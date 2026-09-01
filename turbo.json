@@ -31,7 +31,10 @@
     },
     "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
     "start": { "dependsOn": ["^build"], "cache": false, "persistent": true },
-    "lint": { "dependsOn": ["^lint"] },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "env": ["NODE_ENV", "SKIP_ENV_VALIDATION"]
+    },
     "check-types": { "dependsOn": ["^build"] },
     "test": { "dependsOn": ["^build"] },
     "clean": { "cache": false }
