@@ -7,8 +7,10 @@ import { LeverService } from './lever.service.js';
 
 @Controller()
 export class LeverController {
-  constructor(private readonly levers: LeverService) {}
+    constructor(private readonly levers: LeverService) {}
 
-  @Implement(contract.growth.levers.list)
-  list() { return implement(contract.growth.levers.list).handler(() => this.levers.list()); }
+    @Implement(contract.growth.levers.list)
+    list() {
+        return implement(contract.growth.levers.list).handler(() => this.levers.list());
+    }
 }

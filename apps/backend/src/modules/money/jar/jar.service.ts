@@ -16,123 +16,162 @@ export type JarDto = ContractJar;
 
 @Injectable()
 export class JarService {
-  private readonly jars: ScopedRepository<Jar>;
-  private readonly categories: ScopedRepository<Category>;
+    private readonly jars: ScopedRepository<Jar>;
+    private readonly categories: ScopedRepository<Category>;
 
-  constructor(private readonly em: EntityManager) {
-    this.jars = new ScopedRepository(em, Jar);
-    this.categories = new ScopedRepository(em, Category);
-  }
+    constructor(private readonly em: EntityManager) {
+        this.jars = new ScopedRepository(em, Jar);
+        this.categories = new ScopedRepository(em, Category);
+    }
 
-  async list(): Promise<JarDto[]> {
-    const rows = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
-    return rows.map(toJarDto);
-  }
+    async list(): Promise<JarDto[]> {
+        const rows = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
+        return rows.map(toJarDto);
+    }
 
-  async balances(period: string) {
-    const jars = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
-    const spentByJar = await this.spentByJar(period);
-    const income = await this.monthlyNetIncome();
+    async balances(period: string) {
+        const jars = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
+        const spentByJar = await this.spentByJar(period);
+        const income = await this.monthlyNetIncome();
 
-    return Promise.all(
-      jars.map(async (jar) => {
-        const allocated = Math.round((income * Number(jar.percentage)) / 100);
-        const spent = spentByJar.get(jar.id) ?? 0;
-        const remaining = allocated - spent;
-        const cats = await this.categories.find({ jar: jar.id });
+        return Promise.all(
+            jars.map(async jar => {
+                const allocated = Math.round((income * Number(jar.percentage)) / 100);
+                const spent = spentByJar.get(jar.id) ?? 0;
+                const remaining = allocated - spent;
+                const cats = await this.categories.find({ jar: jar.id });
+                return {
+                    ...toJarDto(jar),
+                    period,
+                    allocated,
+                    spent,
+                    remaining,
+                    progress:
+                        allocated > 0 ? Math.min(1, Math.max(0, remaining / allocated)) : null,
+                    overspent: remaining < 0,
+                    categories: cats.map(c => ({
+                        id: c.id,
+                        jarId: jar.id,
+                        name: c.name,
+                        budgeted: Number(c.budgeted),
+                        actual: 0,
+                        archived: c.archived,
+                    })),
+                };
+            })
+        );
+    }
+
+    /**
+     * A split that does not total 100 silently loses or invents money, so this is
+     * rejected rather than normalised.
+     */
+    async updateSplit(split: { jarId: string; percentage: number }[]): Promise<JarDto[]> {
+        const total = split.reduce((sum, s) => sum + s.percentage, 0);
+        if (Math.abs(total - 100) > 0.01) {
+            throw new Error(`Jar split must total 100%, received ${total}%`);
+        }
+        for (const { jarId, percentage } of split) {
+            const jar = await this.jars.findOneOrFail({ id: jarId });
+            jar.percentage = percentage.toFixed(2);
+        }
+        await this.em.flush();
+        return this.list();
+    }
+
+    async update(
+        id: string,
+        patch: Partial<Pick<Jar, 'name' | 'subtitle' | 'icon'>>
+    ): Promise<JarDto> {
+        const jar = await this.jars.findOneOrFail({ id });
+        Object.assign(jar, patch);
+        await this.em.flush();
+        return toJarDto(jar);
+    }
+
+    async createCategory(jarId: string, name: string, budgeted: number) {
+        const jar = await this.jars.findOneOrFail({ id: jarId });
+        const cat = this.em.create(Category, {
+            householdId: currentHouseholdId(),
+            jar,
+            name,
+            budgeted,
+        } as never);
+        await this.em.persistAndFlush(cat);
         return {
-          ...toJarDto(jar),
-          period,
-          allocated,
-          spent,
-          remaining,
-          progress: allocated > 0 ? Math.min(1, Math.max(0, remaining / allocated)) : null,
-          overspent: remaining < 0,
-          categories: cats.map((c) => ({
-            id: c.id, jarId: jar.id, name: c.name,
-            budgeted: Number(c.budgeted), actual: 0, archived: c.archived,
-          })),
+            id: cat.id,
+            jarId: jar.id,
+            name: cat.name,
+            budgeted: Number(cat.budgeted),
+            actual: 0,
+            archived: false,
         };
-      }),
-    );
-  }
-
-  /**
-   * A split that does not total 100 silently loses or invents money, so this is
-   * rejected rather than normalised.
-   */
-  async updateSplit(split: { jarId: string; percentage: number }[]): Promise<JarDto[]> {
-    const total = split.reduce((sum, s) => sum + s.percentage, 0);
-    if (Math.abs(total - 100) > 0.01) {
-      throw new Error(`Jar split must total 100%, received ${total}%`);
     }
-    for (const { jarId, percentage } of split) {
-      const jar = await this.jars.findOneOrFail({ id: jarId });
-      jar.percentage = percentage.toFixed(2);
+
+    async updateCategory(
+        id: string,
+        patch: Partial<{ name: string; budgeted: number; archived: boolean }>
+    ) {
+        const cat = await this.categories.findOneOrFail({ id });
+        Object.assign(cat, patch);
+        await this.em.flush();
+        return {
+            id: cat.id,
+            jarId: cat.jar.id,
+            name: cat.name,
+            budgeted: Number(cat.budgeted),
+            actual: 0,
+            archived: cat.archived,
+        };
     }
-    await this.em.flush();
-    return this.list();
-  }
 
-  async update(id: string, patch: Partial<Pick<Jar, 'name' | 'subtitle' | 'icon'>>): Promise<JarDto> {
-    const jar = await this.jars.findOneOrFail({ id });
-    Object.assign(jar, patch);
-    await this.em.flush();
-    return toJarDto(jar);
-  }
+    async deleteCategory(id: string) {
+        const cat = await this.categories.findOneOrFail({ id });
+        await this.em.removeAndFlush(cat);
+    }
 
-  async createCategory(jarId: string, name: string, budgeted: number) {
-    const jar = await this.jars.findOneOrFail({ id: jarId });
-    const cat = this.em.create(Category, {
-      householdId: currentHouseholdId(), jar, name, budgeted,
-    } as never);
-    await this.em.persistAndFlush(cat);
-    return { id: cat.id, jarId: jar.id, name: cat.name, budgeted: Number(cat.budgeted), actual: 0, archived: false };
-  }
-
-  async updateCategory(id: string, patch: Partial<{ name: string; budgeted: number; archived: boolean }>) {
-    const cat = await this.categories.findOneOrFail({ id });
-    Object.assign(cat, patch);
-    await this.em.flush();
-    return { id: cat.id, jarId: cat.jar.id, name: cat.name, budgeted: Number(cat.budgeted), actual: 0, archived: cat.archived };
-  }
-
-  async deleteCategory(id: string) {
-    const cat = await this.categories.findOneOrFail({ id });
-    await this.em.removeAndFlush(cat);
-  }
-
-  /** One grouped query rather than a per-jar round trip. */
-  private async spentByJar(period: string): Promise<Map<string, number>> {
-    const rows = await this.em.getConnection().execute<{ jar_id: string; total: string }[]>(
-      `SELECT jar_id, COALESCE(SUM(-amount), 0)::text AS total
+    /** One grouped query rather than a per-jar round trip. */
+    private async spentByJar(period: string): Promise<Map<string, number>> {
+        const rows = await this.em.getConnection().execute<{ jar_id: string; total: string }[]>(
+            `SELECT jar_id, COALESCE(SUM(-amount), 0)::text AS total
          FROM money.transaction
         WHERE household_id = ? AND status = 'SORTED' AND amount < 0
           AND to_char(booked_on, 'YYYY-MM') = ?
         GROUP BY jar_id`,
-      [currentHouseholdId(), period],
-    );
-    return new Map(rows.filter((r) => r.jar_id).map((r) => [r.jar_id, Number(r.total)]));
-  }
+            [currentHouseholdId(), period]
+        );
+        return new Map(rows.filter(r => r.jar_id).map(r => [r.jar_id, Number(r.total)]));
+    }
 
-  /** Active income normalised to a monthly figure. */
-  async monthlyNetIncome(): Promise<number> {
-    const rows = await this.em.getConnection().execute<{ amount: string; cadence: Cadence }[]>(
-      `SELECT amount::text, cadence FROM money.income_source WHERE household_id = ? AND active = true`,
-      [currentHouseholdId()],
-    );
-    return Math.round(
-      rows.reduce((sum, r) => sum + Number(r.amount) * (CADENCE_TO_MONTHLY[r.cadence] ?? 0), 0),
-    );
-  }
+    /** Active income normalised to a monthly figure. */
+    async monthlyNetIncome(): Promise<number> {
+        const rows = await this.em
+            .getConnection()
+            .execute<{ amount: string; cadence: Cadence }[]>(
+                `SELECT amount::text, cadence FROM money.income_source WHERE household_id = ? AND active = true`,
+                [currentHouseholdId()]
+            );
+        return Math.round(
+            rows.reduce(
+                (sum, r) => sum + Number(r.amount) * (CADENCE_TO_MONTHLY[r.cadence] ?? 0),
+                0
+            )
+        );
+    }
 }
 
 function toJarDto(jar: Jar): JarDto {
-  return {
-    // String-enum members are nominal in TypeScript, so they need widening to the
-    // contract's literal union even though the runtime values are identical.
-    id: jar.id, householdId: jar.householdId, key: jar.key as JarDto['key'], name: jar.name,
-    subtitle: jar.subtitle, icon: jar.icon, percentage: Number(jar.percentage),
-    spendable: jar.spendable, sortOrder: jar.sortOrder,
-  };
+    return {
+        // String-enum members are nominal in TypeScript, so they need widening to the
+        // contract's literal union even though the runtime values are identical.
+        id: jar.id,
+        householdId: jar.householdId,
+        key: jar.key as JarDto['key'],
+        name: jar.name,
+        subtitle: jar.subtitle,
+        icon: jar.icon,
+        percentage: Number(jar.percentage),
+        spendable: jar.spendable,
+        sortOrder: jar.sortOrder,
+    };
 }

@@ -15,50 +15,50 @@ import { TurnService } from '../turn/turn.service.js';
  */
 @Injectable()
 export class DashboardService {
-  constructor(
-    private readonly jars: JarService,
-    private readonly turns: TurnService,
-    private readonly coach: CoachService,
-    private readonly transactions: TransactionService,
-    private readonly households: HouseholdService,
-  ) {}
+    constructor(
+        private readonly jars: JarService,
+        private readonly turns: TurnService,
+        private readonly coach: CoachService,
+        private readonly transactions: TransactionService,
+        private readonly households: HouseholdService
+    ) {}
 
-  async get(householdId: string, period: string) {
-    const [jars, turn, coach, inboxCount, income, settings] = await Promise.all([
-      this.jars.balances(period),
-      this.turns.current(period),
-      this.coach.feed(period),
-      this.transactions.countInbox(),
-      this.jars.monthlyNetIncome(),
-      this.households.settings(householdId),
-    ]);
+    async get(householdId: string, period: string) {
+        const [jars, turn, coach, inboxCount, income, settings] = await Promise.all([
+            this.jars.balances(period),
+            this.turns.current(period),
+            this.coach.feed(period),
+            this.transactions.countInbox(),
+            this.jars.monthlyNetIncome(),
+            this.households.settings(householdId),
+        ]);
 
-    const allocatedTotal = sum(jars.map((j) => j.allocated));
-    const spentTotal = sum(jars.map((j) => j.spent));
-    const play = jars.find((j) => j.key === 'PLAY');
+        const allocatedTotal = sum(jars.map(j => j.allocated));
+        const spentTotal = sum(jars.map(j => j.spent));
+        const play = jars.find(j => j.key === 'PLAY');
 
-    // What is safe to spend today without pushing any spendable jar over its line.
-    const daysLeft = Math.max(1, daysInPeriod(period) - new Date().getUTCDate());
-    const spendableRemaining = sum(
-      jars.filter((j) => j.spendable).map((j) => Math.max(0, j.remaining)),
-    );
+        // What is safe to spend today without pushing any spendable jar over its line.
+        const daysLeft = Math.max(1, daysInPeriod(period) - new Date().getUTCDate());
+        const spendableRemaining = sum(
+            jars.filter(j => j.spendable).map(j => Math.max(0, j.remaining))
+        );
 
-    return {
-      period,
-      periodLabel: formatPeriod(period),
-      allocatedTotal,
-      incomeTotal: income,
-      spentTotal,
-      avgLeftOver: allocatedTotal - spentTotal,
-      safePerDay: Math.floor(spendableRemaining / daysLeft),
-      playLeft: play?.remaining ?? 0,
-      inboxCount,
-      jars,
-      coach,
-      turn,
-      why: settings.why ?? null,
-    };
-  }
+        return {
+            period,
+            periodLabel: formatPeriod(period),
+            allocatedTotal,
+            incomeTotal: income,
+            spentTotal,
+            avgLeftOver: allocatedTotal - spentTotal,
+            safePerDay: Math.floor(spendableRemaining / daysLeft),
+            playLeft: play?.remaining ?? 0,
+            inboxCount,
+            jars,
+            coach,
+            turn,
+            why: settings.why ?? null,
+        };
+    }
 }
 
 /**
@@ -67,8 +67,8 @@ export class DashboardService {
  * TODO: take the locale from HouseholdSettings instead of defaulting to nl-NL.
  */
 function formatPeriod(period: string, locale = 'nl-NL'): string {
-  const [year, month] = period.split('-').map(Number);
-  return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
-    new Date(Date.UTC(year ?? 1970, (month ?? 1) - 1, 1)),
-  );
+    const [year, month] = period.split('-').map(Number);
+    return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
+        new Date(Date.UTC(year ?? 1970, (month ?? 1) - 1, 1))
+    );
 }

@@ -7,33 +7,33 @@ import { Category, Jar } from '../../jar/entities/index.js';
 /** Recurring obligations. They draw from a jar so they are visible before they hit. */
 @Entity({ tableName: 'fixed_cost', schema: 'money' })
 export class FixedCost extends HouseholdEntity {
-  @ManyToOne(() => Jar)
-  jar!: Jar;
+    @ManyToOne(() => Jar)
+    jar!: Jar;
 
-  @ManyToOne(() => Category, { nullable: true })
-  category: Category | null = null;
+    @ManyToOne(() => Category, { nullable: true })
+    category: Category | null = null;
 
-  @Property({ length: 120 })
-  name!: string;
+    @Property({ length: 120 })
+    name!: string;
 
-  @Property({ type: 'bigint' })
-  amount!: number;
+    @Property({ type: 'bigint' })
+    amount!: number;
 
-  @Enum(() => Cadence)
-  cadence: Cadence = Cadence.MONTHLY;
+    @Enum(() => Cadence)
+    cadence: Cadence = Cadence.MONTHLY;
 
-  @Property({ nullable: true })
-  dueDay: number | null = null;
+    @Property({ nullable: true })
+    dueDay: number | null = null;
 
-  @Enum(() => FlowDirection)
-  direction: FlowDirection = FlowDirection.OUT;
+    @Enum(() => FlowDirection)
+    direction: FlowDirection = FlowDirection.OUT;
 
-  @Property({ default: true })
-  active = true;
+    @Property({ default: true })
+    active = true;
 
-  @Property({ type: 'date', nullable: true })
-  endsOn: string | null = null;
+    @Property({ type: 'date', nullable: true })
+    endsOn: string | null = null;
 
-  @Property({ type: 'text', nullable: true })
-  note: string | null = null;
+    @Property({ type: 'text', nullable: true })
+    note: string | null = null;
 }

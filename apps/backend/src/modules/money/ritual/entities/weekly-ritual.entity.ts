@@ -4,7 +4,12 @@ import type { RitualAllocation } from './ritual-allocation.entity.js';
 
 import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 
-export enum RitualStage { LOOK = 'LOOK', REDIRECT = 'REDIRECT', INTEND = 'INTEND', DONE = 'DONE' }
+export enum RitualStage {
+    LOOK = 'LOOK',
+    REDIRECT = 'REDIRECT',
+    INTEND = 'INTEND',
+    DONE = 'DONE',
+}
 
 /**
  * The ten-minute weekly ritual: look, redirect, set intention. Three steps on
@@ -13,22 +18,22 @@ export enum RitualStage { LOOK = 'LOOK', REDIRECT = 'REDIRECT', INTEND = 'INTEND
 @Entity({ tableName: 'weekly_ritual', schema: 'money' })
 @Unique({ properties: ['householdId', 'week'] })
 export class WeeklyRitual extends HouseholdEntity {
-  /** YYYY-Www */
-  @Property({ length: 8 })
-  week!: string;
+    /** YYYY-Www */
+    @Property({ length: 8 })
+    week!: string;
 
-  @Enum(() => RitualStage)
-  stage: RitualStage = RitualStage.LOOK;
+    @Enum(() => RitualStage)
+    stage: RitualStage = RitualStage.LOOK;
 
-  @Property({ type: 'bigint', default: 0 })
-  surplus = 0;
+    @Property({ type: 'bigint', default: 0 })
+    surplus = 0;
 
-  @OneToMany('RitualAllocation', 'ritual')
-  allocations = new Collection<RitualAllocation>(this);
+    @OneToMany('RitualAllocation', 'ritual')
+    allocations = new Collection<RitualAllocation>(this);
 
-  @Property({ length: 280, nullable: true })
-  intention: string | null = null;
+    @Property({ length: 280, nullable: true })
+    intention: string | null = null;
 
-  @Property({ type: 'timestamptz', nullable: true })
-  completedAt: Date | null = null;
+    @Property({ type: 'timestamptz', nullable: true })
+    completedAt: Date | null = null;
 }

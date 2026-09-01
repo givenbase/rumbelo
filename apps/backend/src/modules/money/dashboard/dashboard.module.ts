@@ -10,8 +10,8 @@ import { DashboardService } from './dashboard.service.js';
 
 /** Depends on the aggregates it composes rather than reaching into their tables. */
 @Module({
-  imports: [JarModule, TurnModule, CoachModule, TransactionModule, HouseholdModule],
-  controllers: [DashboardController],
-  providers: [DashboardService],
+    imports: [JarModule, TurnModule, CoachModule, TransactionModule, HouseholdModule],
+    controllers: [DashboardController],
+    providers: [DashboardService],
 })
 export class DashboardModule {}

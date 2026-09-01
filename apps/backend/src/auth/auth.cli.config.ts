@@ -7,13 +7,13 @@ import { loadEnv } from '../common/config/env.config.js';
 import { createAuth } from './auth.config.js';
 
 function findRootEnv(): string {
-  let dir = dirname(fileURLToPath(import.meta.url));
-  for (let i = 0; i < 6; i++) {
-    const candidate = resolve(dir, '.env');
-    if (existsSync(candidate)) return candidate;
-    dir = resolve(dir, '..');
-  }
-  return resolve(dirname(fileURLToPath(import.meta.url)), '../../../../.env');
+    let dir = dirname(fileURLToPath(import.meta.url));
+    for (let i = 0; i < 6; i++) {
+        const candidate = resolve(dir, '.env');
+        if (existsSync(candidate)) return candidate;
+        dir = resolve(dir, '..');
+    }
+    return resolve(dirname(fileURLToPath(import.meta.url)), '../../../../.env');
 }
 
 loadDotenv({ path: findRootEnv() });

@@ -9,12 +9,12 @@ import { useRouter } from 'next/navigation';
  * (soft intercept sheet or full-page history).
  */
 export function useFormDismiss(onSuccess?: () => void) {
-  const router = useRouter();
-  return useCallback(() => {
-    if (onSuccess) {
-      onSuccess();
-      return;
-    }
-    router.back();
-  }, [onSuccess, router]);
+    const router = useRouter();
+    return useCallback(() => {
+        if (onSuccess) {
+            onSuccess();
+            return;
+        }
+        router.back();
+    }, [onSuccess, router]);
 }

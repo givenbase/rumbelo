@@ -10,46 +10,47 @@ export const metadata = { title: 'Intention' };
 const CURRENT_INTENT = 'Ten minutes of stillness before I open my inbox.';
 
 export default function IntentPage() {
-  const hasIntent = Boolean(CURRENT_INTENT);
+    const hasIntent = Boolean(CURRENT_INTENT);
 
-  return (
-    <PageContent width="narrow" className="grid animate-rise gap-6">
-      <Section eyebrow="Intention" title="One sentence for this week.">
-        <p className="max-w-prose text-base text-fg-muted">
-          Not a resolution. An instruction to yourself, small enough to keep.
-        </p>
-      </Section>
+    return (
+        <PageContent width="narrow" className="grid animate-rise gap-6">
+            <Section eyebrow="Intention" title="One sentence for this week.">
+                <p className="max-w-prose text-base text-fg-muted">
+                    Not a resolution. An instruction to yourself, small enough to keep.
+                </p>
+            </Section>
 
-      {/* ── Intent card ── */}
-      <div className="grid gap-4 rounded-2xl border border-accent/35 bg-surface p-6 shadow-glow">
-        <Eyebrow>My intention</Eyebrow>
+            {/* ── Intent card ── */}
+            <div className="grid gap-4 rounded-2xl border border-accent/35 bg-surface p-6 shadow-glow">
+                <Eyebrow>My intention</Eyebrow>
 
-        <input
-          type="text"
-          defaultValue={CURRENT_INTENT}
-          placeholder="Write one sentence for this week…"
-          className={cn(
-            'w-full rounded-xl border border-line-strong bg-raised px-4 py-4',
-            'font-display text-lg lg:text-xl text-fg tracking-tight',
-            'placeholder:text-fg-faint',
-            'transition-colors focus:border-accent focus:outline-none',
-          )}
-        />
+                <input
+                    type="text"
+                    defaultValue={CURRENT_INTENT}
+                    placeholder="Write one sentence for this week…"
+                    className={cn(
+                        'w-full rounded-xl border border-line-strong bg-raised p-4',
+                        'font-display text-lg tracking-tight text-fg lg:text-xl',
+                        'placeholder:text-fg-faint',
+                        'transition-colors focus:border-accent focus:outline-none'
+                    )}
+                />
 
-        {hasIntent && (
-          <p className="font-mono text-xs font-medium tracking-widest text-success uppercase">
-            ✦ Set for this week
-          </p>
-        )}
+                {hasIntent && (
+                    <p className="font-mono text-xs font-medium tracking-widest text-success uppercase">
+                        ✦ Set for this week
+                    </p>
+                )}
 
-        <IntentStillnessLink />
-      </div>
+                <IntentStillnessLink />
+            </div>
 
-      {/* ── Tip ── */}
-      <p className="text-sm leading-relaxed text-fg-faint">
-        A good intention is small, concrete, and about behaviour — not an outcome.
-        &quot;I check my jars every Sunday&quot; works better than &quot;I am more financially aware.&quot;
-      </p>
-    </PageContent>
-  );
+            {/* ── Tip ── */}
+            <p className="text-sm leading-relaxed text-fg-faint">
+                A good intention is small, concrete, and about behaviour — not an outcome. &quot;I
+                check my jars every Sunday&quot; works better than &quot;I am more financially
+                aware.&quot;
+            </p>
+        </PageContent>
+    );
 }

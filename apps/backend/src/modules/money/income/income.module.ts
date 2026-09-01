@@ -5,9 +5,9 @@ import { IncomeController } from './income.controller.js';
 import { IncomeService } from './income.service.js';
 
 @Module({
-  imports: [JarModule],
-  controllers: [IncomeController],
-  providers: [IncomeService],
-  exports: [IncomeService],
+    imports: [JarModule],
+    controllers: [IncomeController],
+    providers: [IncomeService],
+    exports: [IncomeService],
 })
 export class IncomeModule {}

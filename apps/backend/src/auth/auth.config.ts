@@ -15,53 +15,53 @@ import type { Env } from '../common/config/env.config.js';
  * sharing a budget need.
  */
 export function createAuth(env: Env) {
-  const pool = new Pool({
-    connectionString: env.DATABASE_URL,
-    ssl: env.DATABASE_SSL ? { rejectUnauthorized: false } : undefined,
-  });
+    const pool = new Pool({
+        connectionString: env.DATABASE_URL,
+        ssl: env.DATABASE_SSL ? { rejectUnauthorized: false } : undefined,
+    });
 
-  return betterAuth({
-    database: pool,
-    secret: env.BETTER_AUTH_SECRET,
-    baseURL: env.BETTER_AUTH_URL,
-    trustedOrigins: [env.APP_URL, env.WEB_URL],
+    return betterAuth({
+        database: pool,
+        secret: env.BETTER_AUTH_SECRET,
+        baseURL: env.BETTER_AUTH_URL,
+        trustedOrigins: [env.APP_URL, env.WEB_URL],
 
-    emailAndPassword: {
-      enabled: true,
-      minPasswordLength: 12,
-      requireEmailVerification: env.NODE_ENV === 'production',
-    },
+        emailAndPassword: {
+            enabled: true,
+            minPasswordLength: 12,
+            requireEmailVerification: env.NODE_ENV === 'production',
+        },
 
-    session: {
-      expiresIn: 60 * 60 * 24 * 30,
-      updateAge: 60 * 60 * 24,
-      cookieCache: { enabled: true, maxAge: 60 * 5 },
-    },
+        session: {
+            expiresIn: 60 * 60 * 24 * 30,
+            updateAge: 60 * 60 * 24,
+            cookieCache: { enabled: true, maxAge: 60 * 5 },
+        },
 
-    account: {
-      accountLinking: { enabled: true },
-    },
+        account: {
+            accountLinking: { enabled: true },
+        },
 
-    plugins: [
-      organization({
-        allowUserToCreateOrganization: true,
-        organizationLimit: 5,
-        creatorRole: 'owner',
-        membershipLimit: 10,
-      }),
-      // A finance app should not treat second-factor as optional plumbing.
-      twoFactor({ issuer: 'Rumbelo' }),
-    ],
+        plugins: [
+            organization({
+                allowUserToCreateOrganization: true,
+                organizationLimit: 5,
+                creatorRole: 'owner',
+                membershipLimit: 10,
+            }),
+            // A finance app should not treat second-factor as optional plumbing.
+            twoFactor({ issuer: 'Rumbelo' }),
+        ],
 
-    advanced: {
-      cookiePrefix: 'rumbelo',
-      useSecureCookies: env.NODE_ENV === 'production',
-      defaultCookieAttributes: {
-        sameSite: 'lax',
-        httpOnly: true,
-      },
-    },
-  });
+        advanced: {
+            cookiePrefix: 'rumbelo',
+            useSecureCookies: env.NODE_ENV === 'production',
+            defaultCookieAttributes: {
+                sameSite: 'lax',
+                httpOnly: true,
+            },
+        },
+    });
 }
 
 export type Auth = ReturnType<typeof createAuth>;

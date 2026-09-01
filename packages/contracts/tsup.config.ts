@@ -10,18 +10,18 @@ import { defineConfig } from 'tsup';
  * needs "use client" re-attached as a banner or Next will treat it as a server module.
  */
 const shared = {
-  format: ['esm', 'cjs'] as const,
-  dts: true,
-  sourcemap: true,
-  treeshake: true,
-  external: ['react', '@tanstack/react-query'],
+    format: ['esm', 'cjs'] as const,
+    dts: true,
+    sourcemap: true,
+    treeshake: true,
+    external: ['react', '@tanstack/react-query'],
 };
 
 export default defineConfig([
-  { ...shared, entry: { index: 'src/index.ts' }, clean: true },
-  {
-    ...shared,
-    entry: { react: 'src/client/react.tsx' },
-    clean: false,
-  },
+    { ...shared, entry: { index: 'src/index.ts' }, clean: true },
+    {
+        ...shared,
+        entry: { react: 'src/client/react.tsx' },
+        clean: false,
+    },
 ]);

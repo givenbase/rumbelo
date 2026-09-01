@@ -8,7 +8,7 @@ import { LogModule } from './log/log.module.js';
  * Mirrors the Energie portal in the application navigation.
  */
 @Module({
-  imports: [LogModule],
-  exports: [LogModule],
+    imports: [LogModule],
+    exports: [LogModule],
 })
 export class EnergyModule {}

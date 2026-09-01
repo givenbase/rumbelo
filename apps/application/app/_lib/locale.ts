@@ -1,5 +1,9 @@
 /** Lightweight locale helper — swap for next-intl `useTranslations` in a follow-up pass. */
-import { t as translate, DEFAULT_LOCALE as defaultLocale, type AppLocale as LocaleType } from '@rumbelo/i18n';
+import {
+    t as translate,
+    DEFAULT_LOCALE as defaultLocale,
+    type AppLocale as LocaleType,
+} from '@rumbelo/i18n';
 
 export { translate as t, defaultLocale as DEFAULT_LOCALE };
 export type AppLocale = LocaleType;

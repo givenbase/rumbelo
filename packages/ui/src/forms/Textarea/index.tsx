@@ -7,13 +7,10 @@ import { cn } from '@rumbelo/utils';
 import { controlClasses } from '../Input';
 
 export function Textarea({
-  className,
-  ...props
+    className,
+    ...props
 }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      className={cn(controlClasses, 'h-auto resize-none py-3', className)}
-      {...props}
-    />
-  );
+    return (
+        <textarea className={cn(controlClasses, 'h-auto resize-none py-3', className)} {...props} />
+    );
 }

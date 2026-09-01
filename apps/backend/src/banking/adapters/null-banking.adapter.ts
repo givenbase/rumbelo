@@ -8,11 +8,21 @@ import type { BankingPort } from '../banking.port.js';
  */
 @Injectable()
 export class NullBankingAdapter implements BankingPort {
-  isEnabled() { return false; }
-  async listInstitutions() { return []; }
-  async startLink(): Promise<never> {
-    throw new Error('Bank sync is disabled. Set FEATURE_BANK_SYNC and configure an aggregator.');
-  }
-  async getConnection() { return null; }
-  async fetchTransactions() { return []; }
+    isEnabled() {
+        return false;
+    }
+    async listInstitutions() {
+        return [];
+    }
+    async startLink(): Promise<never> {
+        throw new Error(
+            'Bank sync is disabled. Set FEATURE_BANK_SYNC and configure an aggregator.'
+        );
+    }
+    async getConnection() {
+        return null;
+    }
+    async fetchTransactions() {
+        return [];
+    }
 }

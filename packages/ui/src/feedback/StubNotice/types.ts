@@ -1,5 +1,5 @@
 interface StubNoticeProps {
-  what: string;
+    what: string;
 }
 
 export type { StubNoticeProps };

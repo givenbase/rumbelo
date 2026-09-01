@@ -7,7 +7,7 @@ import type BadgeProps from './types';
 import badgeVariants from './styles';
 
 export function Badge({ children, tone = 'neutral' }: BadgeProps) {
-  return <span className={cn(badgeVariants({ tone }))}>{children}</span>;
+    return <span className={cn(badgeVariants({ tone }))}>{children}</span>;
 }
 
 export { badgeVariants };

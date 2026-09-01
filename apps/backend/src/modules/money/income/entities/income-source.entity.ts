@@ -4,31 +4,35 @@ import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 import { Cadence } from '../../../../common/database/enums.js';
 
 export enum IncomeKind {
-  SALARY = 'SALARY', FREELANCE = 'FREELANCE', BENEFIT = 'BENEFIT',
-  RENTAL = 'RENTAL', DIVIDEND = 'DIVIDEND', OTHER = 'OTHER',
+    SALARY = 'SALARY',
+    FREELANCE = 'FREELANCE',
+    BENEFIT = 'BENEFIT',
+    RENTAL = 'RENTAL',
+    DIVIDEND = 'DIVIDEND',
+    OTHER = 'OTHER',
 }
 
 @Entity({ tableName: 'income_source', schema: 'money' })
 export class IncomeSource extends HouseholdEntity {
-  @Property({ length: 120 })
-  name!: string;
+    @Property({ length: 120 })
+    name!: string;
 
-  @Enum(() => IncomeKind)
-  kind: IncomeKind = IncomeKind.SALARY;
+    @Enum(() => IncomeKind)
+    kind: IncomeKind = IncomeKind.SALARY;
 
-  @Property({ type: 'bigint' })
-  amount!: number;
+    @Property({ type: 'bigint' })
+    amount!: number;
 
-  @Enum(() => Cadence)
-  cadence: Cadence = Cadence.MONTHLY;
+    @Enum(() => Cadence)
+    cadence: Cadence = Cadence.MONTHLY;
 
-  /** Day of month the money lands; drives the auto-split trigger. */
-  @Property({ nullable: true })
-  expectedDay: number | null = null;
+    /** Day of month the money lands; drives the auto-split trigger. */
+    @Property({ nullable: true })
+    expectedDay: number | null = null;
 
-  @Property({ default: true })
-  active = true;
+    @Property({ default: true })
+    active = true;
 
-  @Property({ type: 'date', nullable: true })
-  startedOn: string | null = null;
+    @Property({ type: 'date', nullable: true })
+    startedOn: string | null = null;
 }

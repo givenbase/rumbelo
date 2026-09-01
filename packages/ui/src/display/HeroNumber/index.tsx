@@ -8,7 +8,7 @@ import heroNumberClass from './styles';
 
 /** Gradient-text hero figure. */
 export function HeroNumber({ children, className }: HeroNumberProps) {
-  return <div className={cn(heroNumberClass, className)}>{children}</div>;
+    return <div className={cn(heroNumberClass, className)}>{children}</div>;
 }
 
 export type { HeroNumberProps };

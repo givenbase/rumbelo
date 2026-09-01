@@ -6,27 +6,32 @@ import { CoachMessage } from './entities/index.js';
 
 @Injectable()
 export class CoachService {
-  private readonly repo: ScopedRepository<CoachMessage>;
-  constructor(private readonly em: EntityManager) {
-    this.repo = new ScopedRepository(em, CoachMessage);
-  }
+    private readonly repo: ScopedRepository<CoachMessage>;
+    constructor(private readonly em: EntityManager) {
+        this.repo = new ScopedRepository(em, CoachMessage);
+    }
 
-  async feed(period: string) {
-    const rows = await this.repo.find(
-      { period, dismissedAt: null },
-      { orderBy: { createdAt: 'DESC' }, limit: 20 },
-    );
-    return rows.map((m) => ({
-      id: m.id, householdId: m.householdId, period: m.period, kind: m.kind, text: m.text,
-      ctaLabel: m.ctaLabel, ctaHref: m.ctaHref,
-      dismissedAt: m.dismissedAt?.toISOString() ?? null,
-      createdAt: m.createdAt.toISOString(),
-    }));
-  }
+    async feed(period: string) {
+        const rows = await this.repo.find(
+            { period, dismissedAt: null },
+            { orderBy: { createdAt: 'DESC' }, limit: 20 }
+        );
+        return rows.map(m => ({
+            id: m.id,
+            householdId: m.householdId,
+            period: m.period,
+            kind: m.kind,
+            text: m.text,
+            ctaLabel: m.ctaLabel,
+            ctaHref: m.ctaHref,
+            dismissedAt: m.dismissedAt?.toISOString() ?? null,
+            createdAt: m.createdAt.toISOString(),
+        }));
+    }
 
-  async dismiss(id: string) {
-    const message = await this.repo.findOneOrFail({ id });
-    message.dismissedAt = new Date();
-    await this.em.flush();
-  }
+    async dismiss(id: string) {
+        const message = await this.repo.findOneOrFail({ id });
+        message.dismissedAt = new Date();
+        await this.em.flush();
+    }
 }

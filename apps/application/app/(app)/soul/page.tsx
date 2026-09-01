@@ -4,5 +4,5 @@ import { PortalHub } from '@/components/features/home/portal-hub';
 export const metadata = { title: 'Soul · overview' };
 
 export default function SoulPage() {
-  return <PortalHub {...soulPortalHub} />;
+    return <PortalHub {...soulPortalHub} />;
 }

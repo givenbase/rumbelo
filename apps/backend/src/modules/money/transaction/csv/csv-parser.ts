@@ -5,59 +5,61 @@
  */
 
 export interface ParsedRow {
-  bookedOn: string;
-  amount: number;
-  description: string;
-  counterparty: string | null;
+    bookedOn: string;
+    amount: number;
+    description: string;
+    counterparty: string | null;
 }
 
 /** Header aliases across the major Dutch exports. */
 const COLUMNS = {
-  date: ['date', 'datum', 'transactiedatum', 'boekingsdatum'],
-  amount: ['amount', 'bedrag', 'bedrag (eur)', 'transactiebedrag'],
-  description: ['description', 'omschrijving', 'mededelingen', 'naam / omschrijving'],
-  counterparty: ['counterparty', 'tegenrekening', 'naam tegenpartij', 'tegenpartij'],
+    date: ['date', 'datum', 'transactiedatum', 'boekingsdatum'],
+    amount: ['amount', 'bedrag', 'bedrag (eur)', 'transactiebedrag'],
+    description: ['description', 'omschrijving', 'mededelingen', 'naam / omschrijving'],
+    counterparty: ['counterparty', 'tegenrekening', 'naam tegenpartij', 'tegenpartij'],
 } as const;
 
 export function parseStatementCsv(content: string): ParsedRow[] {
-  const lines = content.split(/\r?\n/).filter((l) => l.trim().length > 0);
-  if (lines.length < 2) return [];
+    const lines = content.split(/\r?\n/).filter(l => l.trim().length > 0);
+    if (lines.length < 2) return [];
 
-  const delimiter = sniffDelimiter(lines[0]!);
-  const header = splitRow(lines[0]!, delimiter).map((h) => h.toLowerCase());
-  const col = (aliases: readonly string[]) =>
-    header.findIndex((h) => aliases.some((a) => h.includes(a)));
+    const delimiter = sniffDelimiter(lines[0]!);
+    const header = splitRow(lines[0]!, delimiter).map(h => h.toLowerCase());
+    const col = (aliases: readonly string[]) =>
+        header.findIndex(h => aliases.some(a => h.includes(a)));
 
-  const iDate = col(COLUMNS.date);
-  const iAmount = col(COLUMNS.amount);
-  const iDesc = col(COLUMNS.description);
-  const iParty = col(COLUMNS.counterparty);
+    const iDate = col(COLUMNS.date);
+    const iAmount = col(COLUMNS.amount);
+    const iDesc = col(COLUMNS.description);
+    const iParty = col(COLUMNS.counterparty);
 
-  // Without a date and an amount there is nothing to import; fail loudly upstream.
-  if (iDate < 0 || iAmount < 0) return [];
+    // Without a date and an amount there is nothing to import; fail loudly upstream.
+    if (iDate < 0 || iAmount < 0) return [];
 
-  return lines.slice(1).flatMap((line) => {
-    const cells = splitRow(line, delimiter);
-    const bookedOn = normaliseDate(cells[iDate] ?? '');
-    const amount = parseAmount(cells[iAmount] ?? '');
-    if (!bookedOn || amount === null) return [];
-    return [{
-      bookedOn,
-      amount,
-      description: (iDesc >= 0 ? cells[iDesc] : '') || 'Geïmporteerd',
-      counterparty: iParty >= 0 ? (cells[iParty] || null) : null,
-    }];
-  });
+    return lines.slice(1).flatMap(line => {
+        const cells = splitRow(line, delimiter);
+        const bookedOn = normaliseDate(cells[iDate] ?? '');
+        const amount = parseAmount(cells[iAmount] ?? '');
+        if (!bookedOn || amount === null) return [];
+        return [
+            {
+                bookedOn,
+                amount,
+                description: (iDesc >= 0 ? cells[iDesc] : '') || 'Geïmporteerd',
+                counterparty: iParty >= 0 ? cells[iParty] || null : null,
+            },
+        ];
+    });
 }
 
 function sniffDelimiter(headerLine: string): string {
-  const semis = (headerLine.match(/;/g) ?? []).length;
-  const commas = (headerLine.match(/,/g) ?? []).length;
-  return semis > commas ? ';' : ',';
+    const semis = (headerLine.match(/;/g) ?? []).length;
+    const commas = (headerLine.match(/,/g) ?? []).length;
+    return semis > commas ? ';' : ',';
 }
 
 function splitRow(line: string, delimiter: string): string[] {
-  return line.split(delimiter).map((c) => c.trim().replace(/^"|"$/g, ''));
+    return line.split(delimiter).map(c => c.trim().replace(/^"|"$/g, ''));
 }
 
 /**
@@ -66,16 +68,16 @@ function splitRow(line: string, delimiter: string): string[] {
  * turns €1.234,56 into 1.234.
  */
 function parseAmount(raw: string): number | null {
-  const cleaned = raw.replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
-  const value = Number(cleaned);
-  return Number.isFinite(value) ? Math.round(value * 100) : null;
+    const cleaned = raw.replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+    const value = Number(cleaned);
+    return Number.isFinite(value) ? Math.round(value * 100) : null;
 }
 
 /** Accepts YYYY-MM-DD, YYYYMMDD and DD-MM-YYYY, covering the major NL exports. */
 function normaliseDate(raw: string): string | null {
-  const s = raw.trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
-  const m = s.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
-  return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
+    const s = raw.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
+    const m = s.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+    return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
 }

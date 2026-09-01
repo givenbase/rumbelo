@@ -5,23 +5,22 @@ import { cn } from '@rumbelo/utils';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 
 export function ToastPill() {
-  const { toast } = useAppShell();
+    const { toast } = useAppShell();
 
-  if (!toast) return null;
+    if (!toast) return null;
 
-  return (
-    <div
-      key={toast.id}
-      role="status"
-      aria-live="polite"
-      className={cn(
-        'fixed bottom-24 left-1/2 z-60 -translate-x-1/2 whitespace-nowrap rounded-full border px-5 py-2.5 text-sm font-medium shadow-lg animate-rise',
-        toast.type === 'success' && 'border-success/30 bg-success/10 text-success',
-        toast.type === 'error'   && 'border-danger/30  bg-danger/10  text-danger',
-        toast.type === 'info'    && 'border-line-strong bg-surface    text-fg',
-      )}
-    >
-      {toast.message}
-    </div>
-  );
+    return (
+        <div
+            key={toast.id}
+            role="status"
+            aria-live="polite"
+            className={cn(
+                'fixed bottom-24 left-1/2 z-60 -translate-x-1/2 animate-rise rounded-full border px-5 py-2.5 text-sm font-medium whitespace-nowrap shadow-lg',
+                toast.type === 'success' && 'border-success/30 bg-success/10 text-success',
+                toast.type === 'error' && 'border-danger/30 bg-danger/10 text-danger',
+                toast.type === 'info' && 'border-line-strong bg-surface text-fg'
+            )}>
+            {toast.message}
+        </div>
+    );
 }

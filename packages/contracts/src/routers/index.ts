@@ -15,11 +15,11 @@ import { contract as soul } from './soul/index.js';
  * Paths are auto-filled for Nest `@Implement` (requires explicit route paths).
  */
 const rawContract = {
-  ...platform,
-  money,
-  growth,
-  energy,
-  soul,
+    ...platform,
+    money,
+    growth,
+    energy,
+    soul,
 };
 
 export const contract = populateContractRouterPaths(rawContract);

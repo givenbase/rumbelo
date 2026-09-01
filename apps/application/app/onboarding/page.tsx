@@ -6,5 +6,5 @@ import { redirect } from 'next/navigation';
  * ("Opnieuw instellen") or programmatically via openOnboarding().
  */
 export default function OnboardingRedirect() {
-  redirect('/?onboarding=1');
+    redirect('/?onboarding=1');
 }

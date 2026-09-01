@@ -4,29 +4,34 @@ import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 import { PeriodTurn } from './period-turn.entity.js';
 
 export enum TurnEventKind {
-  JAR_HELD = 'JAR_HELD', JAR_OVERSPENT = 'JAR_OVERSPENT', INBOX_CLEARED = 'INBOX_CLEARED',
-  RITUAL_DONE = 'RITUAL_DONE', GOAL_REACHED = 'GOAL_REACHED', DEBT_CLEARED = 'DEBT_CLEARED',
-  INCOME_LOGGED = 'INCOME_LOGGED', STREAK_KEPT = 'STREAK_KEPT',
+    JAR_HELD = 'JAR_HELD',
+    JAR_OVERSPENT = 'JAR_OVERSPENT',
+    INBOX_CLEARED = 'INBOX_CLEARED',
+    RITUAL_DONE = 'RITUAL_DONE',
+    GOAL_REACHED = 'GOAL_REACHED',
+    DEBT_CLEARED = 'DEBT_CLEARED',
+    INCOME_LOGGED = 'INCOME_LOGGED',
+    STREAK_KEPT = 'STREAK_KEPT',
 }
 
 @Entity({ tableName: 'turn_event', schema: 'money' })
 @Index({ properties: ['householdId', 'period'] })
 export class TurnEvent extends HouseholdEntity {
-  @ManyToOne(() => PeriodTurn, { deleteRule: 'cascade' })
-  turn!: PeriodTurn;
+    @ManyToOne(() => PeriodTurn, { deleteRule: 'cascade' })
+    turn!: PeriodTurn;
 
-  @Property({ length: 7 })
-  period!: string;
+    @Property({ length: 7 })
+    period!: string;
 
-  @Enum(() => TurnEventKind)
-  kind!: TurnEventKind;
+    @Enum(() => TurnEventKind)
+    kind!: TurnEventKind;
 
-  @Property()
-  day!: number;
+    @Property()
+    day!: number;
 
-  @Property({ length: 240 })
-  text!: string;
+    @Property({ length: 240 })
+    text!: string;
 
-  @Property({ default: 0 })
-  points = 0;
+    @Property({ default: 0 })
+    points = 0;
 }

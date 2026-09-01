@@ -9,16 +9,16 @@ export const RuleField = z.enum(['DESCRIPTION', 'COUNTERPARTY', 'AMOUNT']);
  * first match wins and stamps appliedRuleId so the decision stays auditable.
  */
 export const Rule = z.object({
-  id: Id,
-  householdId: HouseholdId,
-  field: RuleField,
-  matcher: RuleMatcher,
-  value: z.string().min(1).max(200),
-  jarId: Id,
-  categoryId: Id.nullable(),
-  priority: z.int(),
-  active: z.boolean().default(true),
-  /** How many transactions this rule has sorted — surfaces dead rules. */
-  hitCount: z.int(),
+    id: Id,
+    householdId: HouseholdId,
+    field: RuleField,
+    matcher: RuleMatcher,
+    value: z.string().min(1).max(200),
+    jarId: Id,
+    categoryId: Id.nullable(),
+    priority: z.int(),
+    active: z.boolean().default(true),
+    /** How many transactions this rule has sorted — surfaces dead rules. */
+    hitCount: z.int(),
 });
 export type Rule = z.infer<typeof Rule>;

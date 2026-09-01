@@ -7,7 +7,7 @@ import { GratitudeModule } from './gratitude/gratitude.module.js';
  * Mirrors the Ziel portal in the application navigation.
  */
 @Module({
-  imports: [GratitudeModule],
-  exports: [GratitudeModule],
+    imports: [GratitudeModule],
+    exports: [GratitudeModule],
 })
 export class SoulModule {}

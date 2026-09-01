@@ -8,13 +8,13 @@ import { controlClasses } from '../Input';
 
 /** Native select — default for Rumbelo forms. Use SelectMenu for Radix menus. */
 export function Select({
-  className,
-  children,
-  ...props
+    className,
+    children,
+    ...props
 }: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select className={cn(controlClasses, 'appearance-none pr-8', className)} {...props}>
-      {children}
-    </select>
-  );
+    return (
+        <select className={cn(controlClasses, 'appearance-none pr-8', className)} {...props}>
+            {children}
+        </select>
+    );
 }

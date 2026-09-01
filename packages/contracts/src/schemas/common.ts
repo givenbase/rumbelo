@@ -37,12 +37,12 @@ export const Cadence = z.enum(['WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY', 'ONCE
 export type Cadence = z.infer<typeof Cadence>;
 
 export const Pagination = z.object({
-  limit: z.int().min(1).max(200).default(50),
-  cursor: z.string().nullish(),
+    limit: z.int().min(1).max(200).default(50),
+    cursor: z.string().nullish(),
 });
 
 export const paginated = <T extends z.ZodType>(item: T) =>
-  z.object({ items: z.array(item), nextCursor: z.string().nullable() });
+    z.object({ items: z.array(item), nextCursor: z.string().nullable() });
 
 /** Scope every mutation to a household explicitly; never infer it from the row being edited. */
 export const HouseholdScoped = z.object({ householdId: HouseholdId });

@@ -6,14 +6,14 @@ import { v7 as uuidv7 } from 'uuid';
  * "most recent" queries cheap, which matters for the transaction table.
  */
 export abstract class BaseEntity {
-  @PrimaryKey({ type: 'uuid' })
-  id: string = uuidv7();
+    @PrimaryKey({ type: 'uuid' })
+    id: string = uuidv7();
 
-  @Property({ type: 'timestamptz', defaultRaw: 'now()' })
-  createdAt: Date = new Date();
+    @Property({ type: 'timestamptz', defaultRaw: 'now()' })
+    createdAt: Date = new Date();
 
-  @Property({ type: 'timestamptz', defaultRaw: 'now()', onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+    @Property({ type: 'timestamptz', defaultRaw: 'now()', onUpdate: () => new Date() })
+    updatedAt: Date = new Date();
 }
 
 /**
@@ -22,7 +22,7 @@ export abstract class BaseEntity {
  * middleware that guarantees no query escapes it.
  */
 export abstract class HouseholdEntity extends BaseEntity {
-  /** better-auth organization id (non-uuid string) */
-  @Property({ type: 'varchar', length: 64, index: true })
-  householdId!: string;
+    /** better-auth organization id (non-uuid string) */
+    @Property({ type: 'varchar', length: 64, index: true })
+    householdId!: string;
 }

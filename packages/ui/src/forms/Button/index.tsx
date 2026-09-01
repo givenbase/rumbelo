@@ -8,22 +8,22 @@ import buttonVariants from './styles';
 
 /** Brand Button — rounded-full accent treatment from the Rumbelo design system. */
 export function Button({
-  children,
-  variant = 'primary',
-  size = 'md',
-  iconLeft,
-  iconRight,
-  as: Tag = 'button',
-  className,
-  ...props
+    children,
+    variant = 'primary',
+    size = 'md',
+    iconLeft,
+    iconRight,
+    as: Tag = 'button',
+    className,
+    ...props
 }: ButtonProps) {
-  return (
-    <Tag className={cn(buttonVariants({ size, variant }), className)} {...props}>
-      {iconLeft}
-      {children}
-      {iconRight}
-    </Tag>
-  );
+    return (
+        <Tag className={cn(buttonVariants({ size, variant }), className)} {...props}>
+            {iconLeft}
+            {children}
+            {iconRight}
+        </Tag>
+    );
 }
 
 export { buttonVariants };

@@ -16,20 +16,20 @@ import { FeatureModules } from './modules/index.js';
 
 @Module({})
 export class AppModule {
-  static forRoot(env: Env): DynamicModule {
-    return {
-      module: AppModule,
-      imports: [
-        ConfigModule.forRoot({ isGlobal: true, cache: true }),
-        MikroOrmModule.forRoot(ormConfig),
-        ScheduleModule.forRoot(),
-        ThrottlerModule.forRoot([{ ttl: 60_000, limit: 240 }]),
-        BetterAuthModule.forRoot({ auth: createAuth(env) }),
-        ORPCModule.forRoot({ interceptors: [] }),
-        TenancyModule,
-        ...FeatureModules,
-      ],
-      providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
-    };
-  }
+    static forRoot(env: Env): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                ConfigModule.forRoot({ isGlobal: true, cache: true }),
+                MikroOrmModule.forRoot(ormConfig),
+                ScheduleModule.forRoot(),
+                ThrottlerModule.forRoot([{ ttl: 60_000, limit: 240 }]),
+                BetterAuthModule.forRoot({ auth: createAuth(env) }),
+                ORPCModule.forRoot({ interceptors: [] }),
+                TenancyModule,
+                ...FeatureModules,
+            ],
+            providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
+        };
+    }
 }

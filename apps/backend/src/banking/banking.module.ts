@@ -8,7 +8,7 @@ import { BANKING_PORT } from './banking.port.js';
  * once credentials exist — nothing downstream changes.
  */
 @Module({
-  providers: [{ provide: BANKING_PORT, useClass: NullBankingAdapter }],
-  exports: [BANKING_PORT],
+    providers: [{ provide: BANKING_PORT, useClass: NullBankingAdapter }],
+    exports: [BANKING_PORT],
 })
 export class BankingModule {}

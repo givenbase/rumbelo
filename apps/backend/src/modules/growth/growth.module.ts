@@ -8,7 +8,7 @@ import { MilestoneModule } from './milestone/milestone.module.js';
  * what already arrived. Mirrors the Groei portal in the application navigation.
  */
 @Module({
-  imports: [LeverModule, MilestoneModule],
-  exports: [LeverModule, MilestoneModule],
+    imports: [LeverModule, MilestoneModule],
+    exports: [LeverModule, MilestoneModule],
 })
 export class GrowthModule {}

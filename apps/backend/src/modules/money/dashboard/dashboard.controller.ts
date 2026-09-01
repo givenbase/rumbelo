@@ -8,12 +8,12 @@ import { DashboardService } from './dashboard.service.js';
 
 @Controller()
 export class DashboardController {
-  constructor(private readonly dashboard: DashboardService) {}
+    constructor(private readonly dashboard: DashboardService) {}
 
-  @Implement(contract.money.dashboard.get)
-  get() {
-    return implement(contract.money.dashboard.get).handler(({ input }) =>
-      this.dashboard.get(input.householdId, input.period ?? currentPeriod()),
-    );
-  }
+    @Implement(contract.money.dashboard.get)
+    get() {
+        return implement(contract.money.dashboard.get).handler(({ input }) =>
+            this.dashboard.get(input.householdId, input.period ?? currentPeriod())
+        );
+    }
 }

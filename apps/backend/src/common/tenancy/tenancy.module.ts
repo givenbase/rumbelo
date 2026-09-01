@@ -11,11 +11,11 @@ import { TenantOrpcInterceptor } from './tenant-orpc.interceptor.js';
  */
 @Global()
 @Module({
-  providers: [
-    MembershipService,
-    TenantOrpcInterceptor,
-    { provide: APP_INTERCEPTOR, useClass: TenantOrpcInterceptor },
-  ],
-  exports: [MembershipService],
+    providers: [
+        MembershipService,
+        TenantOrpcInterceptor,
+        { provide: APP_INTERCEPTOR, useClass: TenantOrpcInterceptor },
+    ],
+    exports: [MembershipService],
 })
 export class TenancyModule {}

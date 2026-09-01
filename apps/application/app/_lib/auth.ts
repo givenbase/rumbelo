@@ -5,8 +5,8 @@ import { organizationClient } from 'better-auth/client/plugins';
 import { env } from '@/app/_utils/get-env';
 
 const client = createAuthClient({
-  baseURL: env.NEXT_PUBLIC_AUTH_URL,
-  plugins: [organizationClient()],
+    baseURL: env.NEXT_PUBLIC_AUTH_URL,
+    plugins: [organizationClient()],
 });
 
 export const signIn = client.signIn;
@@ -15,28 +15,28 @@ export const signOut = client.signOut;
 export const useSession = client.useSession;
 
 export async function updateUser(data: { name?: string; image?: string | null }) {
-  return client.updateUser(data);
+    return client.updateUser(data);
 }
 
 export async function changePassword(data: {
-  currentPassword: string;
-  newPassword: string;
-  revokeOtherSessions?: boolean;
+    currentPassword: string;
+    newPassword: string;
+    revokeOtherSessions?: boolean;
 }) {
-  return client.changePassword(data);
+    return client.changePassword(data);
 }
 
 export async function setActiveOrganization(organizationId: string) {
-  await client.organization.setActive({ organizationId });
+    await client.organization.setActive({ organizationId });
 }
 
 export async function updateOrganization(organizationId: string, data: { name?: string }) {
-  await client.organization.update({ organizationId, data });
+    await client.organization.update({ organizationId, data });
 }
 
 export type Session = NonNullable<ReturnType<typeof useSession>['data']>;
 
 export function activeHouseholdId(session: Session | null | undefined): string | null {
-  if (!session) return null;
-  return session.session?.activeOrganizationId ?? null;
+    if (!session) return null;
+    return session.session?.activeOrganizationId ?? null;
 }

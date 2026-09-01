@@ -4,12 +4,12 @@ import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 
 @Entity({ tableName: 'income_milestone', schema: 'growth' })
 export class IncomeMilestone extends HouseholdEntity {
-  @Property({ length: 160 })
-  label!: string;
+    @Property({ length: 160 })
+    label!: string;
 
-  @Property({ type: 'bigint' })
-  targetMonthly!: number;
+    @Property({ type: 'bigint' })
+    targetMonthly!: number;
 
-  @Property({ type: 'date', nullable: true })
-  reachedOn: string | null = null;
+    @Property({ type: 'date', nullable: true })
+    reachedOn: string | null = null;
 }

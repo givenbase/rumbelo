@@ -11,25 +11,25 @@ import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 @Entity({ tableName: 'period_turn', schema: 'money' })
 @Unique({ properties: ['householdId', 'period'] })
 export class PeriodTurn extends HouseholdEntity {
-  /** YYYY-MM */
-  @Property({ length: 7 })
-  period!: string;
+    /** YYYY-MM */
+    @Property({ length: 7 })
+    period!: string;
 
-  @Property({ default: 0 })
-  score = 0;
+    @Property({ default: 0 })
+    score = 0;
 
-  @Property({ default: 0 })
-  maxScore = 0;
+    @Property({ default: 0 })
+    maxScore = 0;
 
-  @Property({ default: 1 })
-  level = 1;
+    @Property({ default: 1 })
+    level = 1;
 
-  @Property({ default: false })
-  closed = false;
+    @Property({ default: false })
+    closed = false;
 
-  @Property({ type: 'timestamptz', nullable: true })
-  closedAt: Date | null = null;
+    @Property({ type: 'timestamptz', nullable: true })
+    closedAt: Date | null = null;
 
-  @OneToMany('TurnEvent', 'turn')
-  events = new Collection<TurnEvent>(this);
+    @OneToMany('TurnEvent', 'turn')
+    events = new Collection<TurnEvent>(this);
 }

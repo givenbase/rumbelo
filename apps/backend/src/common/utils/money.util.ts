@@ -10,28 +10,28 @@
  * user would pick themselves if asked.
  */
 export function splitByPercentage(
-  total: number,
-  shares: { id: string; percentage: number }[],
+    total: number,
+    shares: { id: string; percentage: number }[]
 ): { id: string; amount: number }[] {
-  if (shares.length === 0) return [];
+    if (shares.length === 0) return [];
 
-  const allocated = shares.map((s) => ({
-    id: s.id,
-    amount: Math.floor((total * s.percentage) / 100),
-    percentage: s.percentage,
-  }));
+    const allocated = shares.map(s => ({
+        id: s.id,
+        amount: Math.floor((total * s.percentage) / 100),
+        percentage: s.percentage,
+    }));
 
-  const distributed = allocated.reduce((sum, a) => sum + a.amount, 0);
-  const remainder = total - distributed;
+    const distributed = allocated.reduce((sum, a) => sum + a.amount, 0);
+    const remainder = total - distributed;
 
-  if (remainder !== 0) {
-    const largest = allocated.reduce((a, b) => (b.percentage > a.percentage ? b : a));
-    largest.amount += remainder;
-  }
+    if (remainder !== 0) {
+        const largest = allocated.reduce((a, b) => (b.percentage > a.percentage ? b : a));
+        largest.amount += remainder;
+    }
 
-  return allocated.map(({ id, amount }) => ({ id, amount }));
+    return allocated.map(({ id, amount }) => ({ id, amount }));
 }
 
 export function sum(values: number[]): number {
-  return values.reduce((a, b) => a + b, 0);
+    return values.reduce((a, b) => a + b, 0);
 }

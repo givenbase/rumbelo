@@ -5,20 +5,20 @@
 import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
 
 export function useLiveQuery<TData>(
-  options: UseQueryOptions<TData>,
-  mockFallback: TData,
-  enabled = false,
+    options: UseQueryOptions<TData>,
+    mockFallback: TData,
+    enabled = false
 ): UseQueryResult<TData> {
-  const query = useQuery({ ...options, enabled });
-  if (!enabled) {
-    return {
-      ...query,
-      data: mockFallback,
-      isPending: false,
-      isLoading: false,
-      isSuccess: true,
-      status: 'success',
-    } as UseQueryResult<TData>;
-  }
-  return query;
+    const query = useQuery({ ...options, enabled });
+    if (!enabled) {
+        return {
+            ...query,
+            data: mockFallback,
+            isPending: false,
+            isLoading: false,
+            isSuccess: true,
+            status: 'success',
+        } as UseQueryResult<TData>;
+    }
+    return query;
 }

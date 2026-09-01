@@ -5,5 +5,5 @@ import { SettingsShell } from '@/components/layout/settings-shell';
  * under `/settings/[section]` (e.g. `/settings/jars`).
  */
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
-  return <SettingsShell>{children}</SettingsShell>;
+    return <SettingsShell>{children}</SettingsShell>;
 }

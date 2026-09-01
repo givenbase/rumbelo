@@ -5,9 +5,9 @@ import { TurnController } from './turn.controller.js';
 import { TurnService } from './turn.service.js';
 
 @Module({
-  imports: [JarModule],
-  controllers: [TurnController],
-  providers: [TurnService],
-  exports: [TurnService],
+    imports: [JarModule],
+    controllers: [TurnController],
+    providers: [TurnService],
+    exports: [TurnService],
 })
 export class TurnModule {}

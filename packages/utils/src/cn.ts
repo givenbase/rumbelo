@@ -3,5 +3,5 @@ import { twMerge } from 'tailwind-merge';
 
 /** Merge Tailwind classes so later props reliably override earlier ones. */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+    return twMerge(clsx(inputs));
 }

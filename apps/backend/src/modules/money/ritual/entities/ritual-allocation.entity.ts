@@ -15,12 +15,12 @@ import { WeeklyRitual } from './weekly-ritual.entity.js';
 @Entity({ tableName: 'ritual_allocation', schema: 'money' })
 @Unique({ properties: ['ritual', 'jar'] })
 export class RitualAllocation extends HouseholdEntity {
-  @ManyToOne(() => WeeklyRitual, { deleteRule: 'cascade' })
-  ritual!: WeeklyRitual;
+    @ManyToOne(() => WeeklyRitual, { deleteRule: 'cascade' })
+    ritual!: WeeklyRitual;
 
-  @ManyToOne(() => Jar, { deleteRule: 'cascade' })
-  jar!: Jar;
+    @ManyToOne(() => Jar, { deleteRule: 'cascade' })
+    jar!: Jar;
 
-  @Property({ type: 'bigint' })
-  amount!: number;
+    @Property({ type: 'bigint' })
+    amount!: number;
 }

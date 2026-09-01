@@ -19,22 +19,31 @@ import { TurnModule } from './turn/turn.module.js';
  * composes them.
  */
 @Module({
-  imports: [
-    JarModule,
-    IncomeModule,
-    FixedCostModule,
-    AccountModule,
-    TransactionModule,
-    RuleModule,
-    GoalModule,
-    DebtModule,
-    TurnModule,
-    RitualModule,
-    DashboardModule,
-  ],
-  exports: [
-    JarModule, IncomeModule, FixedCostModule, AccountModule, TransactionModule,
-    RuleModule, GoalModule, DebtModule, TurnModule, RitualModule, DashboardModule,
-  ],
+    imports: [
+        JarModule,
+        IncomeModule,
+        FixedCostModule,
+        AccountModule,
+        TransactionModule,
+        RuleModule,
+        GoalModule,
+        DebtModule,
+        TurnModule,
+        RitualModule,
+        DashboardModule,
+    ],
+    exports: [
+        JarModule,
+        IncomeModule,
+        FixedCostModule,
+        AccountModule,
+        TransactionModule,
+        RuleModule,
+        GoalModule,
+        DebtModule,
+        TurnModule,
+        RitualModule,
+        DashboardModule,
+    ],
 })
 export class MoneyModule {}

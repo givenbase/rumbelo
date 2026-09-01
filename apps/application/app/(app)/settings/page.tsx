@@ -4,5 +4,5 @@ export const metadata = { title: 'Account — Settings' };
 
 /** Default settings landing — Account (no redirect). */
 export default function SettingsPage() {
-  return <AccountSettings />;
+    return <AccountSettings />;
 }

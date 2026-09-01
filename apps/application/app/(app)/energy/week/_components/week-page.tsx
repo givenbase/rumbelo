@@ -15,161 +15,199 @@ const SLEEP_WEEK = SLEEP_HOURS * 7;
 const REST_HOURS = 168 - SLEEP_WEEK - STEERED_HOURS;
 
 const WEEK_WHOLE = [
-  { name: 'Sleep', hours: `${SLEEP_WEEK}h`, pct: Math.round((SLEEP_WEEK / 168) * 100), color: 'var(--color-jar-lts)' },
-  { name: 'Everything else', hours: `${REST_HOURS}h`, pct: Math.round((REST_HOURS / 168) * 100), color: 'var(--color-sunken)' },
-  { name: 'You steer', hours: `${STEERED_HOURS}h`, pct: Math.round((STEERED_HOURS / 168) * 100), color: 'var(--color-accent)' },
+    {
+        name: 'Sleep',
+        hours: `${SLEEP_WEEK}h`,
+        pct: Math.round((SLEEP_WEEK / 168) * 100),
+        color: 'var(--color-jar-lts)',
+    },
+    {
+        name: 'Everything else',
+        hours: `${REST_HOURS}h`,
+        pct: Math.round((REST_HOURS / 168) * 100),
+        color: 'var(--color-sunken)',
+    },
+    {
+        name: 'You steer',
+        hours: `${STEERED_HOURS}h`,
+        pct: Math.round((STEERED_HOURS / 168) * 100),
+        color: 'var(--color-accent)',
+    },
 ] as const;
 
 const JAR_BORDER: Record<string, string> = {
-  NECESSITIES: 'border-t-jar-nec',
-  FINANCIAL_FREEDOM: 'border-t-jar-ff',
-  LONG_TERM_SAVINGS: 'border-t-jar-lts',
-  EDUCATION: 'border-t-jar-edu',
-  PLAY: 'border-t-jar-play',
-  GIVE: 'border-t-jar-give',
+    NECESSITIES: 'border-t-jar-nec',
+    FINANCIAL_FREEDOM: 'border-t-jar-ff',
+    LONG_TERM_SAVINGS: 'border-t-jar-lts',
+    EDUCATION: 'border-t-jar-edu',
+    PLAY: 'border-t-jar-play',
+    GIVE: 'border-t-jar-give',
 };
 
 const METRIC_LABEL: Record<string, string> = {
-  SLEEP: 'Sleep',
-  TRAIN: 'Training',
-  FOOD: 'Nutrition',
-  MIND: 'Stillness',
+    SLEEP: 'Sleep',
+    TRAIN: 'Training',
+    FOOD: 'Nutrition',
+    MIND: 'Stillness',
 };
 
 const TREND_ICON: Record<string, string> = { UP: '↑', FLAT: '→', DOWN: '↓' };
-const TREND_CLASS: Record<string, string> = { UP: 'text-success', FLAT: 'text-fg-muted', DOWN: 'text-danger' };
+const TREND_CLASS: Record<string, string> = {
+    UP: 'text-success',
+    FLAT: 'text-fg-muted',
+    DOWN: 'text-danger',
+};
 
 export function WeekPageClient() {
-  const api = useApi();
-  const { householdId } = useAuth();
-  const live = isLiveData(householdId);
+    const api = useApi();
+    const { householdId } = useAuth();
+    const live = isLiveData(householdId);
 
-  const summaryQuery = useLiveQuery(
-    api.energy.logs.summary.queryOptions({ input: { householdId: householdId! } }),
-    mockEnergy.map((e) => ({
-      metric: e.metric,
-      average7d: e.value,
-      average28d: e.value,
-      trend: e.trend,
-      spendCorrelation: null,
-    })) as never,
-    live,
-  );
+    const summaryQuery = useLiveQuery(
+        api.energy.logs.summary.queryOptions({ input: { householdId: householdId! } }),
+        mockEnergy.map(e => ({
+            metric: e.metric,
+            average7d: e.value,
+            average28d: e.value,
+            trend: e.trend,
+            spendCorrelation: null,
+        })) as never,
+        live
+    );
 
-  const summary = summaryQuery.data ?? [];
+    const summary = summaryQuery.data ?? [];
 
-  return (
-    <div className="grid animate-rise gap-6">
-      <Section eyebrow="My week" title="Every hour gets a job too.">
-        <p className="max-w-prose text-base text-fg-muted">
-          The same six percentages, but spent in hours. Money buys things; hours build the
-          person who earns them.
-        </p>
-      </Section>
+    return (
+        <div className="grid animate-rise gap-6">
+            <Section eyebrow="My week" title="Every hour gets a job too.">
+                <p className="max-w-prose text-base text-fg-muted">
+                    The same six percentages, but spent in hours. Money buys things; hours build the
+                    person who earns them.
+                </p>
+            </Section>
 
-      {/* ── Live energy summary ── */}
-      {summary.length > 0 && (
-        <div className="flex flex-wrap gap-3">
-          {(summary as Array<{ metric: string; average7d: number; trend: string }>).map((s) => (
-            <div
-              key={s.metric}
-              className="flex items-center gap-3 rounded-xl border border-line bg-raised px-4 py-2.5"
-            >
-              <span className="font-mono text-xs font-medium tracking-wide uppercase text-fg-muted">
-                {METRIC_LABEL[s.metric] ?? s.metric}
-              </span>
-              <span className="font-mono text-base font-semibold text-fg">
-                {Math.round(s.average7d)}
-              </span>
-              <span className={cn('font-mono text-xs', TREND_CLASS[s.trend] ?? 'text-fg-muted')}>
-                {TREND_ICON[s.trend] ?? ''}
-              </span>
-            </div>
-          ))}
+            {/* ── Live energy summary ── */}
+            {summary.length > 0 && (
+                <div className="flex flex-wrap gap-3">
+                    {(summary as Array<{ metric: string; average7d: number; trend: string }>).map(
+                        s => (
+                            <div
+                                key={s.metric}
+                                className="flex items-center gap-3 rounded-xl border border-line bg-raised px-4 py-2.5">
+                                <span className="font-mono text-xs font-medium tracking-wide text-fg-muted uppercase">
+                                    {METRIC_LABEL[s.metric] ?? s.metric}
+                                </span>
+                                <span className="font-mono text-base font-semibold text-fg">
+                                    {Math.round(s.average7d)}
+                                </span>
+                                <span
+                                    className={cn(
+                                        'font-mono text-xs',
+                                        TREND_CLASS[s.trend] ?? 'text-fg-muted'
+                                    )}>
+                                    {TREND_ICON[s.trend] ?? ''}
+                                </span>
+                            </div>
+                        )
+                    )}
+                </div>
+            )}
+
+            <Card className="grid gap-5 p-6">
+                {/* ── 168-hour overview bar ── */}
+                <div>
+                    <Eyebrow>Your week has 168 hours</Eyebrow>
+                    <div className="mt-3 flex h-3 gap-0.5 overflow-hidden rounded-full">
+                        {WEEK_WHOLE.map(w => (
+                            <span
+                                key={w.name}
+                                title={`${w.name} — ${w.hours}`}
+                                className="block h-full"
+                                style={{ width: `${w.pct}%`, background: w.color }}
+                            />
+                        ))}
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-4">
+                        {WEEK_WHOLE.map(w => (
+                            <span
+                                key={w.name}
+                                className="flex items-baseline gap-2 font-mono text-xs text-fg-muted">
+                                <span
+                                    className="size-2 rounded-sm"
+                                    style={{ background: w.color }}
+                                />
+                                {w.name} {w.hours}
+                            </span>
+                        ))}
+                    </div>
+                    <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-muted">
+                        Of those 168 hours you steer about {STEERED_HOURS} yourself. The rest goes
+                        to sleep, work, and everything that happens without a choice.
+                    </p>
+                </div>
+
+                {/* ── Steered-hours slider ── */}
+                <div className="flex flex-wrap items-center gap-4 border-t border-line pt-5">
+                    <Eyebrow className="whitespace-nowrap text-accent">Of which you steer</Eyebrow>
+                    <input
+                        type="range"
+                        min={8}
+                        max={70}
+                        defaultValue={STEERED_HOURS}
+                        className="min-w-50 flex-1 accent-accent"
+                        readOnly
+                    />
+                    <span className="font-display text-3xl font-semibold text-accent tabular-nums">
+                        {STEERED_HOURS}h
+                    </span>
+                </div>
+
+                {/* ── Per-jar hour cards ── */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                    {JAR_META.map(j => {
+                        const hours = Math.round((STEERED_HOURS * j.pct) / 100);
+                        return (
+                            <div
+                                key={j.key}
+                                className={cn(
+                                    'grid gap-2 rounded-xl border border-t-4 border-line bg-raised p-4',
+                                    JAR_BORDER[j.key]
+                                )}>
+                                <span
+                                    className={cn(
+                                        'flex items-center gap-2 font-mono text-xs font-medium tracking-wider uppercase',
+                                        j.text
+                                    )}>
+                                    <span aria-hidden>{j.icon}</span>
+                                    {j.name}
+                                </span>
+                                <span className="flex items-baseline gap-2">
+                                    <span className="font-display text-2xl font-semibold text-fg tabular-nums">
+                                        {hours}h
+                                    </span>
+                                    <span className="font-mono text-xs text-fg-faint">
+                                        {j.pct}%
+                                    </span>
+                                </span>
+                                <span className="text-sm leading-snug text-fg-muted">
+                                    {j.subtitle}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* ── Where time and money disagree ── */}
+                <div className="border-t border-line pt-5">
+                    <Eyebrow className="text-accent">✦ Where time and money diverge</Eyebrow>
+                    <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-secondary">
+                        You give Play 10% of your money but only{' '}
+                        {Math.round((Math.round((STEERED_HOURS * 10) / 100) / STEERED_HOURS) * 100)}
+                        % of your steerable hours. That is not failure — it is a signal that your
+                        joy lives mainly in small impulses, not planned blocks.
+                    </p>
+                </div>
+            </Card>
         </div>
-      )}
-
-      <Card className="grid gap-5 p-6">
-        {/* ── 168-hour overview bar ── */}
-        <div>
-          <Eyebrow>Your week has 168 hours</Eyebrow>
-          <div className="mt-3 flex h-3 overflow-hidden rounded-full gap-0.5">
-            {WEEK_WHOLE.map((w) => (
-              <span
-                key={w.name}
-                title={`${w.name} — ${w.hours}`}
-                className="block h-full"
-                style={{ width: `${w.pct}%`, background: w.color }}
-              />
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-4">
-            {WEEK_WHOLE.map((w) => (
-              <span key={w.name} className="flex items-baseline gap-2 font-mono text-xs text-fg-muted">
-                <span className="size-2 rounded-sm" style={{ background: w.color }} />
-                {w.name} {w.hours}
-              </span>
-            ))}
-          </div>
-          <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-muted">
-            Of those 168 hours you steer about {STEERED_HOURS} yourself. The rest goes to sleep,
-            work, and everything that happens without a choice.
-          </p>
-        </div>
-
-        {/* ── Steered-hours slider ── */}
-        <div className="flex flex-wrap items-center gap-4 border-t border-line pt-5">
-          <Eyebrow className="whitespace-nowrap text-accent">Of which you steer</Eyebrow>
-          <input
-            type="range"
-            min={8}
-            max={70}
-            defaultValue={STEERED_HOURS}
-            className="min-w-50 flex-1 accent-accent"
-            readOnly
-          />
-          <span className="font-display text-3xl font-semibold tabular-nums text-accent">
-            {STEERED_HOURS}h
-          </span>
-        </div>
-
-        {/* ── Per-jar hour cards ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {JAR_META.map((j) => {
-            const hours = Math.round((STEERED_HOURS * j.pct) / 100);
-            return (
-              <div
-                key={j.key}
-                className={cn(
-                  'grid gap-2 rounded-xl border border-line border-t-4 bg-raised p-4',
-                  JAR_BORDER[j.key],
-                )}
-              >
-                <span className={cn('flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider', j.text)}>
-                  <span aria-hidden>{j.icon}</span>
-                  {j.name}
-                </span>
-                <span className="flex items-baseline gap-2">
-                  <span className="font-display text-2xl font-semibold tabular-nums text-fg">{hours}h</span>
-                  <span className="font-mono text-xs text-fg-faint">{j.pct}%</span>
-                </span>
-                <span className="text-sm leading-snug text-fg-muted">{j.subtitle}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* ── Where time and money disagree ── */}
-        <div className="border-t border-line pt-5">
-          <Eyebrow className="text-accent">✦ Where time and money diverge</Eyebrow>
-          <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-secondary">
-            You give Play 10% of your money but only{' '}
-            {Math.round((Math.round((STEERED_HOURS * 10) / 100) / STEERED_HOURS) * 100)}% of your
-            steerable hours. That is not failure — it is a signal that your joy lives mainly in small
-            impulses, not planned blocks.
-          </p>
-        </div>
-      </Card>
-    </div>
-  );
+    );
 }

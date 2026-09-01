@@ -14,10 +14,10 @@ import { SoulModule } from './soul/soul.module.js';
  *   Coach     — advisory that reads across all four products
  */
 export const FeatureModules = [
-  HouseholdModule,
-  MoneyModule,
-  GrowthModule,
-  EnergyModule,
-  SoulModule,
-  CoachModule,
+    HouseholdModule,
+    MoneyModule,
+    GrowthModule,
+    EnergyModule,
+    SoulModule,
+    CoachModule,
 ];

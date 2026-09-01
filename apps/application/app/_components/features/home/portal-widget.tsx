@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { AccentCard } from '@rumbelo/ui';
 
 export interface PortalWidgetStat {
-  label: string;
-  value: string;
-  color?: string;
+    label: string;
+    value: string;
+    color?: string;
 }
 
 /**
@@ -16,61 +16,57 @@ export interface PortalWidgetStat {
  * Ziel) — the Money portal is handled by HeroKluis higher up on the page.
  */
 export function PortalWidget({
-  tint,
-  icon,
-  title,
-  href,
-  stats,
-  tagline,
+    tint,
+    icon,
+    title,
+    href,
+    stats,
+    tagline,
 }: {
-  tint: string;
-  icon: string;
-  title: string;
-  href: string;
-  stats: PortalWidgetStat[];
-  tagline: string;
+    tint: string;
+    icon: string;
+    title: string;
+    href: string;
+    stats: PortalWidgetStat[];
+    tagline: string;
 }) {
-  return (
-    <AccentCard tint={tint} className="flex h-full min-w-0 flex-col gap-3.5 p-5">
-      {/* Header row */}
-      <div className="flex items-center justify-between gap-3">
-        <span
-          className="flex items-center gap-2 font-mono text-xs font-medium tracking-widest uppercase"
-          style={{ color: tint }}
-        >
-          <span aria-hidden>{icon}</span>
-          {title}
-        </span>
-        <Link
-          href={href}
-          className="font-mono text-xs font-medium text-fg-faint transition-colors hover:text-accent"
-        >
-          Open ▸
-        </Link>
-      </div>
+    return (
+        <AccentCard tint={tint} className="flex h-full min-w-0 flex-col gap-3.5 p-5">
+            {/* Header row */}
+            <div className="flex items-center justify-between gap-3">
+                <span
+                    className="flex items-center gap-2 font-mono text-xs font-medium tracking-widest uppercase"
+                    style={{ color: tint }}>
+                    <span aria-hidden>{icon}</span>
+                    {title}
+                </span>
+                <Link
+                    href={href}
+                    className="font-mono text-xs font-medium text-fg-faint transition-colors hover:text-accent">
+                    Open ▸
+                </Link>
+            </div>
 
-      {/* Stat rows */}
-      <div className="grid">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0"
-          >
-            <span className="font-mono text-xs tracking-wide whitespace-nowrap text-fg-faint">
-              {s.label}
-            </span>
-            <span
-              className="font-display text-2xl leading-none font-semibold tracking-tight"
-              style={s.color ? { color: s.color } : { color: 'var(--color-fg)' }}
-            >
-              {s.value}
-            </span>
-          </div>
-        ))}
-      </div>
+            {/* Stat rows */}
+            <div className="grid">
+                {stats.map(s => (
+                    <div
+                        key={s.label}
+                        className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
+                        <span className="font-mono text-xs tracking-wide whitespace-nowrap text-fg-faint">
+                            {s.label}
+                        </span>
+                        <span
+                            className="font-display text-2xl leading-none font-semibold tracking-tight"
+                            style={s.color ? { color: s.color } : { color: 'var(--color-fg)' }}>
+                            {s.value}
+                        </span>
+                    </div>
+                ))}
+            </div>
 
-      {/* Tagline */}
-      <p className="text-sm leading-relaxed text-fg-muted">{tagline}</p>
-    </AccentCard>
-  );
+            {/* Tagline */}
+            <p className="text-sm leading-relaxed text-fg-muted">{tagline}</p>
+        </AccentCard>
+    );
 }

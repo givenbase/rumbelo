@@ -1,10 +1,10 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 export interface TenantContext {
-  userId: string;
-  /** Null only during household.onboard (user authenticated, org not yet created). */
-  householdId: string | null;
-  role: 'OWNER' | 'PARTNER' | 'VIEWER';
+    userId: string;
+    /** Null only during household.onboard (user authenticated, org not yet created). */
+    householdId: string | null;
+    role: 'OWNER' | 'PARTNER' | 'VIEWER';
 }
 
 /**
@@ -19,26 +19,26 @@ export const tenantStorage = new AsyncLocalStorage<TenantContext>();
 export const authHeadersStorage = new AsyncLocalStorage<Headers>();
 
 export function currentAuthHeaders(): Headers {
-  return authHeadersStorage.getStore() ?? new Headers();
+    return authHeadersStorage.getStore() ?? new Headers();
 }
 
 export function currentTenant(): TenantContext {
-  const ctx = tenantStorage.getStore();
-  if (!ctx) {
-    throw new Error(
-      'No tenant context. A household-scoped query ran outside a request — ' +
-        'wrap background jobs in tenantStorage.run().',
-    );
-  }
-  return ctx;
+    const ctx = tenantStorage.getStore();
+    if (!ctx) {
+        throw new Error(
+            'No tenant context. A household-scoped query ran outside a request — ' +
+                'wrap background jobs in tenantStorage.run().'
+        );
+    }
+    return ctx;
 }
 
 export function currentHouseholdId(): string {
-  const id = currentTenant().householdId;
-  if (!id) throw new Error('No household in tenant context');
-  return id;
+    const id = currentTenant().householdId;
+    if (!id) throw new Error('No household in tenant context');
+    return id;
 }
 
 export function currentUserId(): string {
-  return currentTenant().userId;
+    return currentTenant().userId;
 }

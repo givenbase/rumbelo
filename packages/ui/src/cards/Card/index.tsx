@@ -7,7 +7,7 @@ import type CardProps from './types';
 import cardClass from './styles';
 
 export function Card({ children, className }: CardProps) {
-  return <div className={cn(cardClass, className)}>{children}</div>;
+    return <div className={cn(cardClass, className)}>{children}</div>;
 }
 
 export type { CardProps };

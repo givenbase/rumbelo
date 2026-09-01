@@ -10,25 +10,27 @@ import type { TenantContext } from './tenant.context.js';
  */
 @Injectable()
 export class MembershipService {
-  constructor(private readonly em: EntityManager) {}
+    constructor(private readonly em: EntityManager) {}
 
-  async roleFor(userId: string, householdId: string): Promise<TenantContext['role'] | null> {
-    const rows = await this.em.getConnection().execute<{ role: string }[]>(
-      `SELECT role FROM public."member" WHERE "userId" = ? AND "organizationId" = ? LIMIT 1`,
-      [userId, householdId],
-    );
-    const raw = rows[0]?.role;
-    if (!raw) return null;
+    async roleFor(userId: string, householdId: string): Promise<TenantContext['role'] | null> {
+        const rows = await this.em
+            .getConnection()
+            .execute<{ role: string }[]>(
+                `SELECT role FROM public."member" WHERE "userId" = ? AND "organizationId" = ? LIMIT 1`,
+                [userId, householdId]
+            );
+        const raw = rows[0]?.role;
+        if (!raw) return null;
 
-    switch (raw.toLowerCase()) {
-      case 'owner':
-      case 'admin':
-        return 'OWNER';
-      case 'partner':
-      case 'member':
-        return 'PARTNER';
-      default:
-        return 'VIEWER';
+        switch (raw.toLowerCase()) {
+            case 'owner':
+            case 'admin':
+                return 'OWNER';
+            case 'partner':
+            case 'member':
+                return 'PARTNER';
+            default:
+                return 'VIEWER';
+        }
     }
-  }
 }
