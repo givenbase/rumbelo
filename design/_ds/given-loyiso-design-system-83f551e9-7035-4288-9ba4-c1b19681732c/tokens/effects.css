@@ -1,0 +1,26 @@
+:root {
+  /* Elevation — deep shadows for the obsidian ground */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 6px 20px rgba(0,0,0,0.45);
+  --shadow-lg: 0 18px 50px rgba(0,0,0,0.55);
+  --shadow-xl: 0 40px 90px rgba(0,0,0,0.6);
+
+  /* Signature glows — gold warmth + high-frequency halo */
+  --glow-gold:   0 0 0 1px rgba(201,162,75,0.28), 0 10px 40px rgba(201,162,75,0.18);
+  --glow-freq:   0 0 40px rgba(122,92,255,0.35);
+  --glow-inset:  inset 0 1px 0 rgba(255,255,255,0.06);
+
+  /* Hairline metallic ring for cards/buttons */
+  --ring-gold:  inset 0 0 0 1px rgba(201,162,75,0.35); /* @kind shadow */
+  --ring-hair:  inset 0 0 0 1px rgba(255,255,255,0.08); /* @kind shadow */
+
+  /* Motion */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --ease-in-out:cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast:   140ms; /* @kind other */
+  --dur-base:   240ms; /* @kind other */
+  --dur-slow:   480ms; /* @kind other */
+
+  /* Blur */
+  --blur-glass: saturate(140%) blur(14px); /* @kind other */
+}

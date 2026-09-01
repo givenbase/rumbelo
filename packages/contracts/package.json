@@ -1,0 +1,56 @@
+{
+  "name": "@rumbelo/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/add-use-client.mjs",
+    "dev": "tsup --watch --onSuccess \"node scripts/add-use-client.mjs\"",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@orpc/client": "^1.13.0",
+    "@orpc/contract": "^1.13.0",
+    "@orpc/server": "^1.13.0",
+    "@orpc/tanstack-query": "^1.13.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@rumbelo/typescript-config": "workspace:*",
+    "@tanstack/react-query": "^5.90.12",
+    "@types/react": "19.2.18",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5",
+    "react": "^19"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  }
+}

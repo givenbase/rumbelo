@@ -1,0 +1,150 @@
+/*
+ * Single source of truth for Rumbelo design tokens (Tailwind v4 @theme).
+ * All hex/rgb values live here — apps import via globals.css only.
+ */
+
+@theme {
+  /* Fonts — next/font sets --font-* in each app's layout.tsx */
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Surfaces — light */
+  --color-bg: #edeff3;
+  --color-bg-app: #f5f7f9;
+  --color-surface: #ffffff;
+  --color-raised: #f4f6f8;
+  --color-sunken: #e2e6ee;
+  --color-line: rgb(14 17 22 / 0.1);
+  --color-line-strong: rgb(14 17 22 / 0.2);
+
+  /* Foreground */
+  --color-fg: #0e1116;
+  --color-fg-strong: #1e2634;
+  --color-fg-secondary: #3e4859;
+  --color-fg-muted: #5a6474;
+  --color-fg-faint: #5f6a78;
+
+  /* Accent — indigo */
+  --color-accent: #4338ca;
+  --color-accent-hover: #4f46e5;
+  --color-accent-press: #312e81;
+  --color-accent-soft: rgb(67 56 202 / 0.09);
+  --color-on-accent: #ffffff;
+
+  /* Status */
+  --color-success: #047857;
+  --color-warning: #9a4e08;
+  --color-danger: #c81e1e;
+
+  /* Jars + portals */
+  --color-jar-nec: #64748b;
+  --color-jar-ff: #4338ca;
+  --color-jar-edu: #0e7490;
+  --color-jar-lts: #0369a1;
+  --color-jar-play: #b45309;
+  --color-jar-give: #15803d;
+  --color-portal-soul: #7c3aed;
+
+  --color-scrim: rgb(14 17 22 / 0.42);
+  --color-chrome: rgb(255 255 255 / 0.86);
+
+  --radius-lg: 16px;
+  --radius-md: calc(var(--radius-lg) - 4px);
+  --radius-sm: calc(var(--radius-lg) - 8px);
+  --shadow-md: 0 1px 2px rgb(14 17 22 / 0.05), 0 6px 16px rgb(14 17 22 / 0.06);
+  --shadow-lg: 0 2px 4px rgb(14 17 22 / 0.06), 0 14px 34px rgb(14 17 22 / 0.1);
+  --shadow-xl: 0 30px 70px rgb(14 17 22 / 0.18);
+  --shadow-glow: 0 8px 26px rgb(67 56 202 / 0.16);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise: rise 380ms var(--ease-out) both;
+
+  --gradient-accent: linear-gradient(
+    135deg,
+    var(--color-accent-hover) 0%,
+    var(--color-accent) 58%,
+    var(--color-accent-press) 100%
+  );
+  --gradient-page: radial-gradient(90% 46% at 50% 0%, rgb(99 102 241 / 0.13), transparent 70%);
+
+  /* shadcn semantic aliases — var() only, no duplicate hex */
+  --color-background: var(--color-bg-app);
+  --color-foreground: var(--color-fg);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-fg);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-fg);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-on-accent);
+  --color-secondary: var(--color-raised);
+  --color-secondary-foreground: var(--color-fg);
+  --color-muted: var(--color-raised);
+  --color-muted-foreground: var(--color-fg-muted);
+  --color-accent-foreground: var(--color-on-accent);
+  --color-destructive: var(--color-danger);
+  --color-destructive-foreground: var(--color-on-accent);
+  --color-border: var(--color-line);
+  --color-input: var(--color-line-strong);
+  --color-ring: var(--color-accent);
+  --radius: var(--radius-lg);
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes drift {
+    0% {
+      transform: translate3d(-4%, -2%, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(4%, 3%, 0) scale(1.08);
+    }
+    100% {
+      transform: translate3d(-4%, -2%, 0) scale(1);
+    }
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(30vh);
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.1;
+    }
+    82% {
+      opacity: 0.1;
+    }
+    100% {
+      transform: translateY(-46vh);
+      opacity: 0;
+    }
+  }
+
+  @keyframes tickerX {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-9px);
+    }
+  }
+}

@@ -1,0 +1,75 @@
+import Link from 'next/link';
+import { AccentCard } from '@rumbelo/ui';
+
+export interface PortalWidgetStat {
+  label: string;
+  value: string;
+  color?: string;
+}
+
+/**
+ * Portal preview widget (design: Kluis Finance App.dc.html:468-517).
+ *
+ * A compact top-accent-bar card showing one portal's key metrics and a
+ * single tagline. Used in a row of three on the dashboard (Groei, Energie,
+ * Ziel) — the Money portal is handled by HeroKluis higher up on the page.
+ */
+export function PortalWidget({
+  tint,
+  icon,
+  title,
+  href,
+  stats,
+  tagline,
+}: {
+  tint: string;
+  icon: string;
+  title: string;
+  href: string;
+  stats: PortalWidgetStat[];
+  tagline: string;
+}) {
+  return (
+    <AccentCard tint={tint} className="flex min-w-50 flex-1 flex-col gap-3.5 p-5.5">
+      {/* Header row */}
+      <div className="flex items-center justify-between gap-3">
+        <span
+          className="flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.16em] uppercase"
+          style={{ color: tint }}
+        >
+          <span aria-hidden>{icon}</span>
+          {title}
+        </span>
+        <Link
+          href={href}
+          className="font-mono text-[11px] font-medium text-fg-faint transition-colors hover:text-accent"
+        >
+          Open ▸
+        </Link>
+      </div>
+
+      {/* Stat rows */}
+      <div className="grid">
+        {stats.map((s) => (
+          <div
+            key={s.label}
+            className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0"
+          >
+            <span className="font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-fg-faint">
+              {s.label}
+            </span>
+            <span
+              className="font-display text-[22px] leading-none font-semibold tracking-tight"
+              style={s.color ? { color: s.color } : { color: 'var(--color-fg)' }}
+            >
+              {s.value}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Tagline */}
+      <p className="text-[12.5px] leading-relaxed text-fg-muted">{tagline}</p>
+    </AccentCard>
+  );
+}

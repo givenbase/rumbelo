@@ -1,0 +1,20 @@
+import { Injectable } from '@nestjs/common';
+import { EntityManager } from '@mikro-orm/postgresql';
+import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
+import { IncomeMilestone } from './entities/index.js';
+
+@Injectable()
+export class MilestoneService {
+  private readonly repo: ScopedRepository<IncomeMilestone>;
+  constructor(private readonly em: EntityManager) {
+    this.repo = new ScopedRepository(em, IncomeMilestone);
+  }
+
+  async list() {
+    const rows = await this.repo.find();
+    return rows.map((m) => ({
+      id: m.id, householdId: m.householdId, label: m.label,
+      targetMonthly: Number(m.targetMonthly), reachedOn: m.reachedOn,
+    }));
+  }
+}

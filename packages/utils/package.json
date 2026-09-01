@@ -1,0 +1,23 @@
+{
+  "name": "@rumbelo/utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@rumbelo/eslint-config": "workspace:*",
+    "@rumbelo/typescript-config": "workspace:*",
+    "eslint": "10.9.1",
+    "typescript": "5.9.3"
+  }
+}

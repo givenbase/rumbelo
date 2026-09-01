@@ -1,0 +1,54 @@
+{
+  "name": "@rumbelo/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./forms": "./src/forms/index.ts",
+    "./cards": "./src/cards/index.ts",
+    "./feedback": "./src/feedback/index.ts",
+    "./layout": "./src/layout/index.ts",
+    "./display": "./src/display/index.ts",
+    "./navigation": "./src/navigation/index.ts",
+    "./lib/utils": "./src/lib/utils.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@rumbelo/config": "workspace:*",
+    "@rumbelo/utils": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.511.0",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.6.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.86.0",
+    "sonner": "^2.0.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@rumbelo/eslint-config": "workspace:*",
+    "@rumbelo/typescript-config": "workspace:*",
+    "@types/node": "26.3.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "eslint": "10.9.1",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

@@ -1,0 +1,8 @@
+/* Webfonts — sourced from Google Fonts.
+   NOTE: No brand font files were provided, so these are curated substitutions.
+   - Cormorant Garamond  → spiritual, editorial display serif
+   - Space Grotesk       → modern technical sans (voice of a programmer)
+   - JetBrains Mono      → code / frequency mono
+   If you have licensed brand fonts, drop the .woff2 files in assets/fonts and
+   replace the @import below with local @font-face rules. */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');

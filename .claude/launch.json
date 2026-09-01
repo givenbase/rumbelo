@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "application",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@rumbelo/application", "run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "website",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@rumbelo/website", "run", "dev"],
+      "port": 3001
+    }
+  ]
+}

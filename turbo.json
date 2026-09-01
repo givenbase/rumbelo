@@ -1,0 +1,39 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
+  "globalDependencies": ["**/.env.*local", ".env"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"],
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "DATABASE_URL",
+        "DATABASE_SSL",
+        "REDIS_URL",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "APP_URL",
+        "WEB_URL",
+        "API_URL",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "FEATURE_BANK_SYNC",
+        "ENABLE_BANKING_APP_ID",
+        "ENABLE_BANKING_PRIVATE_KEY",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "ANTHROPIC_API_KEY",
+        "SENTRY_DSN"
+      ]
+    },
+    "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
+    "start": { "dependsOn": ["^build"], "cache": false, "persistent": true },
+    "lint": { "dependsOn": ["^lint"] },
+    "check-types": { "dependsOn": ["^build"] },
+    "test": { "dependsOn": ["^build"] },
+    "clean": { "cache": false }
+  }
+}

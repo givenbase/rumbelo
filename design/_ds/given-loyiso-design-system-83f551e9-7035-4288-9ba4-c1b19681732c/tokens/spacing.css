@@ -1,0 +1,27 @@
+:root {
+  /* 4px base spatial scale */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* Layout */
+  --container:    1200px; /* @kind spacing */
+  --container-nar:820px; /* @kind spacing */
+  --gutter:       24px; /* @kind spacing */
+
+  /* Radii — soft, jewel-like */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-2xl: 32px;
+  --radius-pill:999px;
+}

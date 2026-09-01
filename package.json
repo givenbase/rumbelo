@@ -1,0 +1,40 @@
+{
+  "name": "rumbelo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:app": "turbo run dev --filter=@rumbelo/application --filter=@rumbelo/backend",
+    "dev:web": "turbo run dev --filter=@rumbelo/website",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "infra:up": "docker compose -f devops/docker-compose.dev.yml up -d",
+    "infra:down": "docker compose -f devops/docker-compose.dev.yml down",
+    "db:migrate": "pnpm --filter @rumbelo/backend run db:migrate",
+    "db:fresh": "pnpm --filter @rumbelo/backend run db:fresh",
+    "db:seed": "pnpm --filter @rumbelo/backend run db:seed",
+    "auth:migrate": "pnpm --filter @rumbelo/backend run auth:migrate",
+    "rename": "node scripts/rename-project.mjs"
+  },
+  "devDependencies": {
+    "prettier": "3.9.6",
+    "turbo": "^2.10.12",
+    "typescript": "5.9.3"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "version": "0.1.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "overrides": {
+      "fastify": "5.11.3"
+    }
+  }
+}

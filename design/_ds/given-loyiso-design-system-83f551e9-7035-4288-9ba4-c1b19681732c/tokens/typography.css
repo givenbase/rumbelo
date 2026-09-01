@@ -1,0 +1,36 @@
+:root {
+  /* Families */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-sans:    'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Type scale (fluid-ish, px) */
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
+  --text-md:   18px;
+  --text-lg:   22px;
+  --text-xl:   28px;
+  --text-2xl:  36px;
+  --text-3xl:  48px;
+  --text-4xl:  64px;
+  --text-5xl:  88px;
+
+  /* Weights */
+  --fw-regular: 400; /* @kind font */
+  --fw-medium:  500; /* @kind font */
+  --fw-semibold:600; /* @kind font */
+  --fw-bold:    700; /* @kind font */
+
+  /* Line heights */
+  --lh-tight:   1.05; /* @kind other */
+  --lh-snug:    1.2; /* @kind other */
+  --lh-normal:  1.5; /* @kind other */
+  --lh-relaxed: 1.7; /* @kind other */
+
+  /* Letter spacing */
+  --ls-tight:  -0.02em; /* @kind other */
+  --ls-normal: 0; /* @kind other */
+  --ls-wide:   0.04em; /* @kind other */
+  --ls-eyebrow:0.22em; /* @kind other */
+}
