@@ -16,10 +16,11 @@ const EnvSchema = z.object({
     REDIS_URL: z.string().optional(),
 
     BETTER_AUTH_SECRET: z.string().min(32, 'Use at least 32 chars; this signs sessions'),
-    BETTER_AUTH_URL: z.url(),
 
-    APP_URL: z.url(),
-    WEB_URL: z.url(),
+    /** Public origins — mirror NEXT_PUBLIC_DOMAIN_* in the Next apps. */
+    DOMAIN_APP: z.url(),
+    DOMAIN_WEB: z.url(),
+    DOMAIN_BACK: z.url(),
 
     /** Bank sync stays off until an aggregator is configured. CSV import is always on. */
     FEATURE_BANK_SYNC: z

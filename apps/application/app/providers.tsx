@@ -4,7 +4,7 @@ import { ApiProvider } from '@rumbelo/contracts/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 
-import { env } from '@/app/_utils/get-env';
+import { backendRpcUrl } from '@/app/_utils/portal-urls';
 import { AppShellProvider } from '@/components/features/shell/app-shell-context';
 import { AuthProvider } from '@/components/features/shell/auth-provider';
 
@@ -28,7 +28,7 @@ export function Providers({ children }: { children: ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <ApiProvider url={env.NEXT_PUBLIC_API_URL}>
+                <ApiProvider url={backendRpcUrl()}>
                     <AppShellProvider>{children}</AppShellProvider>
                 </ApiProvider>
             </AuthProvider>

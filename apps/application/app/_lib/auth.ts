@@ -2,10 +2,10 @@ import { createAuthClient } from 'better-auth/react';
 
 import { organizationClient } from 'better-auth/client/plugins';
 
-import { env } from '@/app/_utils/get-env';
+import { backendAuthUrl } from '@/app/_utils/portal-urls';
 
 const client = createAuthClient({
-    baseURL: env.NEXT_PUBLIC_AUTH_URL,
+    baseURL: backendAuthUrl(),
     plugins: [organizationClient()],
 });
 

@@ -4,7 +4,7 @@ type Req = FastifyRequest & { headers: Record<string, string | string[] | undefi
 
 export function toAuthHeaders(
     req: Req,
-    appUrl = process.env.APP_URL ?? 'http://localhost:3000'
+    appUrl = process.env.DOMAIN_APP ?? 'http://localhost:3000'
 ): Headers {
     const h = new Headers();
     for (const [key, value] of Object.entries(req.headers)) {

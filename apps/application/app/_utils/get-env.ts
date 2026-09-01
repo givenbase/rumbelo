@@ -4,39 +4,40 @@ import { z } from 'zod';
 
 const isProdBuild = process.env.NODE_ENV === 'production' && !process.env.SKIP_ENV_VALIDATION;
 
-/** Required URL in production builds; localhost default in local/dev. */
-const publicUrl = (devDefault: string) => (isProdBuild ? z.url() : z.url().default(devDefault));
+const portalOrigin = (devDefault: string) =>
+    isProdBuild ? z.url() : z.url().default(devDefault);
 
 /**
- * Typed env for `@rumbelo/application` via `@t3-oss/env-nextjs` (same pattern as Meltizo / Galighticus).
+ * Three public origins — same shape for every app:
  *
- * - Client vars must be `NEXT_PUBLIC_*`
- * - Access via `env.NEXT_PUBLIC_…` — never raw `process.env` for declared keys
- * - Set `SKIP_ENV_VALIDATION=1` to skip (Docker / CI without full env)
+ *   NEXT_PUBLIC_DOMAIN_APP  → product
+ *   NEXT_PUBLIC_DOMAIN_WEB  → marketing
+ *   NEXT_PUBLIC_DOMAIN_BACK → API (append /rpc or /api/auth in code)
  */
 export const env = createEnv({
     client: {
-        /* -------------------- API / AUTH -------------------- */
-        NEXT_PUBLIC_API_URL: publicUrl('http://localhost:3002/rpc'),
-        NEXT_PUBLIC_AUTH_URL: publicUrl('http://localhost:3002/api/auth'),
+        NEXT_PUBLIC_DOMAIN_APP: portalOrigin('http://localhost:3000'),
+        NEXT_PUBLIC_DOMAIN_WEB: portalOrigin('http://localhost:3001'),
+        NEXT_PUBLIC_DOMAIN_BACK: portalOrigin('http://localhost:3002'),
 
-        /* -------------------- DESIGN PREVIEW -------------------- */
-        /** Force fixtures even when signed in. Accepts true/false (string). */
         NEXT_PUBLIC_PREVIEW_MODE: z.enum(['true', 'false']).optional(),
-        /** Plan override: grip | ritme | groei | all | max | full */
         NEXT_PUBLIC_PREVIEW_PLAN: z
             .enum(['grip', 'ritme', 'groei', 'all', 'max', 'full'])
             .optional(),
 
-        /* -------------------- MONITORING (optional) -------------------- */
         NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
     },
 
     emptyStringAsUndefined: true,
 
     runtimeEnv: {
-        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
+        NEXT_PUBLIC_DOMAIN_APP:
+            process.env.NEXT_PUBLIC_DOMAIN_APP ?? process.env.NEXT_PUBLIC_APP_DOMAIN,
+        NEXT_PUBLIC_DOMAIN_WEB:
+            process.env.NEXT_PUBLIC_DOMAIN_WEB ?? process.env.NEXT_PUBLIC_WEB_DOMAIN,
+        NEXT_PUBLIC_DOMAIN_BACK:
+            process.env.NEXT_PUBLIC_DOMAIN_BACK ?? process.env.NEXT_PUBLIC_BACKEND_DOMAIN,
+
         NEXT_PUBLIC_PREVIEW_MODE: process.env.NEXT_PUBLIC_PREVIEW_MODE,
         NEXT_PUBLIC_PREVIEW_PLAN: process.env.NEXT_PUBLIC_PREVIEW_PLAN,
         NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,

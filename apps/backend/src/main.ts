@@ -40,7 +40,7 @@ async function bootstrap() {
     await app.register(cookie, { secret: env.BETTER_AUTH_SECRET });
     await app.register(cors, {
         // Credentials + wildcard origin is not permitted; enumerate the two frontends.
-        origin: [env.APP_URL, env.WEB_URL],
+        origin: [env.DOMAIN_APP, env.DOMAIN_WEB],
         credentials: true,
         allowedHeaders: ['content-type', 'authorization', 'x-household-id'],
     });
