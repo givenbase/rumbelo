@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DEFAULT_JAR_SPLIT, type JarKey } from '@rumbelo/contracts';
 import { useApi, useApiClient } from '@rumbelo/contracts/react';
@@ -32,6 +32,43 @@ const JAR_COLOR: Record<string, string> = Object.fromEntries(
   JAR_META.map((j) => [j.key, j.color]),
 );
 
+function ProfileNameCard({
+  defaultName,
+  userEmail,
+  savePending,
+  onSave,
+}: {
+  defaultName: string;
+  userEmail: string;
+  savePending: boolean;
+  onSave: (name: string) => void;
+}) {
+  const [name, setName] = useState(defaultName);
+
+  return (
+    <Card className="grid gap-4">
+      <Field label="Name" htmlFor="name">
+        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+      </Field>
+      <Field
+        label="Email address"
+        htmlFor="email"
+        hint="Changing email requires confirmation — coming later via better-auth."
+      >
+        <Input id="email" type="email" value={userEmail} disabled />
+      </Field>
+      <div className="flex justify-end">
+        <Button
+          disabled={savePending || !name.trim() || name.trim() === defaultName}
+          onClick={() => onSave(name.trim())}
+        >
+          {savePending ? 'Working…' : 'Save'}
+        </Button>
+      </div>
+    </Card>
+  );
+}
+
 export function AccountSettings() {
   const api = useApi();
   const client = useApiClient();
@@ -41,14 +78,9 @@ export function AccountSettings() {
   const live = isLiveData(householdId);
 
   const user = session?.user;
-  const [name, setName] = useState(user?.name ?? '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [inviteEmail, setInviteEmail] = useState('');
-
-  useEffect(() => {
-    setName(user?.name ?? '');
-  }, [user?.name]);
 
   const membersQuery = useLiveQuery(
     api.household.members.queryOptions({ input: { householdId: householdId! } }),
@@ -57,15 +89,15 @@ export function AccountSettings() {
   );
 
   const saveProfile = useMutation({
-    mutationFn: async () => {
-      const result = await updateUser({ name: name.trim() });
-      if (result.error) throw new Error(result.error.message ?? 'Profiel opslaan mislukt');
+    mutationFn: async (nextName: string) => {
+      const result = await updateUser({ name: nextName });
+      if (result.error) throw new Error(result.error.message ?? 'Profile save failed');
     },
     onSuccess: async () => {
       await refreshSession();
-      showToast('Profiel opgeslagen', 'success');
+      showToast('Profile saved', 'success');
     },
-    onError: () => showToast('Profiel opslaan mislukt', 'error'),
+    onError: () => showToast('Profile save failed', 'error'),
   });
 
   const savePassword = useMutation({
@@ -75,14 +107,14 @@ export function AccountSettings() {
         newPassword,
         revokeOtherSessions: true,
       });
-      if (result.error) throw new Error(result.error.message ?? 'Wachtwoord wijzigen mislukt');
+      if (result.error) throw new Error(result.error.message ?? 'Password change failed');
     },
     onSuccess: () => {
       setCurrentPassword('');
       setNewPassword('');
-      showToast('Wachtwoord gewijzigd', 'success');
+      showToast('Password changed', 'success');
     },
-    onError: () => showToast('Wachtwoord wijzigen mislukt', 'error'),
+    onError: () => showToast('Password change failed', 'error'),
   });
 
   const invite = useMutation({
@@ -97,39 +129,26 @@ export function AccountSettings() {
     onSuccess: () => {
       setInviteEmail('');
       void queryClient.invalidateQueries({ queryKey: api.household.members.key() });
-      showToast('Uitnodiging verstuurd', 'success');
+      showToast('Invitation sent', 'success');
     },
-    onError: () => showToast('Uitnodigen mislukt', 'error'),
+    onError: () => showToast('Invitation failed', 'error'),
   });
 
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Account" title="Profiel" />
+      <Section eyebrow="Account" title="Profile" />
+
+      <ProfileNameCard
+        key={user?.id ?? 'guest'}
+        defaultName={user?.name ?? ''}
+        userEmail={user?.email ?? ''}
+        savePending={saveProfile.isPending}
+        onSave={(nextName) => saveProfile.mutate(nextName)}
+      />
 
       <Card className="grid gap-4">
-        <Field label="Naam" htmlFor="name">
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-        </Field>
-        <Field
-          label="E-mailadres"
-          htmlFor="email"
-          hint="E-mail wijzigen vraagt om bevestiging — komt later via better-auth."
-        >
-          <Input id="email" type="email" value={user?.email ?? ''} disabled />
-        </Field>
-        <div className="flex justify-end">
-          <Button
-            disabled={saveProfile.isPending || !name.trim() || name.trim() === user?.name}
-            onClick={() => saveProfile.mutate()}
-          >
-            {saveProfile.isPending ? 'Bezig…' : 'Opslaan'}
-          </Button>
-        </div>
-      </Card>
-
-      <Card className="grid gap-4">
-        <Eyebrow className="mb-0">Wachtwoord</Eyebrow>
-        <Field label="Huidig wachtwoord" htmlFor="cur-pw">
+        <Eyebrow className="mb-0">Password</Eyebrow>
+        <Field label="Current password" htmlFor="cur-pw">
           <Input
             id="cur-pw"
             type="password"
@@ -139,7 +158,7 @@ export function AccountSettings() {
             autoComplete="current-password"
           />
         </Field>
-        <Field label="Nieuw wachtwoord" htmlFor="new-pw" hint="Minimaal 8 tekens.">
+        <Field label="New password" htmlFor="new-pw" hint="Minimum 8 characters.">
           <Input
             id="new-pw"
             type="password"
@@ -155,26 +174,26 @@ export function AccountSettings() {
             disabled={savePassword.isPending || currentPassword.length < 1 || newPassword.length < 8}
             onClick={() => savePassword.mutate()}
           >
-            {savePassword.isPending ? 'Bezig…' : 'Wachtwoord wijzigen'}
+            {savePassword.isPending ? 'Working…' : 'Change password'}
           </Button>
         </div>
       </Card>
 
       <Card>
-        <Eyebrow className="mb-3">Tweestapsverificatie</Eyebrow>
+        <Eyebrow className="mb-3">Two-step verification</Eyebrow>
         <Toggle
           checked={false}
-          label="Authenticatie-app (TOTP)"
-          hint="Scan de QR-code met Google Authenticator, 1Password of vergelijkbaar."
+          label="Authenticator app (TOTP)"
+          hint="Scan the QR code with Google Authenticator, 1Password, or similar."
           disabled
         />
-        <StubNotice what="2FA-setup via better-auth TOTP — komt binnenkort." />
+        <StubNotice what="2FA setup via better-auth TOTP — coming soon." />
       </Card>
 
       <Card className="grid gap-4">
-        <Eyebrow className="mb-0">Huishouden</Eyebrow>
+        <Eyebrow className="mb-0">Household</Eyebrow>
         <p className="text-sm text-fg-muted">
-          Leden delen potten, regels en transactiegeschiedenis. Ieder lid logt in met een eigen account.
+          Members share jars, rules, and transaction history. Each member signs in with their own account.
         </p>
         {live && (membersQuery.data?.length ?? 0) > 0 ? (
           <ul className="divide-y divide-line rounded-lg border border-line">
@@ -189,9 +208,9 @@ export function AccountSettings() {
             ))}
           </ul>
         ) : (
-          <StubNotice what="Leden verschijnen hier zodra je een huishouden hebt." />
+          <StubNotice what="Members appear here once you have a household." />
         )}
-        <Field label="Uitnodigen (e-mail)" htmlFor="invite-email">
+        <Field label="Invite (email)" htmlFor="invite-email">
           <Input
             id="invite-email"
             type="email"
@@ -207,17 +226,17 @@ export function AccountSettings() {
             disabled={!live || invite.isPending || !inviteEmail.includes('@')}
             onClick={() => invite.mutate()}
           >
-            {invite.isPending ? 'Bezig…' : 'Uitnodigen'}
+            {invite.isPending ? 'Working…' : 'Invite'}
           </Button>
         </div>
       </Card>
 
       <DangerZone
-        title="Account verwijderen"
-        body="Je huishouden, potten en volledige transactiegeschiedenis worden verwijderd. Dit kan niet ongedaan worden gemaakt — exporteer eerst je data."
-        action="Account verwijderen"
+        title="Delete account"
+        body="Your household, jars, and full transaction history will be deleted. This cannot be undone — export your data first."
+        action="Delete account"
         onAction={() =>
-          showToast('Account verwijderen komt later — exporteer eerst je data.', 'info')
+          showToast('Account deletion coming soon — export your data first.', 'info')
         }
       />
     </div>
@@ -248,13 +267,13 @@ export function JarsSettings() {
     live,
   );
 
-  const jars = jarsQuery.data ?? [];
-  const [pct, setPct] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    if (!jars.length) return;
-    setPct(Object.fromEntries(jars.map((j) => [j.id, j.percentage])));
-  }, [jars]);
+  const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
+  const serverPct = useMemo(
+    () => Object.fromEntries(jars.map((j) => [j.id, j.percentage])),
+    [jars],
+  );
+  const [pctDraft, setPctDraft] = useState<Record<string, number> | null>(null);
+  const pct = pctDraft ?? serverPct;
 
   const total = Object.values(pct).reduce((s, n) => s + n, 0);
   const balanced = Math.abs(total - 100) < 0.01;
@@ -282,11 +301,12 @@ export function JarsSettings() {
       });
     },
     onSuccess: () => {
+      setPctDraft(null);
       void queryClient.invalidateQueries({ queryKey: api.money.jars.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
-      showToast('Verdeling opgeslagen', 'success');
+      showToast('Split saved', 'success');
     },
-    onError: () => showToast('Verdeling opslaan mislukt', 'error'),
+    onError: () => showToast('Split save failed', 'error'),
   });
 
   function resetDefaults() {
@@ -294,20 +314,20 @@ export function JarsSettings() {
     for (const jar of jars) {
       next[jar.id] = DEFAULT_JAR_SPLIT[jar.key as JarKey] ?? jar.percentage;
     }
-    setPct(next);
+    setPctDraft(next);
   }
 
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Geld" title="Potten">
+      <Section eyebrow="Money" title="Jars">
         <p className="text-sm text-fg-muted">
-          De verdeling bepaalt waar inkomen heen gaat op het moment dat het binnenkomt. Alles samen
-          moet exact 100% zijn — anders raakt er geld zoek of ontstaat het uit niets.
+          The split determines where income goes the moment it arrives. Everything together
+          must be exactly 100% — otherwise money goes missing or appears from nowhere.
         </p>
       </Section>
 
       <Card className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-fg">Totaal</p>
+        <p className="text-sm font-semibold text-fg">Total</p>
         <Badge tone={balanced ? 'success' : 'danger'}>{formatPercent(total)}</Badge>
       </Card>
 
@@ -328,8 +348,8 @@ export function JarsSettings() {
                       step={0.5}
                       value={value}
                       onChange={(e) =>
-                        setPct((prev) => ({
-                          ...prev,
+                        setPctDraft((prev) => ({
+                          ...(prev ?? serverPct),
                           [jar.id]: Number(e.target.value) || 0,
                         }))
                       }
@@ -339,7 +359,7 @@ export function JarsSettings() {
                   </div>
                 </Field>
                 <p className="pb-3 text-sm tabular-nums text-fg-muted">
-                  {formatMoney(allocated)} p/m
+                  {formatMoney(allocated)}/mo
                 </p>
               </div>
               <Meter value={value / 100} tone={JAR_COLOR[jar.key] ?? 'accent'} />
@@ -348,17 +368,17 @@ export function JarsSettings() {
         })}
         <div className="flex justify-end gap-2 border-t border-line pt-4">
           <Button variant="ghost" onClick={resetDefaults}>
-            Terug naar standaard
+            Reset to default
           </Button>
           <Button
             disabled={!live || !balanced || saveSplit.isPending}
             onClick={() => saveSplit.mutate()}
           >
-            {saveSplit.isPending ? 'Bezig…' : 'Verdeling opslaan'}
+            {saveSplit.isPending ? 'Working…' : 'Save split'}
           </Button>
         </div>
         {!live ? (
-          <StubNotice what="Log in en rond onboarding af om de verdeling te bewaren." />
+          <StubNotice what="Sign in and complete setup to save the split." />
         ) : null}
       </Card>
     </div>
@@ -403,39 +423,39 @@ export function BankSettings() {
       setKind('CHECKING');
       setAdding(false);
       void queryClient.invalidateQueries({ queryKey: api.money.accounts.list.key() });
-      showToast('Rekening toegevoegd', 'success');
+      showToast('Account added', 'success');
     },
-    onError: () => showToast('Rekening toevoegen mislukt', 'error'),
+    onError: () => showToast('Account add failed', 'error'),
   });
 
   const accounts = accountsQuery.data ?? [];
   const kindLabel: Record<string, string> = {
-    CHECKING: 'Betaalrekening',
-    SAVINGS: 'Spaarrekening',
-    CREDIT: 'Creditcard',
-    CASH: 'Contant',
-    INVESTMENT: 'Beleggingsrekening',
+    CHECKING: 'Checking',
+    SAVINGS: 'Savings',
+    CREDIT: 'Credit card',
+    CASH: 'Cash',
+    INVESTMENT: 'Investment',
   };
 
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Geld" title="Bank">
+      <Section eyebrow="Money" title="Bank">
         <p className="text-sm text-fg-muted">
-          CSV-import werkt altijd en is de aanbevolen route. Een directe bankkoppeling vereist een
-          PSD2-aggregator.
+          CSV import always works and is the recommended route. A direct bank connection requires a
+          PSD2 aggregator.
         </p>
       </Section>
 
       <ListToolbar
-        createLabel="+ Rekening toevoegen"
+        createLabel="+ Add account"
         onCreate={() => setAdding(true)}
       >
-        <span className="text-sm font-semibold text-fg">Rekeningen</span>
+        <span className="text-sm font-semibold text-fg">Accounts</span>
       </ListToolbar>
 
       <Card className="p-0">
         {accounts.length === 0 ? (
-          <p className="px-5 py-4 text-sm text-fg-muted">Nog geen rekeningen.</p>
+          <p className="px-5 py-4 text-sm text-fg-muted">No accounts yet.</p>
         ) : (
           <ul className="divide-y divide-line">
             {accounts.map((a) => (
@@ -443,7 +463,7 @@ export function BankSettings() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium text-fg">{a.name}</p>
                   <p className="truncate font-mono text-xs text-fg-muted">
-                    {a.iban ?? 'Geen IBAN'} · {formatMoney(a.balance)}
+                    {a.iban ?? 'No IBAN'} · {formatMoney(a.balance)}
                   </p>
                 </div>
                 <Badge>{kindLabel[a.kind] ?? a.kind}</Badge>
@@ -455,18 +475,18 @@ export function BankSettings() {
 
       {adding ? (
       <Card className="grid gap-4">
-        <p className="text-sm font-semibold text-fg">Rekening toevoegen</p>
-        <Field label="Naam" htmlFor="acc-name">
+        <p className="text-sm font-semibold text-fg">Add account</p>
+        <Field label="Name" htmlFor="acc-name">
           <Input
             id="acc-name"
-            placeholder="Betaalrekening"
+            placeholder="Checking account"
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={!live}
             autoFocus
           />
         </Field>
-        <Field label="IBAN" htmlFor="acc-iban" hint="Optioneel — alleen voor herkenning bij import.">
+        <Field label="IBAN" htmlFor="acc-iban" hint="Optional — only for recognition during import.">
           <Input
             id="acc-iban"
             placeholder="NL00 BANK 0000 0000 00"
@@ -475,43 +495,43 @@ export function BankSettings() {
             disabled={!live}
           />
         </Field>
-        <Field label="Soort" htmlFor="acc-kind">
+        <Field label="Type" htmlFor="acc-kind">
           <Select
             id="acc-kind"
             value={kind}
             onChange={(e) => setKind(e.target.value as typeof kind)}
             disabled={!live}
           >
-            <option value="CHECKING">Betaalrekening</option>
-            <option value="SAVINGS">Spaarrekening</option>
-            <option value="CREDIT">Creditcard</option>
-            <option value="CASH">Contant</option>
-            <option value="INVESTMENT">Beleggingsrekening</option>
+            <option value="CHECKING">Checking</option>
+            <option value="SAVINGS">Savings</option>
+            <option value="CREDIT">Credit card</option>
+            <option value="CASH">Cash</option>
+            <option value="INVESTMENT">Investment</option>
           </Select>
         </Field>
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={() => setAdding(false)}>
-            Annuleren
+            Cancel
           </Button>
           <Button
             disabled={!live || createAccount.isPending || !name.trim()}
             onClick={() => createAccount.mutate()}
           >
-            {createAccount.isPending ? 'Bezig…' : 'Toevoegen'}
+            {createAccount.isPending ? 'Working…' : 'Add'}
           </Button>
         </div>
       </Card>
       ) : null}
 
       <Card>
-        <Eyebrow className="mb-2">Bankkoppeling</Eyebrow>
+        <Eyebrow className="mb-2">Bank connection</Eyebrow>
         <p className="text-sm text-fg-muted">
-          Uitgeschakeld. Enable Banking heeft een gratis &lsquo;restricted production&rsquo;-laag
-          voor rekeningen die je zelf koppelt — genoeg voor deze fase.
+          Disabled. Enable Banking has a free &lsquo;restricted production&rsquo; tier
+          for accounts you connect yourself — enough for this stage.
         </p>
         <div className="mt-4">
           <Button variant="secondary" disabled>
-            Bank koppelen
+            Connect bank
           </Button>
         </div>
       </Card>
@@ -522,15 +542,15 @@ export function BankSettings() {
 export function GroeiSettings() {
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Groei" title="Groeiprofiel" />
+      <Section eyebrow="Growth" title="Growth profile" />
       <Card>
-        <Eyebrow className="mb-2">Inkomensdoel</Eyebrow>
-        <Field label="Streefinkomen per maand (netto)" htmlFor="income-goal">
+        <Eyebrow className="mb-2">Income goal</Eyebrow>
+        <Field label="Target monthly income (net)" htmlFor="income-goal">
           <Input id="income-goal" type="number" placeholder="5000" disabled />
         </Field>
-        <p className="mt-2 text-xs text-fg-muted">Wordt gebruikt als referentie in Groei-grafieken.</p>
+        <p className="mt-2 text-xs text-fg-muted">Used as a reference in Growth charts.</p>
       </Card>
-      <StubNotice what="Leerdoelen, leeslijst-integratie en passief-inkomen tracker — komen binnenkort." />
+      <StubNotice what="Learning goals, reading list integration, and passive income tracker — coming soon." />
     </div>
   );
 }
@@ -538,20 +558,20 @@ export function GroeiSettings() {
 export function EnergieSettings() {
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Energie" title="Energieprofiel" />
+      <Section eyebrow="Energy" title="Energy profile" />
       <Card>
-        <Eyebrow className="mb-3">Slaap</Eyebrow>
-        <Field label="Slaapstreef (uren)" htmlFor="sleep-goal">
+        <Eyebrow className="mb-3">Sleep</Eyebrow>
+        <Field label="Sleep target (hours)" htmlFor="sleep-goal">
           <Input id="sleep-goal" type="number" min={4} max={12} defaultValue={8} className="w-28" disabled />
         </Field>
       </Card>
       <Card>
         <Eyebrow className="mb-3">Training</Eyebrow>
-        <Field label="Trainingen per week" htmlFor="train-goal">
+        <Field label="Training sessions per week" htmlFor="train-goal">
           <Input id="train-goal" type="number" min={0} max={14} defaultValue={4} className="w-28" disabled />
         </Field>
       </Card>
-      <StubNotice what="Wearable-integratie (Garmin, Apple Health) en macro-doelen — komen binnenkort." />
+      <StubNotice what="Wearable integration (Garmin, Apple Health) and macro goals — coming soon." />
     </div>
   );
 }
@@ -559,14 +579,14 @@ export function EnergieSettings() {
 export function ZielSettings() {
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Ziel" title="Zielprofiel" />
+      <Section eyebrow="Soul" title="Soul profile" />
       <Card>
-        <Eyebrow className="mb-3">Stiltepraktijk</Eyebrow>
-        <Field label="Dagelijks streef (minuten)" htmlFor="mind-goal">
+        <Eyebrow className="mb-3">Stillness practice</Eyebrow>
+        <Field label="Daily target (minutes)" htmlFor="mind-goal">
           <Input id="mind-goal" type="number" min={0} max={120} defaultValue={10} className="w-28" disabled />
         </Field>
       </Card>
-      <StubNotice what="Intentie-sjablonen, chakra-routing en dankbaarheidsinstellingen — komen binnenkort." />
+      <StubNotice what="Intention templates, chakra routing, and gratitude settings — coming soon." />
     </div>
   );
 }
@@ -591,22 +611,13 @@ export function SysteemSettings() {
   );
 
   const settings = settingsQuery.data;
-  const [periodDay, setPeriodDay] = useState(1);
-  const [hhName, setHhName] = useState('');
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    if (settings) setPeriodDay(settings.periodStartDay);
-  }, [settings]);
-
-  useEffect(() => {
-    if (householdQuery.data) setHhName(householdQuery.data.name);
-  }, [householdQuery.data]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('rumbelo-theme');
-    setDark(stored === 'dark');
-  }, []);
+  const [periodDayDraft, setPeriodDayDraft] = useState<number | null>(null);
+  const [hhNameDraft, setHhNameDraft] = useState<string | null>(null);
+  const periodDay = periodDayDraft ?? settings?.periodStartDay ?? 1;
+  const hhName = hhNameDraft ?? householdQuery.data?.name ?? '';
+  const [dark, setDark] = useState(
+    () => typeof window !== 'undefined' && localStorage.getItem('rumbelo-theme') === 'dark',
+  );
 
   const savePeriod = useMutation({
     mutationFn: async () => {
@@ -617,11 +628,12 @@ export function SysteemSettings() {
       });
     },
     onSuccess: () => {
+      setPeriodDayDraft(null);
       void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
       void queryClient.invalidateQueries({ queryKey: api.household.current.key() });
-      showToast('Periode opgeslagen', 'success');
+      showToast('Period saved', 'success');
     },
-    onError: () => showToast('Periode opslaan mislukt', 'error'),
+    onError: () => showToast('Period save failed', 'error'),
   });
 
   const saveHouseholdName = useMutation({
@@ -630,11 +642,12 @@ export function SysteemSettings() {
       await updateOrganization(householdId, { name: hhName.trim() });
     },
     onSuccess: () => {
+      setHhNameDraft(null);
       void queryClient.invalidateQueries({ queryKey: api.household.current.key() });
       void queryClient.invalidateQueries({ queryKey: api.household.list.key() });
-      showToast('Huishouden bijgewerkt', 'success');
+      showToast('Household updated', 'success');
     },
-    onError: () => showToast('Huishouden opslaan mislukt', 'error'),
+    onError: () => showToast('Household save failed', 'error'),
   });
 
   const saveLocale = useMutation({
@@ -645,9 +658,9 @@ export function SysteemSettings() {
     onSuccess: (_data, next) => {
       if (locale !== next) toggleLocale();
       void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
-      showToast('Taal opgeslagen', 'success');
+      showToast('Language saved', 'success');
     },
-    onError: () => showToast('Taal opslaan mislukt', 'error'),
+    onError: () => showToast('Language save failed', 'error'),
   });
 
   const saveTheme = useMutation({
@@ -661,23 +674,23 @@ export function SysteemSettings() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
     },
-    onError: () => showToast('Thema opslaan mislukt', 'error'),
+    onError: () => showToast('Theme save failed', 'error'),
   });
 
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Systeem" title="Weergave & periode" />
+      <Section eyebrow="System" title="Display & period" />
 
       <Card>
-        <Eyebrow className="mb-3">Thema</Eyebrow>
+        <Eyebrow className="mb-3">Theme</Eyebrow>
         <Toggle
           checked={dark}
-          label="Donkere modus"
-          hint="Wordt lokaal én in huishoudinstellingen bewaard."
+          label="Dark mode"
+          hint="Saved locally and in household settings."
           onCheckedChange={(next) => saveTheme.mutate(next ? 'dark' : 'light')}
         />
         <div className="mt-3">
-          <Field label="Taal" htmlFor="lang">
+          <Field label="Language" htmlFor="lang">
             <Select
               id="lang"
               value={settings?.locale ?? locale}
@@ -687,22 +700,22 @@ export function SysteemSettings() {
                 else if (locale !== next) toggleLocale();
               }}
             >
-              <option value="nl">Nederlands</option>
+              <option value="nl">Dutch</option>
               <option value="en">English</option>
             </Select>
           </Field>
           <p className="mt-1.5 text-xs text-fg-muted">
-            UI-copy is nog grotendeels Nederlands; de voorkeur wordt al opgeslagen.
+            UI copy will be fully English; the preference is already saved.
           </p>
         </div>
       </Card>
 
       <Card>
-        <Eyebrow className="mb-3">Periode</Eyebrow>
+        <Eyebrow className="mb-3">Period</Eyebrow>
         <Field
-          label="Dag waarop de maand omslaat"
+          label="Day the month rolls over"
           htmlFor="period-day"
-          hint="De turn sluit op deze dag. Inkomen dat erna binnenkomt, telt voor de volgende maand."
+          hint="The turn closes on this day. Income received after counts for next month."
         >
           <Input
             id="period-day"
@@ -710,7 +723,9 @@ export function SysteemSettings() {
             min={1}
             max={28}
             value={periodDay}
-            onChange={(e) => setPeriodDay(Math.min(28, Math.max(1, Number(e.target.value) || 1)))}
+            onChange={(e) =>
+              setPeriodDayDraft(Math.min(28, Math.max(1, Number(e.target.value) || 1)))
+            }
             className="w-28"
             disabled={!live}
           />
@@ -721,18 +736,18 @@ export function SysteemSettings() {
             disabled={!live || savePeriod.isPending}
             onClick={() => savePeriod.mutate()}
           >
-            {savePeriod.isPending ? 'Bezig…' : 'Opslaan'}
+            {savePeriod.isPending ? 'Working…' : 'Save'}
           </Button>
         </div>
       </Card>
 
       <Card>
-        <Eyebrow className="mb-3">Huishouden</Eyebrow>
-        <Field label="Naam" htmlFor="hh-name">
+        <Eyebrow className="mb-3">Household</Eyebrow>
+        <Field label="Name" htmlFor="hh-name">
           <Input
             id="hh-name"
             value={hhName}
-            onChange={(e) => setHhName(e.target.value)}
+            onChange={(e) => setHhNameDraft(e.target.value)}
             disabled={!live}
           />
         </Field>
@@ -742,7 +757,7 @@ export function SysteemSettings() {
             disabled={!live || saveHouseholdName.isPending || !hhName.trim()}
             onClick={() => saveHouseholdName.mutate()}
           >
-            {saveHouseholdName.isPending ? 'Bezig…' : 'Opslaan'}
+            {saveHouseholdName.isPending ? 'Working…' : 'Save'}
           </Button>
         </div>
       </Card>
@@ -753,20 +768,20 @@ export function SysteemSettings() {
 export function PlanSettings() {
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Plan" title="Abonnement" />
+      <Section eyebrow="Plan" title="Subscription" />
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-semibold text-fg">Rumbelo Early Access</p>
             <p className="mt-1 text-xs text-fg-muted">
-              Je gebruikt Rumbelo gratis in de early-access fase. Het abonnement gaat in wanneer het
-              product klaar is voor een bredere groep.
+              You are using Rumbelo for free during the early-access phase. Billing begins when the
+              product is ready for a wider audience.
             </p>
           </div>
-          <Badge tone="success">Actief</Badge>
+          <Badge tone="success">Active</Badge>
         </div>
       </Card>
-      <StubNotice what="Stripe-integratie, plan-gates en factuurgeschiedenis — komen binnenkort." />
+      <StubNotice what="Stripe integration, plan gates, and billing history — coming soon." />
     </div>
   );
 }
@@ -799,10 +814,10 @@ export function ExportSettings() {
         categoryId: t.categoryId ?? '',
       }));
       const stamp = `${period.year}-${String(period.month).padStart(2, '0')}`;
-      downloadTextFile(`rumbelo-transacties-${stamp}.csv`, toCsv(rows), 'text/csv;charset=utf-8');
-      showToast(`${rows.length} transacties geëxporteerd`, 'success');
+      downloadTextFile(`rumbelo-transactions-${stamp}.csv`, toCsv(rows), 'text/csv;charset=utf-8');
+      showToast(`${rows.length} transaction${rows.length === 1 ? '' : 's'} exported`, 'success');
     } catch {
-      showToast('CSV-export mislukt', 'error');
+      showToast('CSV export failed', 'error');
     } finally {
       setBusy(null);
     }
@@ -838,9 +853,9 @@ export function ExportSettings() {
         JSON.stringify(payload, null, 2),
         'application/json',
       );
-      showToast('Volledige export gedownload', 'success');
+      showToast('Full export downloaded', 'success');
     } catch {
-      showToast('JSON-export mislukt', 'error');
+      showToast('JSON export failed', 'error');
     } finally {
       setBusy(null);
     }
@@ -848,16 +863,16 @@ export function ExportSettings() {
 
   return (
     <div className="mx-auto grid w-full max-w-lg gap-6">
-      <Section eyebrow="Systeem" title="Export">
+      <Section eyebrow="System" title="Export">
         <p className="text-sm text-fg-muted">
-          Je data is van jou. Je kunt op elk moment een export downloaden vanuit dit apparaat.
+          Your data belongs to you. You can download an export from this device at any time.
         </p>
       </Section>
 
       <Card className="grid gap-4">
-        <Eyebrow>Transacties</Eyebrow>
+        <Eyebrow>Transactions</Eyebrow>
         <p className="text-sm text-fg-muted">
-          Alle recente transacties, inclusief pot, als CSV.
+          All recent transactions, including jar, as CSV.
         </p>
         <Button
           variant="secondary"
@@ -865,14 +880,14 @@ export function ExportSettings() {
           disabled={!live || busy != null}
           onClick={() => void exportCsv()}
         >
-          {busy === 'csv' ? 'Bezig…' : 'Downloaden als CSV'}
+          {busy === 'csv' ? 'Working…' : 'Download as CSV'}
         </Button>
       </Card>
 
       <Card className="grid gap-4">
-        <Eyebrow>Volledige data</Eyebrow>
+        <Eyebrow>Full data</Eyebrow>
         <p className="text-sm text-fg-muted">
-          Potten, inkomen, vaste lasten, schulden, doelen, regels en transacties als JSON.
+          Jars, income, fixed costs, debts, goals, rules, and transactions as JSON.
         </p>
         <Button
           variant="secondary"
@@ -880,12 +895,12 @@ export function ExportSettings() {
           disabled={!live || busy != null}
           onClick={() => void exportJson()}
         >
-          {busy === 'json' ? 'Bezig…' : 'Downloaden als JSON'}
+          {busy === 'json' ? 'Working…' : 'Download as JSON'}
         </Button>
       </Card>
 
       {!live ? (
-        <StubNotice what="Log in om exports te downloaden." />
+        <StubNotice what="Sign in to download exports." />
       ) : null}
     </div>
   );

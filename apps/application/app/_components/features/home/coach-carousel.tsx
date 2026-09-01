@@ -36,14 +36,14 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
     <div className="overflow-hidden rounded-2xl border border-accent-hover bg-surface shadow-md">
       <div className="grid gap-3.5 px-5 pt-4.5 pb-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="font-mono text-[10.5px] font-medium tracking-[0.16em] text-accent uppercase">✦ The coach</span>
+          <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">✦ The coach</span>
           <span className="flex items-center gap-2">
             <span className="size-1.75 rounded-full" style={{ background: slide.dotColor }} />
-            <span className="font-mono text-[10px] font-medium tracking-[0.15em] text-fg-faint uppercase">{slide.kind}</span>
+            <span className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">{slide.kind}</span>
           </span>
         </div>
 
-        <p className="max-w-[52ch] text-pretty font-display text-[clamp(19px,2.4vw,26px)] leading-[1.3] font-medium text-fg">
+        <p className="max-w-prose text-pretty font-display text-xl lg:text-2xl font-medium leading-snug text-fg">
           {slide.text}
         </p>
 
@@ -67,7 +67,7 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
             >
               ←
             </button>
-            <span className="font-mono text-[10px] font-medium text-fg-faint">
+            <span className="font-mono text-xs font-medium text-fg-faint">
               {index + 1} / {slides.length}
             </span>
             <button
@@ -94,21 +94,21 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
           <Link
             key={r.label}
             href={r.href}
-            className="grid flex-1 gap-1 border-r border-line px-4 py-2.5 transition-colors last:border-r-0 hover:bg-raised"
-            style={{ borderTopWidth: 2, borderTopColor: r.color }}
+            className="grid flex-1 gap-1 border-r border-t-2 border-line px-4 py-2.5 transition-colors last:border-r-0 hover:bg-raised"
+            style={{ borderTopColor: r.color }}
           >
-            <span className="font-mono text-[8.5px] font-semibold tracking-[0.16em]" style={{ color: r.color }}>
+            <span className="font-mono text-xs font-semibold tracking-widest" style={{ color: r.color }}>
               {r.label}
             </span>
             <span className="flex items-baseline gap-1.5">
-              <span className="font-mono text-[11.5px] text-fg">{r.value}</span>
+              <span className="font-mono text-xs text-fg">{r.value}</span>
               <span className="text-xs text-fg-faint">{r.what}</span>
             </span>
           </Link>
         ))}
         <Link
           href="/ritual"
-          className="ml-auto flex items-center border-l border-line px-4.5 font-mono text-[9.5px] font-medium tracking-[0.13em] text-fg-faint uppercase transition-colors hover:text-accent"
+          className="ml-auto flex items-center border-l border-line px-4.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:text-accent"
         >
           Detail
         </Link>

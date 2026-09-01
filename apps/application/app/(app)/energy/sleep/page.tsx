@@ -1,17 +1,17 @@
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
 import { SLEEP_HOURS, mockSleepStages } from '@/app/_mock';
 
-export const metadata = { title: 'Slaap' };
+export const metadata = { title: 'Sleep' };
 
 export default function SleepPage() {
   const h = SLEEP_HOURS;
 
   return (
     <div className="grid animate-rise gap-6">
-      <Section eyebrow="Mijn slaap" title="De vloer waar al het andere op staat.">
-        <p className="max-w-[62ch] text-[15px] text-fg-muted">
-          Slaap is geen budget dat je verdeelt — het is de invoer die bepaalt hoe goed de rest van
-          je dag werkt. Diepe slaap maakt je uitgerust; droomslaap maakt je scherp.
+      <Section eyebrow="My sleep" title="The floor everything else stands on.">
+        <p className="max-w-prose text-base text-fg-muted">
+          Sleep is not a budget you distribute — it is the input that determines how well the rest of
+          your day works. Deep sleep restores you; REM sleep sharpens you.
         </p>
       </Section>
 
@@ -20,8 +20,8 @@ export default function SleepPage() {
         <div className="grid gap-4 p-6">
           {/* Control row */}
           <div className="flex flex-wrap items-center gap-4">
-            <span className="font-mono text-[9.5px] font-medium uppercase tracking-[0.16em] text-fg-muted whitespace-nowrap">
-              Slaap per nacht
+            <span className="font-mono text-xs font-medium uppercase tracking-widest text-fg-muted whitespace-nowrap">
+              Sleep per night
             </span>
             <input
               type="range"
@@ -32,9 +32,9 @@ export default function SleepPage() {
               readOnly
               className="min-w-30 max-w-45 flex-1 accent-accent"
             />
-            <span className="min-w-13 font-mono text-[14px] font-medium text-fg">{h}u</span>
-            <span className="rounded-full border border-success/25 bg-success/10 px-2.75 py-1.5 font-mono text-[9.5px] font-medium uppercase tracking-widest text-success whitespace-nowrap">
-              Goed
+            <span className="min-w-13 font-mono text-sm font-medium text-fg">{h}h</span>
+            <span className="rounded-full border border-success/25 bg-success/10 px-2.75 py-1.5 font-mono text-xs font-medium uppercase tracking-widest text-success whitespace-nowrap">
+              Good
             </span>
           </div>
 
@@ -51,7 +51,7 @@ export default function SleepPage() {
           </div>
 
           {/* Stage breakdown grid */}
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(clamp(180px,30%,260px),1fr))] gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {mockSleepStages.map((s) => (
               <div key={s.name} className="flex min-w-0 items-start gap-2.5">
                 <span
@@ -60,16 +60,16 @@ export default function SleepPage() {
                 />
                 <div className="grid min-w-0 gap-1">
                   <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="text-[13.5px] font-semibold text-fg">{s.name}</span>
+                    <span className="text-sm font-semibold text-fg">{s.name}</span>
                     <span
-                      className="font-mono text-[12px] font-medium"
+                      className="font-mono text-xs font-medium"
                       style={{ color: s.color }}
                     >
                       {s.hours}
                     </span>
                   </div>
-                  <span className="text-[12px] leading-relaxed text-fg-muted">{s.does}</span>
-                  <span className="font-mono text-[9.5px] font-medium tracking-[0.08em] text-fg-faint whitespace-nowrap">
+                  <span className="text-xs leading-relaxed text-fg-muted">{s.does}</span>
+                  <span className="font-mono text-xs font-medium tracking-wide text-fg-faint whitespace-nowrap">
                     {s.band}
                   </span>
                 </div>
@@ -77,33 +77,33 @@ export default function SleepPage() {
             ))}
           </div>
 
-          <p className="max-w-[74ch] text-[13px] leading-relaxed text-fg-muted">
-            Twee verschillende dingen: diepe slaap maakt je uitgerust, droomslaap maakt je scherp.
-            Diepe slaap zit in de eerste uren van de nacht, droomslaap in de laatste — dus een korte
-            nacht kost je vooral de scherpte.
+          <p className="max-w-prose text-sm leading-relaxed text-fg-muted">
+            Two different things: deep sleep restores you, REM sleep sharpens you.
+            Deep sleep comes in the first hours of the night, REM in the last — so a short
+            night costs you mainly your sharpness.
           </p>
 
           {/* Advice callout */}
           <div className="rounded-xl border border-success/25 bg-success/10 px-4 py-3.5">
-            <p className="text-[13.5px] leading-relaxed text-fg-secondary">
-              Ongeveer 5,3 volledige cycli — delta zit op zijn maximum (1,7u) en je REM-theta ook
-              (1,7u). Delta kan niet veel hoger: slow-wave is begrensd op zo'n 1,5 tot 2 uur per
-              nacht. Langer slapen levert dus vooral meer theta en REM op — en dat is precies wat je
-              bij een korte nacht kwijtraakt.
+            <p className="text-sm leading-relaxed text-fg-secondary">
+              About 5.3 complete cycles — delta is at its maximum (1.7h) and your REM-theta too
+              (1.7h). Delta cannot go much higher: slow-wave is capped at roughly 1.5 to 2 hours per
+              night. Sleeping longer mainly adds more theta and REM — which is exactly what you
+              lose on a short night.
             </p>
           </div>
 
-          <p className="font-mono text-[10px] font-medium tracking-[0.04em] text-fg-faint leading-relaxed">
-            Ruwe schatting op basis van gemiddelde slaapstadia — algemene informatie, geen medisch advies.
+          <p className="font-mono text-xs font-medium tracking-normal text-fg-faint leading-relaxed">
+            Rough estimate based on average sleep stages — general information, not medical advice.
           </p>
         </div>
 
         {/* ── Money cost section ── */}
         <div className="grid gap-3 border-t border-line px-6 py-5">
-          <Eyebrow className="text-accent">✦ Wat het je elders kost</Eyebrow>
-          <p className="max-w-[72ch] text-[14px] leading-relaxed text-fg-secondary">
-            Bij {h} uur betaal je er nergens voor. Je 40 gestuurde uren komen op volle kracht aan,
-            en je Play-pot blijft een keuze in plaats van een reflex.
+          <Eyebrow className="text-accent">✦ What it costs you elsewhere</Eyebrow>
+          <p className="max-w-prose text-sm leading-relaxed text-fg-secondary">
+            At {h} hours you pay nothing elsewhere. Your 40 steered hours arrive at full power,
+            and your Play jar stays a choice instead of a reflex.
           </p>
         </div>
       </Card>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { cn } from '@rumbelo/utils';
 import { formatMoney } from '@rumbelo/utils';
 import { JAR_META } from '@/app/_mock';
@@ -56,16 +56,15 @@ export function InboxSortCard({
   onConfirm?: (transactionId: string, jarId: string, createRule?: boolean) => Promise<void>;
   onChange?: (transaction: InboxTransaction, jarId: string) => void;
 }) {
-  const [jarId, setJarId] = useState(() => resolveInitialJarId(jars, suggestedJarId, t.amount));
+  const [pickedJarId, setPickedJarId] = useState<string | null>(null);
   const [picking, setPicking] = useState(false);
   const [done, setDone] = useState(false);
   const [pending, setPending] = useState<'sort' | 'rule' | null>(null);
 
-  useEffect(() => {
-    if (jarId && jars.some((j) => j.id === jarId)) return;
-    const next = resolveInitialJarId(jars, suggestedJarId, t.amount);
-    if (next) setJarId(next);
-  }, [jars, suggestedJarId, t.amount, jarId]);
+  const jarId = useMemo(() => {
+    if (pickedJarId && jars.some((j) => j.id === pickedJarId)) return pickedJarId;
+    return resolveInitialJarId(jars, suggestedJarId, t.amount);
+  }, [pickedJarId, jars, suggestedJarId, t.amount]);
 
   const selected = jars.find((j) => j.id === jarId) ?? jars[0];
   const meta = metaForKey(selected?.key ?? suggestJarKey(t.amount));
@@ -95,12 +94,12 @@ export function InboxSortCard({
     <div className="grid gap-4 rounded-2xl border border-line bg-surface p-5 shadow-md animate-rise">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-[15.5px] font-semibold text-fg">{t.description}</p>
-          <p className="mt-1 font-mono text-[10.5px] tracking-[0.06em] text-fg-muted">
-            {t.counterparty ?? 'Onbekende tegenpartij'} · {t.bookedOn}
+          <p className="text-base font-semibold text-fg">{t.description}</p>
+          <p className="mt-1 font-mono text-xs tracking-normal text-fg-muted">
+            {t.counterparty ?? 'Unknown counterparty'} · {t.bookedOn}
           </p>
         </div>
-        <span className={cn('shrink-0 font-mono text-[17px]', t.amount < 0 ? 'text-fg' : 'text-success')}>
+        <span className={cn('shrink-0 font-mono text-lg', t.amount < 0 ? 'text-fg' : 'text-success')}>
           {formatMoney(t.amount, { signed: true })}
         </span>
       </div>
@@ -111,21 +110,21 @@ export function InboxSortCard({
           onClick={() => setPicking((v) => !v)}
           className="flex flex-wrap items-center gap-2.5 rounded-xl border border-line bg-raised px-3.5 py-3 text-left transition-colors hover:border-line-strong"
         >
-          <span className="font-mono text-[9.5px] tracking-[0.16em] uppercase text-fg-muted">
-            Dit lijkt op
+          <span className="font-mono text-xs tracking-widest uppercase text-fg-muted">
+            Looks like
           </span>
           <span className="size-2 shrink-0 rounded-sm" style={{ background: toVar(meta.color) }} />
-          <span className="text-[13.5px] text-fg">{selected?.name ?? meta.name}</span>
+          <span className="text-sm text-fg">{selected?.name ?? meta.name}</span>
           {selected?.subtitle ? (
-            <span className="text-[13px] text-fg-muted">· {selected.subtitle}</span>
+            <span className="text-sm text-fg-muted">· {selected.subtitle}</span>
           ) : null}
           <span
             className={cn(
-              'ml-auto whitespace-nowrap font-mono text-[10px]',
+              'ml-auto whitespace-nowrap font-mono text-xs',
               confident ? 'text-fg-faint' : 'text-warning',
             )}
           >
-            {confident ? 'redelijk zeker' : 'niet zeker — check dit'}
+            {confident ? 'fairly certain' : 'not sure — please check'}
           </span>
         </button>
 
@@ -139,11 +138,11 @@ export function InboxSortCard({
                   key={jar.id}
                   type="button"
                   onClick={() => {
-                    setJarId(jar.id);
+                    setPickedJarId(jar.id);
                     setPicking(false);
                   }}
                   className={cn(
-                    'inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] tracking-[0.1em] uppercase transition-colors',
+                    'inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-xs tracking-widest uppercase transition-colors',
                     active
                       ? 'border-accent/40 bg-accent-soft text-accent'
                       : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
@@ -163,7 +162,7 @@ export function InboxSortCard({
 
       <div className="flex flex-wrap gap-2">
         <Button size="sm" onClick={() => void confirm(false)} disabled={pending != null || !jarId}>
-          {pending === 'sort' ? 'Bezig…' : 'Klopt'}
+          {pending === 'sort' ? 'Working…' : 'Correct'}
         </Button>
         <Button
           variant="secondary"
@@ -171,7 +170,7 @@ export function InboxSortCard({
           onClick={() => void confirm(true)}
           disabled={pending != null || !onConfirm || !jarId}
         >
-          {pending === 'rule' ? 'Bezig…' : 'Altijd zo'}
+          {pending === 'rule' ? 'Working…' : 'Always this'}
         </Button>
         <Button
           variant="ghost"
@@ -179,7 +178,7 @@ export function InboxSortCard({
           disabled={pending != null || !jarId}
           onClick={() => onChange?.(t, jarId)}
         >
-          Anders
+          Other
         </Button>
       </div>
     </div>
@@ -203,7 +202,7 @@ export function TabPills({
           type="button"
           onClick={() => onChange(tab.id)}
           className={cn(
-            'flex items-center gap-2 rounded-full border font-mono text-[10.5px] font-medium tracking-[0.12em] uppercase px-4 py-2 transition-all duration-200',
+            'flex items-center gap-2 rounded-full border font-mono text-xs font-medium tracking-wide uppercase px-4 py-2 transition-all duration-200',
             active === tab.id
               ? 'border-accent/40 bg-accent-soft text-accent'
               : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
@@ -211,7 +210,7 @@ export function TabPills({
         >
           {tab.label}
           {tab.count != null && tab.count > 0 && (
-            <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-[9.5px] text-warning">
+            <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
               {tab.count}
             </span>
           )}

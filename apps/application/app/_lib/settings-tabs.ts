@@ -13,15 +13,15 @@ export type SettingsTab =
 export const DEFAULT_TAB: SettingsTab = 'account';
 
 export const SETTINGS_TABS: { key: SettingsTab; label: string; sub: string }[] = [
-  { key: 'account',  label: 'Account',  sub: 'Profiel & beveiliging' },
-  { key: 'jars',     label: 'Potten',   sub: 'Verdeling & namen' },
-  { key: 'bank',     label: 'Bank',     sub: 'Import & koppeling' },
-  { key: 'groei',    label: 'Groei',    sub: 'Inkomen & doelen' },
-  { key: 'energie',  label: 'Energie',  sub: 'Slaap & training' },
-  { key: 'ziel',     label: 'Ziel',     sub: 'Intentie & centra' },
-  { key: 'systeem',  label: 'Systeem',  sub: 'Weergave & periode' },
-  { key: 'plan',     label: 'Plan',     sub: 'Abonnement' },
-  { key: 'export',   label: 'Export',   sub: 'Je data meenemen' },
+  { key: 'account', label: 'Account', sub: 'Profile & security' },
+  { key: 'jars',    label: 'Jars',    sub: 'Split & names' },
+  { key: 'bank',    label: 'Bank',    sub: 'Import & connection' },
+  { key: 'groei',   label: 'Growth',  sub: 'Income & goals' },
+  { key: 'energie', label: 'Energy',  sub: 'Sleep & training' },
+  { key: 'ziel',    label: 'Soul',    sub: 'Intent & centres' },
+  { key: 'systeem', label: 'System',  sub: 'Display & period' },
+  { key: 'plan',    label: 'Plan',    sub: 'Subscription' },
+  { key: 'export',  label: 'Export',  sub: 'Take your data with you' },
 ];
 
 const TAB_KEYS = new Set<string>(SETTINGS_TABS.map((t) => t.key));

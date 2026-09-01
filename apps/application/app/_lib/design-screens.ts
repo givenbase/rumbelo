@@ -23,7 +23,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
   { key: 'why', section: 'WAAROM KLUIS', route: '/why', navGroup: 'home', status: 'shell', gap: 'Foundation layout — 4 principles + quote' },
 
   { key: 'geldhome', section: 'PORTAL OVERZICHT', route: '/money/overview', navGroup: 'money', status: 'shell', gap: 'PortalHub money config' },
-  { key: 'jars', section: 'POTTEN / JARS', route: '/money/jars', navGroup: 'money', status: 'partial', gap: 'Live jar balances when household active; pixel pass pending' },
+  { key: 'jars', section: 'POTTEN / JARS', route: '/money/jars', navGroup: 'money', status: 'partial', gap: 'Card grid + split simulator from design; ListToolbar Move money + URL modal; live balances when not in preview' },
   { key: 'tx', section: 'TRANSACTIES', route: '/money/transactions', navGroup: 'money', status: 'partial', gap: 'Live inbox + sort mutation when household active' },
   { key: 'debt', section: 'SCHULDEN', route: '/money/debts', navGroup: 'money', status: 'partial', gap: 'Freedom date hero + list; simulator simplified' },
   { key: 'fixed', section: 'VASTE LASTEN', route: '/money/fixed-costs', navGroup: 'money', status: 'partial', gap: 'In/out tabs + list' },

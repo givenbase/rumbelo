@@ -7,7 +7,7 @@ import { IncomeUpdatePage } from '../../../_components/income-pages';
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   return (
-    <RouteModalShell closeHref="/growth/income" title="Inkomen bewerken">
+    <RouteModalShell closeHref="/growth/income" title="Edit income">
       <IncomeUpdatePage id={id} embedded />
     </RouteModalShell>
   );

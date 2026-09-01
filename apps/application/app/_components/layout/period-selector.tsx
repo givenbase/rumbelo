@@ -3,8 +3,8 @@
 import { useAppShell, type Period } from '@/components/features/shell/app-shell-context';
 
 const MONTHS_SHORT = [
-  'Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec',
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ];
 
 function encode(p: Period): string {
@@ -43,14 +43,14 @@ export function PeriodSelector() {
 
   return (
     <div className="relative flex items-center">
-      <span className="pointer-events-none absolute left-2.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-fg-faint">
-        Periode
+      <span className="pointer-events-none absolute left-2.5 font-mono text-xs font-semibold uppercase tracking-wide text-fg-faint">
+        Period
       </span>
       <select
         value={value}
         onChange={(e) => setPeriod(decode(e.target.value))}
-        className="h-8 appearance-none rounded-full border border-line bg-raised pl-16 pr-6 font-mono text-[11px] font-medium text-fg transition-colors hover:border-line-strong focus:border-accent focus:outline-none"
-        aria-label="Selecteer periode"
+        className="h-8 appearance-none rounded-full border border-line bg-raised pl-16 pr-6 font-mono text-xs font-medium text-fg transition-colors hover:border-line-strong focus:border-accent focus:outline-none"
+        aria-label="Select period"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -58,7 +58,7 @@ export function PeriodSelector() {
           </option>
         ))}
       </select>
-      <span className="pointer-events-none absolute right-2 text-[9px] text-fg-faint" aria-hidden>
+      <span className="pointer-events-none absolute right-2 text-xs text-fg-faint" aria-hidden>
         ▾
       </span>
     </div>

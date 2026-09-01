@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,16 +25,16 @@ import { isLiveData } from '@/app/_lib/preview';
 
 const euros = z
   .string()
-  .min(1, 'Bedrag is verplicht')
+  .min(1, 'Amount is required')
   .refine((v) => {
     const cents = parseEurosToCents(v);
     return cents != null && cents > 0;
-  }, { message: 'Voer een geldig bedrag in' });
+  }, { message: 'Enter a valid amount' });
 
 const fixedCostFormSchema = z.object({
-  name: z.string().min(1, 'Naam is verplicht').max(120),
+  name: z.string().min(1, 'Name is required').max(120),
   amount: euros,
-  jarId: z.string().min(1, 'Kies een pot'),
+  jarId: z.string().min(1, 'Choose a jar'),
   dueDay: z.string().optional(),
 });
 
@@ -68,7 +68,7 @@ export function FixedCostForm({
     [],
     live,
   );
-  const jars = jarsQuery.data ?? [];
+  const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
   const form = useForm<FixedCostFormValues>({
     defaultValues: {
@@ -125,10 +125,10 @@ export function FixedCostForm({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.byJar.key() });
-      showToast(mode === 'edit' ? 'Vaste last bijgewerkt' : 'Vaste last opgeslagen', 'success');
+      showToast(mode === 'edit' ? 'Fixed cost updated' : 'Fixed cost saved', 'success');
       dismiss();
     },
-    onError: () => showToast('Opslaan mislukt', 'error'),
+    onError: () => showToast('Save failed', 'error'),
   });
 
   const removeMutation = useMutation({
@@ -139,15 +139,15 @@ export function FixedCostForm({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.byJar.key() });
-      showToast('Vaste last verwijderd', 'success');
+      showToast('Fixed cost deleted', 'success');
       dismiss();
     },
-    onError: () => showToast('Verwijderen mislukt', 'error'),
+    onError: () => showToast('Delete failed', 'error'),
   });
 
   async function onSubmit(values: FixedCostFormValues) {
     if (!live) {
-      showToast('Log in om vaste lasten op te slaan', 'error');
+      showToast('Sign in to save fixed costs', 'error');
       return;
     }
     await saveMutation.mutateAsync(values);
@@ -169,10 +169,10 @@ export function FixedCostForm({
         <div className="grid gap-2">
           <Button type="submit" className="w-full" disabled={busy}>
             {saveMutation.isPending || form.formState.isSubmitting
-              ? 'Bezig…'
+              ? 'Working…'
               : mode === 'edit'
-                ? 'Wijzigingen opslaan'
-                : 'Vaste last opslaan'}
+                ? 'Save changes'
+                : 'Save fixed cost'}
           </Button>
           {mode === 'edit' && entityId ? (
             <Button
@@ -181,11 +181,11 @@ export function FixedCostForm({
               className="w-full text-danger hover:bg-danger/10 hover:text-danger"
               disabled={form.formState.isSubmitting || saveMutation.isPending || removeMutation.isPending}
               onClick={() => {
-                if (!window.confirm('Deze vaste last definitief verwijderen?')) return;
+                if (!window.confirm('Permanently delete this fixed cost?')) return;
                 void removeMutation.mutateAsync();
               }}
             >
-              {removeMutation.isPending ? 'Verwijderen…' : 'Verwijderen'}
+              {removeMutation.isPending ? 'Deleting…' : 'Delete'}
             </Button>
           ) : null}
         </div>
@@ -196,9 +196,9 @@ export function FixedCostForm({
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Naam</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input placeholder="Bijv. huur" {...field} />
+              <Input placeholder="e.g. rent" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -210,7 +210,7 @@ export function FixedCostForm({
         name="amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Bedrag per maand (€)</FormLabel>
+            <FormLabel>Amount per month (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>
@@ -224,14 +224,14 @@ export function FixedCostForm({
         name="jarId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Pot</FormLabel>
+            <FormLabel>Jar</FormLabel>
             <FormControl>
               <select
                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
                 {...field}
               >
                 {jars.length === 0 ? (
-                  <option value="">Geen potten — rond onboarding af</option>
+                  <option value="">No jars — complete setup first</option>
                 ) : (
                   jars.map((jar) => (
                     <option key={jar.id} value={jar.id}>
@@ -252,7 +252,7 @@ export function FixedCostForm({
         name="dueDay"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Vervaldatum (dag van de maand)</FormLabel>
+            <FormLabel>Due day (day of month)</FormLabel>
             <FormControl>
               <Input type="number" min={1} max={31} placeholder="1" {...field} />
             </FormControl>

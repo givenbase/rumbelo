@@ -3,8 +3,8 @@
  *
  * Three tiers in ascending order:
  *   grip  → Grip (starter, free)
- *   ritme → Ritme (unlock debt / week / goals screens)
- *   groei → Groei (unlock income / board / learn / chakra screens)
+ *   ritme → Engine (unlock debt / week / goals screens)
+ *   groei → Compound (unlock income / board / learn / chakra screens)
  */
 
 export type PlanKey = 'grip' | 'ritme' | 'groei';
@@ -34,11 +34,11 @@ export const SCREEN_MIN: Record<string, PlanKey> = {
   chakra: 'groei',
 };
 
-/** Human-readable plan labels (Dutch). */
+/** Human-readable plan labels (product names). */
 export const PLAN_LABELS: Record<PlanKey, string> = {
   grip:   'Grip',
-  ritme:  'Ritme',
-  groei:  'Groei',
+  ritme:  'Engine',
+  groei:  'Compound',
 };
 
 /** Active plan when billing is not wired — preview env can raise this via the shell. */
@@ -54,59 +54,59 @@ export function isScreenLocked(screenKey: string | null, plan: PlanKey = MOCK_PL
 
 export const LOCK_COPY: Record<string, { title: string; line: string; planName: string; price: string; cta: string }> = {
   debt: {
-    title: 'Schulden horen bij Engine',
-    line: 'Een schuldenplan met rente, volgorde en een vrijheidsdatum — plus bankkoppeling — zit in Engine.',
+    title: 'Debt belongs in Engine',
+    line: 'A debt plan with interest, payoff order, and a freedom date — plus bank connection — is in Engine.',
     planName: 'Engine',
-    price: '€9 / maand',
-    cta: 'Upgrade naar Engine',
+    price: '€9 / month',
+    cta: 'Upgrade to Engine',
   },
   week: {
-    title: 'Je week hoort bij Engine',
-    line: '168 uur verdelen, slaap, training en voeding — de vloer onder elke financiële beslissing.',
+    title: 'Your week belongs in Engine',
+    line: 'Divide 168 hours, sleep, training, and food — the floor under every money decision.',
     planName: 'Engine',
-    price: '€9 / maand',
-    cta: 'Upgrade naar Engine',
+    price: '€9 / month',
+    cta: 'Upgrade to Engine',
   },
   goals: {
-    title: 'Doelen horen bij Compound',
-    line: 'Doelen met datum, pot en voortgang — plus inkomen, leren en vermogen — zit in Compound.',
+    title: 'Goals belong in Compound',
+    line: 'Goals with a date, jar, and progress — plus income, learning, and net worth — are in Compound.',
     planName: 'Compound',
-    price: '€19 / maand',
-    cta: 'Upgrade naar Compound',
+    price: '€19 / month',
+    cta: 'Upgrade to Compound',
   },
   income: {
-    title: 'Inkomen hoort bij Compound',
-    line: 'Je inkomenscurve, hefbomen en groeidoelen — zit in Compound.',
+    title: 'Income belongs in Compound',
+    line: 'Your income curve, levers, and growth targets — in Compound.',
     planName: 'Compound',
-    price: '€19 / maand',
-    cta: 'Upgrade naar Compound',
+    price: '€19 / month',
+    cta: 'Upgrade to Compound',
   },
   board: {
-    title: 'Vermogen hoort bij Compound',
-    line: 'Net worth, rendement en je vrijheidsgetal — zit in Compound.',
+    title: 'Net worth belongs in Compound',
+    line: 'Net worth, returns, and your freedom number — in Compound.',
     planName: 'Compound',
-    price: '€19 / maand',
-    cta: 'Upgrade naar Compound',
+    price: '€19 / month',
+    cta: 'Upgrade to Compound',
   },
   learn: {
-    title: 'Leren hoort bij Compound',
-    line: 'Boeken, inzichten en wat ze veranderden — zit in Compound.',
+    title: 'Learning belongs in Compound',
+    line: 'Books, insights, and what they changed — in Compound.',
     planName: 'Compound',
-    price: '€19 / maand',
-    cta: 'Upgrade naar Compound',
+    price: '€19 / month',
+    cta: 'Upgrade to Compound',
   },
   chakra: {
-    title: 'Centra horen bij Engine',
-    line: 'De zeven centra en waar energie vastzit — zit in Engine.',
+    title: 'Centres belong in Engine',
+    line: 'The seven centres and where energy gets stuck — in Engine.',
     planName: 'Engine',
-    price: '€9 / maand',
-    cta: 'Upgrade naar Engine',
+    price: '€9 / month',
+    cta: 'Upgrade to Engine',
   },
   default: {
-    title: 'Deze plek hoort bij een hoger plan',
-    line: 'Wat je al hebt ingevuld blijft van jou — je opent alleen wat je nodig hebt.',
+    title: 'This area belongs on a higher plan',
+    line: 'Everything you have already entered stays yours — you only unlock what you need.',
     planName: 'Engine',
-    price: '€9 / maand',
-    cta: 'Bekijk plannen',
+    price: '€9 / month',
+    cta: 'View plans',
   },
 };

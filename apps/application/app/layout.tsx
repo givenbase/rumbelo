@@ -29,7 +29,7 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: { default: 'Rumbelo', template: '%s · Rumbelo' },
-  description: 'Geld met intentie. Zes potten, één rustig overzicht.',
+  description: 'Money with intention. Six jars, one calm overview.',
 };
 
 export const viewport: Viewport = {

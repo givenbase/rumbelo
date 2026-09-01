@@ -7,7 +7,7 @@ import { FixedCostUpdatePage } from '../../../_components/fixed-cost-pages';
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   return (
-    <RouteModalShell closeHref="/money/fixed-costs" title="Vaste last bewerken">
+    <RouteModalShell closeHref="/money/fixed-costs" title="Edit fixed cost">
       <FixedCostUpdatePage id={id} embedded />
     </RouteModalShell>
   );

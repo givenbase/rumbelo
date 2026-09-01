@@ -5,13 +5,15 @@
  * `mockX` → `useQuery(api.…)` in one line.
  *
  * Jar names/subtitles are verbatim from Kluis Finance App.dc.html
- * (:2239-2256); English jar labels stay even in Dutch UI copy.
+ * Jar names stay in English (product vocabulary from the design).
  */
 export {
   INCOME_SOURCES,
   JAR_META,
   mockJars,
 } from './jars';
+
+export { JAR_GUIDE, type JarGuide, type JarGuideKey } from './jar-guide';
 
 export {
   mockDebts,

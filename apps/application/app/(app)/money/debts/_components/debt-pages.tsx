@@ -30,10 +30,10 @@ export function DebtUpdatePage({
   const row = (query.data ?? []).find((d) => d.id === id);
 
   if (live && query.isLoading && !row) {
-    return <p className="text-sm text-fg-muted">Laden…</p>;
+    return <p className="text-sm text-fg-muted">Loading…</p>;
   }
   if (!row) {
-    return <p className="text-sm text-fg-muted">Schuld niet gevonden.</p>;
+    return <p className="text-sm text-fg-muted">Debt not found.</p>;
   }
 
   return (

@@ -3,7 +3,7 @@ import { messages, type MessageLocale } from './messages.js';
 export { messages, type MessageLocale };
 
 export type AppLocale = MessageLocale;
-export const DEFAULT_LOCALE: AppLocale = 'nl';
+export const DEFAULT_LOCALE: AppLocale = 'en';
 
 type NestedKeyOf<T, Prefix extends string = ''> = T extends object
   ? {

@@ -1,6 +1,6 @@
 import { WeekPageClient } from './_components/week-page';
 
-export const metadata = { title: 'Mijn week' };
+export const metadata = { title: 'My week' };
 
 export default function WeekPage() {
   return <WeekPageClient />;

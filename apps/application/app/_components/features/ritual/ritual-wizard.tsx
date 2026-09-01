@@ -17,18 +17,18 @@ interface WizardJar {
 const STEPS = [
   {
     key: 'LOOK' as const,
-    label: 'Kijken',
-    sub: 'Wat gebeurde er deze week?',
+    label: 'Look',
+    sub: 'What happened this week?',
   },
   {
     key: 'REDIRECT' as const,
-    label: 'Richten',
-    sub: 'Waar gaat het overschot heen?',
+    label: 'Direct',
+    sub: 'Where does the surplus go?',
   },
   {
     key: 'INTEND' as const,
-    label: 'Intentie',
-    sub: 'Wat is je intentie voor volgende week?',
+    label: 'Intend',
+    sub: 'What is your intention for next week?',
   },
 ];
 
@@ -106,11 +106,11 @@ export function RitualWizard({
           >
             <span
               className={cn(
-                'font-mono text-[9px] font-semibold tracking-[0.18em] uppercase',
+                'font-mono text-xs font-semibold tracking-widest uppercase',
                 i === step ? 'text-accent' : 'text-fg-faint',
               )}
             >
-              Stap {i + 1}
+              Step {i + 1}
             </span>
             <span
               className={cn(
@@ -120,7 +120,7 @@ export function RitualWizard({
             >
               {s.label}
             </span>
-            <span className="text-[11px] leading-tight text-fg-faint">{s.sub}</span>
+            <span className="text-xs leading-tight text-fg-faint">{s.sub}</span>
             {/* Progress pip */}
             <span
               className={cn(
@@ -133,17 +133,17 @@ export function RitualWizard({
       </div>
 
       {/* Step content */}
-      <div className="rounded-[20px] border border-line bg-surface p-6 shadow-md animate-rise">
-        {/* ── Stap 1: Kijken ─────────────────────────────────────────── */}
+      <div className="rounded-2xl border border-line bg-surface p-6 shadow-md animate-rise">
+        {/* ── Step 1: Look ─────────────────────────────────────────── */}
         {current.key === 'LOOK' && (
           <div className="grid gap-5">
             <div>
-              <Eyebrow>✦ Kijken</Eyebrow>
+              <Eyebrow>✦ Look</Eyebrow>
               <h2 className="mt-1.5 font-display text-2xl font-semibold tracking-tight text-fg">
-                Wat deed je deze week?
+                What did you do this week?
               </h2>
               <p className="mt-1 text-sm text-fg-muted">
-                Geen oordeel. Informatie is alles wat we nodig hebben.
+                No judgment. Information is all we need.
               </p>
             </div>
             <div className="grid gap-2">
@@ -170,17 +170,17 @@ export function RitualWizard({
           </div>
         )}
 
-        {/* ── Stap 2: Richten ────────────────────────────────────────── */}
+        {/* ── Step 2: Direct ────────────────────────────────────────── */}
         {current.key === 'REDIRECT' && (
           <div className="grid gap-5">
             <div>
-              <Eyebrow>✦ Richten</Eyebrow>
+              <Eyebrow>✦ Direct</Eyebrow>
               <h2 className="mt-1.5 font-display text-2xl font-semibold tracking-tight text-fg">
-                Overschot verdelen
+                Distribute surplus
               </h2>
               <p className="mt-1 text-sm text-fg-muted">
-                <span className="font-semibold text-fg">{formatMoney(surplus)}</span> staat nog
-                zonder richting. Stuur het naar waar het werkt.
+                <span className="font-semibold text-fg">{formatMoney(surplus)}</span> has no
+                direction yet. Send it where it works.
               </p>
             </div>
             <div className="grid gap-2">
@@ -201,7 +201,7 @@ export function RitualWizard({
                       className="h-8 px-3 text-xs"
                       onClick={() => setRedirectJarId(jar.id)}
                     >
-                      {redirectJarId === jar.id ? 'Geselecteerd' : 'Hierheen'}
+                      {redirectJarId === jar.id ? 'Selected' : 'Send here'}
                     </Button>
                   </div>
                 ))}
@@ -209,29 +209,29 @@ export function RitualWizard({
           </div>
         )}
 
-        {/* ── Stap 3: Intentie ───────────────────────────────────────── */}
+        {/* ── Step 3: Intend ───────────────────────────────────────── */}
         {current.key === 'INTEND' && (
           <div className="grid gap-5">
             <div>
-              <Eyebrow>✦ Intentie</Eyebrow>
+              <Eyebrow>✦ Intend</Eyebrow>
               <h2 className="mt-1.5 font-display text-2xl font-semibold tracking-tight text-fg">
-                Mijn intentie voor volgende week
+                My intention for next week
               </h2>
               <p className="mt-1 text-sm text-fg-muted">
-                Eén zin. Wat ga je anders doen?
+                One sentence. What will you do differently?
               </p>
             </div>
             <textarea
               rows={4}
               value={intent}
               onChange={(e) => setIntent(e.target.value)}
-              placeholder="Schrijf je intentie hier..."
+              placeholder="Write your intention here..."
               className="w-full resize-none rounded-xl border border-line bg-raised px-4 py-3 text-sm text-fg placeholder:text-fg-faint transition-colors focus:border-accent focus:outline-none"
-              aria-label="Intentie voor volgende week"
+              aria-label="Intention for next week"
             />
             {intent.trim().length > 0 && (
               <p className="text-xs text-fg-muted">
-                Goed. Onthoud dit als de week zwaar voelt.
+                Good. Remember this when the week feels hard.
               </p>
             )}
           </div>
@@ -242,16 +242,16 @@ export function RitualWizard({
       <div className="flex items-center justify-between gap-3">
         {step > 0 ? (
           <Button variant="ghost" onClick={() => setStep((s) => s - 1)}>
-            ← Vorige
+            ← Back
           </Button>
         ) : (
           <span />
         )}
 
         {step < STEPS.length - 1 ? (
-          <Button onClick={() => void goNext()}>Volgende →</Button>
+          <Button onClick={() => void goNext()}>Next →</Button>
         ) : (
-          <Button onClick={() => void finish()}>Ritueel afronden ✓</Button>
+          <Button onClick={() => void finish()}>Complete ritual ✓</Button>
         )}
       </div>
     </div>

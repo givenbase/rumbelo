@@ -13,9 +13,9 @@ const SLEEP_WEEK = SLEEP_HOURS * 7;
 const REST_HOURS = 168 - SLEEP_WEEK - STEERED_HOURS;
 
 const WEEK_WHOLE = [
-  { name: 'Slaap', hours: `${SLEEP_WEEK}u`, pct: Math.round((SLEEP_WEEK / 168) * 100), color: 'var(--color-jar-lts)' },
-  { name: 'Al het andere', hours: `${REST_HOURS}u`, pct: Math.round((REST_HOURS / 168) * 100), color: 'var(--color-sunken)' },
-  { name: 'Jij stuurt', hours: `${STEERED_HOURS}u`, pct: Math.round((STEERED_HOURS / 168) * 100), color: 'var(--color-accent)' },
+  { name: 'Sleep', hours: `${SLEEP_WEEK}h`, pct: Math.round((SLEEP_WEEK / 168) * 100), color: 'var(--color-jar-lts)' },
+  { name: 'Everything else', hours: `${REST_HOURS}h`, pct: Math.round((REST_HOURS / 168) * 100), color: 'var(--color-sunken)' },
+  { name: 'You steer', hours: `${STEERED_HOURS}h`, pct: Math.round((STEERED_HOURS / 168) * 100), color: 'var(--color-accent)' },
 ] as const;
 
 const JAR_BORDER: Record<string, string> = {
@@ -28,10 +28,10 @@ const JAR_BORDER: Record<string, string> = {
 };
 
 const METRIC_LABEL: Record<string, string> = {
-  SLEEP: 'Slaap',
+  SLEEP: 'Sleep',
   TRAIN: 'Training',
-  FOOD: 'Voeding',
-  MIND: 'Stilte',
+  FOOD: 'Nutrition',
+  MIND: 'Stillness',
 };
 
 const TREND_ICON: Record<string, string> = { UP: '↑', FLAT: '→', DOWN: '↓' };
@@ -58,10 +58,10 @@ export function WeekPageClient() {
 
   return (
     <div className="grid animate-rise gap-6">
-      <Section eyebrow="Mijn week" title="Elk uur krijgt ook een taak.">
-        <p className="max-w-[62ch] text-[15px] text-fg-muted">
-          Dezelfde zes percentages, maar uitgegeven in uren. Geld koopt dingen; uren bouwen de
-          persoon die het verdient.
+      <Section eyebrow="My week" title="Every hour gets a job too.">
+        <p className="max-w-prose text-base text-fg-muted">
+          The same six percentages, but spent in hours. Money buys things; hours build the
+          person who earns them.
         </p>
       </Section>
 
@@ -73,13 +73,13 @@ export function WeekPageClient() {
               key={s.metric}
               className="flex items-center gap-3 rounded-xl border border-line bg-raised px-4 py-2.5"
             >
-              <span className="font-mono text-[10px] font-medium tracking-[0.14em] uppercase text-fg-muted">
+              <span className="font-mono text-xs font-medium tracking-wide uppercase text-fg-muted">
                 {METRIC_LABEL[s.metric] ?? s.metric}
               </span>
-              <span className="font-mono text-[15px] font-semibold text-fg">
+              <span className="font-mono text-base font-semibold text-fg">
                 {Math.round(s.average7d)}
               </span>
-              <span className={cn('font-mono text-[11px]', TREND_CLASS[s.trend] ?? 'text-fg-muted')}>
+              <span className={cn('font-mono text-xs', TREND_CLASS[s.trend] ?? 'text-fg-muted')}>
                 {TREND_ICON[s.trend] ?? ''}
               </span>
             </div>
@@ -90,7 +90,7 @@ export function WeekPageClient() {
       <Card className="grid gap-5 p-6">
         {/* ── 168-hour overview bar ── */}
         <div>
-          <Eyebrow>Je week heeft 168 uur</Eyebrow>
+          <Eyebrow>Your week has 168 hours</Eyebrow>
           <div className="mt-3 flex h-3 overflow-hidden rounded-full gap-0.5">
             {WEEK_WHOLE.map((w) => (
               <span
@@ -103,21 +103,21 @@ export function WeekPageClient() {
           </div>
           <div className="mt-3 flex flex-wrap gap-4">
             {WEEK_WHOLE.map((w) => (
-              <span key={w.name} className="flex items-baseline gap-2 font-mono text-[10px] text-fg-muted">
+              <span key={w.name} className="flex items-baseline gap-2 font-mono text-xs text-fg-muted">
                 <span className="size-2 rounded-sm" style={{ background: w.color }} />
                 {w.name} {w.hours}
               </span>
             ))}
           </div>
-          <p className="mt-3 max-w-[70ch] text-[13px] leading-relaxed text-fg-muted">
-            Van die 168 uur stuur jij er zelf ongeveer {STEERED_HOURS}. De rest gaat naar slaap,
-            werk en alles wat zonder keuze gebeurt.
+          <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-muted">
+            Of those 168 hours you steer about {STEERED_HOURS} yourself. The rest goes to sleep,
+            work, and everything that happens without a choice.
           </p>
         </div>
 
         {/* ── Steered-hours slider ── */}
         <div className="flex flex-wrap items-center gap-4 border-t border-line pt-5">
-          <Eyebrow className="whitespace-nowrap text-accent">Daarvan stuur je zelf</Eyebrow>
+          <Eyebrow className="whitespace-nowrap text-accent">Of which you steer</Eyebrow>
           <input
             type="range"
             min={8}
@@ -127,31 +127,31 @@ export function WeekPageClient() {
             readOnly
           />
           <span className="font-display text-3xl font-semibold tabular-nums text-accent">
-            {STEERED_HOURS}u
+            {STEERED_HOURS}h
           </span>
         </div>
 
         {/* ── Per-jar hour cards ── */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(clamp(150px,30%,240px),1fr))] gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {JAR_META.map((j) => {
             const hours = Math.round((STEERED_HOURS * j.pct) / 100);
             return (
               <div
                 key={j.key}
                 className={cn(
-                  'grid gap-2 rounded-[14px] border border-line border-t-[3px] bg-raised p-4',
+                  'grid gap-2 rounded-xl border border-line border-t-4 bg-raised p-4',
                   JAR_BORDER[j.key],
                 )}
               >
-                <span className={cn('flex items-center gap-2 font-mono text-[9.5px] font-medium uppercase tracking-wider', j.text)}>
+                <span className={cn('flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider', j.text)}>
                   <span aria-hidden>{j.icon}</span>
                   {j.name}
                 </span>
                 <span className="flex items-baseline gap-2">
-                  <span className="font-display text-[26px] font-semibold tabular-nums text-fg">{hours}u</span>
-                  <span className="font-mono text-[10px] text-fg-faint">{j.pct}%</span>
+                  <span className="font-display text-2xl font-semibold tabular-nums text-fg">{hours}h</span>
+                  <span className="font-mono text-xs text-fg-faint">{j.pct}%</span>
                 </span>
-                <span className="text-[12.5px] leading-snug text-fg-muted">{j.subtitle}</span>
+                <span className="text-sm leading-snug text-fg-muted">{j.subtitle}</span>
               </div>
             );
           })}
@@ -159,12 +159,12 @@ export function WeekPageClient() {
 
         {/* ── Where time and money disagree ── */}
         <div className="border-t border-line pt-5">
-          <Eyebrow className="text-accent">✦ Waar tijd en geld niet kloppen</Eyebrow>
-          <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-fg-secondary">
-            Je geeft Play 10% van je geld maar slechts{' '}
-            {Math.round((Math.round((STEERED_HOURS * 10) / 100) / STEERED_HOURS) * 100)}% van je
-            stuurbare uren. Dat is geen falen — het is een signaal dat je plezier vooral in kleine
-            impulsen zit, niet in geplande blokken.
+          <Eyebrow className="text-accent">✦ Where time and money diverge</Eyebrow>
+          <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-secondary">
+            You give Play 10% of your money but only{' '}
+            {Math.round((Math.round((STEERED_HOURS * 10) / 100) / STEERED_HOURS) * 100)}% of your
+            steerable hours. That is not failure — it is a signal that your joy lives mainly in small
+            impulses, not planned blocks.
           </p>
         </div>
       </Card>

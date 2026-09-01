@@ -25,27 +25,27 @@ export function PortalPreviewCard({
   line: string;
 }) {
   return (
-    <AccentCard tint={tint} className="flex flex-1 flex-col gap-3.5 rounded-[20px] p-5.5">
+    <AccentCard tint={tint} className="flex flex-1 flex-col gap-3.5 rounded-2xl p-5.5">
       <div className="flex items-center justify-between gap-3">
-        <span className="flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.16em] uppercase" style={{ color: tint }}>
+        <span className="flex items-center gap-2 font-mono text-xs font-medium tracking-widest uppercase" style={{ color: tint }}>
           {icon}
           {title}
         </span>
-        <Link href={href} className="font-mono text-[11px] font-medium text-fg-faint hover:text-accent">
+        <Link href={href} className="font-mono text-xs font-medium text-fg-faint hover:text-accent">
           {openLabel}
         </Link>
       </div>
       <div className="grid">
         {rows.map((r) => (
           <div key={r.label} className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
-            <span className="font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-fg-faint">{r.label}</span>
-            <span className="font-display text-[22px] leading-none font-semibold tracking-tight" style={{ color: r.color }}>
+            <span className="font-mono text-xs tracking-wide whitespace-nowrap text-fg-faint">{r.label}</span>
+            <span className="font-display text-2xl leading-none font-semibold tracking-tight" style={{ color: r.color }}>
               {r.value}
             </span>
           </div>
         ))}
       </div>
-      <p className="text-[12.5px] leading-relaxed text-fg-muted">{line}</p>
+      <p className="text-sm leading-relaxed text-fg-muted">{line}</p>
     </AccentCard>
   );
 }

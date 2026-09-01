@@ -40,10 +40,10 @@ export function ExpenseUpdatePage({
   const tx = fromList ?? fromInbox;
 
   if (live && (listQuery.isLoading || inboxQuery.isLoading) && !tx) {
-    return <p className="text-sm text-fg-muted">Laden…</p>;
+    return <p className="text-sm text-fg-muted">Loading…</p>;
   }
   if (!tx) {
-    return <p className="text-sm text-fg-muted">Transactie niet gevonden.</p>;
+    return <p className="text-sm text-fg-muted">Transaction not found.</p>;
   }
 
   return (

@@ -20,10 +20,10 @@ import { useLiveQuery } from '@rumbelo/hooks';
 import { useApi, useApiClient } from '@rumbelo/contracts/react';
 
 const FALLBACK_RECAP: CoachRecapItem[] = [
-  { portal: 'Geld', value: '—', what: 'besteed deze week', tint: 'var(--color-jar-give)', href: '/money/transactions' },
-  { portal: 'Groei', value: '—', what: 'inkomen stijging/jaar', tint: 'var(--color-jar-lts)', href: '/growth' },
-  { portal: 'Energie', value: '—', what: 'getraind deze week', tint: 'var(--color-jar-play)', href: '/energy' },
-  { portal: 'Ziel', value: '—', what: 'stilte vandaag', tint: 'var(--color-portal-soul)', href: '/soul' },
+  { portal: 'Money', value: '—', what: 'spent this week', tint: 'var(--color-jar-give)', href: '/money/transactions' },
+  { portal: 'Growth', value: '—', what: 'income growth/year', tint: 'var(--color-jar-lts)', href: '/growth' },
+  { portal: 'Energy', value: '—', what: 'trained this week', tint: 'var(--color-jar-play)', href: '/energy' },
+  { portal: 'Soul', value: '—', what: 'stillness today', tint: 'var(--color-portal-soul)', href: '/soul' },
 ];
 
 export function HomeDashboardClient() {
@@ -57,9 +57,9 @@ export function HomeDashboardClient() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-      showToast('Maand afgesloten', 'success');
+      showToast('Month closed', 'success');
     },
-    onError: () => showToast('Afsluiten mislukt', 'error'),
+    onError: () => showToast('Close failed', 'error'),
   });
 
   const mock = mockDashboard;
@@ -67,7 +67,7 @@ export function HomeDashboardClient() {
   const d = live ? { ...mock, ...(liveData ?? {}) } : (liveData ?? mock);
   const jars = live ? (liveData?.jars?.length ? liveData.jars : []) : mockJars;
   const turn = liveData?.turn ?? mockTurn;
-  const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'nl-NL');
+  const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'en-US');
   const coach: CoachMessage[] =
     live && liveData?.coach?.length
       ? liveData.coach.map((m: (typeof liveData.coach)[number]) => ({
@@ -84,8 +84,8 @@ export function HomeDashboardClient() {
   return (
     <div className="grid gap-6">
       <div>
-        <Eyebrow>✦ {formatPeriod(d.period ?? periodKey, 'nl-NL')}</Eyebrow>
-        <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">
+        <Eyebrow>✦ {formatPeriod(d.period ?? periodKey, 'en-US')}</Eyebrow>
+        <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg lg:text-4xl">
           {periodLabel}
         </h1>
       </div>
@@ -99,9 +99,9 @@ export function HomeDashboardClient() {
                   id: 'fallback',
                   kind: 'NUDGE',
                   text: d.inboxCount
-                    ? `${d.inboxCount} transacties wachten op een potje.`
-                    : 'Alles gesorteerd — tijd voor intentie.',
-                  ctaLabel: d.inboxCount ? 'Inbox sorteren' : 'Weekritueel',
+                    ? `${d.inboxCount} transaction${d.inboxCount === 1 ? '' : 's'} waiting for a jar.`
+                    : 'All sorted — time for intention.',
+                  ctaLabel: d.inboxCount ? 'Sort inbox' : 'Weekly ritual',
                   ctaHref: d.inboxCount ? '/money/transactions' : '/ritual',
                 },
               ]
@@ -111,56 +111,55 @@ export function HomeDashboardClient() {
 
       <HeroKluis
         total={formatMoney(d.allocatedTotal ?? mockDashboard.allocatedTotal)}
-        incomeBreakdown={`Verdeeld over ${jars.length} potten`}
+        incomeBreakdown={`Distributed across ${jars.length} jar${jars.length === 1 ? '' : 's'}`}
         stats={[
-          { label: 'Gemiddeld over/maand', value: formatMoney(d.avgLeftOver ?? 0), tone: 'accent' },
-          { label: 'Veilig per dag', value: formatMoney(d.safePerDay ?? 0), tone: 'accent' },
-          { label: 'Over in Spelen', value: formatMoney(d.playLeft ?? 0) },
+          { label: 'Avg left/month', value: formatMoney(d.avgLeftOver ?? 0), tone: 'accent' },
+          { label: 'Safe per day', value: formatMoney(d.safePerDay ?? 0), tone: 'accent' },
+          { label: 'Left in Play', value: formatMoney(d.playLeft ?? 0) },
         ]}
       >
         <JarDrilldownTable jars={jars as never} />
       </HeroKluis>
 
-      <div className="flex flex-wrap items-stretch gap-4.5">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <PortalWidget
           tint="var(--color-jar-lts)"
           icon="↗"
-          title="Groei"
+          title="Growth"
           href="/growth"
           stats={[
-            { label: 'INKOMEN DEZE MAAND', value: formatMoney(d.incomeTotal ?? 0) },
+            { label: 'INCOME THIS MONTH', value: formatMoney(d.incomeTotal ?? 0) },
             { label: 'INBOX', value: String(d.inboxCount ?? 0) },
           ]}
-          tagline="Kosten snijden heeft een vloer; inkomen verhogen niet."
+          tagline="Cutting costs has a floor; raising income does not."
         />
         <PortalWidget
           tint="var(--color-jar-play)"
           icon={"✳\uFE0E"}
-          title="Energie"
+          title="Energy"
           href="/energy"
           stats={[
-            { label: 'GETRAIND DEZE WEEK', value: '3u' },
-            { label: 'SLAAPSCORE', value: String(sleepScore) },
+            { label: 'TRAINED THIS WEEK', value: '3h' },
+            { label: 'SLEEP SCORE', value: String(sleepScore) },
           ]}
-          tagline="Een moe hoofd besteedt; een uitgerust hoofd stuurt."
+          tagline="A tired mind spends; a rested mind directs."
         />
         <PortalWidget
           tint="var(--color-portal-soul)"
           icon="✦"
-          title="Ziel"
+          title="Soul"
           href="/soul"
           stats={[
-            { label: 'STILTE VANDAAG', value: '10 min' },
-            { label: 'WAAROM', value: d.why ? '✓' : '—' },
+            { label: 'STILLNESS TODAY', value: '10 min' },
+            { label: 'WHY', value: d.why ? '✓' : '—' },
           ]}
-          tagline="Een kalm verstand stuurt geld. Een rusteloos verstand geeft het uit."
+          tagline="A calm mind directs money. A restless one spends it."
         />
       </div>
 
       <TurnLog
         score={turn.score}
         daysLeft={turn.daysLeft}
-        levelLabel={turn.levelLabel}
         events={turn.events}
       />
 
@@ -170,9 +169,9 @@ export function HomeDashboardClient() {
             type="button"
             onClick={() => closeTurnMutation.mutate()}
             disabled={closeTurnMutation.isPending}
-            className="rounded-full border border-line-strong px-5 py-2.5 font-mono text-[10.5px] font-medium tracking-[0.12em] uppercase text-fg-muted transition-colors hover:border-accent-hover hover:text-accent disabled:opacity-50"
+            className="rounded-full border border-line-strong px-5 py-2.5 font-mono text-xs font-medium tracking-wide uppercase text-fg-muted transition-colors hover:border-accent-hover hover:text-accent disabled:opacity-50"
           >
-            {closeTurnMutation.isPending ? 'Bezig…' : 'Beurt afsluiten'}
+            {closeTurnMutation.isPending ? 'Working…' : 'Close turn'}
           </button>
         </div>
       )}

@@ -14,7 +14,7 @@ import { AccentCard, Badge, Card, Eyebrow } from '@rumbelo/ui';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 const EXTRA_OPTIONS = [
-  { label: 'Alleen minimum', value: 0 },
+  { label: 'Minimum only', value: 0 },
   { label: '+ €50', value: 5_000 },
   { label: '+ €100', value: 10_000 },
   { label: '+ €200', value: 20_000 },
@@ -104,38 +104,38 @@ export function DebtsPageClient() {
   return (
     <div className="grid animate-rise gap-8">
       <div>
-        <span className="font-mono text-[12px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ SCHULDEN
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ DEBT
         </span>
-        <h1 className="mt-2 font-display text-[clamp(26px,4vw,38px)] font-semibold tracking-tight text-fg">
-          Schuldenvrij in {freedomDate}.
+        <h1 className="mt-2 font-display text-3xl lg:text-4xl font-semibold tracking-tight text-fg">
+          Debt-free by {freedomDate}.
         </h1>
-        <p className="mt-2 max-w-[58ch] text-[15px] text-pretty text-fg-muted">
-          Niet alle schuld is hetzelfde. Snap eerst het verschil, kies dan hoe je aflost.
+        <p className="mt-2 max-w-prose text-base text-pretty text-fg-muted">
+          Not all debt is equal. Understand the difference first, then choose how you pay it off.
         </p>
       </div>
 
       <ListToolbar
-        createLabel="+ Schuld toevoegen"
+        createLabel="+ Add debt"
         onCreate={() => router.push(CREATE_HREF.debt)}
       />
 
       <AccentCard tint="var(--color-accent)">
         <div className="flex flex-wrap gap-x-8 gap-y-4 items-start">
           <div className="grid gap-1.5">
-            <Eyebrow>Vrij in</Eyebrow>
+            <Eyebrow>Free by</Eyebrow>
             <p className="font-display text-4xl font-semibold tracking-tight text-accent">
               {freedomDate}
             </p>
           </div>
           <div className="grid gap-1.5">
-            <Eyebrow>Totale schuld</Eyebrow>
+            <Eyebrow>Total debt</Eyebrow>
             <p className="font-display text-2xl font-semibold tabular-nums text-fg">
               {formatMoney(total)}
             </p>
           </div>
           <div className="grid gap-1.5">
-            <Eyebrow>Minimaal p/m</Eyebrow>
+            <Eyebrow>Minimum /mo</Eyebrow>
             <p className="font-display text-2xl font-semibold tabular-nums text-fg">
               {formatMoney(monthly)}
             </p>
@@ -146,7 +146,7 @@ export function DebtsPageClient() {
         {!live && (
           <div className="mt-5 border-t border-line pt-4">
             <Eyebrow className="mb-3">
-              Aflosversneller · {extra > 0 ? formatMoney(extra) : 'geen'} extra p/m
+              Payoff booster · {extra > 0 ? formatMoney(extra) : 'none'} extra/mo
             </Eyebrow>
             <div className="flex flex-wrap gap-2">
               {EXTRA_OPTIONS.map((opt) => (
@@ -155,7 +155,7 @@ export function DebtsPageClient() {
                   type="button"
                   onClick={() => setExtra(opt.value)}
                   className={cn(
-                    'rounded-full border font-mono text-[10.5px] font-medium tracking-widest px-3.5 py-2 transition-all duration-200',
+                    'rounded-full border font-mono text-xs font-medium tracking-widest px-3.5 py-2 transition-all duration-200',
                     extra === opt.value
                       ? 'border-accent/40 bg-accent-soft text-accent'
                       : 'border-line text-fg-muted hover:border-accent-hover hover:text-accent',
@@ -171,8 +171,8 @@ export function DebtsPageClient() {
       </AccentCard>
 
       <div>
-        <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ Aflosvolgorde · Lawine
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ Payoff order · Avalanche
         </span>
       </div>
 
@@ -189,21 +189,21 @@ export function DebtsPageClient() {
             >
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-[11px] text-accent">#{i + 1}</span>
+                  <span className="font-mono text-xs text-accent">#{i + 1}</span>
                   <div>
                     <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="text-[15px] text-fg">{d.name}</span>
+                      <span className="text-base text-fg">{d.name}</span>
                       <Badge tone={d.interestRate > 10 ? 'danger' : 'neutral'}>
-                        {d.interestRate}% rente
+                        {d.interestRate}% interest
                       </Badge>
                     </div>
-                    <div className="mt-1 font-mono text-[10px] tracking-[0.06em] text-fg-faint">
-                      {formatMoney(d.minimumPayment)} p/m minimum
+                    <div className="mt-1 font-mono text-xs tracking-normal text-fg-faint">
+                      {formatMoney(d.minimumPayment)}/mo minimum
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono text-[15px] text-fg">{formatMoney(d.balance)}</div>
+                  <div className="font-mono text-base text-fg">{formatMoney(d.balance)}</div>
                 </div>
               </div>
             </button>
@@ -213,33 +213,33 @@ export function DebtsPageClient() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div
-          className="rounded-lg border border-line bg-surface p-5 shadow-md"
-          style={{ borderLeftWidth: 3, borderLeftColor: 'var(--color-accent)' }}
+          className="rounded-lg border border-l-4 border-line bg-surface p-5 shadow-md"
+          style={{ borderLeftColor: 'var(--color-accent)' }}
         >
           <div className="mb-3 flex items-center gap-2.5">
             <span className="size-2.5 rounded-full bg-accent" />
-            <span className="font-mono text-[11px] font-medium tracking-[0.15em] uppercase text-accent">
-              Lawine
+            <span className="font-mono text-xs font-medium tracking-wide uppercase text-accent">
+              Avalanche
             </span>
           </div>
-          <p className="text-[14px] leading-relaxed text-pretty text-fg-secondary">
-            Betaal de hoogste rente het eerst af. Kost wiskundig het minst. De enige reden om niet
-            lawine te doen is als je een kleine overwinning nodig hebt om door te gaan.
+          <p className="text-sm leading-relaxed text-pretty text-fg-secondary">
+            Pay the highest interest first. Mathematically the cheapest option. The only reason not to
+            avalanche is if you need a quick win to keep going.
           </p>
         </div>
         <div
-          className="rounded-lg border border-line bg-surface p-5 shadow-md"
-          style={{ borderLeftWidth: 3, borderLeftColor: 'var(--color-fg-muted)' }}
+          className="rounded-lg border border-l-4 border-line bg-surface p-5 shadow-md"
+          style={{ borderLeftColor: 'var(--color-fg-muted)' }}
         >
           <div className="mb-3 flex items-center gap-2.5">
             <span className="size-2.5 rounded-full bg-fg-muted" />
-            <span className="font-mono text-[11px] font-medium tracking-[0.15em] uppercase text-fg-muted">
-              Sneeuwbal
+            <span className="font-mono text-xs font-medium tracking-wide uppercase text-fg-muted">
+              Snowball
             </span>
           </div>
-          <p className="text-[14px] leading-relaxed text-pretty text-fg-secondary">
-            Los het kleinste saldo het eerst af. Kost meer rente maar levert snellere overwinningen.
-            Kies de methode die je vol kunt houden.
+          <p className="text-sm leading-relaxed text-pretty text-fg-secondary">
+            Pay the smallest balance first. Costs more interest but delivers faster wins.
+            Choose the method you can stick with.
           </p>
         </div>
       </div>

@@ -9,10 +9,10 @@ import { JAR_META } from '@/app/_mock';
 import { markOnboardingDone } from '@/app/_lib/onboarding-storage';
 
 const STEPS = [
-  { title: 'Welkom bij Rumbelo', body: 'Geld met intentie. Zes potten, één rustig overzicht.' },
-  { title: 'Jouw inkomen', body: 'Wat komt er netto per maand binnen?' },
-  { title: 'De zes potten', body: 'Je inkomen wordt meteen verdeeld — betaal eerst je toekomst.' },
-  { title: 'Jouw waarom', body: 'Eén zin op je dashboard. De controlevraag als het krap wordt.' },
+  { title: 'Welcome to Rumbelo', body: 'Money with intention. Six jars, one calm overview.' },
+  { title: 'Your income', body: 'What is your net monthly income?' },
+  { title: 'The six jars', body: 'Your income is split immediately — pay your future first.' },
+  { title: 'Your why', body: 'One sentence on your dashboard. The check when money gets tight.' },
 ];
 
 export function OnboardingOverlay() {
@@ -25,7 +25,7 @@ export function OnboardingOverlay() {
     if (session && !householdId) openOnboarding();
   }, [session, householdId, openOnboarding]);
 
-  const [householdName, setHouseholdName] = useState('Mijn huishouden');
+  const [householdName, setHouseholdName] = useState('My household');
   const [monthlyIncome, setMonthlyIncome] = useState('4300');
   const [why, setWhy] = useState('');
   const [pending, setPending] = useState(false);
@@ -53,9 +53,9 @@ export function OnboardingOverlay() {
       await refreshSession();
       markOnboardingDone();
       closeOnboarding(true);
-      showToast('Huishouden aangemaakt', 'success');
+      showToast('Household created', 'success');
     } catch {
-      showToast('Onboarding mislukt — probeer opnieuw', 'error');
+      showToast('Setup failed — please try again', 'error');
     } finally {
       setPending(false);
     }
@@ -67,12 +67,12 @@ export function OnboardingOverlay() {
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Welkom bij Rumbelo"
+        aria-label="Welcome to Rumbelo"
         className="fixed left-1/2 top-1/2 z-71 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line-strong bg-surface p-6 shadow-xl animate-rise"
       >
         <div className="mb-5 flex items-center justify-between">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-            Stap {onboardingStep + 1} van {STEPS.length}
+          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">
+            Step {onboardingStep + 1} of {STEPS.length}
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export function OnboardingOverlay() {
 
         {onboardingStep === 1 && (
           <div className="mt-4">
-            <Field label="Netto per maand (€)" htmlFor="income">
+            <Field label="Net monthly income (€)" htmlFor="income">
               <Input
                 id="income"
                 inputMode="decimal"
@@ -110,21 +110,21 @@ export function OnboardingOverlay() {
 
         {onboardingStep === 3 && (
           <div className="mt-4 grid gap-3">
-            <Field label="Naam huishouden" htmlFor="household">
+            <Field label="Household name" htmlFor="household">
               <Input
                 id="household"
                 value={householdName}
                 onChange={(e) => setHouseholdName(e.target.value)}
               />
             </Field>
-            <Field label="Jouw waarom" htmlFor="why">
+            <Field label="Your why" htmlFor="why">
               <textarea
                 id="why"
                 rows={3}
                 value={why}
                 onChange={(e) => setWhy(e.target.value)}
                 className="w-full rounded-xl border border-line bg-raised px-3 py-2 text-sm"
-                placeholder="Waarom doe je dit?"
+                placeholder="Why are you doing this?"
               />
             </Field>
           </div>
@@ -144,16 +144,16 @@ export function OnboardingOverlay() {
           <div className="flex gap-2">
             {onboardingStep > 0 && (
               <Button variant="ghost" size="sm" onClick={() => setOnboardingStep(onboardingStep - 1)}>
-                Terug
+                Back
               </Button>
             )}
             {isLast ? (
               <Button size="sm" onClick={() => void finish()} disabled={pending}>
-                {pending ? 'Bezig…' : 'Klaar'}
+                {pending ? 'Working…' : 'Done'}
               </Button>
             ) : (
               <Button size="sm" onClick={() => setOnboardingStep(onboardingStep + 1)}>
-                Volgende
+                Next
               </Button>
             )}
           </div>

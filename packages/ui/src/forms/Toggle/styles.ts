@@ -10,7 +10,7 @@ export function toggleTrackClass(checked: boolean) {
 
 export function toggleThumbClass(checked: boolean) {
   return cn(
-    'absolute top-0.5 size-5 rounded-full bg-surface shadow-md transition-[left]',
-    checked ? 'left-[1.125rem]' : 'left-0.5',
+    'absolute top-0.5 left-0.5 size-5 rounded-full bg-surface shadow-md transition-transform',
+    checked ? 'translate-x-4' : 'translate-x-0',
   );
 }

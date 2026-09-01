@@ -16,19 +16,19 @@ import { Button, Card, EmptyState } from '@rumbelo/ui';
 import { InboxSortCard } from '@/components/features/money/inbox-sort-card';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
-type Tab = 'SORTEREN' | 'ALLES' | 'REGELS';
+type Tab = 'INBOX' | 'ALL' | 'RULES';
 
 const MATCHER_LABEL: Record<string, string> = {
-  CONTAINS: 'bevat',
+  CONTAINS: 'contains',
   EQUALS: 'is',
-  STARTS_WITH: 'begint met',
+  STARTS_WITH: 'starts with',
   REGEX: 'regex',
 };
 
 const FIELD_LABEL: Record<string, string> = {
-  DESCRIPTION: 'omschrijving',
-  COUNTERPARTY: 'tegenpartij',
-  AMOUNT: 'bedrag',
+  DESCRIPTION: 'description',
+  COUNTERPARTY: 'counterparty',
+  AMOUNT: 'amount',
 };
 
 export function TransactionsPageClient() {
@@ -38,7 +38,7 @@ export function TransactionsPageClient() {
   const { householdId } = useAuth();
   const { showToast } = useAppShell();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>('SORTEREN');
+  const [tab, setTab] = useState<Tab>('INBOX');
   const live = isLiveData(householdId);
 
   const inboxQuery = useLiveQuery(
@@ -97,12 +97,12 @@ export function TransactionsPageClient() {
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
       if (vars.createRule) {
         void queryClient.invalidateQueries({ queryKey: api.money.rules.list.key() });
-        showToast('Gesorteerd en regel opgeslagen', 'success');
+        showToast('Sorted and rule saved', 'success');
       } else {
-        showToast('Transactie gesorteerd', 'success');
+        showToast('Transaction sorted', 'success');
       }
     },
-    onError: () => showToast('Sorteren mislukt', 'error'),
+    onError: () => showToast('Sort failed', 'error'),
   });
 
   const replayMutation = useMutation({
@@ -117,12 +117,12 @@ export function TransactionsPageClient() {
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
       showToast(
         result.sorted > 0
-          ? `${result.sorted} transactie${result.sorted === 1 ? '' : 's'} gesorteerd via regels`
-          : 'Geen matches — inbox ongewijzigd',
+          ? `${result.sorted} transaction${result.sorted === 1 ? '' : 's'} sorted by rules`
+          : 'No matches — inbox unchanged',
         result.sorted > 0 ? 'success' : 'info',
       );
     },
-    onError: () => showToast('Regels toepassen mislukt', 'error'),
+    onError: () => showToast('Apply rules failed', 'error'),
   });
 
   const removeRuleMutation = useMutation({
@@ -132,9 +132,9 @@ export function TransactionsPageClient() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.rules.list.key() });
-      showToast('Regel verwijderd', 'success');
+      showToast('Rule deleted', 'success');
     },
-    onError: () => showToast('Verwijderen mislukt', 'error'),
+    onError: () => showToast('Delete failed', 'error'),
   });
 
   function resolveJarId(fallbackKey: string): string {
@@ -145,37 +145,38 @@ export function TransactionsPageClient() {
   return (
     <div className="grid animate-rise gap-8">
       <div>
-        <span className="font-mono text-[12px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ TRANSACTIES
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ TRANSACTIONS
         </span>
-        <h1 className="mt-2 font-display text-[clamp(26px,4vw,38px)] font-semibold tracking-tight text-fg">
-          Alleen wat wisselt. Vaste lasten staan elders.
+        <h1 className="mt-2 font-display text-3xl lg:text-4xl font-semibold tracking-tight text-fg">
+          Only what changes. Fixed costs are elsewhere.
         </h1>
-        <p className="mt-2 max-w-[62ch] text-[15px] text-pretty text-fg-muted">
-          Wat je bank doorstuurt komt hier eerst binnen — jij zegt uit welke pot het kwam.
+        <p className="mt-2 max-w-prose text-base text-pretty text-fg-muted">
+          What your bank sends over lands here first — you say which jar it came from. Connecting a
+          bank is a setting.
         </p>
       </div>
 
       <ListToolbar
         onCreate={() => router.push(CREATE_HREF.tx)}
         secondary={
-          live && (tab === 'SORTEREN' || tab === 'REGELS') && rules.length > 0 ? (
+          live && (tab === 'INBOX' || tab === 'RULES') && rules.length > 0 ? (
             <Button
               variant="secondary"
               size="sm"
               disabled={replayMutation.isPending}
               onClick={() => void replayMutation.mutateAsync()}
             >
-              {replayMutation.isPending ? 'Bezig…' : 'Regels toepassen'}
+              {replayMutation.isPending ? 'Working…' : 'Apply rules'}
             </Button>
           ) : null
         }
       >
         {(
           [
-            ['SORTEREN', 'Te sorteren'],
-            ['ALLES', 'Alle uitgaven'],
-            ['REGELS', 'Regels'],
+            ['INBOX', 'To sort'],
+            ['ALL', 'All expenses'],
+            ['RULES', 'Rules'],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -183,20 +184,20 @@ export function TransactionsPageClient() {
             type="button"
             onClick={() => setTab(id)}
             className={cn(
-              'flex items-center gap-2 rounded-full border font-mono text-[10.5px] font-medium tracking-[0.12em] uppercase px-4 py-2 transition-all duration-200',
+              'flex items-center gap-2 rounded-full border font-mono text-xs font-medium tracking-wide uppercase px-4 py-2 transition-all duration-200',
               tab === id
                 ? 'border-accent/40 bg-accent-soft text-accent'
                 : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
             )}
           >
             {label}
-            {id === 'SORTEREN' && inbox.length > 0 && (
-              <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-[9.5px] text-warning">
+            {id === 'INBOX' && inbox.length > 0 && (
+              <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
                 {inbox.length}
               </span>
             )}
-            {id === 'REGELS' && rules.length > 0 && (
-              <span className="rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[9.5px] text-accent">
+            {id === 'RULES' && rules.length > 0 && (
+              <span className="rounded-full bg-accent/15 px-2 py-0.5 font-mono text-xs text-accent">
                 {rules.length}
               </span>
             )}
@@ -204,12 +205,12 @@ export function TransactionsPageClient() {
         ))}
       </ListToolbar>
 
-      {tab === 'SORTEREN' &&
+      {tab === 'INBOX' &&
         (inbox.length === 0 ? (
           <EmptyState
             icon="✓"
-            title="Niets meer te sorteren."
-            body="Elke betaling heeft een pot. Kom morgen terug — of koppel hieronder een bank."
+            title="Nothing left to sort."
+            body="Every payment has a jar. Come back tomorrow — or connect a bank below."
           />
         ) : (
           <div className="grid gap-3">
@@ -241,15 +242,15 @@ export function TransactionsPageClient() {
           </div>
         ))}
 
-      {tab === 'ALLES' && (
+      {tab === 'ALL' && (
         <div className="grid gap-3">
-          <p className="text-[13.5px] text-fg-muted">
-            Tik op een regel om hem aan te passen of te verwijderen.
+          <p className="text-sm text-fg-muted">
+            Tap a row to edit or delete it.
           </p>
           <Card className="overflow-hidden p-0">
             <div className="grid gap-px">
               {all.length === 0 ? (
-                <p className="px-5 py-4 text-sm text-fg-muted">Nog geen uitgaven in deze periode.</p>
+                <p className="px-5 py-4 text-sm text-fg-muted">No expenses in this period yet.</p>
               ) : (
                 all.map((t) => {
                   const jarId =
@@ -267,20 +268,20 @@ export function TransactionsPageClient() {
                       className="grid w-full gap-1 border-b border-line px-5 py-3.5 text-left last:border-b-0 hover:bg-raised"
                     >
                       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <span className="min-w-0 flex-1 text-[14px] text-fg">{t.description}</span>
+                        <span className="min-w-0 flex-1 text-sm text-fg">{t.description}</span>
                         <span
                           className={cn(
-                            'font-mono text-[14px]',
+                            'font-mono text-sm',
                             t.amount < 0 ? 'text-fg' : 'text-success',
                           )}
                         >
                           {formatMoney(t.amount, { signed: true })}
                         </span>
                       </div>
-                      <div className="flex flex-wrap gap-x-2 font-mono text-[10px] tracking-[0.08em] uppercase text-fg-faint">
+                      <div className="flex flex-wrap gap-x-2 font-mono text-xs tracking-wide uppercase text-fg-faint">
                         <span>{t.bookedOn}</span>
                         <span>·</span>
-                        <span>{t.status === 'INBOX' ? 'Inbox' : (jar?.name ?? 'Geen pot')}</span>
+                        <span>{t.status === 'INBOX' ? 'Inbox' : (jar?.name ?? 'No jar')}</span>
                       </div>
                     </button>
                   );
@@ -291,23 +292,23 @@ export function TransactionsPageClient() {
         </div>
       )}
 
-      {tab === 'REGELS' &&
+      {tab === 'RULES' &&
         (!live ? (
           <EmptyState
             icon="◇"
-            title="Log in om regels te beheren."
-            body="Regels sorteren inbox-transacties automatisch naar de juiste pot."
+            title="Sign in to manage rules."
+            body="Rules automatically sort inbox transactions into the right jar."
           />
         ) : rules.length === 0 ? (
           <EmptyState
             icon="◇"
-            title="Nog geen regels."
-            body="Kies “Altijd zo” bij een inbox-item om een regel te leren. Daarna kun je ze hier beheren."
+            title="No rules yet."
+            body="Choose “Always this” on an inbox item to teach a rule. Manage them here afterwards."
           />
         ) : (
           <div className="grid gap-3">
-            <p className="text-[13.5px] text-fg-muted">
-              Eerste match wint, op prioriteit. Dead rules (0 hits) kun je gerust weggooien.
+            <p className="text-sm text-fg-muted">
+              First match wins, by priority. Dead rules (0 hits) can safely be deleted.
             </p>
             <Card className="overflow-hidden p-0">
               <div className="grid gap-px">
@@ -316,17 +317,17 @@ export function TransactionsPageClient() {
                   return (
                     <div
                       key={rule.id}
-                      className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-line px-5 py-3.5 last:border-b-0"
+                      className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5 last:border-b-0"
                     >
                       <div className="min-w-0">
-                        <p className="text-[14px] text-fg">
-                          Als {FIELD_LABEL[rule.field] ?? rule.field}{' '}
+                        <p className="text-sm text-fg">
+                          If {FIELD_LABEL[rule.field] ?? rule.field}{' '}
                           {MATCHER_LABEL[rule.matcher] ?? rule.matcher}{' '}
-                          <span className="font-mono text-[13px]">“{rule.value}”</span>
+                          <span className="font-mono text-sm">“{rule.value}”</span>
                         </p>
-                        <p className="mt-1 font-mono text-[10px] tracking-[0.06em] uppercase text-fg-faint">
-                          → {jar?.name ?? 'Pot'} · prio {rule.priority} · {rule.hitCount} hits
-                          {!rule.active ? ' · uit' : ''}
+                        <p className="mt-1 font-mono text-xs tracking-normal uppercase text-fg-faint">
+                          → {jar?.name ?? 'Jar'} · prio {rule.priority} · {rule.hitCount} hits
+                          {!rule.active ? ' · off' : ''}
                         </p>
                       </div>
                       <Button
@@ -335,11 +336,11 @@ export function TransactionsPageClient() {
                         className="text-danger hover:bg-danger/10 hover:text-danger"
                         disabled={removeRuleMutation.isPending}
                         onClick={() => {
-                          if (!window.confirm('Deze sorteerregel verwijderen?')) return;
+                          if (!window.confirm('Delete this sort rule?')) return;
                           void removeRuleMutation.mutateAsync(rule.id);
                         }}
                       >
-                        Verwijder
+                        Delete
                       </Button>
                     </div>
                   );

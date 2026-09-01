@@ -17,27 +17,27 @@ const TARGET = 600_000;
 
 const LEVERS = [
   {
-    meta: 'Hefboom 1',
-    name: 'Tarief verhogen',
-    desc: 'Elke €100 meer per dag is €2.000 extra per maand. Eén gesprek kan het doen.',
+    meta: 'Lever 1',
+    name: 'Raise your rate',
+    desc: 'Every €100 more per day is €2,000 extra per month. One conversation can do it.',
     color: 'var(--color-accent)',
   },
   {
-    meta: 'Hefboom 2',
-    name: 'Extra dienst',
-    desc: 'Een tweede product of dienst heeft nul vaste kosten als de eerste al draait.',
+    meta: 'Lever 2',
+    name: 'Add a service',
+    desc: 'A second product or service has zero fixed costs once the first is running.',
     color: 'var(--color-jar-lts)',
   },
   {
-    meta: 'Hefboom 3',
-    name: 'Passief bouwen',
-    desc: 'Iets dat één keer wordt gemaakt en daarna blijft werken. Begint klein, nooit nul.',
+    meta: 'Lever 3',
+    name: 'Build passive income',
+    desc: 'Something made once that keeps working. Starts small, never zero.',
     color: 'var(--color-jar-ff)',
   },
   {
-    meta: 'Hefboom 4',
-    name: 'Netwerk activeren',
-    desc: 'Omzet die via mensen komt kost geen marketing. Elke tevreden klant is een kanaal.',
+    meta: 'Lever 4',
+    name: 'Activate your network',
+    desc: 'Revenue from people costs no marketing. Every happy client is a channel.',
     color: 'var(--color-jar-edu)',
   },
 ] as const;
@@ -74,37 +74,37 @@ export function IncomePageClient() {
   return (
     <div className="grid animate-rise gap-8">
       <div>
-        <span className="font-mono text-[12px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ MIJN INKOMEN
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ MY INCOME
         </span>
-        <h1 className="mt-2 font-display text-[clamp(26px,4vw,38px)] font-semibold tracking-tight text-fg">
-          Bezuinigen heeft een bodem. Verdienen niet.
+        <h1 className="mt-2 font-display text-3xl lg:text-4xl font-semibold tracking-tight text-fg">
+          Spending cuts have a floor. Earning doesn't.
         </h1>
       </div>
 
       <ListToolbar
-        createLabel="+ Toevoegen"
+        createLabel="+ Add"
         onCreate={() => router.push(CREATE_HREF.income)}
       >
-        <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ Inkomstenbronnen
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ Income sources
         </span>
       </ListToolbar>
 
       <div className="flex flex-wrap items-start gap-5">
-        <AccentCard tint="var(--color-accent)" className="grid min-w-0 flex-[1_1_340px] gap-5">
+        <AccentCard tint="var(--color-accent)" className="grid min-w-0 min-w-0 flex-1 basis-80 gap-5">
           <div className="flex flex-wrap gap-6">
             <div className="grid gap-1.5">
-              <Eyebrow>Nu, per maand</Eyebrow>
-              <p className="font-display text-[clamp(30px,4.4vw,40px)] font-semibold leading-none tracking-tight text-fg">
+              <Eyebrow>Now, per month</Eyebrow>
+              <p className="font-display text-3xl lg:text-4xl font-semibold leading-none tracking-tight text-fg">
                 {formatMoney(NET)}
               </p>
-              <p className="font-mono text-[10.5px] text-fg-muted">{formatMoney(NET * 12)} per jaar</p>
+              <p className="font-mono text-xs text-fg-muted">{formatMoney(NET * 12)} per year</p>
             </div>
             <div className="grid gap-1.5">
-              <Eyebrow>Doel</Eyebrow>
+              <Eyebrow>Target</Eyebrow>
               <p
-                className="font-display text-[clamp(30px,4.4vw,40px)] font-semibold leading-none tracking-tight"
+                className="font-display text-3xl lg:text-4xl font-semibold leading-none tracking-tight"
                 style={{
                   background: 'var(--gradient-accent)',
                   WebkitBackgroundClip: 'text',
@@ -115,17 +115,17 @@ export function IncomePageClient() {
               </p>
             </div>
             <div className="grid gap-1.5">
-              <Eyebrow>Gat</Eyebrow>
-              <p className="font-display text-[clamp(30px,4.4vw,40px)] font-semibold leading-none tracking-tight text-warning">
+              <Eyebrow>Gap</Eyebrow>
+              <p className="font-display text-3xl lg:text-4xl font-semibold leading-none tracking-tight text-warning">
                 {formatMoney(GAP)}
               </p>
             </div>
           </div>
         </AccentCard>
 
-        <Card className="grid min-w-0 flex-[1_1_300px] content-start gap-4">
-          <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-            ✦ Wat dat met elke pot doet
+        <Card className="grid min-w-0 min-w-0 flex-1 basis-72 content-start gap-4">
+          <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+            ✦ What that does to each jar
           </span>
           <div>
             {JAR_META.map((j) => {
@@ -135,14 +135,14 @@ export function IncomePageClient() {
               return (
                 <div
                   key={j.key}
-                  className="grid grid-cols-[16px_1fr_auto_auto] items-center gap-2.5 border-b border-line py-2.5 last:border-b-0"
+                  className="flex items-center gap-2.5 border-b border-line py-2.5 last:border-b-0"
                 >
-                  <span>{j.icon}</span>
-                  <span className="min-w-0 truncate text-[13px] text-fg-secondary">{j.name}</span>
-                  <span className="whitespace-nowrap font-mono text-[11.5px] text-fg-muted">
+                  <span className="shrink-0">{j.icon}</span>
+                  <span className="min-w-0 flex-1 truncate text-sm text-fg-secondary">{j.name}</span>
+                  <span className="shrink-0 whitespace-nowrap font-mono text-xs text-fg-muted">
                     {formatMoney(now)} →
                   </span>
-                  <span className="whitespace-nowrap font-mono text-[12.5px] text-success">
+                  <span className="shrink-0 whitespace-nowrap font-mono text-sm text-success">
                     {formatMoney(then)}
                   </span>
                 </div>
@@ -154,15 +154,15 @@ export function IncomePageClient() {
 
       <Card className="p-0">
         <div className="border-b border-line px-5 py-3.5">
-          <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-            ✦ Inkomstenbronnen
+          <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+            ✦ Income sources
           </span>
         </div>
         {sources.length === 0 ? (
           <p className="px-5 py-4 text-sm text-fg-muted">
             {live
-              ? 'Nog geen inkomstenbronnen — voeg er een toe om potten te voeden.'
-              : 'Log in om inkomstenbronnen te beheren.'}
+              ? 'No income sources yet — add one to feed your jars.'
+              : 'Sign in to manage income sources.'}
           </p>
         ) : (
           <div className="grid gap-px">
@@ -173,15 +173,15 @@ export function IncomePageClient() {
                 onClick={() =>
                   router.push(updateHref('income', s.id))
                 }
-                className="grid w-full grid-cols-[1fr_auto] items-center gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised"
+                className="flex w-full items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised"
               >
                 <div>
-                  <div className="text-[14px] text-fg">{s.name}</div>
-                  <div className="mt-0.5 font-mono text-[10px] tracking-[0.06em] text-fg-faint">
+                  <div className="text-sm text-fg">{s.name}</div>
+                  <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
                     {s.kind}
                   </div>
                 </div>
-                <span className="font-mono text-[13.5px] text-success">{formatMoney(s.amount)}</span>
+                <span className="font-mono text-sm text-success">{formatMoney(s.amount)}</span>
               </button>
             ))}
           </div>
@@ -192,15 +192,15 @@ export function IncomePageClient() {
         {LEVERS.map((l) => (
           <AccentCard key={l.name} tint={l.color} className="grid content-start gap-2.5">
             <span
-              className="font-mono text-[9.5px] font-medium tracking-[0.16em] uppercase"
+              className="font-mono text-xs font-medium tracking-widest uppercase"
               style={{ color: l.color }}
             >
               {l.meta}
             </span>
-            <h3 className="font-display text-[19px] font-semibold leading-snug tracking-tight text-fg">
+            <h3 className="font-display text-xl font-semibold leading-snug tracking-tight text-fg">
               {l.name}
             </h3>
-            <p className="text-[13.5px] leading-relaxed text-pretty text-fg-muted">{l.desc}</p>
+            <p className="text-sm leading-relaxed text-pretty text-fg-muted">{l.desc}</p>
           </AccentCard>
         ))}
       </div>

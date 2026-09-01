@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,14 +25,14 @@ import { isLiveData } from '@/app/_lib/preview';
 
 const euros = z
   .string()
-  .min(1, 'Bedrag is verplicht')
+  .min(1, 'Amount is required')
   .refine((v) => {
     const cents = parseEurosToCents(v);
     return cents != null && cents > 0;
-  }, { message: 'Voer een geldig bedrag in' });
+  }, { message: 'Enter a valid amount' });
 
 const goalFormSchema = z.object({
-  name: z.string().min(1, 'Naam is verplicht').max(120),
+  name: z.string().min(1, 'Name is required').max(120),
   target: euros,
   monthlyContribution: z.string().optional(),
   jarId: z.string().optional(),
@@ -69,7 +69,7 @@ export function GoalForm({
     [],
     live,
   );
-  const jars = jarsQuery.data ?? [];
+  const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
   const form = useForm<GoalFormValues>({
     defaultValues: {
@@ -130,10 +130,10 @@ export function GoalForm({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.goals.projections.key() });
-      showToast(mode === 'edit' ? 'Doel bijgewerkt' : 'Doel opgeslagen', 'success');
+      showToast(mode === 'edit' ? 'Goal updated' : 'Goal saved', 'success');
       dismiss();
     },
-    onError: () => showToast('Opslaan mislukt', 'error'),
+    onError: () => showToast('Save failed', 'error'),
   });
 
   const removeMutation = useMutation({
@@ -144,15 +144,15 @@ export function GoalForm({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.goals.projections.key() });
-      showToast('Doel verwijderd', 'success');
+      showToast('Goal deleted', 'success');
       dismiss();
     },
-    onError: () => showToast('Verwijderen mislukt', 'error'),
+    onError: () => showToast('Delete failed', 'error'),
   });
 
   async function onSubmit(values: GoalFormValues) {
     if (!live) {
-      showToast('Log in om doelen op te slaan', 'error');
+      showToast('Sign in to save goals', 'error');
       return;
     }
     await saveMutation.mutateAsync(values);
@@ -170,10 +170,10 @@ export function GoalForm({
         <div className="grid gap-2">
           <Button type="submit" className="w-full" disabled={busy}>
             {saveMutation.isPending || form.formState.isSubmitting
-              ? 'Bezig…'
+              ? 'Working…'
               : mode === 'edit'
-                ? 'Wijzigingen opslaan'
-                : 'Doel opslaan'}
+                ? 'Save changes'
+                : 'Save goal'}
           </Button>
           {mode === 'edit' && entityId ? (
             <Button
@@ -182,11 +182,11 @@ export function GoalForm({
               className="w-full text-danger hover:bg-danger/10 hover:text-danger"
               disabled={busy}
               onClick={() => {
-                if (!window.confirm('Dit doel definitief verwijderen?')) return;
+                if (!window.confirm('Permanently delete this goal?')) return;
                 void removeMutation.mutateAsync();
               }}
             >
-              {removeMutation.isPending ? 'Verwijderen…' : 'Verwijderen'}
+              {removeMutation.isPending ? 'Deleting…' : 'Delete'}
             </Button>
           ) : null}
         </div>
@@ -197,9 +197,9 @@ export function GoalForm({
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Naam</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input placeholder="Bijv. noodfonds" {...field} />
+              <Input placeholder="e.g. emergency fund" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -211,7 +211,7 @@ export function GoalForm({
         name="target"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Doelbedrag (€)</FormLabel>
+            <FormLabel>Target amount (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>
@@ -225,7 +225,7 @@ export function GoalForm({
         name="monthlyContribution"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Maandelijkse inleg (€)</FormLabel>
+            <FormLabel>Monthly contribution (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>
@@ -239,7 +239,7 @@ export function GoalForm({
         name="jarId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Pot</FormLabel>
+            <FormLabel>Jar</FormLabel>
             <FormControl>
               <select
                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
@@ -263,9 +263,9 @@ export function GoalForm({
         name="why"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Waarom (optioneel)</FormLabel>
+            <FormLabel>Why (optional)</FormLabel>
             <FormControl>
-              <Input placeholder="Kort waarom dit ertoe doet" {...field} />
+              <Input placeholder="Briefly why this matters" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

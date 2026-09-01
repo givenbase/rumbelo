@@ -5,7 +5,7 @@ import { SheetStubForm } from '@/components/features/forms/sheet-stub-form';
 
 export default function Page() {
   return (
-    <RouteModalShell closeHref="/energy/train" title="Nieuwe training">
+    <RouteModalShell closeHref="/energy/train" title="New training">
       <SheetStubForm kind="session" mode="create" embedded />
     </RouteModalShell>
   );

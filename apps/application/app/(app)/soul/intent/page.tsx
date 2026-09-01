@@ -3,40 +3,40 @@ import { PageContent } from '@/components/layout/page-content';
 import { cn } from '@rumbelo/utils';
 import { IntentStillnessLink } from './_components/intent-stillness-link';
 
-export const metadata = { title: 'Intentie' };
+export const metadata = { title: 'Intention' };
 
-const CURRENT_INTENT = 'Tien minuten stilte vóór ik mijn inbox open.';
+const CURRENT_INTENT = 'Ten minutes of stillness before I open my inbox.';
 
 export default function IntentPage() {
   const hasIntent = Boolean(CURRENT_INTENT);
 
   return (
     <PageContent width="narrow" className="grid animate-rise gap-6">
-      <Section eyebrow="Intentie" title="Eén zin voor deze week.">
-        <p className="max-w-[54ch] text-[15px] text-fg-muted">
-          Geen goed voornemen. Een instructie aan jezelf, klein genoeg om te houden.
+      <Section eyebrow="Intention" title="One sentence for this week.">
+        <p className="max-w-prose text-base text-fg-muted">
+          Not a resolution. An instruction to yourself, small enough to keep.
         </p>
       </Section>
 
       {/* ── Intent card ── */}
-      <div className="grid gap-4 rounded-[18px] border border-accent/35 bg-surface p-6 shadow-glow">
-        <Eyebrow>Mijn intentie</Eyebrow>
+      <div className="grid gap-4 rounded-2xl border border-accent/35 bg-surface p-6 shadow-glow">
+        <Eyebrow>My intention</Eyebrow>
 
         <input
           type="text"
           defaultValue={CURRENT_INTENT}
-          placeholder="Schrijf één zin voor deze week…"
+          placeholder="Write one sentence for this week…"
           className={cn(
             'w-full rounded-xl border border-line-strong bg-raised px-4 py-4',
-            'font-display text-[clamp(17px,2.2vw,21px)] text-fg tracking-tight',
+            'font-display text-lg lg:text-xl text-fg tracking-tight',
             'placeholder:text-fg-faint',
             'transition-colors focus:border-accent focus:outline-none',
           )}
         />
 
         {hasIntent && (
-          <p className="font-mono text-[10.5px] font-medium tracking-widest text-success uppercase">
-            ✦ Gezet voor deze week
+          <p className="font-mono text-xs font-medium tracking-widest text-success uppercase">
+            ✦ Set for this week
           </p>
         )}
 
@@ -44,9 +44,9 @@ export default function IntentPage() {
       </div>
 
       {/* ── Tip ── */}
-      <p className="text-[13px] leading-relaxed text-fg-faint">
-        Een goede intentie is klein, concreet en gaat over gedrag — niet over een uitkomst.
-        &quot;Ik check mijn potten elke zondag&quot; werkt beter dan &quot;Ik ben financieel bewuster.&quot;
+      <p className="text-sm leading-relaxed text-fg-faint">
+        A good intention is small, concrete, and about behaviour — not an outcome.
+        &quot;I check my jars every Sunday&quot; works better than &quot;I am more financially aware.&quot;
       </p>
     </PageContent>
   );

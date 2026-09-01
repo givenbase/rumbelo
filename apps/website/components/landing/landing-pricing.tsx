@@ -12,16 +12,16 @@ export function LandingPricing() {
   const yearly = billing === 'year';
 
   return (
-    <section id="pricing" className="mx-auto max-w-[1180px] px-[clamp(14px,3vw,22px)] py-[clamp(36px,6vw,72px)]">
-      <div className="mb-[30px] flex flex-wrap items-end justify-between gap-5">
+    <section id="pricing" className="mx-auto max-w-6xl px-4 lg:px-6 py-10 lg:py-16">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
         <div className="min-w-0">
-          <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-accent">
+          <span className="font-mono text-xs font-medium uppercase tracking-widest text-accent">
             ✦ PRICING
           </span>
-          <h2 className="mb-[10px] mt-[14px] max-w-[24ch] font-display text-[clamp(26px,3.6vw,38px)] font-semibold tracking-tight">
+          <h2 className="mb-2.5 mt-3.5 max-w-sm font-display text-3xl lg:text-4xl font-semibold tracking-tight">
             Free where it counts. Paid where it saves you work.
           </h2>
-          <p className="max-w-[52ch] text-[15px] text-fg-muted">
+          <p className="max-w-prose text-base text-fg-muted">
             Start on Grip and stay there as long as you like. Nothing you enter is ever locked away.
           </p>
         </div>
@@ -33,7 +33,7 @@ export function LandingPricing() {
               key={k}
               type="button"
               onClick={() => setBilling(k)}
-              className="font-mono cursor-pointer rounded-full px-[15px] py-[9px] text-[10px] font-semibold uppercase tracking-[0.1em] whitespace-nowrap transition-colors"
+              className="font-mono cursor-pointer rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-widest whitespace-nowrap transition-colors"
               style={{
                 background: billing === k ? 'var(--gradient-accent)' : 'transparent',
                 color: billing === k ? 'var(--color-on-accent)' : 'var(--color-fg-muted)',
@@ -46,7 +46,7 @@ export function LandingPricing() {
       </div>
 
       <div
-        className="grid items-start gap-[14px]"
+        className="grid items-start gap-3.5"
         style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(250px,30%,360px),1fr))' }}
       >
         {PLANS.map((p) => {
@@ -64,23 +64,23 @@ export function LandingPricing() {
           return (
             <div
               key={p.key}
-              className="flex min-w-0 flex-col overflow-hidden rounded-[18px] bg-surface"
+              className="flex min-w-0 flex-col overflow-hidden rounded-2xl bg-surface"
               style={{
                 border: `1px solid ${rec ? 'rgb(67 56 202 / 0.34)' : 'var(--color-line)'}`,
                 boxShadow: 'inset 0 0 0 1px rgb(14 17 22 / 0.08)',
               }}
             >
               <span
-                className="block h-[2px]"
+                className="block h-0.5"
                 style={{ background: rec ? 'var(--gradient-accent)' : 'transparent' }}
               />
 
-              <div className="flex flex-wrap items-center justify-between gap-[10px] px-6 pt-6">
-                <span className="font-display text-[25px] font-semibold tracking-tight">
+              <div className="flex flex-wrap items-center justify-between gap-2.5 px-6 pt-6">
+                <span className="font-display text-2xl font-semibold tracking-tight">
                   {p.name}
                 </span>
                 <span
-                  className="font-mono rounded-full border px-[11px] py-[5px] text-[9px] font-semibold uppercase tracking-[0.12em] whitespace-nowrap"
+                  className="font-mono rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide whitespace-nowrap"
                   style={{
                     background: rec ? 'var(--gradient-accent)' : 'transparent',
                     color: rec ? 'var(--color-on-accent)' : 'var(--color-fg-faint)',
@@ -92,33 +92,33 @@ export function LandingPricing() {
               </div>
 
               <div className="px-6 pt-4">
-                <span className="flex flex-wrap items-baseline gap-[6px]">
-                  <span className="font-display text-[40px] font-semibold leading-none tracking-tight text-accent">
+                <span className="flex flex-wrap items-baseline gap-1.5">
+                  <span className="font-display text-4xl font-semibold leading-none tracking-tight text-accent">
                     {fmt(price)}
                   </span>
-                  <span className="font-mono text-[11.5px] font-medium text-fg-faint">{per}</span>
+                  <span className="font-mono text-xs font-medium text-fg-faint">{per}</span>
                 </span>
-                <span className="font-mono mt-2 block text-[10px] font-medium tracking-[0.05em] text-fg-faint">
+                <span className="font-mono mt-2 block text-xs font-medium tracking-wide text-fg-faint">
                   {sub}
                 </span>
               </div>
 
-              <p className="mx-6 my-[18px] text-[13.5px] leading-relaxed text-fg-secondary">
+              <p className="mx-6 my-4 text-sm leading-relaxed text-fg-secondary">
                 {p.line}
               </p>
 
-              <div className="mx-0 mb-5 grid gap-[9px] border-t border-line px-6 pt-4">
+              <div className="mx-0 mb-5 grid gap-2 border-t border-line px-6 pt-4">
                 {p.feats.map((f) => (
-                  <span key={f} className="flex min-w-0 items-baseline gap-[9px]">
-                    <span className="font-mono shrink-0 text-[10px] text-accent">✦</span>
-                    <span className="text-[13px] leading-[1.5] text-fg-secondary">{f}</span>
+                  <span key={f} className="flex min-w-0 items-baseline gap-2">
+                    <span className="font-mono shrink-0 text-xs text-accent">✦</span>
+                    <span className="text-sm leading-normal text-fg-secondary">{f}</span>
                   </span>
                 ))}
               </div>
 
               <a
                 href="#signup"
-                className="font-mono mx-6 mb-6 mt-auto cursor-pointer rounded-full border px-0 py-[14px] text-center text-[10.5px] font-semibold uppercase tracking-[0.12em] transition-[filter] hover:brightness-105"
+                className="font-mono mx-6 mb-6 mt-auto cursor-pointer rounded-full border px-0 py-3.5 text-center text-xs font-semibold uppercase tracking-wide transition-all hover:brightness-105"
                 style={{
                   background: rec ? 'var(--gradient-accent)' : 'transparent',
                   color: rec ? 'var(--color-on-accent)' : 'var(--color-fg-strong)',

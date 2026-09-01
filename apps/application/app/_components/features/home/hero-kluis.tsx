@@ -28,12 +28,12 @@ export function HeroKluis({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-[20px] border border-accent/30 bg-surface p-6 shadow-glow sm:p-7">
+    <div className="rounded-2xl border border-accent/30 bg-surface p-6 shadow-glow sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-6">
         {/* Hero figure */}
         <div>
-          <Eyebrow>Geld · Verdeeld deze maand</Eyebrow>
-          <HeroNumber className="mt-2.5 text-[40px] leading-none sm:text-[52px]">{total}</HeroNumber>
+          <Eyebrow>Money · Distributed this month</Eyebrow>
+          <HeroNumber className="mt-2.5 text-5xl leading-none lg:text-6xl">{total}</HeroNumber>
           <p className="mt-2 text-sm text-fg-muted">{incomeBreakdown}</p>
         </div>
 
@@ -44,7 +44,7 @@ export function HeroKluis({
               <Eyebrow className="whitespace-nowrap">{s.label}</Eyebrow>
               <p
                 className={cn(
-                  'font-display text-[28px] leading-none font-semibold tracking-tight tabular-nums',
+                  'font-display text-3xl leading-none font-semibold tracking-tight tabular-nums',
                   s.tone === 'accent' ? 'text-accent' : 'text-fg',
                 )}
               >
@@ -59,12 +59,12 @@ export function HeroKluis({
 
       {/* Jar section header */}
       <div className="flex items-center justify-between">
-        <Eyebrow>✦ De zes potjes</Eyebrow>
+        <Eyebrow>✦ The six jars</Eyebrow>
         <Link
           href="/money/jars"
-          className="font-mono text-[11px] font-semibold tracking-[0.12em] text-fg-muted uppercase hover:text-accent"
+          className="font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase hover:text-accent"
         >
-          Beheer ▸
+          Manage ▸
         </Link>
       </div>
 

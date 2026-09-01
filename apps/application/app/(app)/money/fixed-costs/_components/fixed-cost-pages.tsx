@@ -30,10 +30,10 @@ export function FixedCostUpdatePage({
   const row = (query.data ?? []).find((f) => f.id === id);
 
   if (live && query.isLoading && !row) {
-    return <p className="text-sm text-fg-muted">Laden…</p>;
+    return <p className="text-sm text-fg-muted">Loading…</p>;
   }
   if (!row) {
-    return <p className="text-sm text-fg-muted">Vaste last niet gevonden.</p>;
+    return <p className="text-sm text-fg-muted">Fixed cost not found.</p>;
   }
 
   return (

@@ -23,22 +23,22 @@ import { isLiveData } from '@/app/_lib/preview';
 
 const euros = z
   .string()
-  .min(1, 'Bedrag is verplicht')
+  .min(1, 'Amount is required')
   .refine((v) => {
     const cents = parseEurosToCents(v);
     return cents != null && cents >= 0;
-  }, { message: 'Voer een geldig bedrag in' });
+  }, { message: 'Enter a valid amount' });
 
 const debtFormSchema = z.object({
-  name: z.string().min(1, 'Naam is verplicht').max(120),
+  name: z.string().min(1, 'Name is required').max(120),
   balance: euros,
   interestRate: z
     .string()
-    .min(1, 'Rente is verplicht')
+    .min(1, 'Interest rate is required')
     .refine((v) => {
       const n = Number(v.replace(',', '.'));
       return Number.isFinite(n) && n >= 0 && n <= 100;
-    }, { message: 'Rente tussen 0 en 100' }),
+    }, { message: 'Interest must be between 0 and 100' }),
   minimumPayment: z.string().optional(),
   kind: z.enum(['CREDIT_CARD', 'LOAN', 'STUDENT', 'MORTGAGE', 'FAMILY', 'OTHER']),
 });
@@ -120,10 +120,10 @@ export function DebtForm({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.debts.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.debts.plan.key() });
-      showToast(mode === 'edit' ? 'Schuld bijgewerkt' : 'Schuld opgeslagen', 'success');
+      showToast(mode === 'edit' ? 'Debt updated' : 'Debt saved', 'success');
       dismiss();
     },
-    onError: () => showToast('Opslaan mislukt', 'error'),
+    onError: () => showToast('Save failed', 'error'),
   });
 
   const removeMutation = useMutation({
@@ -134,15 +134,15 @@ export function DebtForm({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: api.money.debts.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.debts.plan.key() });
-      showToast('Schuld verwijderd', 'success');
+      showToast('Debt deleted', 'success');
       dismiss();
     },
-    onError: () => showToast('Verwijderen mislukt', 'error'),
+    onError: () => showToast('Delete failed', 'error'),
   });
 
   async function onSubmit(values: DebtFormValues) {
     if (!live) {
-      showToast('Log in om schulden op te slaan', 'error');
+      showToast('Sign in to save debts', 'error');
       return;
     }
     await saveMutation.mutateAsync(values);
@@ -160,10 +160,10 @@ export function DebtForm({
         <div className="grid gap-2">
           <Button type="submit" className="w-full" disabled={busy}>
             {saveMutation.isPending || form.formState.isSubmitting
-              ? 'Bezig…'
+              ? 'Working…'
               : mode === 'edit'
-                ? 'Wijzigingen opslaan'
-                : 'Schuld opslaan'}
+                ? 'Save changes'
+                : 'Save debt'}
           </Button>
           {mode === 'edit' && entityId ? (
             <Button
@@ -172,11 +172,11 @@ export function DebtForm({
               className="w-full text-danger hover:bg-danger/10 hover:text-danger"
               disabled={busy}
               onClick={() => {
-                if (!window.confirm('Deze schuld definitief verwijderen?')) return;
+                if (!window.confirm('Permanently delete this debt?')) return;
                 void removeMutation.mutateAsync();
               }}
             >
-              {removeMutation.isPending ? 'Verwijderen…' : 'Verwijderen'}
+              {removeMutation.isPending ? 'Deleting…' : 'Delete'}
             </Button>
           ) : null}
         </div>
@@ -187,9 +187,9 @@ export function DebtForm({
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Naam</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input placeholder="Bijv. creditcard" {...field} />
+              <Input placeholder="e.g. credit card" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -201,18 +201,18 @@ export function DebtForm({
         name="kind"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Soort</FormLabel>
+            <FormLabel>Type</FormLabel>
             <FormControl>
               <select
                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
                 {...field}
               >
-                <option value="CREDIT_CARD">Creditcard</option>
-                <option value="LOAN">Lening</option>
-                <option value="STUDENT">Studielening</option>
-                <option value="MORTGAGE">Hypotheek</option>
-                <option value="FAMILY">Familie</option>
-                <option value="OTHER">Overig</option>
+                <option value="CREDIT_CARD">Credit card</option>
+                <option value="LOAN">Loan</option>
+                <option value="STUDENT">Student loan</option>
+                <option value="MORTGAGE">Mortgage</option>
+                <option value="FAMILY">Family</option>
+                <option value="OTHER">Other</option>
               </select>
             </FormControl>
             <FormMessage />
@@ -225,7 +225,7 @@ export function DebtForm({
         name="balance"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Saldo (€)</FormLabel>
+            <FormLabel>Balance (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>
@@ -239,7 +239,7 @@ export function DebtForm({
         name="interestRate"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Rente (% per jaar)</FormLabel>
+            <FormLabel>Interest rate (% per year)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="12,9" {...field} />
             </FormControl>
@@ -253,7 +253,7 @@ export function DebtForm({
         name="minimumPayment"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Minimumbetaling (€)</FormLabel>
+            <FormLabel>Minimum payment (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>

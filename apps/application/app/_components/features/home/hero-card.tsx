@@ -23,11 +23,11 @@ export function HeroCard({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-[20px] border border-accent-hover bg-surface p-6 shadow-glow sm:p-7">
+    <div className="rounded-2xl border border-accent-hover bg-surface p-6 shadow-glow sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <Eyebrow>Money · Allocated this month</Eyebrow>
-          <HeroNumber className="mt-2.5 text-[40px] leading-none sm:text-[52px]">{total}</HeroNumber>
+          <HeroNumber className="mt-2.5 text-4xl leading-none sm:text-5xl">{total}</HeroNumber>
           <p className="mt-2 text-sm text-fg-muted">{incomeBreakdown}</p>
         </div>
         <div className="flex flex-wrap gap-7">
@@ -36,7 +36,7 @@ export function HeroCard({
               <Eyebrow className="whitespace-nowrap">{s.label}</Eyebrow>
               <p
                 className={cn(
-                  'font-display text-[28px] leading-none font-semibold tracking-tight',
+                  'font-display text-3xl leading-none font-semibold tracking-tight',
                   s.tone === 'accent' ? 'text-accent' : 'text-fg',
                 )}
               >
@@ -51,7 +51,7 @@ export function HeroCard({
 
       <div className="flex items-center justify-between">
         <Eyebrow>✦ The six jars</Eyebrow>
-        <Link href="/money/jars" className="font-mono text-[11px] font-semibold tracking-[0.12em] text-fg-muted uppercase hover:text-accent">
+        <Link href="/money/jars" className="font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase hover:text-accent">
           Manage ▸
         </Link>
       </div>

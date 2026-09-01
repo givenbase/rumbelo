@@ -2,93 +2,93 @@
  * Navigation model — mirrors design `GROUPS` (Kluis Finance App.dc.html:2942).
  *
  * Routes and identifiers: English (HANDOFF §6).
- * Labels shown in the UI: Dutch (design default locale).
+ * Labels shown in the UI: English by default; Dutch via locale toggle / i18n.
  * screenKey: used by plan-gating (lib/plan.ts → SCREEN_MIN).
  */
 export const NAV_GROUPS = [
   {
     key: 'home',
-    label: 'Overzicht',
+    label: 'Overview',
     icon: '◇',
     href: '/',
     children: [
-      { href: '/',       label: 'Overzicht', screenKey: 'dashboard' },
-      { href: '/ritual', label: 'Coach',     screenKey: 'ritual'    },
-      { href: '/why',    label: 'Waarom',    screenKey: 'why'       },
+      { href: '/',       label: 'Overview', screenKey: 'dashboard' },
+      { href: '/ritual', label: 'Coach',    screenKey: 'ritual'    },
+      { href: '/why',    label: 'Why',      screenKey: 'why'       },
     ],
   },
   {
     key: 'money',
-    label: 'Mijn geld',
+    label: 'My money',
     icon: '◈',
     href: '/money/overview',
     children: [
-      { href: '/money/overview',    label: 'Overzicht', screenKey: 'overview' },
-      { href: '/money/jars',        label: 'Potten',    screenKey: 'jars'     },
-      { href: '/money/transactions',label: 'Uitgaven',  screenKey: 'tx'       },
-      { href: '/money/debts',       label: 'Schulden',  screenKey: 'debt'     },
-      { href: '/money/fixed-costs', label: 'Vast',      screenKey: 'fixed'    },
+      { href: '/money/overview',     label: 'Overview',   screenKey: 'overview' },
+      { href: '/money/jars',         label: 'Jars',       screenKey: 'jars'     },
+      { href: '/money/transactions', label: 'Spending',   screenKey: 'tx'       },
+      { href: '/money/debts',        label: 'Debt',       screenKey: 'debt'     },
+      { href: '/money/fixed-costs',  label: 'Fixed',      screenKey: 'fixed'    },
     ],
   },
   {
     key: 'growth',
-    label: 'Mijn groei',
+    label: 'My growth',
     icon: '↗',
     href: '/growth',
     children: [
-      { href: '/growth',         label: 'Overzicht', screenKey: 'growth-hub' },
-      { href: '/growth/goals',   label: 'Doelen',    screenKey: 'goals'      },
-      { href: '/growth/income',  label: 'Inkomen',   screenKey: 'income'     },
-      { href: '/growth/learn',   label: 'Leren',     screenKey: 'learn'      },
-      { href: '/growth/board',   label: 'Vermogen',  screenKey: 'board'      },
+      { href: '/growth',        label: 'Overview', screenKey: 'growth-hub' },
+      { href: '/growth/goals',  label: 'Goals',    screenKey: 'goals'      },
+      { href: '/growth/income', label: 'Income',   screenKey: 'income'     },
+      { href: '/growth/learn',  label: 'Learn',    screenKey: 'learn'      },
+      { href: '/growth/board',  label: 'Net worth', screenKey: 'board'      },
     ],
   },
   {
     key: 'energy',
-    label: 'Mijn energie',
+    label: 'My energy',
     // U+2733 + VS15 (text) — bare ✳ becomes the green ❇️ emoji on Apple fonts
     icon: '✳\uFE0E',
     href: '/energy',
     children: [
-      { href: '/energy',        label: 'Overzicht', screenKey: 'energy-hub' },
-      { href: '/energy/week',   label: 'Week',      screenKey: 'week'       },
-      { href: '/energy/sleep',  label: 'Slaap',     screenKey: 'sleep'      },
-      { href: '/energy/train',  label: 'Trainen',   screenKey: 'train'      },
-      { href: '/energy/food',   label: 'Voeding',   screenKey: 'food'       },
+      { href: '/energy',       label: 'Overview', screenKey: 'energy-hub' },
+      { href: '/energy/week',  label: 'Week',     screenKey: 'week'       },
+      { href: '/energy/sleep', label: 'Sleep',    screenKey: 'sleep'      },
+      { href: '/energy/train', label: 'Training', screenKey: 'train'      },
+      { href: '/energy/food',  label: 'Food',     screenKey: 'food'       },
     ],
   },
   {
     key: 'soul',
-    label: 'Mijn ziel',
+    label: 'My soul',
     icon: '✦',
     href: '/soul',
     children: [
-      { href: '/soul',           label: 'Overzicht', screenKey: 'soul-hub' },
-      { href: '/soul/mind',      label: 'Stilte',    screenKey: 'mind'     },
-      { href: '/soul/gratitude', label: 'Dank',      screenKey: 'grat'     },
-      { href: '/soul/intent',    label: 'Intentie',  screenKey: 'intent'   },
-      { href: '/soul/chakra',    label: 'Centra',    screenKey: 'chakra'   },
+      { href: '/soul',           label: 'Overview',  screenKey: 'soul-hub' },
+      { href: '/soul/mind',      label: 'Stillness', screenKey: 'mind'     },
+      { href: '/soul/gratitude', label: 'Thanks',    screenKey: 'grat'     },
+      { href: '/soul/intent',    label: 'Intent',    screenKey: 'intent'   },
+      { href: '/soul/chakra',    label: 'Centres',   screenKey: 'chakra'   },
     ],
   },
 ] as const;
 
-/** Compact labels for the desktop portal pill bar (design SHORT map, NL). */
+/** Compact labels for the desktop portal pill bar (design SHORT map, EN). */
 export const TOP_PILL_LABELS: Record<string, string> = {
-  home:   'Overzicht',
-  money:  'Geld',
-  growth: 'Groei',
-  energy: 'Energie',
-  soul:   'Ziel',
+  home:   'Overview',
+  money:  'Money',
+  growth: 'Growth',
+  energy: 'Energy',
+  soul:   'Soul',
 };
 
 export type NavGroup = (typeof NAV_GROUPS)[number];
 export type NavChild = NavGroup['children'][number];
 
-/** Bottom tabs — design `SHORT` map NL column (home → Start). */
+/** Bottom tabs — design `SHORT` map EN column (home → Start). */
 export const BOTTOM_TABS = [
-  { href: '/',              label: 'Start',   glyph: '◇' },
-  { href: '/money/overview',label: 'Geld',    glyph: '◈' },
-  { href: '/growth',        label: 'Groei',   glyph: '↗' },
-  { href: '/energy',        label: 'Energie', glyph: '✳\uFE0E' },
-  { href: '/soul',          label: 'Ziel',    glyph: '✦' },
+  { href: '/',               label: 'Start',  glyph: '◇' },
+  { href: '/money/overview', label: 'Money',  glyph: '◈' },
+  { href: '/growth',         label: 'Growth', glyph: '↗' },
+  { href: '/energy',         label: 'Energy', glyph: '✳\uFE0E' },
+  { href: '/soul',           label: 'Soul',   glyph: '✦' },
 ] as const;

@@ -21,10 +21,10 @@ export function SettingsShell({ children }: { children: ReactNode }) {
 
   return (
     <PageContent width="wide" className="animate-rise">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_minmax(0,1fr)]">
-        <nav aria-label="Instellingen navigatie">
-          <p className="mb-3 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-fg-muted">
-            ✦ Instellingen
+      <div className="flex flex-col gap-8 md:flex-row">
+        <nav aria-label="Settings navigation" className="md:w-56 md:shrink-0">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-fg-muted">
+            ✦ Settings
           </p>
           <ul className="grid gap-0.5">
             {SETTINGS_TABS.map((tab) => {
@@ -48,7 +48,7 @@ export function SettingsShell({ children }: { children: ReactNode }) {
                     >
                       {tab.label}
                     </span>
-                    <span className="mt-0.5 block text-[11px] leading-tight text-fg-faint">
+                    <span className="mt-0.5 block text-xs leading-tight text-fg-faint">
                       {tab.sub}
                     </span>
                   </Link>

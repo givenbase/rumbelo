@@ -9,8 +9,8 @@ import accentCardClass from './styles';
 export function AccentCard({ children, tint, className }: AccentCardProps) {
   return (
     <div
-      className={cn(accentCardClass, className)}
-      style={{ borderTopWidth: 3, borderTopColor: tint }}
+      className={cn(accentCardClass, 'border-t-4', className)}
+      style={{ borderTopColor: tint }}
     >
       {children}
     </div>

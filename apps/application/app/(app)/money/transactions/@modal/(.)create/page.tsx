@@ -5,7 +5,7 @@ import { ExpenseCreatePage } from '../../_components/expense-pages';
 
 export default function Page() {
   return (
-    <RouteModalShell closeHref="/money/transactions" title="Nieuwe uitgave" description="Noteer wat eruit ging en kies de pot.">
+    <RouteModalShell closeHref="/money/transactions" title="New expense" description="Note what went out and choose the jar.">
       <ExpenseCreatePage embedded />
     </RouteModalShell>
   );

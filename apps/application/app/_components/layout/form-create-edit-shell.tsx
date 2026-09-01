@@ -30,8 +30,8 @@ export const embeddedFormSurfaceClass = [
   'text-fg',
   '[&_label]:text-fg-muted',
   '[&_label]:font-semibold',
-  '[&_label]:tracking-[0.08em]',
-  '[&_label]:text-[11px]',
+  '[&_label]:tracking-wide',
+  '[&_label]:text-xs',
   '[&_label]:uppercase',
 ].join(' ');
 
@@ -71,7 +71,7 @@ export function FormCreateEditShell<T extends FieldValues>({
               {children}
             </fieldset>
           </div>
-          <div className="sticky bottom-0 z-10 -mx-5 mt-6 border-t border-line bg-surface px-5 py-4 shadow-[0_-10px_28px_rgba(0,0,0,0.06)]">
+          <div className="sticky bottom-0 z-10 -mx-5 mt-6 border-t border-line bg-surface px-5 py-4 shadow-lg">
             {sidebar}
           </div>
         </form>
@@ -84,15 +84,15 @@ export function FormCreateEditShell<T extends FieldValues>({
       <form
         method="post"
         onSubmit={handleSubmit}
-        className={cn('grid gap-6 lg:grid-cols-[1fr_240px]', embeddedFormSurfaceClass)}
+        className={cn('flex flex-col gap-6 lg:flex-row lg:items-start', embeddedFormSurfaceClass)}
       >
-        <div className="min-w-0 space-y-4">
+        <div className="min-w-0 flex-1 space-y-4">
           <FormErrorBox apiError={apiError} form={form} />
           <fieldset className={cn('min-w-0 border-0 p-0', formFieldStackClass)}>
             {children}
           </fieldset>
         </div>
-        <aside className="rounded-lg border border-line bg-raised p-4 lg:sticky lg:top-4 lg:self-start">
+        <aside className="w-full shrink-0 rounded-lg border border-line bg-raised p-4 lg:w-60 lg:sticky lg:top-4 lg:self-start">
           {sidebar}
         </aside>
       </form>

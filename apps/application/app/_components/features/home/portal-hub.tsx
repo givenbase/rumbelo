@@ -36,31 +36,31 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
     <div className="grid animate-rise gap-5">
       <div>
         <span
-          className="flex items-center gap-2 font-mono text-xs font-medium tracking-[0.16em] uppercase"
+          className="flex items-center gap-2 font-mono text-xs font-medium tracking-widest uppercase"
           style={{ color: tint }}
         >
           {icon}
           {eyebrow}
         </span>
-        <h1 className="mt-2.5 font-display text-[clamp(27px,4.2vw,40px)] font-semibold tracking-tight text-fg">
+        <h1 className="mt-2.5 font-display text-3xl lg:text-4xl font-semibold tracking-tight text-fg">
           {title}
         </h1>
-        <p className="mt-2 max-w-[56ch] text-[15px] text-fg-muted">{line}</p>
+        <p className="mt-2 max-w-prose text-base text-fg-muted">{line}</p>
       </div>
 
       <div
-        className="flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-surface p-4.5 shadow-md"
-        style={{ borderLeftWidth: 3, borderLeftColor: tint }}
+        className="flex flex-wrap items-center gap-4 rounded-2xl border border-l-4 border-line bg-surface p-4 shadow-md sm:p-5"
+        style={{ borderLeftColor: tint }}
       >
         <div className="grid min-w-0 flex-1 gap-1.5">
           <span className="flex items-center gap-2">
             <span className="size-1.75 rounded-full" style={{ background: coach.dot }} />
-            <span className="font-mono text-[9.5px] font-medium tracking-[0.16em] text-accent uppercase">DE COACH</span>
-            <span className="font-mono text-[9.5px] font-medium tracking-[0.16em] uppercase" style={{ color: coach.dot }}>
+            <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">The coach</span>
+            <span className="font-mono text-xs font-medium tracking-widest uppercase" style={{ color: coach.dot }}>
               · {coach.kind}
             </span>
           </span>
-          <span className="text-pretty font-display text-[clamp(16px,2vw,19px)] font-medium leading-[1.4] text-fg">
+          <span className="text-pretty font-display text-base lg:text-lg font-medium leading-snug text-fg">
             {coach.text}
           </span>
         </div>
@@ -69,20 +69,20 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
         </Button>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(clamp(200px,24%,300px),1fr))] gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {cards.map((c) => (
           <Link
             key={c.name}
             href={c.href}
-            className="grid content-start gap-2.5 rounded-[18px] border border-line bg-surface p-5 shadow-md transition-[border-color,transform] hover:-translate-y-px hover:border-accent-hover"
-            style={{ borderTopWidth: 3, borderTopColor: c.color }}
+            className="grid content-start gap-2.5 rounded-2xl border border-t-4 border-line bg-surface p-5 shadow-md transition-all hover:-translate-y-px hover:border-accent-hover"
+            style={{ borderTopColor: c.color }}
           >
             <span className="flex items-center justify-between gap-2">
-              <span className="font-mono text-[9.5px] font-semibold tracking-[0.16em] text-fg-faint uppercase">{c.name}</span>
+              <span className="font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">{c.name}</span>
               {c.locked && <span className="text-xs text-fg-faint">🔒</span>}
             </span>
             <span className="flex min-h-13 items-end justify-between gap-3">
-              <span className="font-display text-[clamp(24px,3.2vw,32px)] font-semibold tracking-tight text-fg">{c.value}</span>
+              <span className="font-display text-2xl lg:text-3xl font-semibold tracking-tight text-fg">{c.value}</span>
               {c.chart.kind === 'bars' ? (
                 <span className="flex h-11 items-end gap-0.75">
                   {c.chart.bars.map((h, i) => (
@@ -93,11 +93,11 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
                 <RingChart pct={c.chart.pct} color={c.color} />
               )}
             </span>
-            <span className="text-pretty text-[12.5px] leading-relaxed text-fg-muted">{c.note}</span>
+            <span className="text-pretty text-sm leading-relaxed text-fg-muted">{c.note}</span>
             {c.delta && (
               <span className="flex items-center gap-1.5 border-t border-line pt-2.5">
-                <span className={cn('text-[9px]', c.delta.positive ? 'text-success' : 'text-danger')}>{c.delta.mark}</span>
-                <span className={cn('font-mono text-[10px] font-medium tracking-[0.06em]', c.delta.positive ? 'text-success' : 'text-danger')}>
+                <span className={cn('text-xs', c.delta.positive ? 'text-success' : 'text-danger')}>{c.delta.mark}</span>
+                <span className={cn('font-mono text-xs font-medium tracking-normal', c.delta.positive ? 'text-success' : 'text-danger')}>
                   {c.delta.text}
                 </span>
               </span>
@@ -127,7 +127,7 @@ function RingChart({ pct, color }: { pct: number; color: string }) {
           pathLength={100}
         />
       </svg>
-      <span className="absolute font-mono text-[9.5px] text-fg-faint">{pct}%</span>
+      <span className="absolute font-mono text-xs text-fg-faint">{pct}%</span>
     </span>
   );
 }

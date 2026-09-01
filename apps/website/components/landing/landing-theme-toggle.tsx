@@ -34,7 +34,7 @@ export function LandingThemeToggle() {
       type="button"
       onClick={toggle}
       title={theme === 'dark' ? 'Switch to light' : 'Switch to dark'}
-      className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full border border-line bg-transparent text-[13px] text-fg-muted transition-colors hover:border-accent hover:text-accent"
+      className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full border border-line bg-transparent text-sm text-fg-muted transition-colors hover:border-accent hover:text-accent"
       suppressHydrationWarning
     >
       {theme === 'dark' ? '☽' : '☀'}

@@ -17,7 +17,6 @@ type Tab = 'ERUIT' | 'ERIN';
 
 const toVar = (bgClass: string) => bgClass.replace('bg-', 'var(--color-') + ')';
 
-const MOCK_NET = INCOME_SOURCES.reduce((s, i) => s + i.amount, 0);
 const MOCK_TOTAL_DEBT = mockDebts.reduce((s, d) => s + d.balance, 0);
 
 export function FixedCostsPageClient() {
@@ -111,17 +110,28 @@ export function FixedCostsPageClient() {
   return (
     <div className="grid animate-rise gap-8">
       <div>
-        <span className="font-mono text-[12px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ VASTE LASTEN &amp; INKOMSTEN
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ FIXED COSTS &amp; INCOME
         </span>
-        <h1 className="mt-2 font-display text-[clamp(26px,4vw,38px)] font-semibold tracking-tight text-fg">
-          Eén keer instellen. Daarna draait het vanzelf.
+        <h1 className="mt-2 font-display text-3xl lg:text-4xl font-semibold tracking-tight text-fg">
+          Set it up once. Then it runs automatically.
         </h1>
       </div>
 
       <ListToolbar
-        createLabel={tab === 'ERUIT' ? '+ Toevoegen' : '+ Inkomstenbron'}
+        createLabel={tab === 'ERUIT' ? '+ Add' : '+ Income source'}
         onCreate={() => router.push(tab === 'ERUIT' ? CREATE_HREF.fixed : CREATE_HREF.income)}
+        secondary={
+          <span
+            className={cn(
+              'font-mono text-xs font-medium',
+              leftover >= 0 ? 'text-success' : 'text-danger',
+            )}
+          >
+            {leftover >= 0 ? '+ ' : ''}
+            {formatMoney(leftover)} left after costs
+          </span>
+        }
       >
         {(['ERUIT', 'ERIN'] as const).map((t) => (
           <button
@@ -129,16 +139,16 @@ export function FixedCostsPageClient() {
             type="button"
             onClick={() => setTab(t)}
             className={cn(
-              'flex items-center gap-2.5 rounded-full border font-mono text-[10.5px] font-medium tracking-[0.12em] uppercase px-4 py-2 transition-all duration-200',
+              'flex items-center gap-2.5 rounded-full border font-mono text-xs font-medium tracking-wide uppercase px-4 py-2 transition-all duration-200',
               tab === t
                 ? 'border-accent/40 bg-accent-soft text-accent'
                 : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
             )}
           >
-            {t === 'ERUIT' ? 'Eruit' : 'Erin'}
+            {t === 'ERUIT' ? 'Out' : 'In'}
             <span
               className={cn(
-                'rounded-full px-2 py-0.5 font-mono text-[9.5px]',
+                'rounded-full px-2 py-0.5 font-mono text-xs',
                 tab === t ? 'bg-accent/10 text-accent' : 'bg-raised text-fg-faint',
               )}
             >
@@ -147,24 +157,15 @@ export function FixedCostsPageClient() {
           </button>
         ))}
       </ListToolbar>
-      <p
-        className={cn(
-          '-mt-5 font-mono text-[11px] font-medium',
-          leftover >= 0 ? 'text-success' : 'text-danger',
-        )}
-      >
-        {leftover >= 0 ? '+ ' : ''}
-        {formatMoney(leftover)} over na lasten
-      </p>
 
       {tab === 'ERUIT' && (
-        <div className="grid items-start gap-5 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div className="grid items-start gap-5 sm:grid-cols-2">
           <Card className="p-0">
             <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
-              <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-                ✦ Elke maand eruit
+              <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+                ✦ Every month out
               </span>
-              <span className="font-mono text-[13px] text-fg-secondary">{formatMoney(outTotal)}</span>
+              <span className="font-mono text-sm text-fg-secondary">{formatMoney(outTotal)}</span>
             </div>
 
             <div className="grid gap-px">
@@ -177,7 +178,7 @@ export function FixedCostsPageClient() {
                     onClick={() =>
                       router.push(updateHref('fixed', f.id))
                     }
-                    className="grid w-full cursor-pointer grid-cols-[1fr_auto] items-center gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised"
+                    className="flex w-full cursor-pointer items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised"
                   >
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
@@ -187,18 +188,18 @@ export function FixedCostsPageClient() {
                             style={{ background: toVar(jar.color) }}
                           />
                         )}
-                        <span className="text-[14px] text-fg">{f.name}</span>
+                        <span className="text-sm text-fg">{f.name}</span>
                         {jar && (
-                          <span className="font-mono text-[9.5px] tracking-[0.12em] uppercase text-fg-muted">
+                          <span className="font-mono text-xs tracking-wide uppercase text-fg-muted">
                             {jar.name}
                           </span>
                         )}
                       </div>
-                      <div className="mt-0.5 font-mono text-[10px] tracking-[0.06em] text-fg-faint">
-                        Maandelijks{f.dueDay != null ? ` · dag ${f.dueDay}` : ''}
+                      <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
+                        Monthly{f.dueDay != null ? ` · day ${f.dueDay}` : ''}
                       </div>
                     </div>
-                    <span className="whitespace-nowrap font-mono text-[13.5px] text-fg">
+                    <span className="whitespace-nowrap font-mono text-sm text-fg">
                       {formatMoney(f.amount)}
                     </span>
                   </button>
@@ -211,7 +212,7 @@ export function FixedCostsPageClient() {
                 <button
                   key={j.key}
                   type="button"
-                  className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-[10px] text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent"
+                  className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent"
                 >
                   <span className="size-1.75 rounded-sm" style={{ background: toVar(j.color) }} />
                   {j.name} ›
@@ -222,26 +223,26 @@ export function FixedCostsPageClient() {
           </Card>
 
           <Card>
-            <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-fg-muted">
-              ✦ De abonnementencheck
+            <span className="font-mono text-xs font-medium tracking-widest uppercase text-fg-muted">
+              ✦ Subscription check
             </span>
-            <p className="mt-3 text-[14px] leading-relaxed text-pretty text-fg-secondary">
-              Kijk elk kwartaal of alles hier nog klopt. Kleine bedragen stapelen zich op — een
-              abonnement dat je niet gebruikt is geld dat je maandelijks weggooit. Gezond: minder
-              dan 20% van Necessity gaat naar terugkerende diensten.
+            <p className="mt-3 text-sm leading-relaxed text-pretty text-fg-secondary">
+              Check every quarter that everything here still applies. Small amounts add up — a
+              subscription you don't use is money you throw away monthly. Healthy: less
+              than 20% of Necessity goes to recurring services.
             </p>
           </Card>
         </div>
       )}
 
       {tab === 'ERIN' && (
-        <div className="grid items-start gap-5 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div className="grid items-start gap-5 sm:grid-cols-2">
           <Card className="p-0">
             <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
-              <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-                ✦ Elke maand erin
+              <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+                ✦ Every month in
               </span>
-              <span className="font-mono text-[13px] text-success">{formatMoney(NET)}</span>
+              <span className="font-mono text-sm text-success">{formatMoney(NET)}</span>
             </div>
 
             <div className="grid gap-px">
@@ -256,15 +257,15 @@ export function FixedCostsPageClient() {
                     }
                     router.push(updateHref('income', s.id));
                   }}
-                  className="grid w-full cursor-pointer grid-cols-[1fr_auto] items-center gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised"
+                  className="flex w-full cursor-pointer items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised"
                 >
                   <div>
-                    <div className="text-[14px] text-fg">{s.label}</div>
-                    <div className="mt-0.5 font-mono text-[10px] tracking-[0.06em] text-fg-faint">
-                      Maandelijks{s.dueDay != null ? ` · loondag ${s.dueDay}` : ' · loondag'}
+                    <div className="text-sm text-fg">{s.label}</div>
+                    <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
+                      Monthly{s.dueDay != null ? ` · pay day ${s.dueDay}` : ' · pay day'}
                     </div>
                   </div>
-                  <span className="whitespace-nowrap font-mono text-[13.5px] text-success">
+                  <span className="whitespace-nowrap font-mono text-sm text-success">
                     {formatMoney(s.amount)}
                   </span>
                 </button>
@@ -272,15 +273,15 @@ export function FixedCostsPageClient() {
             </div>
 
             <div className="border-t border-line px-5 py-4">
-              <p className="mb-3 font-mono text-[9.5px] tracking-[0.18em] uppercase text-fg-muted">
-                Zo wordt dit verdeeld
+              <p className="mb-3 font-mono text-xs tracking-widest uppercase text-fg-muted">
+                How this is split
               </p>
               <div className="flex flex-wrap gap-2">
                 {JAR_META.map((j) => (
                   <button
                     key={j.key}
                     type="button"
-                    className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-[10px] text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent"
+                    className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent"
                   >
                     <span className="size-1.75 rounded-sm" style={{ background: toVar(j.color) }} />
                     {j.name} ›
@@ -292,14 +293,14 @@ export function FixedCostsPageClient() {
           </Card>
 
           <Card>
-            <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-              ✦ Is dit genoeg?
+            <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+              ✦ Is this enough?
             </span>
-            <p className="mt-3 text-[14px] leading-relaxed text-pretty text-fg-secondary">
-              {formatMoney(NET)} per maand. Vaste lasten{!live && ' + schuld'} nemen{' '}
-              <strong className="text-fg">{commitmentRatio}%</strong> in — dat is{' '}
-              {commitmentRatio < 50 ? 'comfortabel' : 'krap'}. Onder 50% is ruimte om te bouwen.
-              Het echte plafond zit bij inkomen, niet bij bezuinigen.
+            <p className="mt-3 text-sm leading-relaxed text-pretty text-fg-secondary">
+              {formatMoney(NET)}/mo. Fixed costs{!live && ' + debt'} take{' '}
+              <strong className="text-fg">{commitmentRatio}%</strong> — that&apos;s{' '}
+              {commitmentRatio < 50 ? 'comfortable' : 'tight'}. Under 50% there&apos;s room to build.
+              The real ceiling is income, not cutting costs.
             </p>
           </Card>
         </div>

@@ -19,26 +19,26 @@ export const mockSleepStages = (() => {
   const delta = Math.min(1.7, h * 0.25);
   const rem = Math.max(0, (h - 3) * 0.34);
   const light = Math.max(0, h - delta - rem);
-  const hr = (v: number) => `${(Math.round(v * 10) / 10).toString().replace('.', ',')}u`;
+  const hr = (v: number) => `${(Math.round(v * 10) / 10).toString()}h`;
   return [
-    { name: 'Diepe slaap', does: 'maakt je uitgerust', band: 'delta · 0,5–4 Hz', hours: hr(delta), w: (delta / h) * 100, color: 'var(--color-jar-lts)' },
-    { name: 'Lichte slaap', does: 'de weg erheen, en waar je bewegingen leert', band: 'theta · 4–8 Hz', hours: hr(light), w: (light / h) * 100, color: 'var(--color-sunken)' },
-    { name: 'Droomslaap', does: 'maakt je scherp — humeur en geheugen', band: 'REM · theta + zaagtand', hours: hr(rem), w: (rem / h) * 100, color: 'var(--color-jar-play)' },
+    { name: 'Deep sleep', does: 'restores your body', band: 'delta · 0.5–4 Hz', hours: hr(delta), w: (delta / h) * 100, color: 'var(--color-jar-lts)' },
+    { name: 'Light sleep', does: 'the path there, where movement is learned', band: 'theta · 4–8 Hz', hours: hr(light), w: (light / h) * 100, color: 'var(--color-sunken)' },
+    { name: 'REM sleep', does: 'sharpens you — mood and memory', band: 'REM · theta + sawtooth', hours: hr(rem), w: (rem / h) * 100, color: 'var(--color-jar-play)' },
   ] as const;
 })();
 
 export const SESSION_COLORS: Record<string, string> = {
-  KRACHT: 'var(--color-jar-ff)',
-  HARDLOPEN: 'var(--color-jar-lts)',
-  MOBILITEIT: 'var(--color-jar-edu)',
+  STRENGTH: 'var(--color-jar-ff)',
+  RUNNING: 'var(--color-jar-lts)',
+  MOBILITY: 'var(--color-jar-edu)',
   YOGA: 'var(--color-portal-soul)',
 };
 
 export const mockSessions = [
-  { id: 's1', kind: 'KRACHT', name: 'Bovenkant', meta: '45 min · gisteren', done: true },
-  { id: 's2', kind: 'HARDLOPEN', name: '8 km interval', meta: '52 min · 2 dagen geleden', done: true },
-  { id: 's3', kind: 'KRACHT', name: 'Onderkant', meta: '40 min · 4 dagen geleden', done: false },
-  { id: 's4', kind: 'MOBILITEIT', name: 'Ruggen & strekken', meta: '20 min · 5 dagen geleden', done: true },
+  { id: 's1', kind: 'STRENGTH', name: 'Upper body', meta: '45 min · yesterday', done: true },
+  { id: 's2', kind: 'RUNNING', name: '8 km intervals', meta: '52 min · 2 days ago', done: true },
+  { id: 's3', kind: 'STRENGTH', name: 'Lower body', meta: '40 min · 4 days ago', done: false },
+  { id: 's4', kind: 'MOBILITY', name: 'Back & stretch', meta: '20 min · 5 days ago', done: true },
 ] satisfies { id: string; kind: string; name: string; meta: string; done: boolean }[];
 
 /** kg body-weight → protein/calorie targets. Design formulas: dc.html:3871, 3880. */

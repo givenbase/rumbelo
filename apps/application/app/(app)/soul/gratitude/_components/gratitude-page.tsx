@@ -55,7 +55,7 @@ export function GratitudePageClient() {
     if (entry.day) return entry.day;
     if (entry.createdAt) {
       const d = new Date(entry.createdAt);
-      return d.toLocaleDateString('nl-NL', { weekday: 'short' });
+      return d.toLocaleDateString('en-US', { weekday: 'short' });
     }
     return '';
   }
@@ -73,9 +73,9 @@ export function GratitudePageClient() {
 
   return (
     <PageContent width="narrow" className="grid animate-rise gap-6">
-      <Section eyebrow="Dankbaarheid" title="Één ding per dag.">
-        <p className="text-[15px] text-fg-muted">
-          Niet omdat het je saldo verandert, maar omdat het verandert hoe je ernaar kijkt.
+      <Section eyebrow="Gratitude" title="One thing per day.">
+        <p className="text-base text-fg-muted">
+          Not because it changes your balance, but because it changes how you see it.
         </p>
       </Section>
 
@@ -84,7 +84,7 @@ export function GratitudePageClient() {
         <Input
           ref={inputRef}
           className="min-w-65 flex-1"
-          placeholder="Waar ben je dankbaar voor?"
+          placeholder="What are you grateful for?"
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
@@ -97,33 +97,33 @@ export function GratitudePageClient() {
           onClick={handleAdd}
           disabled={!text.trim() || createMutation.isPending}
         >
-          {createMutation.isPending ? '…' : 'Toevoegen'}
+          {createMutation.isPending ? '…' : 'Add'}
         </Button>
       </div>
 
       {/* ── Entries list ── */}
       {empty ? (
-        <p className="text-[14px] text-fg-muted">
-          Nog niets opgeschreven. Het weekritueel vraagt hier vanzelf naar.
+        <p className="text-sm text-fg-muted">
+          Nothing written yet. The weekly ritual will ask you here.
         </p>
       ) : (
         <div className="grid gap-2.5">
           {entries.map((g) => (
             <div
               key={g.id}
-              className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3.5"
-              style={{ borderLeftWidth: 3, borderLeftColor: 'var(--color-portal-soul)' }}
+              className="flex items-center gap-3 rounded-xl border border-l-4 border-line bg-surface px-4 py-3.5"
+              style={{ borderLeftColor: 'var(--color-portal-soul)' }}
             >
-              <span className="min-w-0 flex-1 text-[14.5px] leading-snug text-fg">
+              <span className="min-w-0 flex-1 text-sm leading-snug text-fg">
                 {g.text}
               </span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-fg-muted whitespace-nowrap">
+              <span className="font-mono text-xs font-medium uppercase tracking-wide text-fg-muted whitespace-nowrap">
                 {formatDay(g)}
               </span>
               <button
                 type="button"
-                aria-label="Verwijder"
-                className="shrink-0 text-[15px] leading-none text-fg-faint transition-colors hover:text-danger"
+                aria-label="Delete"
+                className="shrink-0 text-base leading-none text-fg-faint transition-colors hover:text-danger"
               >
                 ×
               </button>
@@ -133,9 +133,9 @@ export function GratitudePageClient() {
       )}
 
       <div className="border-t border-line pt-3">
-        <Eyebrow>Deze week</Eyebrow>
-        <p className="mt-2 text-[13px] leading-relaxed text-fg-muted">
-          Eén regel per week tijdens het ritueel. Niet meer dan dat — het is een check-in, geen dagboek.
+        <Eyebrow>This week</Eyebrow>
+        <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+          One line per week during the ritual. No more than that — it is a check-in, not a journal.
         </p>
       </div>
     </PageContent>

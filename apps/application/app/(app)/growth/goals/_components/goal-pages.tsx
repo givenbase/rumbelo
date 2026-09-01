@@ -30,10 +30,10 @@ export function GoalUpdatePage({
   const row = (query.data ?? []).find((g) => g.id === id);
 
   if (live && query.isLoading && !row) {
-    return <p className="text-sm text-fg-muted">Laden…</p>;
+    return <p className="text-sm text-fg-muted">Loading…</p>;
   }
   if (!row) {
-    return <p className="text-sm text-fg-muted">Doel niet gevonden.</p>;
+    return <p className="text-sm text-fg-muted">Goal not found.</p>;
   }
 
   return (

@@ -77,13 +77,13 @@ export function RitualPageClient() {
   return (
     <PageContent width="narrow" className="grid gap-8">
       <div>
-        <Eyebrow>Tien minuten per week</Eyebrow>
+        <Eyebrow>Ten minutes a week</Eyebrow>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">
-          Het weekritueel
+          The weekly ritual
         </h1>
-        <p className="mt-2 max-w-[54ch] text-sm text-fg-muted">
-          Rumbelo vraagt je avonden niet. Eén weektelling — kijken, richten, intentie zetten —
-          verslaat elke dag piekeren.
+        <p className="mt-2 max-w-prose text-sm text-fg-muted">
+          Rumbelo does not ask for your evenings. One weekly check-in — look, direct, set intention —
+          beats worrying every single day.
         </p>
       </div>
 

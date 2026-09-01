@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -26,13 +26,13 @@ import { isLiveData } from '@/app/_lib/preview';
 const expenseFormSchema = z.object({
   amount: z
     .string()
-    .min(1, 'Bedrag is verplicht')
+    .min(1, 'Amount is required')
     .refine((v) => {
       const cents = parseEurosToCents(v);
       return cents != null && cents > 0;
-    }, { message: 'Voer een geldig bedrag in' }),
-  description: z.string().min(1, 'Omschrijving is verplicht').max(120),
-  jarId: z.string().min(1, 'Kies een pot'),
+    }, { message: 'Enter a valid amount' }),
+  description: z.string().min(1, 'Description is required').max(120),
+  jarId: z.string().min(1, 'Choose a jar'),
 });
 
 export type ExpenseFormValues = z.infer<typeof expenseFormSchema>;
@@ -71,7 +71,7 @@ export function ExpenseForm({
     [],
     live,
   );
-  const jars = jarsQuery.data ?? [];
+  const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
   const form = useForm<ExpenseFormValues>({
     defaultValues: {
@@ -131,10 +131,10 @@ export function ExpenseForm({
       void queryClient.invalidateQueries({ queryKey: api.money.transactions.inbox.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-      showToast(mode === 'edit' ? 'Uitgave bijgewerkt' : 'Uitgave opgeslagen', 'success');
+      showToast(mode === 'edit' ? 'Expense updated' : 'Expense saved', 'success');
       dismiss();
     },
-    onError: () => showToast('Opslaan mislukt', 'error'),
+    onError: () => showToast('Save failed', 'error'),
   });
 
   const removeMutation = useMutation({
@@ -147,15 +147,15 @@ export function ExpenseForm({
       void queryClient.invalidateQueries({ queryKey: api.money.transactions.inbox.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-      showToast('Uitgave verwijderd', 'success');
+      showToast('Expense deleted', 'success');
       dismiss();
     },
-    onError: () => showToast('Verwijderen mislukt', 'error'),
+    onError: () => showToast('Delete failed', 'error'),
   });
 
   async function onSubmit(values: ExpenseFormValues) {
     if (!live) {
-      showToast('Log in om uitgaven op te slaan', 'error');
+      showToast('Sign in to save expenses', 'error');
       return;
     }
     await saveMutation.mutateAsync(values);
@@ -177,10 +177,10 @@ export function ExpenseForm({
         <div className="grid gap-2">
           <Button type="submit" className="w-full" disabled={busy}>
             {saveMutation.isPending || form.formState.isSubmitting
-              ? 'Bezig…'
+              ? 'Working…'
               : mode === 'edit'
-                ? 'Wijzigingen opslaan'
-                : 'Uitgave opslaan'}
+                ? 'Save changes'
+                : 'Save expense'}
           </Button>
           {mode === 'edit' && entityId ? (
             <Button
@@ -189,11 +189,11 @@ export function ExpenseForm({
               className="w-full text-danger hover:bg-danger/10 hover:text-danger"
               disabled={form.formState.isSubmitting || saveMutation.isPending || removeMutation.isPending}
               onClick={() => {
-                if (!window.confirm('Deze uitgave definitief verwijderen?')) return;
+                if (!window.confirm('Permanently delete this expense?')) return;
                 void removeMutation.mutateAsync();
               }}
             >
-              {removeMutation.isPending ? 'Verwijderen…' : 'Verwijderen'}
+              {removeMutation.isPending ? 'Deleting…' : 'Delete'}
             </Button>
           ) : null}
         </div>
@@ -204,9 +204,9 @@ export function ExpenseForm({
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Omschrijving</FormLabel>
+            <FormLabel>Description</FormLabel>
             <FormControl>
-              <Input placeholder="Bijv. boodschappen" {...field} />
+              <Input placeholder="e.g. groceries" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -218,7 +218,7 @@ export function ExpenseForm({
         name="amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Bedrag (€)</FormLabel>
+            <FormLabel>Amount (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>
@@ -232,14 +232,14 @@ export function ExpenseForm({
         name="jarId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Pot</FormLabel>
+            <FormLabel>Jar</FormLabel>
             <FormControl>
               <select
                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
                 {...field}
               >
                 {jars.length === 0 ? (
-                  <option value="">Geen potten — rond onboarding af</option>
+                  <option value="">No jars — complete setup first</option>
                 ) : (
                   jars.map((jar) => (
                     <option key={jar.id} value={jar.id}>

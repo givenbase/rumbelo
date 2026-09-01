@@ -45,36 +45,36 @@ export function LandingSignupForm() {
   const hasError = (key: FieldKey) => note && !noteOk && !String(vals[key]).trim();
 
   return (
-    <section id="signup" className="mx-auto max-w-[1180px] px-[clamp(14px,3vw,22px)] py-[clamp(36px,6vw,88px)] pb-[clamp(48px,8vw,100px)]">
+    <section id="signup" className="mx-auto max-w-6xl px-4 lg:px-6 py-10 lg:py-20 pb-12 lg:pb-24">
       <div
-        className="overflow-hidden rounded-[24px] border bg-surface"
+        className="overflow-hidden rounded-3xl border bg-surface"
         style={{
           borderColor: 'rgb(67 56 202 / 0.34)',
           boxShadow: 'var(--shadow-lg), inset 0 0 0 1px rgb(14 17 22 / 0.08)',
         }}
       >
-        <span className="block h-[3px]" style={{ background: 'var(--gradient-accent)' }} />
+        <span className="block h-1" style={{ background: 'var(--gradient-accent)' }} />
 
-        <div className="flex flex-wrap gap-[clamp(28px,4vw,56px)] p-[clamp(26px,4vw,44px)]">
+        <div className="flex flex-wrap gap-7 lg:gap-14 p-6 lg:p-10">
           {/* Left: assurances */}
-          <div className="min-w-0 flex-[1_1_320px]">
-            <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-accent">
+          <div className="min-w-0 min-w-0 flex-1 basis-80">
+            <span className="font-mono text-xs font-medium uppercase tracking-widest text-accent">
               ✦ CREATE YOUR ACCOUNT
             </span>
-            <h2 className="mb-[14px] mt-[14px] max-w-[20ch] font-display text-[clamp(26px,3.4vw,36px)] font-semibold tracking-tight">
+            <h2 className="mb-3.5 mt-3.5 max-w-sm font-display text-3xl lg:text-4xl font-semibold tracking-tight">
               Six jars, five minutes.
             </h2>
-            <p className="mb-[22px] max-w-[44ch] text-[15px] leading-[1.65] text-fg-muted">
+            <p className="mb-5 max-w-prose text-base leading-relaxed text-fg-muted">
               You will be asked one thing: what lands in your account each month. Rumbelo does the
               splitting from there.
             </p>
             <div className="grid gap-3">
               {ASSURANCES.map((a) => (
-                <span key={a.t} className="flex min-w-0 items-start gap-[11px]">
-                  <span className="grid size-[30px] shrink-0 place-items-center rounded-[9px] bg-accent-soft">
+                <span key={a.t} className="flex min-w-0 items-start gap-2.5">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-accent-soft">
                     <LandingIcon name={a.icon} size={17} color="var(--color-accent)" />
                   </span>
-                  <span className="pt-[5px] text-[13.5px] leading-[1.55] text-fg-secondary">
+                  <span className="pt-1 text-sm leading-relaxed text-fg-secondary">
                     {a.t}
                   </span>
                 </span>
@@ -83,19 +83,19 @@ export function LandingSignupForm() {
           </div>
 
           {/* Right: form */}
-          <div className="min-w-0 max-w-[420px] flex-[1_1_320px]">
+          <div className="min-w-0 max-w-md min-w-0 flex-1 basis-80">
             <button
               type="button"
               onClick={googleIn}
-              className="flex w-full cursor-pointer items-center justify-center gap-[11px] rounded-[12px] border border-line-strong bg-raised px-0 py-[14px] text-[14px] font-medium text-fg transition-colors hover:border-accent"
+              className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-line-strong bg-raised px-0 py-3.5 text-sm font-medium text-fg transition-colors hover:border-accent"
             >
-              <span className="font-mono text-[14px] font-bold text-accent">G</span>
+              <span className="font-mono text-sm font-bold text-accent">G</span>
               Continue with Google
             </button>
 
             <div className="my-5 flex items-center gap-3">
               <span className="h-px flex-1 bg-line" />
-              <span className="font-mono text-[9.5px] font-medium uppercase tracking-[0.16em] text-fg-faint">
+              <span className="font-mono text-xs font-medium uppercase tracking-widest text-fg-faint">
                 OR WITH EMAIL
               </span>
               <span className="h-px flex-1 bg-line" />
@@ -103,8 +103,8 @@ export function LandingSignupForm() {
 
             <div className="grid gap-3">
               {FIELDS.map((f) => (
-                <label key={f.key} className="grid gap-[6px]">
-                  <span className="font-mono text-[9.5px] font-medium uppercase tracking-[0.14em] text-fg-faint">
+                <label key={f.key} className="grid gap-1.5">
+                  <span className="font-mono text-xs font-medium uppercase tracking-wide text-fg-faint">
                     {f.label}
                   </span>
                   <input
@@ -112,18 +112,18 @@ export function LandingSignupForm() {
                     value={vals[f.key]}
                     onChange={(e) => setVals((v) => ({ ...v, [f.key]: e.target.value }))}
                     placeholder={f.ph}
-                    className="w-full rounded-[11px] border bg-raised px-[14px] py-[13px] text-[14.5px] text-fg outline-none transition-colors focus:border-accent"
+                    className="w-full rounded-lg border bg-raised px-3.5 py-3 text-sm text-fg outline-none transition-colors focus:border-accent"
                     style={{ borderColor: hasError(f.key) ? 'var(--color-danger)' : 'var(--color-line)' }}
                   />
                 </label>
               ))}
 
               <label
-                className="mt-1 flex cursor-pointer items-start gap-[10px]"
+                className="mt-1 flex cursor-pointer items-start gap-2.5"
                 onClick={() => setTerms((t) => !t)}
               >
                 <span
-                  className="mt-[1px] grid size-[18px] shrink-0 place-items-center rounded-[5px] border text-[11px] text-on-accent"
+                  className="mt-px grid size-4 shrink-0 place-items-center rounded-sm border text-xs text-on-accent"
                   style={{
                     background: terms ? 'var(--gradient-accent)' : 'transparent',
                     borderColor: terms ? 'transparent' : 'var(--color-line-strong)',
@@ -131,7 +131,7 @@ export function LandingSignupForm() {
                 >
                   {terms ? '✓' : ''}
                 </span>
-                <span className="text-[12.5px] leading-[1.55] text-fg-muted">
+                <span className="text-sm leading-relaxed text-fg-muted">
                   I agree to the terms and privacy policy. Rumbelo has read-only access to bank
                   data, and only after I connect it myself.
                 </span>
@@ -140,7 +140,7 @@ export function LandingSignupForm() {
               <button
                 type="button"
                 onClick={submit}
-                className="font-mono mt-[6px] w-full cursor-pointer rounded-full border-0 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-on-accent transition-[filter] hover:brightness-105 active:scale-[0.985]"
+                className="font-mono mt-1.5 w-full cursor-pointer rounded-full border-0 py-4 text-xs font-bold uppercase tracking-wide text-on-accent transition-all hover:brightness-105 active:scale-95"
                 style={{ background: 'var(--gradient-accent)' }}
               >
                 Create my free account
@@ -148,14 +148,14 @@ export function LandingSignupForm() {
 
               {note && (
                 <span
-                  className="font-mono text-[11px] font-medium leading-relaxed tracking-[0.04em]"
+                  className="font-mono text-xs font-medium leading-relaxed tracking-normal"
                   style={{ color: noteOk ? 'var(--color-success)' : 'var(--color-danger)' }}
                 >
                   {note}
                 </span>
               )}
 
-              <span className="font-mono text-center text-[10px] font-medium tracking-[0.05em] text-fg-faint">
+              <span className="font-mono text-center text-xs font-medium tracking-wide text-fg-faint">
                 Already have an account?{' '}
                 <a href="/sign-in" className="text-accent hover:text-accent-hover">
                   Sign in

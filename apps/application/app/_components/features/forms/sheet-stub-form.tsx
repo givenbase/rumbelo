@@ -17,7 +17,7 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 
 const stubSchema = z.object({
-  label: z.string().min(1, 'Naam is verplicht').max(80),
+  label: z.string().min(1, 'Name is required').max(80),
   amount: z.string().optional(),
 });
 
@@ -30,18 +30,18 @@ const KIND_COPY: Record<
   { submit: string; amountLabel?: string; labelPlaceholder: string }
 > = {
   session: {
-    submit: 'Training opslaan',
-    labelPlaceholder: 'Bijv. hardlopen',
+    submit: 'Save training',
+    labelPlaceholder: 'e.g. running',
   },
   asset: {
-    submit: 'Bezitting opslaan',
-    amountLabel: 'Waarde (€)',
-    labelPlaceholder: 'Bijv. fiets',
+    submit: 'Save asset',
+    amountLabel: 'Value (€)',
+    labelPlaceholder: 'e.g. bicycle',
   },
   move: {
-    submit: 'Verplaatsen',
-    amountLabel: 'Bedrag (€)',
-    labelPlaceholder: 'Van → naar',
+    submit: 'Move money',
+    amountLabel: 'Amount (€)',
+    labelPlaceholder: 'From → to',
   },
 };
 
@@ -80,9 +80,9 @@ export function SheetStubForm({
     showToast(description ?? title, 'error');
   });
 
-  async function onSubmit(_values: StubValues) {
+  async function onSubmit() {
     showToast(
-      mode === 'edit' ? 'Opgeslagen (lokaal)' : `${copy.submit.replace(' opslaan', '')} klaar (lokaal)`,
+      mode === 'edit' ? 'Saved (local)' : `${copy.submit} done (local)`,
       'success',
     );
     dismiss();
@@ -96,7 +96,7 @@ export function SheetStubForm({
       onSubmit={onSubmit}
       sidebar={
         <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? 'Bezig…' : copy.submit}
+          {form.formState.isSubmitting ? 'Working…' : copy.submit}
         </Button>
       }
     >
@@ -105,7 +105,7 @@ export function SheetStubForm({
         name="label"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Naam</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
               <Input placeholder={copy.labelPlaceholder} {...field} />
             </FormControl>
@@ -131,7 +131,7 @@ export function SheetStubForm({
       ) : null}
 
       <p className="text-xs text-fg-faint">
-        Nog geen live API voor dit type — het formulierpatroon staat al klaar.
+        No live API for this type yet — the form pattern is ready.
       </p>
     </FormCreateEditShell>
   );

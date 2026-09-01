@@ -24,7 +24,7 @@ export function SignUpForm() {
     setPending(false);
 
     if (result.error) {
-      setError(result.error.message ?? 'Registratie mislukt');
+      setError(result.error.message ?? 'Registration failed');
       return;
     }
     router.push('/');
@@ -34,28 +34,28 @@ export function SignUpForm() {
   return (
     <div className="grid gap-6">
       <div>
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-fg-muted mb-2">
+        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-fg-muted mb-2">
           ✦ Rumbelo
         </p>
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">Begin met verdelen</h1>
-        <p className="mt-1 text-sm text-fg-muted">Maak een account en richt je huishouden in.</p>
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">Start splitting</h1>
+        <p className="mt-1 text-sm text-fg-muted">Create an account and set up your household.</p>
       </div>
 
       <form className="grid gap-4" onSubmit={onSubmit}>
-        <Field label="Naam" htmlFor="name">
-          <Input id="name" name="name" autoComplete="name" required placeholder="Jouw naam" />
+        <Field label="Name" htmlFor="name">
+          <Input id="name" name="name" autoComplete="name" required placeholder="Your name" />
         </Field>
-        <Field label="E-mailadres" htmlFor="email">
+        <Field label="Email" htmlFor="email">
           <Input
             id="email"
             name="email"
             type="email"
             autoComplete="email"
             required
-            placeholder="jij@voorbeeld.nl"
+            placeholder="you@example.com"
           />
         </Field>
-        <Field label="Wachtwoord" htmlFor="password">
+        <Field label="Password" htmlFor="password">
           <Input
             id="password"
             name="password"
@@ -63,19 +63,19 @@ export function SignUpForm() {
             autoComplete="new-password"
             required
             minLength={12}
-            placeholder="Minimaal 12 tekens"
+            placeholder="At least 12 characters"
           />
         </Field>
         {error && <p className="text-sm text-danger">{error}</p>}
         <Button type="submit" className="w-full mt-1" disabled={pending}>
-          {pending ? 'Bezig…' : 'Account aanmaken'}
+          {pending ? 'Working…' : 'Create account'}
         </Button>
       </form>
 
       <p className="text-sm text-center text-fg-muted">
-        Al een account?{' '}
+        Already have an account?{' '}
         <Link href="/sign-in" className="font-semibold text-accent hover:underline">
-          Inloggen
+          Sign in
         </Link>
       </p>
     </div>

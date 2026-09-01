@@ -18,43 +18,43 @@ const HOLDING_KINDS: ReadonlyArray<{
 }> = [
   {
     key: 'portfolio',
-    nl: 'Portefeuille',
-    desc: 'Fondsen, aandelen en crypto — je meest liquide bezit.',
+    nl: 'Portfolio',
+    desc: 'Funds, shares and crypto — your most liquid asset.',
   },
   {
     key: 'property',
-    nl: 'Vastgoed',
-    desc: 'Een huis of huurpand. Hoort bij het lange spel.',
+    nl: 'Real estate',
+    desc: 'A house or rental property. Part of the long game.',
   },
   {
     key: 'business',
-    nl: 'Onderneming',
-    desc: 'Een bedrijf of aandeel daarin. Meestal je hoogste rendement en je hoogste risico.',
+    nl: 'Business',
+    desc: 'A company or stake in one. Usually your highest return and highest risk.',
   },
   {
     key: 'cash',
-    nl: 'Contant & buffers',
-    desc: 'Direct opneembaar. Rustgevend, maar het groeit nauwelijks.',
+    nl: 'Cash & reserves',
+    desc: 'Immediately accessible. Reassuring, but barely grows.',
   },
   {
     key: 'pension',
-    nl: 'Pensioen',
-    desc: 'Echt van jou, maar vast tot je stopt met werken.',
+    nl: 'Pension',
+    desc: 'Truly yours, but locked until you stop working.',
   },
 ];
 
 const LEVELS = [
   { index: 1, label: 'Beginner', threshold: 0 },
   { index: 2, label: 'Navigator', threshold: 120 },
-  { index: 3, label: 'Stuurman', threshold: 320 },
-  { index: 4, label: 'Kapitein', threshold: 640 },
-  { index: 5, label: 'Kompas', threshold: 1080 },
+  { index: 3, label: 'Helmsman', threshold: 320 },
+  { index: 4, label: 'Captain', threshold: 640 },
+  { index: 5, label: 'Compass', threshold: 1080 },
 ] as const;
 
 type FilterKey = 'all' | HoldingKind;
 
 /**
- * BORD — netto-vermogensbord + bezittingen + maandscore + levelladder + logboek.
+ * BOARD — net worth board + assets + month score + level ladder + log.
  * Design: Kluis Finance App.dc.html:1236-1357 (MIJN VERMOGEN).
  */
 export function BoardPageClient() {
@@ -94,79 +94,79 @@ export function BoardPageClient() {
       flow,
       isPension,
       flowLabel: isPension
-        ? 'staat vast'
+        ? 'locked'
         : flow > 0
           ? `+ ${formatMoney(flow)} p/m`
-          : 'geen inkomen p/m',
+          : 'no income p/m',
     });
   }
 
   return (
     <div className="grid animate-rise gap-8">
       <div>
-        <span className="font-mono text-[12px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ MIJN VERMOGEN
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ MY NET WORTH
         </span>
-        <h1 className="mt-2 font-display text-[clamp(26px,4vw,38px)] font-semibold tracking-tight text-fg">
-          Waar je geld staat — niet hoe het beweegt.
+        <h1 className="mt-2 font-display text-3xl lg:text-4xl font-semibold tracking-tight text-fg">
+          Where your money stands — not how it moves.
         </h1>
-        <p className="mt-2 max-w-[62ch] text-[15px] text-pretty text-fg-muted">
-          Alles wat je bezit, min alles wat je schuldig bent. Een tegel wordt goud zodra hij je
-          elke maand betaalt — dat is het verschil tussen iets bezitten en iets hebben.
+        <p className="mt-2 max-w-prose text-base text-pretty text-fg-muted">
+          Everything you own minus everything you owe. A tile turns gold the moment it pays you
+          every month — that is the difference between owning something and having it.
         </p>
       </div>
 
       <ListToolbar
-        createLabel="+ Bezitting toevoegen"
+        createLabel="+ Add asset"
         onCreate={() => router.push(CREATE_HREF.asset)}
       />
 
       <AccentCard tint="var(--color-accent)">
-        <span className="font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent">
-          ✦ Hoe ver dit je brengt
+        <span className="font-mono text-xs font-medium tracking-widest uppercase text-accent">
+          ✦ How far this takes you
         </span>
         <div className="mt-4 flex flex-wrap gap-x-8 gap-y-4">
           <div className="grid gap-1.5">
-            <Eyebrow>Totale waarde</Eyebrow>
-            <p className="font-display text-[clamp(24px,3.4vw,31px)] font-semibold leading-none tracking-tight text-fg">
+            <Eyebrow>Total value</Eyebrow>
+            <p className="font-display text-2xl lg:text-3xl font-semibold leading-none tracking-tight text-fg">
               {formatMoney(assetWorth)}
             </p>
           </div>
           <div className="grid gap-1.5">
-            <Eyebrow>Betaalt je maandelijks</Eyebrow>
+            <Eyebrow>Monthly income</Eyebrow>
             <p
-              className="font-display text-[clamp(24px,3.4vw,31px)] font-semibold leading-none tracking-tight"
+              className="font-display text-2xl lg:text-3xl font-semibold leading-none tracking-tight"
               style={{ color: 'var(--color-jar-give)' }}
             >
-              {monthlyPassive === 0 ? 'Nog niet' : formatMoney(monthlyPassive)}
+              {monthlyPassive === 0 ? 'None yet' : formatMoney(monthlyPassive)}
             </p>
           </div>
           <div className="grid gap-1.5">
-            <Eyebrow>Je leven kost</Eyebrow>
-            <p className="font-display text-[clamp(24px,3.4vw,31px)] font-semibold leading-none tracking-tight text-fg">
+            <Eyebrow>Your life costs</Eyebrow>
+            <p className="font-display text-2xl lg:text-3xl font-semibold leading-none tracking-tight text-fg">
               {formatMoney(LIFE_COST)}
             </p>
           </div>
           <div className="grid gap-1.5">
-            <Eyebrow>Totale schuld</Eyebrow>
-            <p className="font-display text-[clamp(24px,3.4vw,31px)] font-semibold leading-none tracking-tight text-danger">
+            <Eyebrow>Total debt</Eyebrow>
+            <p className="font-display text-2xl lg:text-3xl font-semibold leading-none tracking-tight text-danger">
               {formatMoney(TOTAL_DEBT)}
             </p>
           </div>
         </div>
-        <p className="mt-4 text-[12.5px] text-pretty text-fg-muted">
-          Je netto vermogen is <strong className="text-fg">{formatMoney(netWorth)}</strong>. Elke
-          euro die je toevoegt aan Financial Freedom werkt voor je — voor altijd.
+        <p className="mt-4 text-sm text-pretty text-fg-muted">
+          Your net worth is <strong className="text-fg">{formatMoney(netWorth)}</strong>. Every
+          euro you add to Financial Freedom works for you — forever.
         </p>
       </AccentCard>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 font-mono text-[9.5px] font-medium tracking-[0.18em] uppercase text-fg-muted">
-          Toon
+        <span className="mr-1 font-mono text-xs font-medium tracking-widest uppercase text-fg-muted">
+          Show
         </span>
         {(
           [
-            { key: 'all' as const, label: `Alles  ${mockHoldings.length}` },
+            { key: 'all' as const, label: `All  ${mockHoldings.length}` },
             ...presentKinds.map((k) => ({
               key: k.key,
               label: `${k.nl}  ${mockHoldings.filter((h) => h.kind === k.key).length}`,
@@ -178,7 +178,7 @@ export function BoardPageClient() {
             type="button"
             onClick={() => setFilter(f.key)}
             className={cn(
-              'rounded-full border px-3.5 py-1.5 font-mono text-[10.5px] font-medium tracking-[0.08em] uppercase transition-colors',
+              'rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide uppercase transition-colors',
               filter === f.key
                 ? 'border-accent/40 bg-accent-soft text-accent'
                 : 'border-line text-fg-secondary hover:border-accent-hover hover:text-accent',
@@ -195,24 +195,24 @@ export function BoardPageClient() {
             <div className="flex flex-wrap items-start gap-4 border-b border-line px-5 py-4">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline gap-2.5">
-                  <h3 className="font-display text-[19px] font-semibold tracking-tight text-fg">
+                  <h3 className="font-display text-xl font-semibold tracking-tight text-fg">
                     {g.nl}
                   </h3>
-                  <span className="font-mono text-[9.5px] tracking-[0.12em] uppercase text-fg-muted">
-                    {g.items.length === 1 ? '1 bezit' : `${g.items.length} bezittingen`}
+                  <span className="font-mono text-xs tracking-wide uppercase text-fg-muted">
+                    {g.items.length === 1 ? '1 asset' : `${g.items.length} assets`}
                   </span>
                 </div>
-                <p className="mt-1 text-[12.5px] leading-relaxed text-pretty text-fg-muted">
+                <p className="mt-1 text-sm leading-relaxed text-pretty text-fg-muted">
                   {g.desc}
                 </p>
               </div>
               <div className="grid justify-items-end gap-1">
-                <span className="font-display text-[22px] font-semibold leading-none tracking-tight text-fg">
+                <span className="font-display text-2xl font-semibold leading-none tracking-tight text-fg">
                   {formatMoney(g.total)}
                 </span>
                 <span
                   className={cn(
-                    'font-mono text-[10.5px]',
+                    'font-mono text-xs',
                     g.isPension || g.flow <= 0 ? 'text-fg-muted' : 'text-accent',
                   )}
                 >
@@ -225,7 +225,7 @@ export function BoardPageClient() {
                 className="self-center"
                 onClick={() => router.push(CREATE_HREF.asset)}
               >
-                + Toevoegen
+                + Add
               </Button>
             </div>
             <div className="grid gap-3.5 p-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -238,7 +238,7 @@ export function BoardPageClient() {
                     type="button"
                     onClick={() => router.push(CREATE_HREF.asset)}
                     className={cn(
-                      'grid cursor-pointer gap-0 overflow-hidden rounded-[14px] border bg-raised text-left transition-colors hover:border-accent-hover',
+                      'grid cursor-pointer gap-0 overflow-hidden rounded-xl border bg-raised text-left transition-colors hover:border-accent-hover',
                       pays ? 'border-accent/40 shadow-glow' : 'border-line',
                     )}
                   >
@@ -253,33 +253,33 @@ export function BoardPageClient() {
                       }}
                     />
                     <div className="grid gap-2 p-4">
-                      <span className="font-mono text-[9.5px] font-medium tracking-[0.15em] uppercase text-fg-muted">
+                      <span className="font-mono text-xs font-medium tracking-wide uppercase text-fg-muted">
                         {h.locked
-                          ? 'Vast tot pensioen'
+                          ? 'Locked until pension'
                           : pays
-                            ? 'Betaalt je maandelijks'
-                            : 'Groeit alleen in waarde'}
+                            ? 'Pays you monthly'
+                            : 'Appreciates in value'}
                       </span>
                       {jar && (
-                        <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.1em] text-fg-secondary">
+                        <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 font-mono text-xs uppercase tracking-widest text-fg-secondary">
                           <span
                             className={cn('size-1.75 rounded-sm', jar.color)}
                           />
                           {jar.name} ›
                         </span>
                       )}
-                      <span className="font-display text-[19px] font-semibold leading-snug tracking-tight text-fg">
+                      <span className="font-display text-xl font-semibold leading-snug tracking-tight text-fg">
                         {h.name}
                       </span>
-                      <div className="flex justify-between font-mono text-[11px]">
-                        <span className="text-fg-muted">Waarde</span>
+                      <div className="flex justify-between font-mono text-xs">
+                        <span className="text-fg-muted">Value</span>
                         <span className="text-fg-secondary">{formatMoney(h.value)}</span>
                       </div>
-                      <div className="flex justify-between font-mono text-[11px]">
-                        <span className="text-fg-muted">Levert op p/m</span>
+                      <div className="flex justify-between font-mono text-xs">
+                        <span className="text-fg-muted">Monthly income</span>
                         <span className={pays ? 'text-accent' : 'text-fg-muted'}>
                           {h.locked
-                            ? 'nu nog niet te gebruiken'
+                            ? 'not available yet'
                             : pays
                               ? `+ ${formatMoney(h.flow)} p/m`
                               : formatMoney(0) + ' p/m'}
@@ -297,22 +297,22 @@ export function BoardPageClient() {
       <Card className="grid gap-5">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <Eyebrow>{`Beurt · ${formatPeriod(mockTurn.period)}`}</Eyebrow>
+            <Eyebrow>{`Turn · ${formatPeriod(mockTurn.period)}`}</Eyebrow>
             <p className="mt-1.5 font-display text-4xl font-semibold tabular-nums text-fg">
               {mockTurn.score}
               <span className="text-xl text-fg-muted">/{mockTurn.maxScore}</span>
             </p>
           </div>
           <div className="text-right">
-            <Eyebrow>Niveau {mockTurn.level}</Eyebrow>
+            <Eyebrow>Level {mockTurn.level}</Eyebrow>
             <p className="font-display text-xl font-semibold text-accent">{mockTurn.levelLabel}</p>
-            <p className="text-xs text-fg-muted">nog {mockTurn.daysLeft} dagen</p>
+            <p className="text-xs text-fg-muted">{mockTurn.daysLeft} days left</p>
           </div>
         </div>
         <Meter value={mockTurn.score / mockTurn.maxScore} />
       </Card>
 
-      <Section eyebrow="Niveaus" title="De weg omhoog">
+      <Section eyebrow="Levels" title="The way up">
         <div className="grid gap-2">
           {LEVELS.map((l) => {
             const reached = mockTurn.level >= l.index;
@@ -329,14 +329,14 @@ export function BoardPageClient() {
                   </span>
                   <p className="font-semibold text-fg">{l.label}</p>
                 </div>
-                <p className="text-xs tabular-nums text-fg-muted">{l.threshold} punten</p>
+                <p className="text-xs tabular-nums text-fg-muted">{l.threshold} points</p>
               </Card>
             );
           })}
         </div>
       </Section>
 
-      <Section eyebrow="Logboek" title="Wat er gebeurde">
+      <Section eyebrow="Log" title="What happened">
         <Card className="p-0">
           <ul className="divide-y divide-line">
             {mockTurn.events.map((e, i) => (

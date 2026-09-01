@@ -59,7 +59,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [plan, setPlan] = useState<PlanKey>(resolvePreviewPlan(MOCK_PLAN));
-  const [locale, setLocale] = useState<'nl' | 'en'>('nl');
+  const [locale, setLocale] = useState<'nl' | 'en'>('en');
 
   const now = new Date();
   const [period, setPeriod] = useState<Period>({

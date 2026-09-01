@@ -1,6 +1,6 @@
 import { DebtsPageClient } from './_components/debts-page';
 
-export const metadata = { title: 'Schulden' };
+export const metadata = { title: 'Debts' };
 
 export default function DebtsPage() {
   return <DebtsPageClient />;

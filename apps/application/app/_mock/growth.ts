@@ -12,8 +12,8 @@ export type HoldingKind = 'portfolio' | 'property' | 'business' | 'cash' | 'pens
 export const mockHoldings = [
   { id: 'h1', name: 'Wereldindexfonds', jarKey: 'FINANCIAL_FREEDOM', value: 1_420_000, flow: 4_200, kind: 'portfolio' as const, locked: false },
   { id: 'h2', name: 'Meltizo', jarKey: 'FINANCIAL_FREEDOM', value: 2_200_000, flow: 10_000, kind: 'business' as const, locked: false },
-  { id: 'h3', name: 'Spaarbuffer', jarKey: 'LONG_TERM_SAVINGS', value: 650_000, flow: 2_600, kind: 'cash' as const, locked: false },
+  { id: 'h3', name: 'Savings buffer', jarKey: 'LONG_TERM_SAVINGS', value: 650_000, flow: 2_600, kind: 'cash' as const, locked: false },
   { id: 'h4', name: 'Crypto', jarKey: 'FINANCIAL_FREEDOM', value: 380_000, flow: 0, kind: 'portfolio' as const, locked: false },
-  { id: 'h5', name: 'Pensioen via werkgever', jarKey: 'FINANCIAL_FREEDOM', value: 1_860_000, flow: 0, kind: 'pension' as const, locked: true },
-  { id: 'h6', name: 'Lijfrente', jarKey: 'LONG_TERM_SAVINGS', value: 420_000, flow: 0, kind: 'pension' as const, locked: true },
+  { id: 'h5', name: 'Employer pension', jarKey: 'FINANCIAL_FREEDOM', value: 1_860_000, flow: 0, kind: 'pension' as const, locked: true },
+  { id: 'h6', name: 'Annuity', jarKey: 'LONG_TERM_SAVINGS', value: 420_000, flow: 0, kind: 'pension' as const, locked: true },
 ] as const;

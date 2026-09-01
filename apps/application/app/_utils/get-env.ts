@@ -1,5 +1,3 @@
-/* eslint-disable perfectionist/sort-objects -- Don't sort this file */
-
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 

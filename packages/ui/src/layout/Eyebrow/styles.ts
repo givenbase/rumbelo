@@ -1,4 +1,4 @@
 export const eyebrowClass =
-  'text-[11px] font-semibold uppercase tracking-[0.22em] text-fg-muted';
+  'text-xs font-semibold uppercase tracking-widest text-fg-muted';
 
 export default eyebrowClass;

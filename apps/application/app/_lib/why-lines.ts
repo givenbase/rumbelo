@@ -1,47 +1,47 @@
 /**
  * The one-line "why this screen" caption shown above every screen's content.
- * Dutch strings from the design (Kluis Finance App.dc.html:3130-3148, NL column),
+ * English strings from the design (Kluis Finance App.dc.html:3130-3148, EN column),
  * rekeyed by route pathname.
  */
 export const WHY_LINES: Record<string, string> = {
   '/':
-    'Eén blik, één vraag: heb ik deze maand de teugels in handen?',
+    'One look, one question: do I have the reins this month?',
   '/money/jars':
-    'Deze maand, verdeeld voor hij begint. Geld met een taak hoef je niet te verdedigen.',
+    'This month, divided before it starts. Money with a job never has to be defended.',
   '/money/transactions':
-    'Je volgt uitgaven niet om jezelf te veroordelen — je volgt ze om te zien waar je leven lekt.',
+    'You do not track spending to judge yourself — you track it to see where your life leaks.',
   '/money/debts':
-    'Schuld is gehuurde tijd. Elke euro rente is een uur van je leven dat iemand anders stuurt.',
+    'Debt is rented time. Every euro of interest is an hour of your life someone else directs.',
   '/money/fixed-costs':
-    'Vaste lasten zijn beslissingen die je één keer nam en maandelijks betaalt. Herzie ze als beslissingen.',
+    'Fixed costs are decisions you made once and pay for monthly. Review them like decisions.',
   '/growth/goals':
-    'Een doel maakt van het overschot van deze maand iets dat blijft. Met een datum en een pot is het een plan.',
+    "A goal turns this month's surplus into something that lasts. With a date and a jar it is a plan.",
   '/growth/board':
-    'Geld is deze maand. Vermogen is de jaren. Je bent rijk op de dag dat het je leven betaalt.',
+    'Money is this month. Net worth is the years. You are wealthy the day it pays for your life.',
   '/energy/week':
-    'Je uren zijn je capaciteit. Met opzet verdeeld, of door wie het hardst vraagt.',
+    'Your hours are your capacity. Divided on purpose, or by whoever asks loudest.',
   '/energy/sleep':
-    'Slaap is de vloer waar de potten op staan. Snoep ervan af en elk ander getal zakt stilletjes.',
+    'Sleep is the floor the jars stand on. Cut it and every other number quietly drops.',
   '/soul/mind':
-    'Een rustig hoofd stuurt geld. Een onrustig hoofd geeft het uit en noemt dat een beslissing.',
+    'A calm mind directs money. A restless one spends it and calls that a decision.',
   '/soul/gratitude':
-    'Wie ziet wat hij al heeft, koopt minder om een gat te vullen.',
+    'Someone who sees what he already has buys less to fill a hole.',
   '/soul/intent':
-    'Een intentie is een instructie aan jezelf. Een goed voornemen is een hoop.',
+    'An intention is an instruction to yourself. A resolution is a hope.',
   '/soul/chakra':
-    'Benoem waar het vastzit, dan benoemt de volgende stap zichzelf.',
+    'Name where it feels stuck, and the next step usually names itself.',
   '/growth/income':
-    'Bezuinigen heeft een bodem. Meer verdienen niet.',
+    'Cutting costs has a floor. Raising income does not.',
   '/growth/learn':
-    'Een boek waar je geen gebruik voor kunt noemen was Play, niet Education.',
+    'A book you cannot name a use for was Play spending, not Education.',
   '/energy/train':
-    'Trainen is de enige uitgave die de waarde van elk ander uur verhoogt.',
+    'Training is the only spend that raises the value of every other hour.',
   '/energy/food':
-    'Voeding is brandstof voor de week die je potten verdelen. Brandstof koop je, die wilskracht je niet.',
+    'Food is fuel for the week your jars divide. Fuel is bought, not willed.',
   '/ritual':
-    'Tien minuten met je coach verslaat elke dag piekeren. Dit is de hele praktijk.',
+    'Ten minutes with your coach beats worrying every day. This is the whole practice.',
   '/why':
-    'Eén zin op je dashboard — geen poster, een controlevraag als een pot krap wordt.',
+    'One line on your dashboard — not a poster, a check question when a jar gets tight.',
 };
 
 /** Screens with no caption (portal hubs use their own `line`). */

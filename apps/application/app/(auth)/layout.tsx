@@ -17,15 +17,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           not the input fields. Hidden on small screens where it would push the
           form below the fold. */}
       <aside className="hidden flex-col justify-center bg-raised px-12 lg:flex">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-fg-muted">
-          ✦ Geld met intentie
+        <p className="text-xs font-semibold uppercase tracking-widest text-fg-muted">
+          ✦ Money with intention
         </p>
         <p className="mt-4 max-w-md font-display text-3xl font-semibold leading-tight tracking-tight text-fg">
-          Rijkdom is geen getal. Het zijn de teugels in jouw handen.
+          Wealth is not a number. It is the reins in your hands.
         </p>
         <p className="mt-6 max-w-md text-sm leading-relaxed text-fg-secondary">
-          Zes potten, gevuld op het moment dat inkomen binnenkomt. Eén weektelling van tien
-          minuten. Geen boekhouding — regie.
+          Six jars, filled the moment income arrives. One ten-minute weekly check-in.
+          No bookkeeping — direction.
         </p>
       </aside>
     </div>

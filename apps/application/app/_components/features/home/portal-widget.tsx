@@ -30,11 +30,11 @@ export function PortalWidget({
   tagline: string;
 }) {
   return (
-    <AccentCard tint={tint} className="flex min-w-50 flex-1 flex-col gap-3.5 p-5.5">
+    <AccentCard tint={tint} className="flex h-full min-w-0 flex-col gap-3.5 p-5">
       {/* Header row */}
       <div className="flex items-center justify-between gap-3">
         <span
-          className="flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.16em] uppercase"
+          className="flex items-center gap-2 font-mono text-xs font-medium tracking-widest uppercase"
           style={{ color: tint }}
         >
           <span aria-hidden>{icon}</span>
@@ -42,7 +42,7 @@ export function PortalWidget({
         </span>
         <Link
           href={href}
-          className="font-mono text-[11px] font-medium text-fg-faint transition-colors hover:text-accent"
+          className="font-mono text-xs font-medium text-fg-faint transition-colors hover:text-accent"
         >
           Open ▸
         </Link>
@@ -55,11 +55,11 @@ export function PortalWidget({
             key={s.label}
             className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0"
           >
-            <span className="font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-fg-faint">
+            <span className="font-mono text-xs tracking-wide whitespace-nowrap text-fg-faint">
               {s.label}
             </span>
             <span
-              className="font-display text-[22px] leading-none font-semibold tracking-tight"
+              className="font-display text-2xl leading-none font-semibold tracking-tight"
               style={s.color ? { color: s.color } : { color: 'var(--color-fg)' }}
             >
               {s.value}
@@ -69,7 +69,7 @@ export function PortalWidget({
       </div>
 
       {/* Tagline */}
-      <p className="text-[12.5px] leading-relaxed text-fg-muted">{tagline}</p>
+      <p className="text-sm leading-relaxed text-fg-muted">{tagline}</p>
     </AccentCard>
   );
 }

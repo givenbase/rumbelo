@@ -7,13 +7,13 @@ import { PageContent } from '@/components/layout/page-content';
 import { cn } from '@rumbelo/utils';
 
 const CENTRES = [
-  { id: 'root',   name: 'Wortel',      gov: 'Overleven',   color: '#dc2626', ask: 'Wat zou je vandaag één stap veiliger maken?' },
-  { id: 'sacral', name: 'Heilig',      gov: 'Creativiteit', color: '#ea580c', ask: 'Waar zeg je ja terwijl je nee bedoelt?' },
-  { id: 'solar',  name: 'Zonnevlecht', gov: 'Wilskracht',   color: '#ca8a04', ask: 'Welke beslissing stel je uit omdat je moe bent?' },
-  { id: 'heart',  name: 'Hart',        gov: 'Liefde',       color: '#16a34a', ask: 'Aan wie geef je vandaag zonder te rekenen?' },
-  { id: 'throat', name: 'Keel',        gov: 'Expressie',    color: '#0284c7', ask: 'Welke waarheid zou je week lichter maken als je hem uitspreekt?' },
-  { id: 'third',  name: 'Derde oog',   gov: 'Inzicht',      color: '#4f46e5', ask: 'Welk patroon zie je al, maar benoem je nog niet?' },
-  { id: 'crown',  name: 'Kroon',       gov: 'Verbinding',   color: '#7c3aed', ask: 'Waarvoor doe je dit echt — los van de cijfers?' },
+  { id: 'root',   name: 'Root',        gov: 'Survival',    color: '#dc2626', ask: 'What would make you one step safer today?' },
+  { id: 'sacral', name: 'Sacral',      gov: 'Creativity',   color: '#ea580c', ask: 'Where are you saying yes when you mean no?' },
+  { id: 'solar',  name: 'Solar plexus', gov: 'Willpower',    color: '#ca8a04', ask: 'Which decision are you postponing because you are tired?' },
+  { id: 'heart',  name: 'Heart',       gov: 'Love',         color: '#16a34a', ask: 'To whom do you give today without keeping score?' },
+  { id: 'throat', name: 'Throat',      gov: 'Expression',   color: '#0284c7', ask: 'Which truth would lighten your week if you spoke it?' },
+  { id: 'third',  name: 'Third eye',   gov: 'Insight',      color: '#4f46e5', ask: 'Which pattern do you already see but not yet name?' },
+  { id: 'crown',  name: 'Crown',       gov: 'Connection',   color: '#7c3aed', ask: 'Why are you really doing this — beyond the numbers?' },
 ] as const;
 
 export default function ChakraPage() {
@@ -21,10 +21,10 @@ export default function ChakraPage() {
 
   return (
     <PageContent width="prose" className="grid animate-rise gap-6">
-      <Section eyebrow="De centra" title="Waar voelt het vast?">
-        <p className="max-w-[60ch] text-[15px] text-fg-muted">
-          Geen esoterische score — een kaart om te benoemen waar het deze week wringt, zodat je
-          intentie ergens op kan landen.
+      <Section eyebrow="The centres" title="Where does it feel stuck?">
+        <p className="max-w-prose text-base text-fg-muted">
+          Not an esoteric score — a map to name where things feel stuck this week, so your
+          intention has somewhere to land.
         </p>
       </Section>
 
@@ -38,19 +38,19 @@ export default function ChakraPage() {
               type="button"
               onClick={() => setPick(active ? null : c)}
               className={cn(
-                'grid grid-cols-[10px_minmax(0,1fr)_auto] items-center gap-3.5 rounded-xl border px-4 py-3.5 text-left transition-all',
+                'flex items-center gap-3.5 rounded-xl border px-4 py-3.5 text-left transition-all',
                 active
                   ? 'border-accent/40 bg-accent-soft'
                   : 'border-line bg-surface hover:border-accent-hover',
               )}
             >
-              <span className="size-2.5 rounded-full" style={{ background: c.color }} />
+              <span className="size-2.5 shrink-0 rounded-full" style={{ background: c.color }} />
               <span
-                className={cn('font-display text-lg font-semibold', active ? 'text-fg' : 'text-fg')}
+                className={cn('min-w-0 flex-1 font-display text-lg font-semibold', active ? 'text-fg' : 'text-fg')}
               >
                 {c.name}
               </span>
-              <span className="font-mono text-[11px] text-fg-faint">{c.gov}</span>
+              <span className="shrink-0 font-mono text-xs text-fg-faint">{c.gov}</span>
             </button>
           );
         })}
@@ -59,20 +59,20 @@ export default function ChakraPage() {
       {/* ── Pick detail callout ── */}
       {pick && (
         <div
-          className="animate-rise grid gap-3 rounded-[16px] border border-accent/30 bg-surface p-6 shadow-glow"
-          style={{ borderLeftWidth: 3, borderLeftColor: pick.color }}
+          className="animate-rise grid gap-3 rounded-2xl border border-l-4 border-accent/30 bg-surface p-6 shadow-glow"
+          style={{ borderLeftColor: pick.color }}
         >
           <p
-            className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em]"
+            className="font-mono text-xs font-semibold uppercase tracking-widest"
             style={{ color: pick.color }}
           >
             {pick.name}
           </p>
-          <p className="max-w-[52ch] font-display text-[clamp(18px,2.2vw,22px)] font-medium leading-snug text-fg">
+          <p className="max-w-prose font-display text-lg lg:text-xl font-medium leading-snug text-fg">
             {pick.ask}
           </p>
           <Button as={Link} href="/soul/intent" size="sm" className="justify-self-start">
-            Zet als intentie →
+            Set as intention →
           </Button>
         </div>
       )}

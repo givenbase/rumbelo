@@ -1,6 +1,6 @@
 import { AccountSettings } from './_components/settings-panels';
 
-export const metadata = { title: 'Account — Instellingen' };
+export const metadata = { title: 'Account — Settings' };
 
 /** Default settings landing — Account (no redirect). */
 export default function SettingsPage() {

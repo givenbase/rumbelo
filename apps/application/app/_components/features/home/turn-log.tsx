@@ -17,30 +17,23 @@ export interface TurnEvent {
 export function TurnLog({
   score,
   daysLeft,
-  levelLabel,
   events,
 }: {
   score: number;
   daysLeft: number;
-  levelLabel: string;
   events: readonly TurnEvent[];
 }) {
   return (
-    <div className="rounded-[20px] border border-line bg-surface p-6 shadow-md">
+    <div className="rounded-2xl border border-line bg-surface p-6 shadow-md">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3.5">
-        <div className="flex items-center gap-3">
-          <Eyebrow>✦ De beurt</Eyebrow>
-          <span className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[10px] tracking-widest text-fg-muted">
-            {levelLabel}
-          </span>
-        </div>
+        <Eyebrow>✦ The turn</Eyebrow>
         <span className="flex items-baseline gap-2">
-          <span className="font-mono text-[9.5px] font-medium tracking-[0.18em] text-fg-faint uppercase">
-            Maandscore
+          <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
+            Month score
           </span>
           <span className="font-display text-2xl font-semibold tracking-tight text-accent">{score}</span>
-          <span className="font-mono text-[10px] text-fg-faint">{daysLeft} dagen resterend</span>
+          <span className="font-mono text-xs text-fg-faint">{daysLeft} days left</span>
         </span>
       </div>
 
@@ -49,13 +42,13 @@ export function TurnLog({
         {events.map((e, i) => (
           <div
             key={i}
-            className="grid grid-cols-[52px_minmax(0,1fr)_auto] items-baseline gap-2.5 border-b border-line py-3 last:border-b-0 last:pb-0"
+            className="flex items-baseline gap-2.5 border-b border-line py-3 last:border-b-0 last:pb-0"
           >
-            <span className="font-mono text-[10px] text-fg-faint">{e.day}</span>
-            <span className="text-pretty text-[13.5px] text-fg-secondary">{e.text}</span>
+            <span className="w-14 shrink-0 font-mono text-xs text-fg-faint">{e.day}</span>
+            <span className="min-w-0 flex-1 text-pretty text-sm text-fg-secondary">{e.text}</span>
             <span
               className={cn(
-                'font-mono text-xs',
+                'shrink-0 font-mono text-xs',
                 e.points < 0 ? 'text-danger' : 'text-success',
               )}
             >

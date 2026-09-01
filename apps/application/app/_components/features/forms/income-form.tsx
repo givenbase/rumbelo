@@ -22,14 +22,14 @@ import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 import { isLiveData } from '@/app/_lib/preview';
 
 const incomeFormSchema = z.object({
-  name: z.string().min(1, 'Naam is verplicht').max(120),
+  name: z.string().min(1, 'Name is required').max(120),
   amount: z
     .string()
-    .min(1, 'Bedrag is verplicht')
+    .min(1, 'Amount is required')
     .refine((v) => {
       const cents = parseEurosToCents(v);
       return cents != null && cents > 0;
-    }, { message: 'Voer een geldig bedrag in' }),
+    }, { message: 'Enter a valid amount' }),
   kind: z.enum(['SALARY', 'FREELANCE', 'BENEFIT', 'RENTAL', 'DIVIDEND', 'OTHER']),
 });
 
@@ -101,10 +101,10 @@ export function IncomeForm({
       void queryClient.invalidateQueries({ queryKey: api.money.income.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-      showToast(mode === 'edit' ? 'Inkomen bijgewerkt' : 'Inkomen opgeslagen', 'success');
+      showToast(mode === 'edit' ? 'Income updated' : 'Income saved', 'success');
       dismiss();
     },
-    onError: () => showToast('Opslaan mislukt', 'error'),
+    onError: () => showToast('Save failed', 'error'),
   });
 
   const removeMutation = useMutation({
@@ -116,15 +116,15 @@ export function IncomeForm({
       void queryClient.invalidateQueries({ queryKey: api.money.income.list.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
       void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-      showToast('Inkomen verwijderd', 'success');
+      showToast('Income deleted', 'success');
       dismiss();
     },
-    onError: () => showToast('Verwijderen mislukt', 'error'),
+    onError: () => showToast('Delete failed', 'error'),
   });
 
   async function onSubmit(values: IncomeFormValues) {
     if (!live) {
-      showToast('Log in om inkomen op te slaan', 'error');
+      showToast('Sign in to save income', 'error');
       return;
     }
     await saveMutation.mutateAsync(values);
@@ -142,10 +142,10 @@ export function IncomeForm({
         <div className="grid gap-2">
           <Button type="submit" className="w-full" disabled={busy}>
             {saveMutation.isPending || form.formState.isSubmitting
-              ? 'Bezig…'
+              ? 'Working…'
               : mode === 'edit'
-                ? 'Wijzigingen opslaan'
-                : 'Inkomen opslaan'}
+                ? 'Save changes'
+                : 'Save income'}
           </Button>
           {mode === 'edit' && entityId ? (
             <Button
@@ -154,11 +154,11 @@ export function IncomeForm({
               className="w-full text-danger hover:bg-danger/10 hover:text-danger"
               disabled={busy}
               onClick={() => {
-                if (!window.confirm('Deze inkomstenbron definitief verwijderen?')) return;
+                if (!window.confirm('Permanently delete this income source?')) return;
                 void removeMutation.mutateAsync();
               }}
             >
-              {removeMutation.isPending ? 'Verwijderen…' : 'Verwijderen'}
+              {removeMutation.isPending ? 'Deleting…' : 'Delete'}
             </Button>
           ) : null}
         </div>
@@ -169,9 +169,9 @@ export function IncomeForm({
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Naam</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input placeholder="Bijv. salaris" {...field} />
+              <Input placeholder="e.g. salary" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -183,7 +183,7 @@ export function IncomeForm({
         name="amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Bedrag per maand (€)</FormLabel>
+            <FormLabel>Amount per month (€)</FormLabel>
             <FormControl>
               <Input inputMode="decimal" placeholder="0,00" {...field} />
             </FormControl>
@@ -197,18 +197,18 @@ export function IncomeForm({
         name="kind"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Soort</FormLabel>
+            <FormLabel>Type</FormLabel>
             <FormControl>
               <select
                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
                 {...field}
               >
-                <option value="SALARY">Salaris</option>
+                <option value="SALARY">Salary</option>
                 <option value="FREELANCE">Freelance</option>
-                <option value="BENEFIT">Uitkering</option>
-                <option value="RENTAL">Huurinkomen</option>
+                <option value="BENEFIT">Benefit</option>
+                <option value="RENTAL">Rental income</option>
                 <option value="DIVIDEND">Dividend</option>
-                <option value="OTHER">Overig</option>
+                <option value="OTHER">Other</option>
               </select>
             </FormControl>
             <FormMessage />
