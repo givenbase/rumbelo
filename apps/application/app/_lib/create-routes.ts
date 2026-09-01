@@ -12,6 +12,11 @@ export const CREATE_HREF = {
 
 export type CreateKind = keyof typeof CREATE_HREF;
 
+export function spendFromJarHref(jarId: string) {
+    const params = new URLSearchParams({ jarId });
+    return `${CREATE_HREF.tx}?${params.toString()}`;
+}
+
 export function updateHref(kind: Exclude<CreateKind, 'session' | 'asset' | 'move'>, id: string) {
     switch (kind) {
         case 'tx':

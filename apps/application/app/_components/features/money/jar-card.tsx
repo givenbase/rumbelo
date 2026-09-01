@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { cn, formatMoney } from '@rumbelo/utils';
 
-import { CREATE_HREF } from '@/app/_lib/create-routes';
+import { CREATE_HREF, spendFromJarHref } from '@/app/_lib/create-routes';
 import { JAR_GUIDE, type JarGuideKey } from '@/app/_mock';
 
 interface JarCategory {
@@ -228,7 +228,7 @@ export function JarCard({ jar }: { jar: JarCardModel }) {
             <div className="mt-3 flex gap-2">
                 <button
                     type="button"
-                    onClick={() => router.push(CREATE_HREF.tx)}
+                    onClick={() => router.push(spendFromJarHref(jar.id))}
                     className="flex-1 rounded-full border border-line-strong bg-transparent p-2 font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
                     Add a spend
                 </button>

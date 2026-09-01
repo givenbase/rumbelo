@@ -237,8 +237,8 @@ export const DESIGN_SCREENS: DesignScreen[] = [
         section: '(FAB + create/edit routes)',
         route: '—',
         navGroup: 'overlay',
-        status: 'shell',
-        gap: 'URL modals: /create + /update/[id] with @modal intercept; FAB Links; stubs for session/asset/move',
+        status: 'domain',
+        gap: 'App + feature @modal intercepts for all Quick Add / create / update routes; cross-segment (jars→spend, board→asset, fixed→income); stubs for session/asset/move',
     },
 ];
 

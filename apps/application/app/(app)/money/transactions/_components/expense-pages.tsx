@@ -9,8 +9,20 @@ import { isLiveData } from '@/app/_lib/preview';
 import { ExpenseForm } from '@/components/features/forms/expense-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
-export function ExpenseCreatePage({ embedded = false }: { embedded?: boolean }) {
-    return <ExpenseForm mode="create" embedded={embedded} />;
+export function ExpenseCreatePage({
+    embedded = false,
+    defaultJarId,
+}: {
+    embedded?: boolean;
+    defaultJarId?: string;
+}) {
+    return (
+        <ExpenseForm
+            mode="create"
+            embedded={embedded}
+            defaultValues={defaultJarId ? { jarId: defaultJarId } : undefined}
+        />
+    );
 }
 
 export function ExpenseUpdatePage({ id, embedded = false }: { id: string; embedded?: boolean }) {
