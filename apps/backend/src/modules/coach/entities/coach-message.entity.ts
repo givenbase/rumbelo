@@ -1,4 +1,5 @@
 import { Entity, Enum, Index, Property } from '@mikro-orm/core';
+
 import { HouseholdEntity } from '../../../common/database/base.entity.js';
 
 export enum CoachKind {

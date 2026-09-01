@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { DEFAULT_JAR_SPLIT, type JarKey } from '@rumbelo/contracts';
 import { useApi, useApiClient } from '@rumbelo/contracts/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+
+import { DEFAULT_JAR_SPLIT, type JarKey } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
   Badge,
@@ -20,12 +21,13 @@ import {
   Toggle,
 } from '@rumbelo/ui';
 import { formatMoney, formatPercent } from '@rumbelo/utils';
-import { JAR_META, mockJars } from '@/app/_mock';
+
 import { changePassword, updateOrganization, updateUser } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import { isLiveData } from '@/app/_lib/preview';
-import { useAuth } from '@/components/features/shell/auth-provider';
+import { JAR_META, mockJars } from '@/app/_mock';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
+import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 const JAR_COLOR: Record<string, string> = Object.fromEntries(

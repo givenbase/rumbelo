@@ -1,15 +1,18 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+
 import { cn } from '@rumbelo/utils';
-import { PageContent } from '@/components/layout/page-content';
+
 import {
   SETTINGS_TABS,
   settingsHref,
   settingsTabFromPathname,
 } from '@/app/_lib/settings-tabs';
+import { PageContent } from '@/components/layout/page-content';
 
 /**
  * Shared settings chrome. Active section comes from the URL path

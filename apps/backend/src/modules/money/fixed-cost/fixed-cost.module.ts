@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { FixedCostController } from './fixed-cost.controller.js';
 import { FixedCostService } from './fixed-cost.service.js';
 

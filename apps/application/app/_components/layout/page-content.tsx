@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import { cn } from '@rumbelo/utils';
 
 /** Shared max-widths — always paired with mx-auto so narrow pages center in the shell. */

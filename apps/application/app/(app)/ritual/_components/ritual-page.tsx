@@ -1,16 +1,18 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { RitualWizard } from '@/components/features/ritual/ritual-wizard';
-import { PageContent } from '@/components/layout/page-content';
-import { Eyebrow } from '@rumbelo/ui';
-import { useAuth } from '@/components/features/shell/auth-provider';
-import { useAppShell } from '@/components/features/shell/app-shell-context';
-import { mockJars } from '@/app/_mock';
-import { isLiveData } from '@/app/_lib/preview';
-import { currentWeekKey, toPeriodKey } from '@rumbelo/utils';
-import { useLiveQuery } from '@rumbelo/hooks';
 import { useApi, useApiClient } from '@rumbelo/contracts/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { useLiveQuery } from '@rumbelo/hooks';
+import { Eyebrow } from '@rumbelo/ui';
+import { currentWeekKey, toPeriodKey } from '@rumbelo/utils';
+
+import { isLiveData } from '@/app/_lib/preview';
+import { mockJars } from '@/app/_mock';
+import { RitualWizard } from '@/components/features/ritual/ritual-wizard';
+import { useAppShell } from '@/components/features/shell/app-shell-context';
+import { useAuth } from '@/components/features/shell/auth-provider';
+import { PageContent } from '@/components/layout/page-content';
 
 export function RitualPageClient() {
   const api = useApi();

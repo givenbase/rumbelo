@@ -1,11 +1,12 @@
 'use client';
 
+import { ApiProvider } from '@rumbelo/contracts/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { ApiProvider } from '@rumbelo/contracts/react';
+
+import { env } from '@/app/_utils/get-env';
 import { AppShellProvider } from '@/components/features/shell/app-shell-context';
 import { AuthProvider } from '@/components/features/shell/auth-provider';
-import { env } from '@/app/_utils/get-env';
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(

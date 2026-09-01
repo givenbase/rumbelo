@@ -1,12 +1,14 @@
 'use client';
 
 import { useApi } from '@rumbelo/contracts/react';
-import { useAuth } from '@/components/features/shell/auth-provider';
+
 import { useLiveQuery } from '@rumbelo/hooks';
-import { mockEnergy, JAR_META, SLEEP_HOURS } from '@/app/_mock';
-import { isLiveData } from '@/app/_lib/preview';
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
+
+import { isLiveData } from '@/app/_lib/preview';
+import { mockEnergy, JAR_META, SLEEP_HOURS } from '@/app/_mock';
+import { useAuth } from '@/components/features/shell/auth-provider';
 
 const STEERED_HOURS = 40;
 const SLEEP_WEEK = SLEEP_HOURS * 7;

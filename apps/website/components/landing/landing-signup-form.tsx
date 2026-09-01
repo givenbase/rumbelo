@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+
 import { ASSURANCES } from '@/lib/landing-content';
+
 import { LandingIcon } from './landing-icon';
 
 type FieldKey = 'name' | 'email' | 'pass';

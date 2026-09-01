@@ -9,13 +9,15 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+
 import type { PlanKey } from '@/app/_lib/plan';
-import { MOCK_PLAN } from '@/app/_lib/plan';
-import { resolvePreviewPlan } from '@/app/_lib/preview';
+
 import {
   markOnboardingDone,
   resetOnboarding,
 } from '@/app/_lib/onboarding-storage';
+import { MOCK_PLAN } from '@/app/_lib/plan';
+import { resolvePreviewPlan } from '@/app/_lib/preview';
 
 export interface Toast {
   id: number;

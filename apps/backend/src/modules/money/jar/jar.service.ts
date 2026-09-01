@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
+
+import type { Jar as ContractJar } from '@rumbelo/contracts';
+
+import { CADENCE_TO_MONTHLY, Cadence } from '../../../common/database/enums.js';
 import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
 import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
-import { CADENCE_TO_MONTHLY, Cadence } from '../../../common/database/enums.js';
-import type { Jar as ContractJar } from '@rumbelo/contracts';
 import { Category, Jar } from './entities/index.js';
 
 /**

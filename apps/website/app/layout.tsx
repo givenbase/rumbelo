@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
+
 import './globals.css';
 
 const display = Bricolage_Grotesque({

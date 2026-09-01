@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+
 import { DEMO_INCOME_DEFAULT, FLOATERS, JARS, PROOF, TICKER } from '../../lib/landing-content';
 
 function fmt(n: number) {

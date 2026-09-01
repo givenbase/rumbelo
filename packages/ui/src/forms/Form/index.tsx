@@ -1,8 +1,8 @@
 "use client"
 
-import * as React from "react"
 import type { Label as LabelPrimitive } from "radix-ui"
-import { Slot } from "radix-ui"
+
+import * as React from "react"
 import {
   Controller,
   FormProvider,
@@ -14,6 +14,9 @@ import {
 } from "react-hook-form"
 
 import { cn } from "@rumbelo/utils"
+
+import { Slot } from "radix-ui"
+
 import { Label } from "../Label"
 
 const Form = FormProvider

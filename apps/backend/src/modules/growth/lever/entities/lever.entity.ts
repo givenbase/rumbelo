@@ -1,4 +1,5 @@
 import { Entity, Property } from '@mikro-orm/core';
+
 import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 
 /** Things that move earning power. A growth surface, not a budget line. */

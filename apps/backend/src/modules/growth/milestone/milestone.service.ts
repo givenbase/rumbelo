@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
+
 import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
 import { IncomeMilestone } from './entities/index.js';
 

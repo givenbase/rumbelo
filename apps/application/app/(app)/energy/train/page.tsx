@@ -1,11 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
-import { SESSION_COLORS, mockSessions } from '@/app/_mock';
+
 import { CREATE_HREF } from '@/app/_lib/create-routes';
+import { SESSION_COLORS, mockSessions } from '@/app/_mock';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 const TRAIN_TIE =

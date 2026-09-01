@@ -1,16 +1,18 @@
-import 'reflect-metadata';
+import cookie from '@fastify/cookie';
+import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { config as loadDotenv } from 'dotenv';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { NestFactory } from '@nestjs/core';
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import helmet from '@fastify/helmet';
-import cors from '@fastify/cors';
-import cookie from '@fastify/cookie';
+
 import { AppModule } from './app.module.js';
 import { loadEnv } from './common/config/env.config.js';
+
+import 'reflect-metadata';
 
 function loadRootEnvFile() {
   let dir = dirname(fileURLToPath(import.meta.url));

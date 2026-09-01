@@ -1,5 +1,6 @@
 import { Card, Eyebrow, Meter, Section } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
+
 import { mockFood } from '@/app/_mock';
 
 export const metadata = { title: 'Nutrition' };

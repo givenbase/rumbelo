@@ -1,5 +1,7 @@
 import type { EntityManager } from '@mikro-orm/postgresql';
+
 import { Seeder } from '@mikro-orm/seeder';
+
 import { HouseholdSettings } from '../../modules/household/entities/household-settings.entity.js';
 import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../../modules/money/jar/entities/jar.entity.js';
 

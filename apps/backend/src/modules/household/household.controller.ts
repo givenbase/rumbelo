@@ -1,6 +1,8 @@
+import { contract } from '@rumbelo/contracts';
+
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
-import { contract } from '@rumbelo/contracts';
+
 import { HouseholdService } from './household.service.js';
 
 @Controller()

@@ -1,6 +1,7 @@
 /** Home / turn / coach fixtures for the dashboard preview. */
 
 import { currentPeriod } from '@rumbelo/utils';
+
 import { NET_INCOME, mockJars } from './jars';
 
 export const mockDashboard = {

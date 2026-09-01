@@ -1,5 +1,4 @@
-import { cn } from '@rumbelo/utils';
-import { formatMoney } from '@rumbelo/utils';
+import { cn , formatMoney } from '@rumbelo/utils';
 
 export interface JarCategory {
   id: string;

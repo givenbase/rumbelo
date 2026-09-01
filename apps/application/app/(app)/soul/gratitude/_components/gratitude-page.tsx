@@ -1,15 +1,17 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useApi, useApiClient } from '@rumbelo/contracts/react';
-import { useAuth } from '@/components/features/shell/auth-provider';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
+
 import { useLiveQuery } from '@rumbelo/hooks';
-import { currentWeekKey } from '@rumbelo/utils';
-import { mockGratitude } from '@/app/_mock';
-import { isLiveData } from '@/app/_lib/preview';
-import { PageContent } from '@/components/layout/page-content';
 import { Button, Eyebrow, Input, Section } from '@rumbelo/ui';
+import { currentWeekKey } from '@rumbelo/utils';
+
+import { isLiveData } from '@/app/_lib/preview';
+import { mockGratitude } from '@/app/_mock';
+import { useAuth } from '@/components/features/shell/auth-provider';
+import { PageContent } from '@/components/layout/page-content';
 
 export function GratitudePageClient() {
   const api = useApi();

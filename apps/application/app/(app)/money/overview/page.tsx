@@ -1,5 +1,5 @@
-import { PortalHub } from '@/components/features/home/portal-hub';
 import { moneyPortalHub } from '@/app/_lib/portal-hubs';
+import { PortalHub } from '@/components/features/home/portal-hub';
 
 export const metadata = { title: 'Money · overview' };
 

@@ -3,6 +3,7 @@
 import { cn } from '@rumbelo/utils';
 
 import type AccentCardProps from './types';
+
 import accentCardClass from './styles';
 
 /** Top-accent-bar card pattern (jar cards, portal widgets). */

@@ -1,9 +1,11 @@
+import { formatMoney } from '@rumbelo/utils';
+
 /**
  * Portal overview configs — shapes and copy from the design's HUBS block
  * (Kluis Finance App.dc.html:3478-3527), values derived from mock fixtures.
  */
 import type { PortalHubProps } from '@/components/features/home/portal-hub';
-import { formatMoney } from '@rumbelo/utils';
+
 import {
   INCOME_SOURCES,
   mockDebts,

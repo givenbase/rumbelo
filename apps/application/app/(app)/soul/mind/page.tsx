@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
+
 import { mockMind } from '@/app/_mock';
 
 const MIND_TIE =

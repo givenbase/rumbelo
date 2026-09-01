@@ -1,8 +1,10 @@
 'use client';
 
-import type { PlanKey } from '@/app/_lib/plan';
-import { PLAN_LABELS } from '@/app/_lib/plan';
 import { Button } from '@rumbelo/ui';
+
+import type { PlanKey } from '@/app/_lib/plan';
+
+import { PLAN_LABELS } from '@/app/_lib/plan';
 
 export function LockedGate({ requiredPlan }: { requiredPlan: PlanKey }) {
   return (

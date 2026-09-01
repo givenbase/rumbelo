@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { cn } from '@rumbelo/utils';
-import { formatMoney } from '@rumbelo/utils';
-import { JAR_META } from '@/app/_mock';
+
 import { Button } from '@rumbelo/ui';
+import { cn , formatMoney } from '@rumbelo/utils';
+
+import { JAR_META } from '@/app/_mock';
 
 interface InboxTransaction {
   readonly id: string;

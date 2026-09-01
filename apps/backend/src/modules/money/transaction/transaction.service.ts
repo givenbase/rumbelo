@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
 import { createHash } from 'node:crypto';
+
 import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
 import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
 import { BankAccount } from '../account/entities/index.js';
 import { Category, Jar } from '../jar/entities/index.js';
 import { RuleService } from '../rule/rule.service.js';
-import { Transaction, TransactionSource, TransactionStatus } from './entities/index.js';
 import { parseStatementCsv } from './csv/csv-parser.js';
+import { Transaction, TransactionSource, TransactionStatus } from './entities/index.js';
 
 @Injectable()
 export class TransactionService {

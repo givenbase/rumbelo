@@ -3,6 +3,7 @@
 import { cn } from '@rumbelo/utils';
 
 import type BadgeProps from './types';
+
 import badgeVariants from './styles';
 
 export function Badge({ children, tone = 'neutral' }: BadgeProps) {

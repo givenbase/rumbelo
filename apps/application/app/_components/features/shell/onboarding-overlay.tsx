@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useApiClient } from '@rumbelo/contracts/react';
-import { useAuth } from '@/components/features/shell/auth-provider';
-import { useAppShell } from '@/components/features/shell/app-shell-context';
+import { useEffect, useState } from 'react';
+
 import { Button, Field, Input } from '@rumbelo/ui';
-import { JAR_META } from '@/app/_mock';
+
 import { markOnboardingDone } from '@/app/_lib/onboarding-storage';
+import { JAR_META } from '@/app/_mock';
+import { useAppShell } from '@/components/features/shell/app-shell-context';
+import { useAuth } from '@/components/features/shell/auth-provider';
 
 const STEPS = [
   { title: 'Welcome to Rumbelo', body: 'Money with intention. Six jars, one calm overview.' },

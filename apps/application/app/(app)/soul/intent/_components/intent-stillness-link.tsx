@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+
 import { Button } from '@rumbelo/ui';
 
 export function IntentStillnessLink() {

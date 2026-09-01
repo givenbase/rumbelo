@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@rumbelo/utils';
+
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 
 export function ToastPill() {

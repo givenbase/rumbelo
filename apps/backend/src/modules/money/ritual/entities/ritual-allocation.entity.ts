@@ -1,4 +1,5 @@
 import { Entity, ManyToOne, Property, Unique } from '@mikro-orm/core';
+
 import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 import { Jar } from '../../jar/entities/index.js';
 import { WeeklyRitual } from './weekly-ritual.entity.js';

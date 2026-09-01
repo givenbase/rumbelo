@@ -1,6 +1,7 @@
 'use client';
 
 import type ToggleProps from './types';
+
 import { toggleThumbClass, toggleTrackClass } from './styles';
 
 export function Toggle({

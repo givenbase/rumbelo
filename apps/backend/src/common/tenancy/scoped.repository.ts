@@ -1,5 +1,7 @@
 import type { EntityManager, FilterQuery, FindOptions } from '@mikro-orm/postgresql';
+
 import type { HouseholdEntity } from '../database/base.entity.js';
+
 import { currentHouseholdId } from './tenant.context.js';
 
 /**

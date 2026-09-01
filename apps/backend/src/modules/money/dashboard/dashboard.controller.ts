@@ -1,6 +1,8 @@
+import { contract } from '@rumbelo/contracts';
+
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
-import { contract } from '@rumbelo/contracts';
+
 import { currentPeriod } from '../../../common/utils/period.util.js';
 import { DashboardService } from './dashboard.service.js';
 

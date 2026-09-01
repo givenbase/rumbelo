@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { BANKING_PORT } from './banking.port.js';
+
 import { NullBankingAdapter } from './adapters/null-banking.adapter.js';
+import { BANKING_PORT } from './banking.port.js';
 
 /**
  * Binds the null adapter by default. Swap the provider for EnableBankingAdapter

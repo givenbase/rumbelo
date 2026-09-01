@@ -1,9 +1,10 @@
 'use client';
 
 import { cn } from '@rumbelo/utils';
-import { Eyebrow } from '../../layout/Eyebrow';
 
 import type StatTileProps from './types';
+
+import { Eyebrow } from '../../layout/Eyebrow';
 
 /** Headline figure with tabular numbers. */
 export function StatTile({ label, value, hint, tone = 'default' }: StatTileProps) {

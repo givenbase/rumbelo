@@ -1,16 +1,18 @@
 'use client';
 
-import { AccentCard, Card, Eyebrow } from '@rumbelo/ui';
-import { formatMoney } from '@rumbelo/utils';
-import { JAR_META, mockJars } from '@/app/_mock';
-import { useAuth } from '@/components/features/shell/auth-provider';
+import { useApi } from '@rumbelo/contracts/react';
+
 import { useRouter } from 'next/navigation';
-import { useAppShell } from '@/components/features/shell/app-shell-context';
+
+import { useLiveQuery } from '@rumbelo/hooks';
+import { AccentCard, Card, Eyebrow } from '@rumbelo/ui';
+import { formatMoney , toPeriodKey } from '@rumbelo/utils';
+
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { toPeriodKey } from '@rumbelo/utils';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { useApi } from '@rumbelo/contracts/react';
+import { JAR_META, mockJars } from '@/app/_mock';
+import { useAppShell } from '@/components/features/shell/app-shell-context';
+import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 const TARGET = 600_000;

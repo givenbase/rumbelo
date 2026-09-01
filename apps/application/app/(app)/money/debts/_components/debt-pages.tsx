@@ -1,11 +1,13 @@
 'use client';
 
-import { DebtForm } from '@/components/features/forms/debt-form';
+import { useApi } from '@rumbelo/contracts/react';
+
+import { useLiveQuery } from '@rumbelo/hooks';
+
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
+import { DebtForm } from '@/components/features/forms/debt-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
-import { useApi } from '@rumbelo/contracts/react';
-import { useLiveQuery } from '@rumbelo/hooks';
 
 export function DebtCreatePage({ embedded = false }: { embedded?: boolean }) {
   return <DebtForm mode="create" embedded={embedded} />;

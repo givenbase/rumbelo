@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { BankingPort, BankConnection, BankTransaction } from '../banking.port.js';
+
 import type { Env } from '../../common/config/env.config.js';
+import type { BankingPort, BankConnection, BankTransaction } from '../banking.port.js';
 
 /**
  * Enable Banking adapter.

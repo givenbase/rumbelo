@@ -1,6 +1,7 @@
 'use client';
 
 import { RouteModalShell } from '@/components/layout/route-modal-shell';
+
 import { ExpenseCreatePage } from '../../_components/expense-pages';
 
 export default function Page() {

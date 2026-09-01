@@ -1,5 +1,7 @@
 import { createAuthClient } from 'better-auth/react';
+
 import { organizationClient } from 'better-auth/client/plugins';
+
 import { env } from '@/app/_utils/get-env';
 
 const client = createAuthClient({

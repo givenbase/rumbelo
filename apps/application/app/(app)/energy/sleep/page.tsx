@@ -1,4 +1,5 @@
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
+
 import { SLEEP_HOURS, mockSleepStages } from '@/app/_mock';
 
 export const metadata = { title: 'Sleep' };

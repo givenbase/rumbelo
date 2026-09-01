@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '@rumbelo/utils';
-import { formatMoney } from '@rumbelo/utils';
+
 import { Button, Eyebrow } from '@rumbelo/ui';
+import { cn , formatMoney } from '@rumbelo/utils';
 
 interface WizardJar {
   id: string;

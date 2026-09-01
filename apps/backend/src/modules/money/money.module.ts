@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { AccountModule } from './account/account.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
 import { DebtModule } from './debt/debt.module.js';

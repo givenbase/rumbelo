@@ -1,4 +1,5 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+
 import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 import { Cadence, FlowDirection } from '../../../../common/database/enums.js';
 import { Category, Jar } from '../../jar/entities/index.js';

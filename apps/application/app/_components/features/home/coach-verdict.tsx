@@ -1,9 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
-import { cn } from '@rumbelo/utils';
+
+import Link from 'next/link';
+
 import { Button } from '@rumbelo/ui';
+import { cn } from '@rumbelo/utils';
 
 export interface CoachMessage {
   id: string;

@@ -3,6 +3,7 @@
 import { cn } from '@rumbelo/utils';
 
 import type HeroNumberProps from './types';
+
 import heroNumberClass from './styles';
 
 /** Gradient-text hero figure. */

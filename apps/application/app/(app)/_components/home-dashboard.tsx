@@ -1,23 +1,26 @@
 'use client';
 
+import { useApi, useApiClient } from '@rumbelo/contracts/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
+
+import { useSearchParams } from 'next/navigation';
+
+import { useLiveQuery } from '@rumbelo/hooks';
+import { Eyebrow } from '@rumbelo/ui';
+import { formatMoney, formatPeriod , toPeriodKey } from '@rumbelo/utils';
+
 import type { CoachMessage, CoachRecapItem } from '@/components/features/home/coach-verdict';
+
+import { isLiveData } from '@/app/_lib/preview';
+import { mockDashboard, mockEnergy, mockJars, mockTurn } from '@/app/_mock';
 import { CoachVerdict } from '@/components/features/home/coach-verdict';
 import { HeroKluis } from '@/components/features/home/hero-kluis';
-import { JarDrilldownTable } from '@/components/features/money/jar-drilldown-table';
 import { PortalWidget } from '@/components/features/home/portal-widget';
 import { TurnLog } from '@/components/features/home/turn-log';
-import { Eyebrow } from '@rumbelo/ui';
-import { useAuth } from '@/components/features/shell/auth-provider';
+import { JarDrilldownTable } from '@/components/features/money/jar-drilldown-table';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
-import { formatMoney, formatPeriod } from '@rumbelo/utils';
-import { mockDashboard, mockEnergy, mockJars, mockTurn } from '@/app/_mock';
-import { isLiveData } from '@/app/_lib/preview';
-import { toPeriodKey } from '@rumbelo/utils';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { useApi, useApiClient } from '@rumbelo/contracts/react';
+import { useAuth } from '@/components/features/shell/auth-provider';
 
 const FALLBACK_RECAP: CoachRecapItem[] = [
   { portal: 'Money', value: '—', what: 'spent this week', tint: 'var(--color-jar-give)', href: '/money/transactions' },

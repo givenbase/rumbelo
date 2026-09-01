@@ -1,6 +1,7 @@
 'use client';
 
 import { RouteModalShell } from '@/components/layout/route-modal-shell';
+
 import { IncomeCreatePage } from '../../_components/income-pages';
 
 export default function Page() {

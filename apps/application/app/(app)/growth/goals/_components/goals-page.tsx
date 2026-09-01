@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useApi } from '@rumbelo/contracts/react';
-import { useAuth } from '@/components/features/shell/auth-provider';
-import { cn } from '@rumbelo/utils';
-import { formatMoney } from '@rumbelo/utils';
-import { mockGoals } from '@/app/_mock';
-import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
-import { isLiveData } from '@/app/_lib/preview';
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import { useLiveQuery } from '@rumbelo/hooks';
 import { AccentCard, EmptyState, Meter } from '@rumbelo/ui';
+import { cn , formatMoney } from '@rumbelo/utils';
+
+import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
+import { isLiveData } from '@/app/_lib/preview';
+import { mockGoals } from '@/app/_mock';
+import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 type Tab = 'ON_TRACK' | 'REACHED';

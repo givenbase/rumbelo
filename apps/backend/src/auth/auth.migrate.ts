@@ -1,10 +1,11 @@
+import { getMigrations } from 'better-auth/db/migration';
 import { config as loadDotenv } from 'dotenv';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getMigrations } from 'better-auth/db/migration';
-import { createAuth } from './auth.config.js';
+
 import { loadEnv } from '../common/config/env.config.js';
+import { createAuth } from './auth.config.js';
 
 function findRootEnv(): string {
   let dir = dirname(fileURLToPath(import.meta.url));

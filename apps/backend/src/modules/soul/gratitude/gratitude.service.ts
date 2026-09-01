@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
+
 import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
 import { currentUserId } from '../../../common/tenancy/tenant.context.js';
 import { Gratitude } from './entities/index.js';

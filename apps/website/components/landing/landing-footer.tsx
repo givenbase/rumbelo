@@ -1,4 +1,5 @@
 import { FOOT_COLS, TRUST_BADGES, TRUST_CARDS } from '@/lib/landing-content';
+
 import { LandingIcon } from './landing-icon';
 
 export function LandingFooter() {

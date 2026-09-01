@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useAppShell } from '@/components/features/shell/app-shell-context';
+
 import { CREATE_HREF, type CreateKind } from '@/app/_lib/create-routes';
+import { useAppShell } from '@/components/features/shell/app-shell-context';
 
 const QUICK_ITEMS: { label: string; kind: CreateKind }[] = [
   { label: 'Expense', kind: 'tx' },

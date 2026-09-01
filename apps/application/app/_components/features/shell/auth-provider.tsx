@@ -7,6 +7,7 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
+
 import { activeHouseholdId, setActiveOrganization, useSession } from '@/app/_lib/auth';
 
 interface AuthCtx {

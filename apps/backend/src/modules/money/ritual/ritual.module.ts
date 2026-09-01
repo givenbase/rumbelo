@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { RitualController } from './ritual.controller.js';
 import { RitualService } from './ritual.service.js';
 

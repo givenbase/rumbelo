@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
-import './globals.css';
+
 import { Providers } from './providers';
+
+import './globals.css';
 
 /**
  * Fonts come from the design: Bricolage Grotesque for display, Public Sans for

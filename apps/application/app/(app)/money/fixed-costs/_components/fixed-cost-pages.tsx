@@ -1,11 +1,13 @@
 'use client';
 
-import { FixedCostForm } from '@/components/features/forms/fixed-cost-form';
+import { useApi } from '@rumbelo/contracts/react';
+
+import { useLiveQuery } from '@rumbelo/hooks';
+
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
+import { FixedCostForm } from '@/components/features/forms/fixed-cost-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
-import { useApi } from '@rumbelo/contracts/react';
-import { useLiveQuery } from '@rumbelo/hooks';
 
 export function FixedCostCreatePage({ embedded = false }: { embedded?: boolean }) {
   return <FixedCostForm mode="create" embedded={embedded} />;

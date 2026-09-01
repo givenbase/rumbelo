@@ -1,9 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { Separator as SeparatorPrimitive } from "radix-ui"
 
 import { cn } from "@rumbelo/utils"
+
+import { Separator as SeparatorPrimitive } from "radix-ui"
 
 function Separator({
   className,

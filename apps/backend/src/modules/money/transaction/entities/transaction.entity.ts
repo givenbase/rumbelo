@@ -1,4 +1,5 @@
 import { Entity, Enum, Index, ManyToOne, Property } from '@mikro-orm/core';
+
 import { HouseholdEntity } from '../../../../common/database/base.entity.js';
 import { BankAccount } from '../../account/entities/index.js';
 import { Category, Jar } from '../../jar/entities/index.js';

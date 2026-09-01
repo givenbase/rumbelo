@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+
+import { LandingCoachGlance } from './landing-coach-glance';
+import { LandingFooter } from './landing-footer';
 import { LandingHeader } from './landing-header';
 import { LandingHero } from './landing-hero';
-import { LandingPillars } from './landing-pillars';
-import { LandingJars } from './landing-jars';
 import { LandingHowItWorks } from './landing-how-it-works';
-import { LandingCoachGlance } from './landing-coach-glance';
-import { LandingWhyBand } from './landing-why-band';
+import { LandingJars } from './landing-jars';
+import { LandingPillars } from './landing-pillars';
 import { LandingPricing } from './landing-pricing';
 import { LandingSignupForm } from './landing-signup-form';
-import { LandingFooter } from './landing-footer';
+import { LandingWhyBand } from './landing-why-band';
 
 export function LandingPage() {
   const rootRef = useRef<HTMLDivElement>(null);

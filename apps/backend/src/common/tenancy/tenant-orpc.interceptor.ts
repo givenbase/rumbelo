@@ -1,3 +1,5 @@
+import type { FastifyRequest } from 'fastify';
+
 import {
   ForbiddenException,
   Injectable,
@@ -7,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 import { fromNodeHeaders } from 'better-auth/node';
-import type { FastifyRequest } from 'fastify';
 import { Observable } from 'rxjs';
-import { authHeadersStorage, tenantStorage, type TenantContext } from './tenant.context.js';
-import { MembershipService } from './membership.service.js';
+
 import { toAuthHeaders } from './auth-headers.util.js';
+import { MembershipService } from './membership.service.js';
+import { authHeadersStorage, tenantStorage, type TenantContext } from './tenant.context.js';
 
 type Req = FastifyRequest & {
   user?: { id: string } | null;

@@ -1,5 +1,7 @@
 import Link from 'next/link';
+
 import { formatMoney } from '@rumbelo/utils';
+
 import { mockJars } from '@/app/_mock';
 
 export const metadata = { title: 'Learn' };

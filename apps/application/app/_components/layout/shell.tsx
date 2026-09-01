@@ -1,16 +1,20 @@
 'use client';
 
+import { useState, type ReactNode } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+
 import { cn } from '@rumbelo/utils';
+
+import { BOTTOM_TABS, NAV_GROUPS, TOP_PILL_LABELS } from '@/app/_lib/nav';
 import { isScreenLocked, SCREEN_MIN } from '@/app/_lib/plan';
+import { settingsHrefForNavGroup } from '@/app/_lib/settings-tabs';
 import { whyLineFor } from '@/app/_lib/why-lines';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { LockedGate } from '@/components/features/shell/locked-gate';
-import { BOTTOM_TABS, NAV_GROUPS, TOP_PILL_LABELS } from '@/app/_lib/nav';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
-import { settingsHrefForNavGroup } from '@/app/_lib/settings-tabs';
+
 import { PeriodSelector } from './period-selector';
 import { QuickAddFab } from './quick-add';
 import { ThemeToggle } from './theme-toggle';

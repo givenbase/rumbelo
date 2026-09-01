@@ -1,6 +1,8 @@
+import { contract } from '@rumbelo/contracts';
+
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
-import { contract } from '@rumbelo/contracts';
+
 import { AccountService } from './account.service.js';
 
 /** Accounts live under the transactions contract namespace but are their own aggregate. */

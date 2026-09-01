@@ -1,8 +1,9 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { cn } from '@rumbelo/utils';
+
 import { Button } from '@rumbelo/ui';
+import { cn } from '@rumbelo/utils';
 
 const TAB =
   'flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs font-medium tracking-wide uppercase transition-all duration-200';

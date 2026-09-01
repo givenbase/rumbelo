@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { organization, twoFactor } from 'better-auth/plugins';
 import { Pool } from 'pg';
+
 import type { Env } from '../common/config/env.config.js';
 
 /**

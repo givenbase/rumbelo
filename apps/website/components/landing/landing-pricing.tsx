@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import { PLANS } from '@/lib/landing-content';
 
 function fmt(n: number) {

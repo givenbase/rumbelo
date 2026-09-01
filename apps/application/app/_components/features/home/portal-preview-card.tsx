@@ -1,5 +1,7 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
+
+import Link from 'next/link';
+
 import { AccentCard } from '@rumbelo/ui';
 
 interface PreviewRow {

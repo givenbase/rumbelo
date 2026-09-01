@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+
 import { MembershipService } from './membership.service.js';
 import { TenantOrpcInterceptor } from './tenant-orpc.interceptor.js';
 

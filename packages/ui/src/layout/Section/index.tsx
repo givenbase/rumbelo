@@ -1,9 +1,10 @@
 'use client';
 
 import { cn } from '@rumbelo/utils';
-import { Eyebrow } from '../Eyebrow';
 
 import type SectionProps from './types';
+
+import { Eyebrow } from '../Eyebrow';
 
 export function Section({ eyebrow, title, action, children, className }: SectionProps) {
   return (

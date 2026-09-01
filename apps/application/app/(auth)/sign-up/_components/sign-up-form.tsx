@@ -1,10 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
+
 import Link from 'next/link';
-import { signUp } from '@/app/_lib/auth';
+import { useRouter } from 'next/navigation';
+
 import { Button, Field, Input } from '@rumbelo/ui';
+
+import { signUp } from '@/app/_lib/auth';
 
 export function SignUpForm() {
   const router = useRouter();

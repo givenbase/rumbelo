@@ -1,10 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
+
+import Link from 'next/link';
+
 import { Button, Section } from '@rumbelo/ui';
-import { PageContent } from '@/components/layout/page-content';
 import { cn } from '@rumbelo/utils';
+
+import { PageContent } from '@/components/layout/page-content';
 
 const CENTRES = [
   { id: 'root',   name: 'Root',        gov: 'Survival',    color: '#dc2626', ask: 'What would make you one step safer today?' },

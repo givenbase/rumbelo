@@ -1,4 +1,5 @@
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
+
 import { PageContent } from '@/components/layout/page-content';
 
 export const metadata = { title: 'Why Rumbelo' };

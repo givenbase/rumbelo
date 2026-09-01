@@ -1,13 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/postgresql';
-import { AuthService } from '@thallesp/nestjs-better-auth';
 import type { z } from 'zod';
+
 import { OnboardingInput } from '@rumbelo/contracts';
+
+import { EntityManager } from '@mikro-orm/postgresql';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { AuthService } from '@thallesp/nestjs-better-auth';
+
+import type { Auth } from '../../auth/auth.config.js';
+
 import { Currency, Locale } from '../../common/database/enums.js';
 import { currentUserId, currentAuthHeaders } from '../../common/tenancy/tenant.context.js';
-import type { Auth } from '../../auth/auth.config.js';
-import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../money/jar/entities/jar.entity.js';
 import { IncomeKind, IncomeSource } from '../money/income/entities/income-source.entity.js';
+import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../money/jar/entities/jar.entity.js';
 import { HouseholdSettings } from './entities/index.js';
 
 const JAR_META: { key: JarKey; name: string; subtitle: string; icon: string; spendable: boolean }[] = [

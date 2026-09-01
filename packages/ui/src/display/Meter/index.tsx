@@ -3,6 +3,7 @@
 import { cn } from '@rumbelo/utils';
 
 import type MeterProps from './types';
+
 import { meterFillClass, meterTrackClass } from './styles';
 
 /** Horizontal progress meter. Turns red past the line rather than clipping silently. */

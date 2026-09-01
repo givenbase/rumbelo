@@ -1,6 +1,8 @@
 import { Eyebrow, Section } from '@rumbelo/ui';
-import { PageContent } from '@/components/layout/page-content';
 import { cn } from '@rumbelo/utils';
+
+import { PageContent } from '@/components/layout/page-content';
+
 import { IntentStillnessLink } from './_components/intent-stillness-link';
 
 export const metadata = { title: 'Intention' };

@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
+
 import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
 import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
-import { daysInPeriod } from '../../../common/utils/period.util.js';
 import { sum } from '../../../common/utils/money.util.js';
+import { daysInPeriod } from '../../../common/utils/period.util.js';
 import { JarService } from '../jar/jar.service.js';
 import { PeriodTurn, TurnEvent } from './entities/index.js';
 

@@ -1,4 +1,5 @@
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
+
 import { Currency, Locale, Theme } from '../../../common/database/enums.js';
 
 /**

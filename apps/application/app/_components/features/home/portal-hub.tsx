@@ -1,9 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { cn } from '@rumbelo/utils';
+
+import Link from 'next/link';
+
 import { Button } from '@rumbelo/ui';
+import { cn } from '@rumbelo/utils';
 
 interface HubCard {
   name: string;
