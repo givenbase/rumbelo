@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Eyebrow } from '@rumbelo/ui';
-import { formatMoney, formatPeriod, toPeriodKey } from '@rumbelo/utils';
+import { formatMoney, formatPeriod, toPeriodKey, describePeriodTravel } from '@rumbelo/utils';
 
 import type { CoachMessage, CoachRecapItem } from '@/components/features/home/coach-verdict';
 
@@ -107,14 +107,21 @@ export function HomeDashboardClient() {
             : [];
 
     const sleepScore = mockEnergy.find(e => e.metric === 'SLEEP')?.value ?? 0;
+    const travel = describePeriodTravel(period);
 
     return (
         <div className="grid gap-6">
             <div>
-                <Eyebrow>✦ {formatPeriod(d.period ?? periodKey, 'en-US')}</Eyebrow>
+                <Eyebrow>
+                    ✦ {formatPeriod(d.period ?? periodKey, 'en-US')}
+                    {travel.direction !== 'current' ? ` · ${travel.relativeLabel}` : ''}
+                </Eyebrow>
                 <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg lg:text-4xl">
                     {periodLabel}
                 </h1>
+                {travel.direction !== 'current' && travel.daysLabel ? (
+                    <p className="mt-1 text-sm text-fg-muted">{travel.daysLabel}</p>
+                ) : null}
             </div>
 
             <CoachVerdict

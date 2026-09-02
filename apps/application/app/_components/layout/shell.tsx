@@ -16,6 +16,7 @@ import { LockedGate } from '@/components/features/shell/locked-gate';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
 
 import { PeriodSelector } from './period-selector';
+import { PeriodTravelBanner } from './period-travel-banner';
 import { QuickAddFab } from './quick-add';
 import { ThemeToggle } from './theme-toggle';
 import { ToastPill } from './toast';
@@ -317,6 +318,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
             {/* ── MAIN ─────────────────────────────────────────────────────── */}
             <div className="mx-auto max-w-7xl px-4 py-8 pb-24 md:pb-8">
+                <PeriodTravelBanner />
                 {why && (
                     <p className="mb-3.5 max-w-prose font-mono text-xs leading-relaxed font-medium tracking-wide text-fg-faint">
                         ◇ {why}
