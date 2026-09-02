@@ -1,5 +1,4 @@
-import type { JarKey } from '@rumbelo/contracts';
-import { DEFAULT_JAR_SPLIT } from '@rumbelo/contracts';
+import { DEFAULT_JAR_SPLIT, type JarKey } from '@rumbelo/contracts';
 
 export type MoneyCharacter = 'spender' | 'saver' | 'balanced' | 'unknown';
 

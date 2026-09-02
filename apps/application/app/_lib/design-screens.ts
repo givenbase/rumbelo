@@ -212,8 +212,8 @@ export const DESIGN_SCREENS: DesignScreen[] = [
         section: 'INSTELLINGEN',
         route: '/settings',
         navGroup: 'settings',
-        status: 'shell',
-        gap: 'Sprint F: nested /settings + /settings/[section] pages + SettingsShell rail; account/jars/bank/systeem/export panels complete; groei/energie/ziel/plan stubs (fields TBD).',
+        status: 'partial',
+        gap: 'Product-scoped IA: platform + per-product children that need prefs (jars/debt/bank/automation split). PROFILE + ink cards. Remaining: persist auto-rules / horizon / energy / stillness / debt strategy; jar→bank mapping; Excel; Stripe; 2FA.',
     },
 
     {

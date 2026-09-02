@@ -7,8 +7,62 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@rumbelo/utils';
 
-import { SETTINGS_TABS, settingsHref, settingsTabFromPathname } from '@/app/_lib/settings-tabs';
+import {
+    SETTINGS_SECTIONS,
+    settingsHref,
+    settingsTabFromPathname,
+    type SettingsNavItem,
+} from '@/app/_lib/settings-tabs';
 import { PageContent } from '@/components/layout/page-content';
+
+function NavLink({
+    tab,
+    active,
+    compact,
+}: {
+    tab: SettingsNavItem;
+    active: boolean;
+    /** Single-line rail item (desktop). */
+    compact?: boolean;
+}) {
+    return (
+        <Link
+            href={settingsHref(tab.key)}
+            title={tab.sub}
+            className={cn(
+                'transition-colors',
+                compact
+                    ? cn(
+                          'flex items-center gap-2 rounded-md border-l-2 px-2.5 py-1.5 text-[13px] leading-tight',
+                          active
+                              ? 'border-l-accent bg-accent-soft font-medium text-accent'
+                              : 'border-l-transparent text-fg-secondary hover:bg-raised hover:text-fg'
+                      )
+                    : cn(
+                          'shrink-0 rounded-full border px-3 py-1.5 text-xs whitespace-nowrap',
+                          active
+                              ? 'border-accent bg-accent-soft font-medium text-accent'
+                              : 'border-line text-fg-secondary hover:border-accent/40 hover:text-fg'
+                      )
+            )}>
+            {compact ? (
+                <>
+                    <span
+                        className={cn(
+                            'w-2.5 shrink-0 text-center font-mono text-[10px]',
+                            active ? 'text-accent' : 'text-fg-faint'
+                        )}
+                        aria-hidden>
+                        {active ? '✦' : '·'}
+                    </span>
+                    <span className="min-w-0 truncate">{tab.label}</span>
+                </>
+            ) : (
+                tab.label
+            )}
+        </Link>
+    );
+}
 
 /**
  * Shared settings chrome. Active section comes from the URL path
@@ -20,42 +74,53 @@ export function SettingsShell({ children }: { children: ReactNode }) {
 
     return (
         <PageContent width="wide" className="animate-rise">
-            <div className="flex flex-col gap-8 md:flex-row">
-                <nav aria-label="Settings navigation" className="md:w-56 md:shrink-0">
-                    <p className="mb-3 text-xs font-semibold tracking-widest text-fg-muted uppercase">
-                        ✦ Settings
-                    </p>
-                    <ul className="grid gap-0.5">
-                        {SETTINGS_TABS.map(tab => {
-                            const active = tab.key === activeTab;
-                            return (
-                                <li key={tab.key}>
-                                    <Link
-                                        href={settingsHref(tab.key)}
-                                        className={cn(
-                                            'block rounded-lg px-3 py-2.5 transition-colors',
-                                            active
-                                                ? 'bg-accent-soft text-accent'
-                                                : 'text-fg-secondary hover:bg-raised hover:text-fg'
-                                        )}>
-                                        <span
-                                            className={cn(
-                                                'block text-sm font-medium',
-                                                active ? 'text-accent' : 'text-fg'
-                                            )}>
-                                            {tab.label}
-                                        </span>
-                                        <span className="mt-0.5 block text-xs leading-tight text-fg-faint">
-                                            {tab.sub}
-                                        </span>
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                    </ul>
+            <header className="mb-5 max-w-[60ch]">
+                <p className="font-mono text-[10px] font-medium tracking-[0.16em] text-accent uppercase">
+                    ✦ Settings
+                </p>
+                <h1 className="mt-1.5 font-display text-[clamp(1.375rem,3.5vw,1.875rem)] font-semibold tracking-tight text-fg">
+                    Everything you set once.
+                </h1>
+                <p className="mt-1.5 text-sm text-pretty text-fg-muted">
+                    Rules and choices live here. The numbers themselves live on their own screens.
+                </p>
+            </header>
+
+            <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-6">
+                {/* Mobile: one horizontal chip row */}
+                <nav
+                    aria-label="Settings sections"
+                    className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 md:hidden">
+                    {SETTINGS_SECTIONS.flatMap(s => s.items).map(tab => (
+                        <NavLink key={tab.key} tab={tab} active={tab.key === activeTab} />
+                    ))}
                 </nav>
 
-                <div className="min-w-0">{children}</div>
+                {/* Desktop: compact grouped rail */}
+                <nav
+                    aria-label="Settings navigation"
+                    className="hidden shrink-0 content-start gap-3 md:grid md:w-40">
+                    {SETTINGS_SECTIONS.map(section => (
+                        <div key={section.title} className="grid gap-px">
+                            <p className="px-2.5 pb-1 font-mono text-[9px] font-semibold tracking-[0.16em] text-fg-faint uppercase">
+                                {section.title}
+                            </p>
+                            <ul className="grid gap-px">
+                                {section.items.map(tab => (
+                                    <li key={tab.key}>
+                                        <NavLink
+                                            tab={tab}
+                                            active={tab.key === activeTab}
+                                            compact
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </nav>
+
+                <div className="w-full max-w-190 min-w-0">{children}</div>
             </div>
         </PageContent>
     );
