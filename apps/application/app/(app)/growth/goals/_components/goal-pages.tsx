@@ -6,6 +6,7 @@ import { useLiveQuery } from '@rumbelo/hooks';
 
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
+import { mockGoals } from '@/app/_mock';
 import { GoalForm } from '@/components/features/forms/goal-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -20,10 +21,19 @@ export function GoalUpdatePage({ id, embedded = false }: { id: string; embedded?
 
     const query = useLiveQuery(
         api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
-        [],
+        mockGoals as never,
         live
     );
-    const row = (query.data ?? []).find(g => g.id === id);
+    const row = (query.data ?? mockGoals).find(g => g.id === id) as
+        | {
+              id: string;
+              name: string;
+              target: number;
+              monthlyContribution: number;
+              jarId?: string | null;
+              why?: string | null;
+          }
+        | undefined;
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;

@@ -6,8 +6,17 @@ import { useLiveQuery } from '@rumbelo/hooks';
 
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
+import { mockFixedCosts, mockJars } from '@/app/_mock';
 import { FixedCostForm } from '@/components/features/forms/fixed-cost-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
+
+const mockFixedCostRows = mockFixedCosts.map(f => ({
+    id: f.id,
+    name: f.name,
+    amount: f.amount,
+    dueDay: f.dueDay,
+    jarId: mockJars.find(j => j.key === f.jarKey)?.id ?? '',
+}));
 
 export function FixedCostCreatePage({ embedded = false }: { embedded?: boolean }) {
     return <FixedCostForm mode="create" embedded={embedded} />;
@@ -20,10 +29,10 @@ export function FixedCostUpdatePage({ id, embedded = false }: { id: string; embe
 
     const query = useLiveQuery(
         api.money.fixedCosts.list.queryOptions({ input: { householdId: householdId! } }),
-        [],
+        mockFixedCostRows as never,
         live
     );
-    const row = (query.data ?? []).find(f => f.id === id);
+    const row = (query.data ?? mockFixedCostRows).find(f => f.id === id);
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;

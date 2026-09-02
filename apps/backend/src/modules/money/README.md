@@ -16,5 +16,8 @@ The money loop. Children map one-to-one onto the Geld navigation.
 | `ritual/` | the ten-minute weekly ritual and its surplus allocations |
 | `dashboard/` | composition root; one aggregated read for the main screen |
 
+Client-side soft coaching when editing the split (tips only, never blocks save):
+`apps/application/app/_lib/split-coach/README.md`.
+
 `dashboard` depends on the others through their services. It exists so the most
 visited route in the product is one round trip instead of a waterfall.

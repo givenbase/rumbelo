@@ -59,8 +59,8 @@ export const JAR_META = [
 
 /** Salary €3,450 + Freelance €850 — design dashboard figures. */
 export const INCOME_SOURCES = [
-    { label: 'Salary', amount: 345_000 },
-    { label: 'Freelance', amount: 85_000 },
+    { id: 'inc1', label: 'Salary', amount: 345_000, kind: 'SALARY' as const },
+    { id: 'inc2', label: 'Freelance', amount: 85_000, kind: 'FREELANCE' as const },
 ] as const;
 
 const NET_INCOME = INCOME_SOURCES.reduce((s, i) => s + i.amount, 0);

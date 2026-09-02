@@ -6,8 +6,20 @@ import { useLiveQuery } from '@rumbelo/hooks';
 
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
+import { mockJars, mockTransactions } from '@/app/_mock';
 import { ExpenseForm } from '@/components/features/forms/expense-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
+
+const mockTxRows = mockTransactions.map(t => ({
+    id: t.id,
+    description: t.description,
+    amount: t.amount,
+    jarId: t.jarKey ? (mockJars.find(j => j.key === t.jarKey)?.id ?? null) : null,
+    status: t.status,
+}));
+
+const mockInbox = mockTxRows.filter(t => t.status === 'INBOX');
+const mockList = { items: mockTxRows, nextCursor: null };
 
 export function ExpenseCreatePage({
     embedded = false,
@@ -34,12 +46,12 @@ export function ExpenseUpdatePage({ id, embedded = false }: { id: string; embedd
         api.money.transactions.list.queryOptions({
             input: { householdId: householdId!, limit: 100 },
         }),
-        { items: [], nextCursor: null },
+        mockList as never,
         live
     );
     const inboxQuery = useLiveQuery(
         api.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
-        [],
+        mockInbox as never,
         live
     );
 

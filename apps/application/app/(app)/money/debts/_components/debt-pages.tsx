@@ -6,6 +6,7 @@ import { useLiveQuery } from '@rumbelo/hooks';
 
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
+import { mockDebts } from '@/app/_mock';
 import { DebtForm } from '@/components/features/forms/debt-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -20,10 +21,10 @@ export function DebtUpdatePage({ id, embedded = false }: { id: string; embedded?
 
     const query = useLiveQuery(
         api.money.debts.list.queryOptions({ input: { householdId: householdId! } }),
-        [],
+        mockDebts as never,
         live
     );
-    const row = (query.data ?? []).find(d => d.id === id);
+    const row = (query.data ?? mockDebts).find(d => d.id === id);
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;
@@ -42,7 +43,13 @@ export function DebtUpdatePage({ id, embedded = false }: { id: string; embedded?
                 balance: centsToEurosInput(row.balance),
                 interestRate: String(row.interestRate),
                 minimumPayment: centsToEurosInput(row.minimumPayment),
-                kind: row.kind,
+                kind: row.kind as
+                    | 'CREDIT_CARD'
+                    | 'LOAN'
+                    | 'STUDENT'
+                    | 'MORTGAGE'
+                    | 'FAMILY'
+                    | 'OTHER',
             }}
         />
     );

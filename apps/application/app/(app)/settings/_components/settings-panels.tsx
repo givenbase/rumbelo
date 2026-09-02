@@ -25,6 +25,7 @@ import { formatMoney, formatPercent } from '@rumbelo/utils';
 import { changePassword, updateOrganization, updateUser } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import { isLiveData } from '@/app/_lib/preview';
+import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META, mockJars } from '@/app/_mock';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -276,10 +277,16 @@ export function JarsSettings() {
         [jars]
     );
     const [pctDraft, setPctDraft] = useState<Record<string, number> | null>(null);
+    const [dismissedTips, setDismissedTips] = useState<Record<string, true>>({});
     const pct = pctDraft ?? serverPct;
 
     const total = Object.values(pct).reduce((s, n) => s + n, 0);
     const balanced = Math.abs(total - 100) < 0.01;
+
+    const coachTips = useMemo(() => {
+        const tips = evaluateSplitCoach(pctByJarKey(jars, pct), 'unknown');
+        return tips.filter(t => !dismissedTips[t.id]);
+    }, [jars, pct, dismissedTips]);
 
     const incomeQuery = useLiveQuery(
         api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
@@ -316,6 +323,7 @@ export function JarsSettings() {
             next[jar.id] = DEFAULT_JAR_SPLIT[jar.key as JarKey] ?? jar.percentage;
         }
         setPctDraft(next);
+        setDismissedTips({});
     }
 
     return (
@@ -370,6 +378,37 @@ export function JarsSettings() {
                         </div>
                     );
                 })}
+
+                {coachTips.length > 0 ? (
+                    <div className="grid gap-3 border-t border-line pt-4">
+                        <Eyebrow>Coach</Eyebrow>
+                        {coachTips.map(tip => (
+                            <div
+                                key={tip.id}
+                                className={
+                                    tip.severity === 'warn'
+                                        ? 'grid gap-2 rounded-md border border-amber-500/40 bg-amber-500/5 px-3 py-2.5'
+                                        : 'grid gap-2 rounded-md border border-line bg-bg-muted/40 px-3 py-2.5'
+                                }>
+                                <p className="text-sm text-fg">{tip.message}</p>
+                                <div className="flex justify-end">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() =>
+                                            setDismissedTips(prev => ({ ...prev, [tip.id]: true }))
+                                        }>
+                                        Got it
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                        <p className="text-xs text-fg-muted">
+                            Tips never block save — your split, your call.
+                        </p>
+                    </div>
+                ) : null}
+
                 <div className="flex justify-end gap-2 border-t border-line pt-4">
                     <Button variant="ghost" onClick={resetDefaults}>
                         Reset to default

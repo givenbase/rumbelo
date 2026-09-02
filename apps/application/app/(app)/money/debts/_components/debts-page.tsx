@@ -124,12 +124,6 @@ export function DebtsPageClient() {
             <AccentCard tint="var(--color-accent)">
                 <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
                     <div className="grid gap-1.5">
-                        <Eyebrow>Free by</Eyebrow>
-                        <p className="font-display text-4xl font-semibold tracking-tight text-accent">
-                            {freedomDate}
-                        </p>
-                    </div>
-                    <div className="grid gap-1.5">
                         <Eyebrow>Total debt</Eyebrow>
                         <p className="font-display text-2xl font-semibold text-fg tabular-nums">
                             {formatMoney(total)}

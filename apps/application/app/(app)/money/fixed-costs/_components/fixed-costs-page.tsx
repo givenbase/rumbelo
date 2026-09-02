@@ -108,10 +108,10 @@ export function FixedCostsPageClient() {
     const incomeSources =
         liveIncome ??
         INCOME_SOURCES.map(s => ({
-            id: undefined as string | undefined,
+            id: s.id,
             label: s.label,
             amount: s.amount,
-            kind: 'SALARY',
+            kind: s.kind,
             dueDay: null as null,
         }));
 
