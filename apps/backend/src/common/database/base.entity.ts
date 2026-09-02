@@ -17,9 +17,9 @@ export abstract class BaseEntity {
 }
 
 /**
- * Every financial row carries the household it belongs to. This is the tenant
- * boundary — single schema, row-level scoping. See common/tenancy for the
- * middleware that guarantees no query escapes it.
+ * Every financial row carries the household it belongs to. This is the isolation
+ * boundary — single schema, row-level scoping. See common/household for the
+ * interceptor + scoped repository that guarantee no query escapes it.
  */
 export abstract class HouseholdEntity extends BaseEntity {
     /** better-auth organization id (non-uuid string) */

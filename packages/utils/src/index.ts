@@ -8,3 +8,9 @@ export {
     type PeriodTravel,
     type YearMonth,
 } from './period-offset';
+export {
+    createBetterAuthRouteHandlers,
+    proxyBetterAuthRequest,
+    type BetterAuthProxyOptions,
+} from './better-auth-proxy';
+export { rewriteBetterAuthSetCookie } from './better-auth-proxy-cookies';

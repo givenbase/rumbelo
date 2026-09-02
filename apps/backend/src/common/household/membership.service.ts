@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import type { TenantContext } from './tenant.context.js';
+import type { HouseholdContext } from './household.context.js';
 
 /**
  * Membership lives in better-auth's organization tables, which better-auth owns
@@ -12,7 +12,7 @@ import type { TenantContext } from './tenant.context.js';
 export class MembershipService {
     constructor(private readonly em: EntityManager) {}
 
-    async roleFor(userId: string, householdId: string): Promise<TenantContext['role'] | null> {
+    async roleFor(userId: string, householdId: string): Promise<HouseholdContext['role'] | null> {
         const rows = await this.em
             .getConnection()
             .execute<{ role: string }[]>(
@@ -29,6 +29,8 @@ export class MembershipService {
             case 'partner':
             case 'member':
                 return 'PARTNER';
+            case 'viewer':
+                return 'VIEWER';
             default:
                 return 'VIEWER';
         }

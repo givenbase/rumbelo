@@ -1,17 +1,17 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { Category, Jar } from '../jar/entities/index.js';
 import { Transaction, TransactionStatus } from '../transaction/entities/index.js';
 import { Rule, RuleField, RuleMatcher } from './entities/index.js';
 
 @Injectable()
 export class RuleService {
-    private readonly repo: ScopedRepository<Rule>;
+    private readonly repo: HouseholdScopedRepository<Rule>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, Rule);
+        this.repo = new HouseholdScopedRepository(em, Rule);
     }
 
     async list() {

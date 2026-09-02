@@ -2,8 +2,8 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { BankAccount } from '../account/entities/index.js';
 import { Category, Jar } from '../jar/entities/index.js';
 import { RuleService } from '../rule/rule.service.js';
@@ -12,13 +12,13 @@ import { Transaction, TransactionSource, TransactionStatus } from './entities/in
 
 @Injectable()
 export class TransactionService {
-    private readonly transactions: ScopedRepository<Transaction>;
+    private readonly transactions: HouseholdScopedRepository<Transaction>;
 
     constructor(
         private readonly em: EntityManager,
         private readonly rules: RuleService
     ) {
-        this.transactions = new ScopedRepository(em, Transaction);
+        this.transactions = new HouseholdScopedRepository(em, Transaction);
     }
 
     async inbox() {

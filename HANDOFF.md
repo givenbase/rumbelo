@@ -81,16 +81,17 @@ This is the real fix for what `galighticus-platform/ORPC_MIGRATION_PLAN.md`
 worked around with an internal HTTP hop. **That hop is not needed. Do not
 reintroduce it.**
 
-**Tenancy is row-level, not schema-per-tenant.** The tenant is a *household*. A
-B2C product would reach tens of thousands of schemas, O(tenants) migrations and
-catalog bloat. Every financial row carries `household_id`, and the filter is
-injected in exactly one place — `common/tenancy/scoped.repository.ts` — from
-`AsyncLocalStorage`, so a service cannot pass the wrong id or forget one.
-Schema-per-tenant remains correct for Meltizo; different problem.
+**Household isolation is row-level, not schema-per-tenant.** Rumbelo's "tenant"
+is a *household*. A B2C product would reach tens of thousands of schemas,
+O(households) migrations and catalog bloat. Every financial row carries
+`household_id`, and the filter is injected in exactly one place —
+`common/household/household-scoped.repository.ts` — from `AsyncLocalStorage`, so
+a service cannot pass the wrong id or forget one. Schema-per-tenant remains
+correct for Meltizo; different problem.
 
-**Postgres schemas group by product, not by tenant.** `platform`, `money`,
-`growth`, `energy`, `soul`. Orthogonal to tenancy — it exists so the database
-mirrors the module tree. better-auth keeps its own tables in `public`.
+**Postgres schemas group by product, not by household.** `platform`, `money`,
+`growth`, `energy`, `soul`. Orthogonal to household scoping — it exists so the
+database mirrors the module tree. better-auth keeps its own tables in `public`.
 
 ---
 
@@ -246,8 +247,8 @@ already extracted into `apps/application/app/globals.css` and are correct — th
 token layer does not need redoing, only the layouts.
 
 **Everything outside `apps/application/app` and `components/` is
-design-independent and stays:** monorepo, contracts, backend hierarchy, tenancy,
-DB schema, build pipeline.
+design-independent and stays:** monorepo, contracts, backend hierarchy,
+household scoping, DB schema, build pipeline.
 
 ---
 
@@ -304,7 +305,10 @@ node scripts/rename-project.mjs <new-name>
 - **Duplicate `fastify` versions** break `@fastify/*` plugin typings. Pinned via a
   pnpm override to the version `@nestjs/platform-fastify` depends on.
 - **`AsyncLocalStorage.run()` in a Nest guard does not work** — the store is gone
-  before handlers execute. Tenancy must be **middleware**, wrapping `next()`.
+  before handlers execute. And Fastify/Nest middleware runs before route
+  resolution (`req.url` is `/`). Household scoping is therefore an
+  **interceptor** (`HouseholdScopeInterceptor`) that wraps `next.handle()`
+  inside `householdStorage.run()`.
 - **Next.js apps are `"type": "module"`,** so `next.config.js` needs
   `export default`, not `module.exports`.
 - **String-enum members are nominal in TypeScript.** They do not satisfy the

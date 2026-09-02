@@ -12,7 +12,7 @@ const portalOrigin = (devDefault: string) =>
  *
  *   NEXT_PUBLIC_DOMAIN_APP  → product
  *   NEXT_PUBLIC_DOMAIN_WEB  → marketing
- *   NEXT_PUBLIC_DOMAIN_BACK → API (append /rpc or /api/auth in code)
+ *   NEXT_PUBLIC_DOMAIN_BACK → API (append /rpc; Better Auth is proxied via app /api/auth)
  */
 export const env = createEnv({
     client: {
@@ -31,12 +31,9 @@ export const env = createEnv({
     emptyStringAsUndefined: true,
 
     runtimeEnv: {
-        NEXT_PUBLIC_DOMAIN_APP:
-            process.env.NEXT_PUBLIC_DOMAIN_APP ?? process.env.NEXT_PUBLIC_APP_DOMAIN,
-        NEXT_PUBLIC_DOMAIN_WEB:
-            process.env.NEXT_PUBLIC_DOMAIN_WEB ?? process.env.NEXT_PUBLIC_WEB_DOMAIN,
-        NEXT_PUBLIC_DOMAIN_BACK:
-            process.env.NEXT_PUBLIC_DOMAIN_BACK ?? process.env.NEXT_PUBLIC_BACKEND_DOMAIN,
+        NEXT_PUBLIC_DOMAIN_APP: process.env.NEXT_PUBLIC_DOMAIN_APP,
+        NEXT_PUBLIC_DOMAIN_WEB: process.env.NEXT_PUBLIC_DOMAIN_WEB,
+        NEXT_PUBLIC_DOMAIN_BACK: process.env.NEXT_PUBLIC_DOMAIN_BACK,
 
         NEXT_PUBLIC_PREVIEW_MODE: process.env.NEXT_PUBLIC_PREVIEW_MODE,
         NEXT_PUBLIC_PREVIEW_PLAN: process.env.NEXT_PUBLIC_PREVIEW_PLAN,

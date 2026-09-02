@@ -1,8 +1,8 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { sum } from '../../../common/utils/money.util.js';
 import { daysInPeriod } from '../../../common/utils/period.util.js';
 import { JarService } from '../jar/jar.service.js';
@@ -19,15 +19,15 @@ export const LEVELS = [
 
 @Injectable()
 export class TurnService {
-    private readonly turns: ScopedRepository<PeriodTurn>;
-    private readonly events: ScopedRepository<TurnEvent>;
+    private readonly turns: HouseholdScopedRepository<PeriodTurn>;
+    private readonly events: HouseholdScopedRepository<TurnEvent>;
 
     constructor(
         private readonly em: EntityManager,
         private readonly jars: JarService
     ) {
-        this.turns = new ScopedRepository(em, PeriodTurn);
-        this.events = new ScopedRepository(em, TurnEvent);
+        this.turns = new HouseholdScopedRepository(em, PeriodTurn);
+        this.events = new HouseholdScopedRepository(em, TurnEvent);
     }
 
     async current(period: string) {

@@ -32,13 +32,13 @@ export default function WhyFoundationPage() {
         <PageContent width="prose" className="animate-rise">
             <Section eyebrow="✦ The foundation">
                 <h1 className="font-display text-4xl leading-tight font-semibold tracking-tight text-fg md:text-5xl">
-                    Wealth is not a number. It is the reins in your hands.
+                    Your money should give you room to live — and room to grow.
                 </h1>
                 <p className="mt-4 max-w-prose text-base leading-relaxed text-fg-muted">
-                    Rumbelo exists for people who want to succeed — and for people who already do
-                    and want to keep it that way. It is not a bookkeeping app. It is one calm
-                    overview of where your money, your energy, and your time go, so you can adjust
-                    before life adjusts you.
+                    Rumbelo is for people who want control over their life with money: split with
+                    intention, grow what matters, and keep a calm weekly rhythm. It is not a
+                    bookkeeping app — it is one overview of money, energy, and time so you steer
+                    before life steers you.
                 </p>
             </Section>
 

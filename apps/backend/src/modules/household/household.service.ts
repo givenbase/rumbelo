@@ -9,7 +9,7 @@ import { AuthService } from '@thallesp/nestjs-better-auth';
 import type { Auth } from '../../auth/auth.config.js';
 
 import { Currency, Locale } from '../../common/database/enums.js';
-import { currentUserId, currentAuthHeaders } from '../../common/tenancy/tenant.context.js';
+import { currentUserId, currentAuthHeaders } from '../../common/household/household.context.js';
 import { IncomeKind, IncomeSource } from '../money/income/entities/income-source.entity.js';
 import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../money/jar/entities/jar.entity.js';
 import { HouseholdSettings } from './entities/index.js';
@@ -248,12 +248,13 @@ export class HouseholdService {
         const result = await this.authService.api.createInvitation({
             body: {
                 email,
-                role: role === 'OWNER' ? 'owner' : role === 'PARTNER' ? 'member' : 'member',
+                role: role === 'OWNER' ? 'owner' : role === 'PARTNER' ? 'member' : 'viewer',
                 organizationId: householdId,
             },
             headers,
         });
-        return { invitationId: result?.id ?? crypto.randomUUID() };
+        if (!result?.id) throw new BadRequestException('Could not create invitation');
+        return { invitationId: result.id };
     }
 }
 
@@ -277,6 +278,7 @@ function mapRole(raw: string): 'OWNER' | 'PARTNER' | 'VIEWER' {
         case 'member':
         case 'partner':
             return 'PARTNER';
+        case 'viewer':
         default:
             return 'VIEWER';
     }

@@ -2,21 +2,21 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
 import { Cadence } from '../../../common/database/enums.js';
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { splitByPercentage } from '../../../common/utils/money.util.js';
 import { JarService } from '../jar/jar.service.js';
 import { IncomeKind, IncomeSource } from './entities/index.js';
 
 @Injectable()
 export class IncomeService {
-    private readonly sources: ScopedRepository<IncomeSource>;
+    private readonly sources: HouseholdScopedRepository<IncomeSource>;
 
     constructor(
         private readonly em: EntityManager,
         private readonly jars: JarService
     ) {
-        this.sources = new ScopedRepository(em, IncomeSource);
+        this.sources = new HouseholdScopedRepository(em, IncomeSource);
     }
 
     async list() {

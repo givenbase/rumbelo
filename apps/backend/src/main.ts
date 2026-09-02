@@ -10,7 +10,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { AppModule } from './app.module.js';
-import { loadEnv } from './common/config/env.config.js';
+import { loadEnv, type Env } from './common/config/env.config.js';
 
 import 'reflect-metadata';
 
@@ -26,16 +26,17 @@ function loadRootEnvFile() {
     }
 }
 
-async function bootstrap() {
-    loadRootEnvFile();
-    const env = loadEnv();
-
-    const app = await NestFactory.create<NestFastifyApplication>(
+/** Create the Nest application on Fastify. Nothing here touches request handling. */
+async function initializeApp(env: Env): Promise<NestFastifyApplication> {
+    return NestFactory.create<NestFastifyApplication>(
         AppModule.forRoot(env),
         new FastifyAdapter({ trustProxy: true, bodyLimit: 8 * 1024 * 1024 }),
         { bufferLogs: true }
     );
+}
 
+/** Register plugins, pipes and lifecycle hooks. Grows here — not in bootstrap. */
+async function setupApp(app: NestFastifyApplication, env: Env): Promise<void> {
     await app.register(helmet, { contentSecurityPolicy: false });
     await app.register(cookie, { secret: env.BETTER_AUTH_SECRET });
     await app.register(cors, {
@@ -47,9 +48,20 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
     app.enableShutdownHooks();
+}
 
+async function startApp(app: NestFastifyApplication, env: Env): Promise<void> {
     await app.listen({ port: env.PORT, host: '0.0.0.0' });
     Logger.log(`Rumbelo API listening on :${env.PORT}`, 'Bootstrap');
+}
+
+async function bootstrap() {
+    loadRootEnvFile();
+    const env = loadEnv();
+
+    const app = await initializeApp(env);
+    await setupApp(app, env);
+    await startApp(app, env);
 }
 
 void bootstrap();

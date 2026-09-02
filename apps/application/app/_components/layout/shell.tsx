@@ -3,15 +3,17 @@
 import { useState, type ReactNode } from 'react';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@rumbelo/utils';
 
+import { signOut } from '@/app/_lib/auth';
 import { BOTTOM_TABS, NAV_GROUPS, TOP_PILL_LABELS } from '@/app/_lib/nav';
 import { isScreenLocked, SCREEN_MIN } from '@/app/_lib/plan';
 import { settingsHrefForNavGroup } from '@/app/_lib/settings-tabs';
 import { whyLineFor } from '@/app/_lib/why-lines';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
+import { useAuth } from '@/components/features/shell/auth-provider';
 import { LockedGate } from '@/components/features/shell/locked-gate';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
 
@@ -71,9 +73,34 @@ export { useAppShell } from '@/components/features/shell/app-shell-context';
 
 function AppShellInner({ children }: { children: ReactNode }) {
     const pathname = usePathname();
+    const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
     const [subOpen, setSubOpen] = useState(false);
+    const [signingOut, setSigningOut] = useState(false);
     const { plan, resetOnboardingFlow, toggleLocale, locale } = useAppShell();
+    const { session } = useAuth();
+
+    const userName = session?.user?.name?.trim() || 'Guest';
+    const userEmail = session?.user?.email ?? '';
+    const userInitials = (() => {
+        const parts = userName.split(/\s+/).filter(Boolean);
+        if (parts.length >= 2) {
+            return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`.toUpperCase();
+        }
+        if (parts[0]?.length) return parts[0].slice(0, 2).toUpperCase();
+        return (userEmail.slice(0, 2) || '?').toUpperCase();
+    })();
+
+    async function handleSignOut() {
+        setSigningOut(true);
+        setMenuOpen(false);
+        try {
+            await signOut();
+            router.replace('/sign-in');
+        } catch {
+            setSigningOut(false);
+        }
+    }
 
     const activeGroup =
         NAV_GROUPS.find(g =>
@@ -152,7 +179,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             aria-label="User menu"
                             aria-expanded={menuOpen}
                             className="grid size-9 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent transition hover:brightness-110 active:scale-95">
-                            GL
+                            {userInitials}
                         </button>
 
                         {menuOpen && (
@@ -167,14 +194,14 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                     {/* User row */}
                                     <div className="flex items-center gap-3 border-b border-line px-4.5 py-4">
                                         <div className="grid size-9.5 shrink-0 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent">
-                                            GL
+                                            {userInitials}
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-sm font-medium text-fg">
-                                                Given Loyiso
+                                                {userName}
                                             </p>
                                             <p className="truncate font-mono text-xs text-fg-faint">
-                                                info@givenloyiso.com
+                                                {userEmail || '—'}
                                             </p>
                                         </div>
                                     </div>
@@ -222,6 +249,19 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                                         className="grid gap-0.5 rounded-lg px-3 py-2.5 transition-colors hover:bg-raised">
                                                         {inner}
                                                     </Link>
+                                                );
+                                            }
+
+                                            if (item.danger) {
+                                                return (
+                                                    <button
+                                                        key={item.label}
+                                                        type="button"
+                                                        disabled={signingOut}
+                                                        onClick={() => void handleSignOut()}
+                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                        {inner}
+                                                    </button>
                                                 );
                                             }
 

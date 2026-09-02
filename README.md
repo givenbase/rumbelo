@@ -33,11 +33,12 @@ to dual CJS+ESM by tsup so both the ESM backend and the Next apps consume one
 contract definition. This is the fix for the problem `ORPC_MIGRATION_PLAN.md`
 worked around with an internal HTTP hop; that hop is not needed.
 
-**Tenancy is row-level, not schema-per-tenant.** The tenant is a *household*, and
-a B2C product would end up with tens of thousands of schemas, O(tenants)
-migrations and catalog bloat. Every financial row carries `household_id` and the
-filter is injected in exactly one place — `common/tenancy/scoped.repository.ts` —
-from AsyncLocalStorage, so a service cannot pass the wrong id or forget one.
+**Household isolation is row-level, not schema-per-tenant.** Rumbelo's "tenant"
+is a *household*, and a B2C product would end up with tens of thousands of
+schemas, O(households) migrations and catalog bloat. Every financial row carries
+`household_id` and the filter is injected in exactly one place —
+`common/household/household-scoped.repository.ts` — from AsyncLocalStorage, so a
+service cannot pass the wrong id or forget one.
 
 ## Layout
 

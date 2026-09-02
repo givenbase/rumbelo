@@ -1,15 +1,15 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId, currentUserId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId, currentUserId } from '../../../common/household/household.context.js';
 import { EnergyLog, EnergyMetric } from './entities/index.js';
 
 @Injectable()
 export class LogService {
-    private readonly repo: ScopedRepository<EnergyLog>;
+    private readonly repo: HouseholdScopedRepository<EnergyLog>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, EnergyLog);
+        this.repo = new HouseholdScopedRepository(em, EnergyLog);
     }
 
     async logs() {

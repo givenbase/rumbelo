@@ -1,15 +1,15 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { Debt, DebtKind, PayoffStrategy } from './entities/index.js';
 
 @Injectable()
 export class DebtService {
-    private readonly repo: ScopedRepository<Debt>;
+    private readonly repo: HouseholdScopedRepository<Debt>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, Debt);
+        this.repo = new HouseholdScopedRepository(em, Debt);
     }
 
     async list() {

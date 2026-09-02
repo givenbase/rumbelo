@@ -31,7 +31,7 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
     title: { default: 'Rumbelo', template: '%s · Rumbelo' },
-    description: 'Money with intention. Six jars, one calm overview.',
+    description: 'Control that compounds. Six jars, calm weekly rhythm, room to grow.',
 };
 
 export const viewport: Viewport = {

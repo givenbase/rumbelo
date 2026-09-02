@@ -10,7 +10,10 @@ export function backendRpcUrl(): string {
     return joinBackendOrigin(env.NEXT_PUBLIC_DOMAIN_BACK, BACKEND_RPC_PATH);
 }
 
-/** Better Auth — `{DOMAIN_BACK}/api/auth` */
+/**
+ * Nest Better Auth mount — `{DOMAIN_BACK}/api/auth`.
+ * Browser clients should use DOMAIN_APP + `/api/auth` (Next proxy), not this URL.
+ */
 export function backendAuthUrl(): string {
     return joinBackendOrigin(env.NEXT_PUBLIC_DOMAIN_BACK, BACKEND_AUTH_PATH);
 }

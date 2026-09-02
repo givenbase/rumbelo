@@ -2,7 +2,7 @@ import type { EntityManager, FilterQuery, FindOptions } from '@mikro-orm/postgre
 
 import type { HouseholdEntity } from '../database/base.entity.js';
 
-import { currentHouseholdId } from './tenant.context.js';
+import { currentHouseholdId } from './household.context.js';
 
 /**
  * The single place household scoping is applied.
@@ -11,7 +11,7 @@ import { currentHouseholdId } from './tenant.context.js';
  * household-owned entities: the filter is injected from AsyncLocalStorage, so a
  * caller cannot pass the wrong householdId and cannot forget to pass one at all.
  */
-export class ScopedRepository<T extends HouseholdEntity> {
+export class HouseholdScopedRepository<T extends HouseholdEntity> {
     constructor(
         private readonly em: EntityManager,
         private readonly entity: new () => T

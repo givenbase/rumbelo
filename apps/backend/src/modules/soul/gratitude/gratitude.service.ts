@@ -1,15 +1,15 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentUserId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentUserId } from '../../../common/household/household.context.js';
 import { Gratitude } from './entities/index.js';
 
 @Injectable()
 export class GratitudeService {
-    private readonly repo: ScopedRepository<Gratitude>;
+    private readonly repo: HouseholdScopedRepository<Gratitude>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, Gratitude);
+        this.repo = new HouseholdScopedRepository(em, Gratitude);
     }
 
     async forWeek(week: string) {

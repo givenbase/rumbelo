@@ -1,15 +1,15 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
 import { IncomeLever } from './entities/index.js';
 
 /** Things that move earning power. A Growth surface, not a budget line. */
 @Injectable()
 export class LeverService {
-    private readonly repo: ScopedRepository<IncomeLever>;
+    private readonly repo: HouseholdScopedRepository<IncomeLever>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, IncomeLever);
+        this.repo = new HouseholdScopedRepository(em, IncomeLever);
     }
 
     async list() {

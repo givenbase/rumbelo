@@ -6,7 +6,7 @@ with its own `entities/`, service, controller and module.
 
 | Module | Kind | Children |
 |---|---|---|
-| `household/` | platform | the tenant itself — settings, members |
+| `household/` | platform | the household itself — settings, members |
 | `coach/` | platform | advisory that reads across all products |
 | `money/` | product · Geld | `jar` `income` `fixed-cost` `account` `transaction` `rule` `goal` `debt` `turn` `ritual` `dashboard` |
 | `growth/` | product · Groei | `lever` `milestone` |
@@ -20,7 +20,7 @@ with its own `entities/`, service, controller and module.
 - **Never query another aggregate's tables directly.** Import its service — see
   `money/dashboard`, which composes five services rather than joining their tables.
 - **Household-owned entities extend `HouseholdEntity`** and are read through
-  `ScopedRepository`, never `em.find` directly.
+  `HouseholdScopedRepository`, never `em.find` directly.
 - **Money is integer minor units.** Never a float, never a decimal string in
   arithmetic. Splitting goes through `common/utils/money.util.ts`.
 - Adding a product? Create the parent module, register it in `modules/index.ts`,

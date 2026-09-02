@@ -4,8 +4,8 @@ import { Injectable } from '@nestjs/common';
 import type { Jar as ContractJar } from '@rumbelo/contracts';
 
 import { CADENCE_TO_MONTHLY, Cadence } from '../../../common/database/enums.js';
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { Category, Jar } from './entities/index.js';
 
 /**
@@ -16,12 +16,12 @@ export type JarDto = ContractJar;
 
 @Injectable()
 export class JarService {
-    private readonly jars: ScopedRepository<Jar>;
-    private readonly categories: ScopedRepository<Category>;
+    private readonly jars: HouseholdScopedRepository<Jar>;
+    private readonly categories: HouseholdScopedRepository<Category>;
 
     constructor(private readonly em: EntityManager) {
-        this.jars = new ScopedRepository(em, Jar);
-        this.categories = new ScopedRepository(em, Category);
+        this.jars = new HouseholdScopedRepository(em, Jar);
+        this.categories = new HouseholdScopedRepository(em, Category);
     }
 
     async list(): Promise<JarDto[]> {

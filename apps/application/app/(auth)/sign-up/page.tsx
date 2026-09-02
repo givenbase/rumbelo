@@ -1,4 +1,4 @@
-import { SignUpForm } from './_components/sign-up-form';
+import { SignUpForm } from '@/components/features/forms/sign-up-form';
 
 export const metadata = { title: 'Register — Rumbelo' };
 

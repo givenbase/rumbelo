@@ -11,7 +11,7 @@ import type { Env } from './common/config/env.config.js';
 
 import ormConfig from '../mikro-orm.config.js';
 import { createAuth } from './auth/auth.config.js';
-import { TenancyModule } from './common/tenancy/tenancy.module.js';
+import { HouseholdContextModule } from './common/household/household-context.module.js';
 import { FeatureModules } from './modules/index.js';
 
 @Module({})
@@ -26,7 +26,7 @@ export class AppModule {
                 ThrottlerModule.forRoot([{ ttl: 60_000, limit: 240 }]),
                 BetterAuthModule.forRoot({ auth: createAuth(env) }),
                 ORPCModule.forRoot({ interceptors: [] }),
-                TenancyModule,
+                HouseholdContextModule,
                 ...FeatureModules,
             ],
             providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],

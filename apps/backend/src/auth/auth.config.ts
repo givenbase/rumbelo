@@ -4,6 +4,8 @@ import { Pool } from 'pg';
 
 import type { Env } from '../common/config/env.config.js';
 
+import { householdAccessControl, householdRoles } from './access-control.config.js';
+
 /**
  * better-auth owns its own tables (user, session, account, verification,
  * organization, member, invitation) and migrates them with its CLI. We hand it a
@@ -44,6 +46,8 @@ export function createAuth(env: Env) {
 
         plugins: [
             organization({
+                ac: householdAccessControl,
+                roles: householdRoles,
                 allowUserToCreateOrganization: true,
                 organizationLimit: 5,
                 creatorRole: 'owner',

@@ -1,19 +1,19 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { Jar } from '../jar/entities/index.js';
 import { RitualAllocation, WeeklyRitual } from './entities/index.js';
 
 @Injectable()
 export class RitualService {
-    private readonly rituals: ScopedRepository<WeeklyRitual>;
-    private readonly allocations: ScopedRepository<RitualAllocation>;
+    private readonly rituals: HouseholdScopedRepository<WeeklyRitual>;
+    private readonly allocations: HouseholdScopedRepository<RitualAllocation>;
 
     constructor(private readonly em: EntityManager) {
-        this.rituals = new ScopedRepository(em, WeeklyRitual);
-        this.allocations = new ScopedRepository(em, RitualAllocation);
+        this.rituals = new HouseholdScopedRepository(em, WeeklyRitual);
+        this.allocations = new HouseholdScopedRepository(em, RitualAllocation);
     }
 
     async advance(input: {

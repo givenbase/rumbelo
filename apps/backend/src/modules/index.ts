@@ -10,7 +10,7 @@ import { SoulModule } from './soul/soul.module.js';
  *
  * Four product modules mirroring the application's portals, plus two
  * platform-level modules that every product depends on:
- *   Household — the tenant itself, its settings and members
+ *   Household — the shared board itself, its settings and members
  *   Coach     — advisory that reads across all four products
  */
 export const FeatureModules = [

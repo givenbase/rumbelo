@@ -2,16 +2,16 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
 import { Cadence, FlowDirection } from '../../../common/database/enums.js';
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { Category, Jar } from '../jar/entities/index.js';
 import { FixedCost } from './entities/index.js';
 
 @Injectable()
 export class FixedCostService {
-    private readonly repo: ScopedRepository<FixedCost>;
+    private readonly repo: HouseholdScopedRepository<FixedCost>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, FixedCost);
+        this.repo = new HouseholdScopedRepository(em, FixedCost);
     }
 
     async list(direction?: 'IN' | 'OUT' | null) {

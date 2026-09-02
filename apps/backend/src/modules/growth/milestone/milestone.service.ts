@@ -1,14 +1,14 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
 import { IncomeMilestone } from './entities/index.js';
 
 @Injectable()
 export class MilestoneService {
-    private readonly repo: ScopedRepository<IncomeMilestone>;
+    private readonly repo: HouseholdScopedRepository<IncomeMilestone>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, IncomeMilestone);
+        this.repo = new HouseholdScopedRepository(em, IncomeMilestone);
     }
 
     async list() {

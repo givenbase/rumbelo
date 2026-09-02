@@ -3,14 +3,21 @@
 import { useState, type FormEvent } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button, Field, Input } from '@rumbelo/ui';
 
 import { signIn } from '@/app/_lib/auth';
 
+function safeRedirectPath(value: string | null): string {
+    if (value && value.startsWith('/') && !value.startsWith('//')) return value;
+    return '/';
+}
+
 export function SignInForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectTo = safeRedirectPath(searchParams.get('redirectTo'));
     const [error, setError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
 
@@ -22,14 +29,14 @@ export function SignInForm() {
         const email = String(fd.get('email') ?? '');
         const password = String(fd.get('password') ?? '');
 
-        const result = await signIn.email({ email, password, callbackURL: '/' });
+        const result = await signIn.email({ email, password, callbackURL: redirectTo });
         setPending(false);
 
         if (result.error) {
             setError(result.error.message ?? 'Sign in failed');
             return;
         }
-        router.push('/');
+        router.push(redirectTo);
         router.refresh();
     }
 
@@ -42,7 +49,7 @@ export function SignInForm() {
                 <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">
                     Welcome back
                 </h1>
-                <p className="mt-1 text-sm text-fg-muted">Sign in to keep steering.</p>
+                <p className="mt-1 text-sm text-fg-muted">Sign in and take the wheel again.</p>
             </div>
 
             <form className="grid gap-4" onSubmit={onSubmit}>

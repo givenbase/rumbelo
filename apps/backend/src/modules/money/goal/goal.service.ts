@@ -1,16 +1,16 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { ScopedRepository } from '../../../common/tenancy/scoped.repository.js';
-import { currentHouseholdId } from '../../../common/tenancy/tenant.context.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
+import { currentHouseholdId } from '../../../common/household/household.context.js';
 import { Jar } from '../jar/entities/index.js';
 import { Goal, GoalStatus } from './entities/index.js';
 
 @Injectable()
 export class GoalService {
-    private readonly repo: ScopedRepository<Goal>;
+    private readonly repo: HouseholdScopedRepository<Goal>;
     constructor(private readonly em: EntityManager) {
-        this.repo = new ScopedRepository(em, Goal);
+        this.repo = new HouseholdScopedRepository(em, Goal);
     }
 
     async list() {
