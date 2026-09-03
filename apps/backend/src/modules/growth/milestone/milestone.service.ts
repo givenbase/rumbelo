@@ -2,7 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
-import { IncomeMilestone } from './entities/index.js';
+import { IncomeMilestone } from './milestone.entity.js';
 
 @Injectable()
 export class MilestoneService {

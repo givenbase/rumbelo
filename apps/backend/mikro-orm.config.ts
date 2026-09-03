@@ -7,8 +7,6 @@ import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import * as entities from './src/entities.registry.js';
-
 /** MikroORM CLI runs outside Nest — walk up to monorepo root `.env`. */
 function findRootEnv(): string {
     let dir = dirname(fileURLToPath(import.meta.url));
@@ -24,9 +22,13 @@ loadEnv({ path: findRootEnv() });
 const isProd = process.env.NODE_ENV === 'production';
 
 export default defineConfig({
-    // Enums and constant maps are plain objects; only entity classes are functions.
-    entities: Object.values(entities).filter(value => typeof value === 'function') as never,
-    entitiesTs: ['src/**/*.entity.ts'],
+    /**
+     * Convention-based discovery (Galighticus pattern): every `*.entity.ts` file
+     * next to its aggregate's service is an entity — no registry file to keep in
+     * sync when a product is added.
+     */
+    entities: ['./dist/**/*.entity.js'],
+    entitiesTs: ['./src/**/*.entity.ts'],
     clientUrl: process.env.DATABASE_URL,
     driverOptions:
         process.env.DATABASE_SSL === 'true'
@@ -41,6 +43,13 @@ export default defineConfig({
      * entity declares, so the first migration provisions all five.
      */
     schema: 'public',
+    /**
+     * better-auth owns and migrates everything in `public` (user, session,
+     * organization, member, …). Those tables are not MikroORM entities and are
+     * absent from the snapshot, so `migration:create` never touches them — but
+     * `schema:update` diffs against the live DB and would propose dropping
+     * them. Migrations only; never run schema:update here.
+     */
     metadataProvider: ReflectMetadataProvider,
     extensions: [Migrator, SeedManager],
     // Never auto-sync a schema that holds money. Migrations only.

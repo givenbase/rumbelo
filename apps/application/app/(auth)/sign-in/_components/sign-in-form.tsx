@@ -43,9 +43,6 @@ export function SignInForm() {
     return (
         <div className="grid gap-6">
             <div>
-                <p className="mb-2 font-mono text-xs font-semibold tracking-widest text-fg-muted uppercase">
-                    ✦ Rumbelo
-                </p>
                 <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">
                     Welcome back
                 </h1>

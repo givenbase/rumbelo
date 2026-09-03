@@ -2,7 +2,7 @@ import { oc } from '@orpc/contract';
 import { z } from 'zod';
 import * as S from '../../schemas/index.js';
 
-/** Platform-level: the tenant itself, and advisory that reads across products. */
+/** Platform-level: the household itself, and advisory that reads across products. */
 export const contract = {
     household: {
         list: oc.output(z.array(S.Household)),

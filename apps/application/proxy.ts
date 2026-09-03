@@ -1,5 +1,6 @@
-import { getSessionCookie } from 'better-auth/cookies';
 import { type NextRequest, NextResponse } from 'next/server';
+
+import { getSessionCookie } from 'better-auth/cookies';
 
 /**
  * Next.js 16 Proxy with Better Auth (cookie existence only).

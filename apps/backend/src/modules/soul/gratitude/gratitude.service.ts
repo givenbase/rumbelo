@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
 import { currentUserId } from '../../../common/household/household.context.js';
-import { Gratitude } from './entities/index.js';
+import { Gratitude } from './gratitude.entity.js';
 
 @Injectable()
 export class GratitudeService {

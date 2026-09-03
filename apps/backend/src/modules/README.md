@@ -1,17 +1,29 @@
 # Modules
 
-Organised by **product**, mirroring the navigation in `@rumbelo/application`.
-A product is a parent module that imports its children; a child is one aggregate
-with its own `entities/`, service, controller and module.
+Organised by **audience first, product second** — the same cut as Galighticus
+(`portal` = customers, `backoffice` = employees, `auth` = identity).
+A group is a parent module that imports its children; a child is one aggregate
+with its `*.entity.ts`, service, controller and module as flat siblings.
 
-| Module | Kind | Children |
+| Audience | Where | What |
 |---|---|---|
-| `household/` | platform | the household itself — settings, members |
-| `coach/` | platform | advisory that reads across all products |
-| `money/` | product · Geld | `jar` `income` `fixed-cost` `account` `transaction` `rule` `goal` `debt` `turn` `ritual` `dashboard` |
-| `growth/` | product · Groei | `lever` `milestone` |
-| `energy/` | product · Energie | `log` |
-| `soul/` | product · Ziel | `gratitude` |
+| Shared (identity) | `src/auth/` | better-auth config, organization plugin, access control — not a feature module |
+| Shared (plumbing) | `src/common/` | env config, database primitives, household scoping, utils |
+| Shared (product plane) | `platform/` | the household itself + cross-product advisory |
+| Households | `money/` `growth/` `energy/` `soul/` | the four products, mirroring the app's portals |
+| Rumbelo employees | `backoffice/` | reserved — created with its first real feature (support, admin, billing ops), never as an empty folder |
+
+| Module | Children |
+|---|---|
+| `platform/` | `household` (settings, members, invites, onboarding) · `coach` |
+| `money/` · Geld | `plan/` (`jar` `income` `fixed-cost`) · `ledger/` (`account` `transaction` `rule`) · `targets/` (`goal` `debt`) · `rhythm/` (`turn` `ritual`) · `dashboard` |
+| `growth/` · Groei | `lever` `milestone` |
+| `energy/` · Energie | `log` |
+| `soul/` · Ziel | `gratitude` |
+
+A product grows a sub-domain folder (like `money/plan/`) once it has several
+aggregates that belong together — never pre-emptively. `growth`, `energy` and
+`soul` stay flat until they earn grouping.
 
 ## Rules
 
@@ -23,5 +35,6 @@ with its own `entities/`, service, controller and module.
   `HouseholdScopedRepository`, never `em.find` directly.
 - **Money is integer minor units.** Never a float, never a decimal string in
   arithmetic. Splitting goes through `common/utils/money.util.ts`.
-- Adding a product? Create the parent module, register it in `modules/index.ts`,
-  and add its entity barrel to `src/entities.registry.ts`.
+- Adding a product? Create the parent module and register it in
+  `modules/index.ts`. Entities are discovered by convention — any `*.entity.ts`
+  under `src/` (see `mikro-orm.config.ts`); there is no registry to edit.

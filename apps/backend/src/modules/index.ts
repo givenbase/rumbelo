@@ -1,23 +1,20 @@
-import { CoachModule } from './coach/coach.module.js';
 import { EnergyModule } from './energy/energy.module.js';
 import { GrowthModule } from './growth/growth.module.js';
-import { HouseholdModule } from './household/household.module.js';
 import { MoneyModule } from './money/money.module.js';
+import { PlatformModule } from './platform/platform.module.js';
 import { SoulModule } from './soul/soul.module.js';
 
 /**
- * Registered by AppModule.
+ * Registered by AppModule. Grouped by audience:
  *
- * Four product modules mirroring the application's portals, plus two
- * platform-level modules that every product depends on:
- *   Household — the shared board itself, its settings and members
- *   Coach     — advisory that reads across all four products
+ *   platform/  shared plane — the household itself and cross-product advisory
+ *   money/ growth/ energy/ soul/  household-facing products (the app's portals)
+ *   backoffice/  employee-facing tools — reserved, created with its first feature
  */
 export const FeatureModules = [
-    HouseholdModule,
+    PlatformModule,
     MoneyModule,
     GrowthModule,
     EnergyModule,
     SoulModule,
-    CoachModule,
 ];

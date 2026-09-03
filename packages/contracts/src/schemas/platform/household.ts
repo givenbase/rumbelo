@@ -2,12 +2,25 @@ import { z } from 'zod';
 import { Currency, HouseholdId, Id, Locale, Theme, UserId } from '../common.js';
 
 /**
- * Household is the tenant boundary. Every financial row carries householdId and is
- * filtered by it in one middleware — see apps/backend/src/common/tenancy.
+ * Household is the isolation boundary. Every financial row carries householdId and
+ * is filtered by it in one place — see apps/backend/src/common/household.
  * Backed by better-auth's organization plugin so invites/roles come for free.
  */
-export const HouseholdRole = z.enum(['OWNER', 'PARTNER', 'VIEWER']);
+/**
+ * Capability tier of one member — deliberately neutral (owner/member/viewer, the
+ * Notion/GitHub triple) so it fits couples, families, kids and friend groups
+ * alike. Relationship labels ("Partner", "Kid") are UI copy driven by the
+ * household's `kind`, never role values. Maps 1:1 to Better Auth org roles.
+ */
+export const HouseholdRole = z.enum(['OWNER', 'MEMBER', 'VIEWER']);
 export type HouseholdRole = z.infer<typeof HouseholdRole>;
+
+/**
+ * Nature of the group sharing the board. Drives copy and module defaults only —
+ * never permissions (that is the member's role) and never query scoping.
+ */
+export const HouseholdKind = z.enum(['family', 'partners', 'friends', 'solo']);
+export type HouseholdKind = z.infer<typeof HouseholdKind>;
 
 export const Household = z.object({
     id: HouseholdId,
@@ -33,6 +46,7 @@ export const HouseholdMember = z.object({
 
 export const HouseholdSettings = z.object({
     householdId: HouseholdId,
+    kind: HouseholdKind,
     theme: Theme,
     locale: Locale,
     currency: Currency,
@@ -53,6 +67,7 @@ export type HouseholdSettings = z.infer<typeof HouseholdSettings>;
 /** Onboarding writes income + split + fixed costs in one transaction. */
 export const OnboardingInput = z.object({
     householdName: z.string().min(1).max(120),
+    kind: HouseholdKind.default('solo'),
     currency: Currency.default('EUR'),
     locale: Locale.default('nl'),
     monthlyNetIncome: z.int().min(0),

@@ -8,7 +8,8 @@ pnpm --filter @rumbelo/backend dev   # :3002
 ```
 
 - `src/common/` — config, database primitives, household scoping, shared utils
-- `src/modules/` — four products and two platform modules; see its README
+- `src/modules/` — grouped by audience: `platform/` (shared), four household
+  products, `backoffice/` reserved for employee tools; see its README
 - `src/auth/` — better-auth configuration (organization plugin = Household, 2FA)
 - `src/banking/` — bank aggregation behind a port; null adapter by default
 - `src/database/` — migrations and seeders
@@ -54,8 +55,10 @@ enforcement layer.
 ### Kind vs role (two different axes)
 
 - **Role** (per member, from better-auth `member.role`): what can this person
-  change? `owner`/`admin` → OWNER, `member` → PARTNER, `viewer` → VIEWER
+  change? `owner`/`admin` → OWNER, `member` → MEMBER, `viewer` → VIEWER
   (read-only guest tier, defined in `src/auth/access-control.config.ts`).
+  Role names are capability-neutral on purpose — "Partner", "Kid" or
+  "Housemate" are UI copy driven by the household's kind, never enum values.
   Role *is* the trust level — there is no separate trust-score system.
 - **Kind** (per household, `platform.household_settings.kind`): what is the
   nature of the group — `family`, `partners`, `friends`, `solo`? Kind only

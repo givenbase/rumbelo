@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { CoachModule } from '../../coach/coach.module.js';
-import { HouseholdModule } from '../../household/household.module.js';
-import { JarModule } from '../jar/jar.module.js';
-import { TransactionModule } from '../transaction/transaction.module.js';
-import { TurnModule } from '../turn/turn.module.js';
+import { CoachModule } from '../../platform/coach/coach.module.js';
+import { HouseholdModule } from '../../platform/household/household.module.js';
+import { TransactionModule } from '../ledger/transaction/transaction.module.js';
+import { JarModule } from '../plan/jar/jar.module.js';
+import { TurnModule } from '../rhythm/turn/turn.module.js';
 import { DashboardController } from './dashboard.controller.js';
 import { DashboardService } from './dashboard.service.js';
 

@@ -26,11 +26,9 @@ export class MembershipService {
             case 'owner':
             case 'admin':
                 return 'OWNER';
-            case 'partner':
             case 'member':
-                return 'PARTNER';
+                return 'MEMBER';
             case 'viewer':
-                return 'VIEWER';
             default:
                 return 'VIEWER';
         }

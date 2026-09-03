@@ -164,7 +164,7 @@ export function AccountSettings() {
             return client.household.invite({
                 householdId,
                 email: inviteEmail.trim(),
-                role: 'PARTNER',
+                role: 'MEMBER',
             });
         },
         onSuccess: () => {
