@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi, useApiClient } from '@rumbelo/contracts/react';
+import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 

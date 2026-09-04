@@ -9,7 +9,7 @@ import { contract as soul } from './soul/index';
  * Contract-first oRPC, grouped by product.
  *
  * The nesting is the hierarchy: `contract.money.jars.list` becomes the route
- * `/rpc/money/jars/list`, so the API surface, the backend module tree and the
+ * `/money/jars/list`, so the API surface, the backend module tree and the
  * application navigation all read the same way.
  *
  * Paths are auto-filled for Nest `@Implement` (requires explicit route paths).

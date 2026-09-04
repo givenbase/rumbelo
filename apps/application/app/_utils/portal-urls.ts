@@ -1,13 +1,16 @@
 import {
     BACKEND_AUTH_PATH,
-    BACKEND_RPC_PATH,
+    BACKEND_RPC_PROXY_PATH,
     joinBackendOrigin,
 } from '@/app/_utils/backend-paths';
 import { env } from '@/app/_utils/get-env';
 
-/** oRPC — `{DOMAIN_BACK}/rpc` */
+/**
+ * oRPC via same-origin proxy — `{DOMAIN_APP}/api/backend` → Nest.
+ * Prefer `api` from `@/app/_lib/api` (uses window.origin in the browser).
+ */
 export function backendRpcUrl(): string {
-    return joinBackendOrigin(env.NEXT_PUBLIC_DOMAIN_BACK, BACKEND_RPC_PATH);
+    return joinBackendOrigin(env.NEXT_PUBLIC_DOMAIN_APP, BACKEND_RPC_PROXY_PATH);
 }
 
 /**

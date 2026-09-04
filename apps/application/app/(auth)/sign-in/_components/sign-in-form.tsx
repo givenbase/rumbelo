@@ -90,7 +90,7 @@ export function SignInForm() {
             <p className="text-center text-sm text-fg-muted">
                 No account yet?{' '}
                 <Link href="/sign-up" className="font-semibold text-accent hover:underline">
-                    Start splitting
+                    Create an account
                 </Link>
             </p>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useApiClient } from '@rumbelo/contracts/react';
+import { useApiClient } from '@/app/_lib/api-hooks';
 import { useEffect, useState } from 'react';
 
 import { Button, Field, Input } from '@rumbelo/ui';
@@ -62,8 +62,13 @@ export function OnboardingOverlay() {
             markOnboardingDone();
             closeOnboarding(true);
             showToast('Household created', 'success');
-        } catch {
-            showToast('Setup failed — please try again', 'error');
+        } catch (error) {
+            console.error('onboard failed', error);
+            const message =
+                error instanceof Error && error.message
+                    ? error.message
+                    : 'Setup failed — please try again';
+            showToast(message, 'error');
         } finally {
             setPending(false);
         }

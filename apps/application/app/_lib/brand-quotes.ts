@@ -59,6 +59,6 @@ export const AUTH_SIGN_IN = {
 } as const;
 
 export const AUTH_SIGN_UP = {
-    title: 'Start splitting',
-    subtitle: 'Split first. Spend second.',
+    title: 'Stop wondering where it went.',
+    subtitle: 'Six jars. One calm overview.',
 } as const;

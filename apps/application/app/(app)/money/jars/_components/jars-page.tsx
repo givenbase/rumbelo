@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@rumbelo/contracts/react';
+import { useApi } from '@/app/_lib/api-hooks';
 import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';

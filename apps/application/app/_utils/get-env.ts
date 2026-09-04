@@ -12,7 +12,7 @@ const portalOrigin = (devDefault: string) =>
  *
  *   NEXT_PUBLIC_DOMAIN_APP  → product
  *   NEXT_PUBLIC_DOMAIN_WEB  → marketing
- *   NEXT_PUBLIC_DOMAIN_BACK → API (append /rpc; Better Auth is proxied via app /api/auth)
+ *   NEXT_PUBLIC_DOMAIN_BACK → Nest origin (proxied via app `/api/backend` + `/api/auth`)
  */
 export const env = createEnv({
     client: {

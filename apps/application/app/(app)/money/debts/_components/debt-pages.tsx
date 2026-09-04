@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@rumbelo/contracts/react';
+import { useApi } from '@/app/_lib/api-hooks';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 

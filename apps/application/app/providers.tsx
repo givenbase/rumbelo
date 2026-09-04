@@ -1,12 +1,20 @@
 'use client';
 
-import { ApiProvider } from '@rumbelo/contracts/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
-import { backendRpcUrl } from '@/app/_utils/portal-urls';
+import { setClientHouseholdId } from '@/app/_lib/household-api-context';
 import { AppShellProvider } from '@/components/features/shell/app-shell-context';
-import { AuthProvider } from '@/components/features/shell/auth-provider';
+import { AuthProvider, useAuth } from '@/components/features/shell/auth-provider';
+
+/** Keeps OpenAPILink headers in sync without remounting the oRPC client. */
+function HouseholdHeaderSync({ children }: { children: ReactNode }) {
+    const { householdId } = useAuth();
+    useEffect(() => {
+        setClientHouseholdId(householdId);
+    }, [householdId]);
+    return children;
+}
 
 export function Providers({ children }: { children: ReactNode }) {
     const [queryClient] = useState(
@@ -28,9 +36,9 @@ export function Providers({ children }: { children: ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <ApiProvider url={backendRpcUrl()}>
+                <HouseholdHeaderSync>
                     <AppShellProvider>{children}</AppShellProvider>
-                </ApiProvider>
+                </HouseholdHeaderSync>
             </AuthProvider>
         </QueryClientProvider>
     );
