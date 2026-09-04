@@ -36,6 +36,17 @@ Keep the same punch: *where it went / no mystery / clear picture*.
 
 ---
 
+## Audience & manifesto (also ours)
+
+Softer than the money punch — use on about, positioning, closing bands. **Not** the primary hero tagline.
+
+| Line | Best use |
+|---|---|
+| **Built for people who are doing well — and for people who are ready to.** | Audience / about / positioning |
+| **Don’t chase the number. Own the direction.** | Manifesto, closing band, growth portal |
+
+---
+
 ## Extensions (same lane)
 
 Add to pages when you need more copy. Stay in this voice — don’t drift back to vague “clarity / ambition / built to decide.”
@@ -133,6 +144,8 @@ Don’t try to say everything in the hero. Say money hard → open the rest belo
 | Growth section | Stop wondering how to earn more. |
 | Product proof | Six jars. One calm overview. |
 | Principle | Money gets a job. · Split first. Spend second. |
+| Audience | Built for people who are doing well — and for people who are ready to. |
+| Manifesto | Don’t chase the number. Own the direction. |
 
 **Rules**
 1. One primary line per surface — don’t stack three slogans in the hero.
@@ -163,18 +176,19 @@ Don’t try to say everything in the hero. Say money hard → open the rest belo
 | Stop wondering how to earn more. | Stop met gissen hoe je meer verdient. |
 | The picture isn’t only the bank balance. | Het plaatje is meer dan het saldo. |
 | Assign the money. Protect the energy. Keep the why. | Wijs het geld toe. Bescherm de energie. Houd het waarom. |
+| Built for people who are doing well — and for people who are ready to. | Voor wie het goed doet — en voor wie er klaar voor is. |
+| Don’t chase the number. Own the direction. | Jaag niet op het getal. Kies de richting. |
 
 ---
 
 ## Demoted (too weak / too abstract)
 
-Do **not** lead with these on the website. Audience-only or archive:
+Do **not** lead with these on the website:
 
 - Built to decide.
 - Clarity first.
 - Ambition needs a map.
-- Built for people who are doing well — and for people who are ready to. *(audience page only, if needed)*
-- Don’t chase the number. Own the direction. *(too soft as hero)*
+- Not just money. Where your life goes. *(too soft as widener)*
 
 ---
 
@@ -182,9 +196,10 @@ Do **not** lead with these on the website. Audience-only or archive:
 
 1. Lead with the **core three** (money punch) wherever brand voice matters most.
 2. **Widen** after the money beat — portals, energy, soul — using the widener / portal lines.
-3. Use **same-direction** lines for section variety across the site.
-4. Pull **extensions** when a page needs more beats — stay in-lane.
-5. New lines: add here first, then use in UI/copy.
+3. Use **audience / manifesto** lines on about and closing bands — not as the hero tagline.
+4. Use **same-direction** lines for section variety across the site.
+5. Pull **extensions** when a page needs more beats — stay in-lane.
+6. New lines: add here first, then use in UI/copy.
 
 ---
 

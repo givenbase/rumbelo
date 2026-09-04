@@ -41,6 +41,8 @@ Money gets a job. Six jars. One calm overview.
 | Product | **Assign it before you wonder where it went.** |
 | Overview | **Know where it went. Know where it’s going.** |
 | Income | **Paycheck in. Picture clear.** |
+| Audience | **Built for people who are doing well — and for people who are ready to.** |
+| Manifesto | **Don’t chase the number. Own the direction.** |
 
 Use **tagline under the wordmark** as a secondary lockup; wordmark alone for app icon / favicon.
 
