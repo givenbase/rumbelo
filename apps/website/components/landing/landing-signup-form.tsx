@@ -59,14 +59,14 @@ export function LandingSignupForm() {
                     {/* Left: assurances */}
                     <div className="min-w-0 flex-1 basis-80">
                         <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                            ✦ CREATE YOUR ACCOUNT
+                            ✦ Create your account
                         </span>
                         <h2 className="my-3.5 max-w-sm font-display text-3xl font-semibold tracking-tight lg:text-4xl">
-                            Six jars, five minutes.
+                            Split first. Spend second.
                         </h2>
                         <p className="mb-5 max-w-prose text-base leading-relaxed text-fg-muted">
-                            You will be asked one thing: what lands in your account each month.
-                            Rumbelo does the splitting from there.
+                            Built for people who are doing well — and for people who are ready to.
+                            Tell us what lands each month; Rumbelo assigns it from there.
                         </p>
                         <div className="grid gap-3">
                             {ASSURANCES.map(a => (

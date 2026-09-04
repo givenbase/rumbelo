@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { signUp } from '@/app/_lib/auth';
+import { AUTH_SIGN_UP } from '@/app/_lib/brand-quotes';
 
 /** Matches Nest Better Auth `emailAndPassword.minPasswordLength`. */
 const MIN_PASSWORD_LENGTH = 12;
@@ -84,11 +85,9 @@ export function SignUpForm() {
         <div className="grid gap-6">
             <div>
                 <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">
-                    Start splitting
+                    {AUTH_SIGN_UP.title}
                 </h1>
-                <p className="mt-1 text-sm text-fg-muted">
-                    Create an account. Split with intention. Grow on purpose.
-                </p>
+                <p className="mt-1 text-sm text-fg-muted">{AUTH_SIGN_UP.subtitle}</p>
             </div>
 
             <Form {...form}>

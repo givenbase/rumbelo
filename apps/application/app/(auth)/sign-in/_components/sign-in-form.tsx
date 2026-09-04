@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button, Field, Input } from '@rumbelo/ui';
 
+import { AUTH_SIGN_IN } from '@/app/_lib/brand-quotes';
 import { signIn } from '@/app/_lib/auth';
 
 function safeRedirectPath(value: string | null): string {
@@ -44,9 +45,9 @@ export function SignInForm() {
         <div className="grid gap-6">
             <div>
                 <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">
-                    Welcome back
+                    {AUTH_SIGN_IN.title}
                 </h1>
-                <p className="mt-1 text-sm text-fg-muted">Sign in and take the wheel again.</p>
+                <p className="mt-1 text-sm text-fg-muted">{AUTH_SIGN_IN.subtitle}</p>
             </div>
 
             <form className="grid gap-4" onSubmit={onSubmit}>

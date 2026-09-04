@@ -2,13 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { AUTH_QUOTES } from '@/app/_lib/brand-quotes';
+
+const ROTATE_MS = 7000;
+
 /**
- * Desktop auth manifesto panel — looping muted video with readable overlay.
- * Respects prefers-reduced-motion (poster only).
+ * Desktop auth manifesto panel — looping muted video with brand quotes.
+ * Respects prefers-reduced-motion (poster only; first quote stays).
  */
 export function AuthAside() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [reduceMotion, setReduceMotion] = useState(false);
+    const [quoteIndex, setQuoteIndex] = useState(0);
 
     useEffect(() => {
         const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,9 +31,18 @@ export function AuthAside() {
         });
     }, [reduceMotion]);
 
+    useEffect(() => {
+        if (reduceMotion || AUTH_QUOTES.length < 2) return;
+        const id = window.setInterval(() => {
+            setQuoteIndex(i => (i + 1) % AUTH_QUOTES.length);
+        }, ROTATE_MS);
+        return () => window.clearInterval(id);
+    }, [reduceMotion]);
+
+    const quote = AUTH_QUOTES[quoteIndex] ?? AUTH_QUOTES[0];
+
     return (
         <aside className="relative hidden overflow-hidden lg:block">
-            {/* Fallback / reduced-motion still */}
             <div
                 aria-hidden
                 className="absolute inset-0 bg-cover bg-center"
@@ -50,24 +64,36 @@ export function AuthAside() {
                 </video>
             ) : null}
 
-            {/* Scrim so type stays legible on bright frames */}
             <div
                 aria-hidden
                 className="absolute inset-0 bg-linear-to-t from-black/75 via-black/45 to-black/30"
             />
 
-            <div className="relative z-10 flex h-full min-h-dvh flex-col justify-center px-12 py-16">
-                <p className="text-xs font-semibold tracking-widest text-white/70 uppercase">
-                    ✦ Control that compounds
-                </p>
-                <p className="mt-4 max-w-md font-display text-3xl leading-tight font-semibold tracking-tight text-white">
-                    Your money should give you room to live — and room to grow.
-                </p>
-                <p className="mt-6 max-w-md text-sm leading-relaxed text-white/80">
-                    Split income into six jars the moment it lands. Spend without guilt. Build
-                    freedom on purpose. One short weekly check-in keeps you in the driver&apos;s
-                    seat.
-                </p>
+            <div className="relative z-10 flex h-full min-h-dvh flex-col justify-end px-12 py-16">
+                <div key={quoteIndex} className="animate-rise">
+                    <p className="text-xs font-semibold tracking-widest text-white/70 uppercase">
+                        ✦ {quote.eyebrow}
+                    </p>
+                    <p className="mt-4 max-w-md font-display text-3xl leading-tight font-semibold tracking-tight text-white">
+                        {quote.headline}
+                    </p>
+                    <p className="mt-6 max-w-md text-sm leading-relaxed text-white/80">
+                        {quote.support}
+                    </p>
+                </div>
+
+                <div className="mt-10 flex gap-1.5" aria-hidden>
+                    {AUTH_QUOTES.map((_, i) => (
+                        <span
+                            key={i}
+                            className={
+                                i === quoteIndex
+                                    ? 'h-1 w-6 rounded-full bg-white'
+                                    : 'h-1 w-1.5 rounded-full bg-white/35'
+                            }
+                        />
+                    ))}
+                </div>
             </div>
         </aside>
     );

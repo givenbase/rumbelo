@@ -201,6 +201,17 @@ Do **not** lead with these on the website:
 5. Pull **extensions** when a page needs more beats — stay in-lane.
 6. New lines: add here first, then use in UI/copy.
 
+**In product UI:** auth screens read from `apps/application/app/_lib/brand-quotes.ts` (tagline under logo, sign-in/up subtitles, rotating aside quotes). Keep that file in sync with this doc.
+
+**Auth aside rule:** the four rotating panels must be **different jobs**, not four riffs on “where it went”:
+
+1. Money mystery — *Stop wondering where it went.*
+2. The system — *Split first. Spend second.*
+3. Who it’s for — *Built for people who are doing well — and for people who are ready to.*
+4. Life beyond money — *Assign the money. Protect the energy. Keep the why.*
+
+Sign-in leads with (1); sign-up leads with (2).
+
 ---
 
 ## Related
