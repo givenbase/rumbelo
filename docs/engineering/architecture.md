@@ -45,10 +45,10 @@ The same product tree governs modules, API, routes, and database.
 |---|---|---|---|---|
 | — | `modules/household` | `contract.household` | `/settings` | `platform` |
 | — | `modules/coach` | `contract.coach` | — | `platform` |
-| **Money** | `modules/money/*` | `contract.money.*` | `/money/*` | `money` |
-| **Growth** | `modules/growth/*` | `contract.growth.*` | `/growth/*` | `growth` |
-| **Energy** | `modules/energy/*` | `contract.energy.*` | `/energy/*` | `energy` |
-| **Soul** | `modules/soul/*` | `contract.soul.*` | `/soul/*` | `soul` |
+| **Money** | `modules/product/money/*` | `contract.money.*` | `/money/*` | `money` |
+| **Growth** | `modules/product/growth/*` | `contract.growth.*` | `/growth/*` | `growth` |
+| **Energy** | `modules/product/energy/*` | `contract.energy.*` | `/energy/*` | `energy` |
+| **Soul** | `modules/product/soul/*` | `contract.soul.*` | `/soul/*` | `soul` |
 
 **Add anything in all four places or not at all.**
 

@@ -6,7 +6,7 @@ const ok = z.object({ ok: z.literal(true) });
 
 /**
  * Product: Geld. Children map one-to-one onto the Geld navigation in the
- * application and onto apps/backend/src/modules/money.
+ * application and onto apps/backend/src/modules/product/money.
  */
 export const contract = {
     jars: {

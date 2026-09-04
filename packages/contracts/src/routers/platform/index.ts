@@ -5,10 +5,20 @@ import * as S from '../../schemas/index';
 /** Platform-level: account prefs, the household itself, and cross-product advisory. */
 export const contract = {
     account: {
+        /** CREATE */
+        createSettings: oc
+            .input(S.AccountSettings.partial().omit({ accountId: true }))
+            .output(S.AccountSettings),
+        /** READ — current authenticated user's settings */
         settings: oc.output(S.AccountSettings),
+        /** UPDATE */
         updateSettings: oc
             .input(S.AccountSettings.partial().omit({ accountId: true }))
             .output(S.AccountSettings),
+        /** DELETE */
+        deleteSettings: oc
+            .input(z.object({ id: S.Id }))
+            .output(z.object({ ok: z.literal(true) })),
     },
     household: {
         list: oc.output(z.array(S.Household)),

@@ -10,10 +10,10 @@
     "lint": "eslint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
-    "db:migrate": "NODE_OPTIONS='--import tsx/esm' mikro-orm migration:up",
-    "db:create": "NODE_OPTIONS='--import tsx/esm' mikro-orm migration:create",
-    "db:fresh": "NODE_OPTIONS='--import tsx/esm' mikro-orm schema:fresh --run --seed",
-    "db:seed": "NODE_OPTIONS='--import tsx/esm' mikro-orm seeder:run",
+    "db:migrate": "NODE_OPTIONS='--import tsx/esm' mikro-orm migration:up --config ./mikro-orm.config.ts",
+    "db:create": "NODE_OPTIONS='--import tsx/esm' mikro-orm migration:create --config ./mikro-orm.config.ts",
+    "db:fresh": "NODE_OPTIONS='--import tsx/esm' mikro-orm schema:fresh --run --seed --config ./mikro-orm.config.ts",
+    "db:seed": "NODE_OPTIONS='--import tsx/esm' mikro-orm seeder:run --config ./mikro-orm.config.ts",
     "auth:migrate": "NODE_OPTIONS='--import tsx/esm' tsx ./src/modules/auth/better-auth/auth.migrate.ts"
   },
   "dependencies": {

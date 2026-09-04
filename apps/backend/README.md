@@ -8,11 +8,15 @@ pnpm --filter @rumbelo/backend dev   # :3002
 ```
 
 - `src/common/` — config, database primitives, household scoping, shared utils
-- `src/modules/` — grouped by audience: `platform/` (shared), four household
-  products, `backoffice/` reserved for employee tools; see its README
-- `src/auth/` — better-auth configuration (organization plugin = Household, 2FA)
+- `src/modules/` — audience → product → aggregate; see `src/modules/README.md`
+  for CRUD shape (Create → Read → Update → Delete) and folder rules
+- `src/modules/auth/` — better-auth + Rumbelo `account` (identity plane)
+- `src/modules/platform/` — household + coach
+- `src/modules/product/` — money, growth, energy, soul (household portals)
 - `src/banking/` — bank aggregation behind a port; null adapter by default
 - `src/database/` — migrations and seeders
+  - `DatabaseSeeder` orchestrates `JarTemplateSeeder` + `PlanSeeder` (catalogs) then `DemoHouseholdSeeder`
+  - Catalog seed **data** lives next to the aggregate (`modules/backoffice/.../seed/`)
 
 Migrations only; `schema:update` is never run against a database holding money.
 

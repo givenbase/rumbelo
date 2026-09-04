@@ -13,84 +13,46 @@ import { currentUserId, currentAuthHeaders } from '../../../common/household/hou
 import { AccountSettingsService } from '../../auth/account/account-settings/account-settings.service';
 import { AuthMember } from '../../auth/better-auth/member/auth-member.entity';
 import { AuthOrganization } from '../../auth/better-auth/organization/auth-organization.entity';
-import { IncomeKind, IncomeSource } from '../../money/plan/income/income-source.entity';
-import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../../money/plan/jar/jar.entity';
+import { JarTemplateService } from '../../backoffice/reference/jar-template/jar-template.service';
+import { IncomeKind, IncomeSource } from '../../product/money/plan/income/income-source.entity';
+import { Jar } from '../../product/money/plan/jar/jar.entity';
 import { HouseholdSettings } from './household-settings.entity';
-
-const JAR_META: {
-    key: JarKey;
-    name: string;
-    subtitle: string;
-    icon: string;
-    spendable: boolean;
-}[] = [
-    {
-        key: JarKey.NECESSITIES,
-        name: 'Necessity',
-        subtitle: 'Must-pays',
-        icon: '🏠',
-        spendable: true,
-    },
-    {
-        key: JarKey.FINANCIAL_FREEDOM,
-        name: 'Financial Freedom',
-        subtitle: 'Never spend',
-        icon: '🔒',
-        spendable: false,
-    },
-    {
-        key: JarKey.LONG_TERM_SAVINGS,
-        name: 'Long Term Savings',
-        subtitle: 'Big things',
-        icon: '🎯',
-        spendable: true,
-    },
-    {
-        key: JarKey.EDUCATION,
-        name: 'Education',
-        subtitle: 'Grow yourself',
-        icon: '📚',
-        spendable: true,
-    },
-    { key: JarKey.PLAY, name: 'Play', subtitle: 'Guilt-free', icon: '✨', spendable: true },
-    {
-        key: JarKey.GIVE,
-        name: 'Give / foundation',
-        subtitle: 'Pass it on',
-        icon: '🤲',
-        spendable: true,
-    },
-];
 
 @Injectable()
 export class HouseholdService {
     constructor(
         private readonly em: EntityManager,
         private readonly authService: AuthService<Auth>,
-        private readonly accountSettings: AccountSettingsService
+        private readonly accountSettings: AccountSettingsService,
+        private readonly jarTemplates: JarTemplateService
     ) {}
 
-    /** Settings row is created lazily so onboarding never has to pre-seed it. */
-    async settings(householdId: string) {
-        let row = await this.em.findOne(HouseholdSettings, { householdId });
-        if (!row) {
-            row = this.em.create(HouseholdSettings, { householdId } as never);
-            await this.em.persistAndFlush(row);
-        }
-        return toSettingsDto(row);
+    // ====================================================================
+    // ? CREATE Operations
+    // ====================================================================
+
+    async onboard(input: z.infer<typeof OnboardingInput>) {
+        const headers = currentAuthHeaders();
+        return this.onboardInternal(input, headers);
     }
 
-    async updateSettings(householdId: string, patch: Partial<HouseholdSettings>) {
-        const row = await this.em.findOne(HouseholdSettings, { householdId });
-        if (!row) {
-            const created = this.em.create(HouseholdSettings, { householdId, ...patch } as never);
-            await this.em.persistAndFlush(created);
-            return toSettingsDto(created);
-        }
-        Object.assign(row, patch);
-        await this.em.flush();
-        return toSettingsDto(row);
+    async invite(householdId: string, email: string, role: 'OWNER' | 'MEMBER' | 'VIEWER') {
+        const headers = currentAuthHeaders();
+        const result = await this.authService.api.createInvitation({
+            body: {
+                email,
+                role: role.toLowerCase() as 'owner' | 'member' | 'viewer',
+                organizationId: householdId,
+            },
+            headers,
+        });
+        if (!result?.id) throw new BadRequestException('Could not create invitation');
+        return { invitationId: result.id };
     }
+
+    // ====================================================================
+    // ? READ Operations
+    // ====================================================================
 
     async listHouseholds() {
         const userId = currentUserId();
@@ -126,6 +88,16 @@ export class HouseholdService {
         }));
     }
 
+    /** Settings row is created lazily so onboarding never has to pre-seed it. */
+    async settings(householdId: string) {
+        let row = await this.em.findOne(HouseholdSettings, { householdId });
+        if (!row) {
+            row = this.em.create(HouseholdSettings, { householdId } as never);
+            await this.em.persistAndFlush(row);
+        }
+        return toSettingsDto(row);
+    }
+
     async current(householdId: string) {
         const org = await this.em.findOne(AuthOrganization, { id: householdId });
         if (!org) throw new BadRequestException('Household not found');
@@ -141,10 +113,25 @@ export class HouseholdService {
         };
     }
 
-    async onboard(input: z.infer<typeof OnboardingInput>) {
-        const headers = currentAuthHeaders();
-        return this.onboardInternal(input, headers);
+    // ====================================================================
+    // ? UPDATE Operations
+    // ====================================================================
+
+    async updateSettings(householdId: string, patch: Partial<HouseholdSettings>) {
+        const row = await this.em.findOne(HouseholdSettings, { householdId });
+        if (!row) {
+            const created = this.em.create(HouseholdSettings, { householdId, ...patch } as never);
+            await this.em.persistAndFlush(created);
+            return toSettingsDto(created);
+        }
+        Object.assign(row, patch);
+        await this.em.flush();
+        return toSettingsDto(row);
     }
+
+    // ====================================================================
+    // Private helpers
+    // ====================================================================
 
     private async onboardInternal(input: z.infer<typeof OnboardingInput>, headers: Headers) {
         const userId = currentUserId();
@@ -176,8 +163,13 @@ export class HouseholdService {
             ])
         );
 
-        JAR_META.forEach((meta, sortOrder) => {
-            const pct = splitByKey.get(meta.key) ?? DEFAULT_JAR_SPLIT[meta.key];
+        const templates = await this.jarTemplates.listActive();
+        if (templates.length === 0) {
+            throw new BadRequestException('Jar catalog is empty — seed backoffice.jar_template');
+        }
+
+        for (const meta of templates) {
+            const pct = splitByKey.get(meta.key) ?? Number(meta.defaultPercentage);
             this.em.create(Jar, {
                 householdId: org.id,
                 key: meta.key,
@@ -186,9 +178,9 @@ export class HouseholdService {
                 icon: meta.icon,
                 percentage: Number(pct).toFixed(2),
                 spendable: meta.spendable,
-                sortOrder,
+                sortOrder: meta.sortOrder,
             } as never);
-        });
+        }
 
         this.em.create(HouseholdSettings, {
             householdId: org.id,
@@ -197,7 +189,7 @@ export class HouseholdService {
             why: input.why,
         } as never);
 
-        await this.accountSettings.ensureForUser(userId, { locale: input.locale as never });
+        await this.accountSettings.upsertForUser(userId, { locale: input.locale as never });
 
         if (input.monthlyNetIncome > 0) {
             this.em.create(IncomeSource, {
@@ -219,20 +211,6 @@ export class HouseholdService {
             periodStartDay: 1,
             createdAt: new Date().toISOString(),
         };
-    }
-
-    async invite(householdId: string, email: string, role: 'OWNER' | 'MEMBER' | 'VIEWER') {
-        const headers = currentAuthHeaders();
-        const result = await this.authService.api.createInvitation({
-            body: {
-                email,
-                role: role.toLowerCase() as 'owner' | 'member' | 'viewer',
-                organizationId: householdId,
-            },
-            headers,
-        });
-        if (!result?.id) throw new BadRequestException('Could not create invitation');
-        return { invitationId: result.id };
     }
 }
 

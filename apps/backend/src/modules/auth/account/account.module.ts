@@ -1,13 +1,17 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 
-import { AccountSettingsModule } from './account-settings/account-settings.module';
+import { AccountSettingsModule } from './account-settings';
+import { Account } from './account.entity';
 
 /**
- * Account module — Rumbelo-owned person data (profile prefs that are not auth
- * machinery). Board money settings stay under platform/household.
+ * Account Module
+ *
+ * Rumbelo-owned person data (not better-auth machinery, not household board).
+ * Board money settings stay under platform/household.
  */
 @Module({
-    imports: [AccountSettingsModule],
+    imports: [MikroOrmModule.forFeature([Account]), AccountSettingsModule],
     exports: [AccountSettingsModule],
 })
 export class AccountModule {}

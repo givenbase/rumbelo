@@ -127,18 +127,18 @@ The same product tree governs modules, API, routes and database. Learn it once.
 
 | Product | Backend module | Contract | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/household` | `contract.household` | `/settings` | `platform` |
-| — | `modules/coach` | `contract.coach` | — | `platform` |
-| **Geld** | `modules/money/*` | `contract.money.*` | `/money/*` | `money` |
-| **Groei** | `modules/growth/*` | `contract.growth.*` | `/growth/*` | `growth` |
-| **Energie** | `modules/energy/*` | `contract.energy.*` | `/energy/*` | `energy` |
-| **Ziel** | `modules/soul/*` | `contract.soul.*` | `/soul/*` | `soul` |
+| — | `modules/platform/household` | `contract.household` | `/settings` | `platform` |
+| — | `modules/platform/coach` | `contract.coach` | — | `platform` |
+| **Geld** | `modules/product/money/*` | `contract.money.*` | `/money/*` | `money` |
+| **Groei** | `modules/product/growth/*` | `contract.growth.*` | `/growth/*` | `growth` |
+| **Energie** | `modules/product/energy/*` | `contract.energy.*` | `/energy/*` | `energy` |
+| **Ziel** | `modules/product/soul/*` | `contract.soul.*` | `/soul/*` | `soul` |
 
 Money's children are the same list in all four places: `jar` `income`
 `fixed-cost` `account` `transaction` `rule` `goal` `debt` `turn` `ritual`
 `dashboard`.
 
-So `contract.money.jars.list` is served by `modules/money/jar/jar.controller.ts`,
+So `contract.money.jars.list` is served by `modules/product/money/plan/jar/jar.controller.ts`,
 reads `money.jar`, and backs `/money/jars`. **Add anything in all four places or
 not at all.**
 
@@ -146,10 +146,23 @@ not at all.**
 
 ## 6. Conventions — non-negotiable
 
-**Structure.** One folder per domain aggregate: `entities/`, service, controller,
-module. A product is a parent module importing its children. Cross-cutting code
-in `common/`. A README at every product root. Never several controllers in one
-file; never a flattened top-level `entities/`.
+**Who owns the row.** Household/user writes → `product/*`, `platform/household`,
+`auth/account`. Rumbelo writes → `backoffice/*` (`reference/jar-template`, `plan/` for
+Grip/Engine/Compound, later `content/`; billing only if Stripe needs its own home).
+better-auth library writes → `auth/better-auth/`. `platform/` is shared app
+runtime, not company CMS.
+
+**Structure.** One folder per domain aggregate with flat siblings:
+`*.entity.ts`, service, controller, module, `index.ts` barrel — **no**
+`entities/` subfolder. A product is a parent module importing its children.
+Cross-cutting code in `common/`. Audience grouping under `modules/`
+(`auth`, `platform`, products, later `backoffice`). Full shape + CRUD rules:
+`apps/backend/src/modules/README.md` and `.cursor/rules/backend-module-shape.mdc`.
+
+**CRUD order is Create → Read → Update → Delete.** Every service and
+controller uses those section banners in that order only. Never `list`
+before `create`. Never put create-like ops (`onboard`, `invite`, `importCsv`,
+`createCategory`) after updates or deletes.
 
 **Styling is Tailwind. Always.** No CSS files, no SCSS, no CSS modules, no inline
 `style` attributes. When porting the design, **transform** its inline styles into

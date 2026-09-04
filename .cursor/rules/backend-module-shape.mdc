@@ -1,0 +1,116 @@
+---
+description: Backend Nest module/entity/service/controller shape (Galighticus-aligned)
+globs: apps/backend/src/modules/**/*.{ts,md}
+alwaysApply: false
+---
+
+# Backend module consistency
+
+Match Galighticus. Do not invent one-off skinny files or reorder CRUD.
+
+Also documented in `apps/backend/src/modules/README.md` — keep both in sync.
+
+## Folder layout
+
+One aggregate per folder — flat siblings (no `entities/` subfolder):
+
+```
+modules/<audience>/<domain>/<aggregate>/
+  <aggregate>.entity.ts
+  <aggregate>.service.ts
+  <aggregate>.controller.ts
+  <aggregate>.module.ts
+  index.ts
+```
+
+Audience groups: `auth/` (identity), `platform/` (shared plane), `product/` (money|growth|energy|soul), `backoffice/` (employees, when needed).
+
+## Entity
+
+- File-level JSDoc: what it is, who owns writes, schema
+- Sections in this order only: `// ? PROPERTIES` then `// ? RELATIONSHIPS`
+- Short JSDoc on every property and relation
+- Explicit MikroORM `type` / `Enum` / relation options — never bare `@Property()` on `string | null` unions when Reflect metadata is involved
+- Household money rows extend `HouseholdEntity` and go through `HouseholdScopedRepository`
+
+## CRUD order — non-negotiable
+
+**Always Create → Read → Update → Delete.** The letters spell CRUD. Never rearrange.
+
+Apply in **service**, **controller**, and **contract** routers:
+
+```
+// ====================================================================
+// ? CREATE Operations
+// ====================================================================
+
+// ====================================================================
+// ? READ Operations
+// ====================================================================
+
+// ====================================================================
+// ? UPDATE Operations
+// ====================================================================
+
+// ====================================================================
+// ? DELETE Operations
+// ====================================================================
+```
+
+### Classification
+
+| Letter | Method names (examples) |
+|--------|-------------------------|
+| **C** | `create`, `add`, `onboard`, `invite`, `importCsv`, `createCategory`, `upsert*` (create path) |
+| **R** | `list`, `get`, `findOne`, `findAll`, `settings`, `current`, `members`, `summary`, `balances`, `inbox`, `plan`, `projections`, `history`, `feed`, `logs`, `forWeek`, `byJar`, `levels`, `recap` |
+| **U** | `update`, `updateSettings`, `updateSplit`, `updateCategory`, `sort`, `bulkSort`, `dismiss`, `close`, `applySplit`, `replay`, `advance` |
+| **D** | `delete`, `remove`, `deleteCategory` |
+
+Private helpers go **after** all four public CRUD sections (or in a `// Private` block at the end).
+
+### Rules
+
+1. If Create exists, it is the first public section — never `list` before `create`
+2. Do not put Create-like ops after Update/Delete (`importCsv`, `createCategory`, `onboard`, `invite`)
+3. Read-only modules still use the READ banner (and omit empty C/U/D sections **or** leave all four banners with only READ filled — prefer: include only sections that have methods, but never out of C-R-U-D sequence)
+4. Prefer method names `create` / `findOne`|`list`|`get` / `update` / `delete`
+5. Controllers are transport only — no business `if`s; services own rules
+
+## Controller
+
+- Class JSDoc: implements oRPC contracts; thin transport
+- Same CRUD banners and method order as the service
+- One short JSDoc per handler
+- `@Implement(contract…)` then `implement(…).handler(…)`
+
+## Module
+
+- `MikroOrmModule.forFeature([...entities])` when the aggregate owns entities
+- Short module JSDoc; export services other modules need
+
+## Index barrel
+
+Re-export module, service, entity, controller.
+
+## Auth split
+
+- `modules/auth/better-auth/` — library tables (read models + config); better-auth is the single writer
+- `modules/auth/account/` — Rumbelo-owned person data (`account`, `account-settings`, …) — **user** writes prefs
+- Household money-board prefs → `platform/household` (**household** writes)
+- Person UI prefs (theme, locale) → `account-settings` (**user** writes)
+- Never name better-auth's credential store `account` — it is `provider`
+
+## Who owns the row
+
+| Control | Module |
+|---|---|
+| Household / user writes | `product/*`, `platform/household`, `auth/account` |
+| We (Rumbelo) write | `backoffice/*` — plan catalog (Grip/Engine/Compound), countries, question bank, published content |
+| Library writes | `auth/better-auth/` |
+
+`platform/` = shared app runtime (household + coach), not company CMS. Company-authored catalogs live in `backoffice/`.
+
+## Imports
+
+- Extensionless relative imports (`./foo`, not `./foo.js`) — `moduleResolution: Bundler` + `tsx`
+- Contracts package: extensionless; backend Nest: extensionless under Bundler

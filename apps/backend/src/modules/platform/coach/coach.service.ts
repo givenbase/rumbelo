@@ -11,6 +11,10 @@ export class CoachService {
         this.repo = new HouseholdScopedRepository(em, CoachMessage);
     }
 
+    // ====================================================================
+    // ? READ Operations
+    // ====================================================================
+
     async feed(period: string) {
         const rows = await this.repo.find(
             { period, dismissedAt: null },
@@ -28,6 +32,10 @@ export class CoachService {
             createdAt: m.createdAt.toISOString(),
         }));
     }
+
+    // ====================================================================
+    // ? UPDATE Operations
+    // ====================================================================
 
     async dismiss(id: string) {
         const message = await this.repo.findOneOrFail({ id });

@@ -1,67 +1,139 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+
+import type { AccountSettings as AccountSettingsDto } from '@rumbelo/contracts';
 
 import { Locale, Theme } from '../../../../common/database/enums';
 import { currentUserId } from '../../../../common/household/household.context';
 import { Account } from '../account.entity';
 import { AccountSettings } from './account-settings.entity';
 
+export type AccountSettingsPatch = {
+    locale?: Locale;
+    theme?: Theme;
+};
+
+/**
+ * Account Settings Service
+ *
+ * CRUD for person-scoped UI prefs. The authenticated user's settings are the
+ * usual surface; create/ensure is used by onboarding so language lands here,
+ * not on the household board.
+ */
 @Injectable()
 export class AccountSettingsService {
+    private readonly logger = new Logger(AccountSettingsService.name);
+
     constructor(private readonly em: EntityManager) {}
 
-    /** Lazy: first settings read creates the account + settings row. */
-    async get() {
-        const row = await this.ensure();
-        return toDto(row);
-    }
+    // ====================================================================
+    // ? CREATE Operations
+    // ====================================================================
 
-    async update(patch: { locale?: Locale; theme?: Theme }) {
-        const row = await this.ensure();
-        if (patch.locale !== undefined) row.locale = patch.locale;
-        if (patch.theme !== undefined) row.theme = patch.theme;
-        await this.em.flush();
+    /**
+     * Create settings for the current user (and the Account row if missing).
+     * Fails if settings already exist — use update or upsert instead.
+     */
+    async create(patch: AccountSettingsPatch = {}): Promise<AccountSettingsDto> {
+        const userId = currentUserId();
+        const existing = await this.findEntityByUserId(userId);
+        if (existing) {
+            throw new Error(`Account settings for user ${userId} already exist`);
+        }
+        const row = await this.createForUser(userId, patch);
         return toDto(row);
     }
 
     /**
-     * Used by onboarding so the creator's language lands on their account,
-     * not on the household board.
+     * Ensure settings exist for a user (onboarding / lazy get). Idempotent.
      */
-    async ensureForUser(userId: string, defaults?: { locale?: Locale; theme?: Theme }) {
-        return this.ensure(userId, defaults);
+    async upsertForUser(
+        userId: string,
+        defaults: AccountSettingsPatch = {}
+    ): Promise<AccountSettings> {
+        const existing = await this.findEntityByUserId(userId);
+        if (existing) return existing;
+        return this.createForUser(userId, defaults);
     }
 
-    private async ensure(userId = currentUserId(), defaults?: { locale?: Locale; theme?: Theme }) {
-        let account = await this.em.findOne(Account, { user: userId }, { populate: ['settings'] });
+    // ====================================================================
+    // ? READ Operations
+    // ====================================================================
+
+    /**
+     * Current authenticated user's settings (creates defaults if missing).
+     */
+    async get(): Promise<AccountSettingsDto> {
+        const row = await this.upsertForUser(currentUserId());
+        return toDto(row);
+    }
+
+    async findOne(id: string): Promise<AccountSettingsDto> {
+        const row = await this.em.findOne(AccountSettings, { id }, { populate: ['account'] });
+        if (!row) throw new NotFoundException(`Account settings ${id} not found`);
+        return toDto(row);
+    }
+
+    // ====================================================================
+    // ? UPDATE Operations
+    // ====================================================================
+
+    /**
+     * Patch the current authenticated user's settings.
+     */
+    async update(patch: AccountSettingsPatch): Promise<AccountSettingsDto> {
+        const row = await this.upsertForUser(currentUserId());
+        if (patch.locale !== undefined) row.locale = patch.locale;
+        if (patch.theme !== undefined) row.theme = patch.theme;
+        await this.em.flush();
+        this.logger.debug(`Updated account settings ${row.id}`);
+        return toDto(row);
+    }
+
+    // ====================================================================
+    // ? DELETE Operations
+    // ====================================================================
+
+    /**
+     * Delete settings by id. The Account row is left intact.
+     */
+    async delete(id: string): Promise<{ ok: true }> {
+        const row = await this.em.findOne(AccountSettings, { id });
+        if (!row) throw new NotFoundException(`Account settings ${id} not found`);
+        await this.em.removeAndFlush(row);
+        return { ok: true };
+    }
+
+    // ====================================================================
+    // Private
+    // ====================================================================
+
+    private async findEntityByUserId(userId: string): Promise<AccountSettings | null> {
+        const account = await this.em.findOne(Account, { user: userId }, { populate: ['settings'] });
+        return account?.settings ?? null;
+    }
+
+    private async createForUser(
+        userId: string,
+        defaults: AccountSettingsPatch
+    ): Promise<AccountSettings> {
+        let account = await this.em.findOne(Account, { user: userId });
         if (!account) {
             account = this.em.create(Account, { user: userId } as never);
-            const settings = this.em.create(AccountSettings, {
-                account,
-                locale: defaults?.locale ?? Locale.nl,
-                theme: defaults?.theme ?? Theme.system,
-            } as never);
-            await this.em.persistAndFlush([account, settings]);
-            account.settings = settings;
-            return settings;
+            this.em.persist(account);
         }
 
-        if (!account.settings) {
-            const settings = this.em.create(AccountSettings, {
-                account,
-                locale: defaults?.locale ?? Locale.nl,
-                theme: defaults?.theme ?? Theme.system,
-            } as never);
-            await this.em.persistAndFlush(settings);
-            account.settings = settings;
-            return settings;
-        }
-
-        return account.settings;
+        const settings = this.em.create(AccountSettings, {
+            account,
+            locale: defaults.locale ?? Locale.nl,
+            theme: defaults.theme ?? Theme.system,
+        } as never);
+        await this.em.persistAndFlush(settings);
+        return settings;
     }
 }
 
-function toDto(row: AccountSettings) {
+function toDto(row: AccountSettings): AccountSettingsDto {
     return {
         accountId: row.account.id,
         locale: row.locale,

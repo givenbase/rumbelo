@@ -14,6 +14,10 @@ import { AuthMember } from '../../modules/auth/better-auth/member/auth-member.en
 export class MembershipService {
     constructor(private readonly em: EntityManager) {}
 
+    // ====================================================================
+    // ? READ Operations
+    // ====================================================================
+
     async roleFor(userId: string, householdId: string): Promise<HouseholdContext['role'] | null> {
         const membership = await this.em.findOne(AuthMember, {
             user: userId,

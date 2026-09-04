@@ -65,15 +65,15 @@ database. Learn it once and it holds everywhere.
 |---|---|---|---|---|
 | — | `modules/household` | `contract.household` | `/settings` | `platform` |
 | — | `modules/coach` | `contract.coach` | — | `platform` |
-| **Geld** | `modules/money/*` | `contract.money.*` | `/money/*` | `money` |
-| **Groei** | `modules/growth/*` | `contract.growth.*` | `/growth` | `growth` |
-| **Energie** | `modules/energy/*` | `contract.energy.*` | `/energy` | `energy` |
-| **Ziel** | `modules/soul/*` | `contract.soul.*` | `/soul` | `soul` |
+| **Geld** | `modules/product/money/*` | `contract.money.*` | `/money/*` | `money` |
+| **Groei** | `modules/product/growth/*` | `contract.growth.*` | `/growth` | `growth` |
+| **Energie** | `modules/product/energy/*` | `contract.energy.*` | `/energy` | `energy` |
+| **Ziel** | `modules/product/soul/*` | `contract.soul.*` | `/soul` | `soul` |
 
 Money's children are the same list in all four places: `jars` `income`
 `fixed-costs` `accounts` `transactions` `rules` `goals` `debts` `turn` `ritual`
 `dashboard`. So `contract.money.jars.list` is served by
-`modules/money/jar/jar.controller.ts`, reads `money.jar`, and backs `/money/jars`.
+`modules/product/money/plan/jar/jar.controller.ts`, reads `money.jar`, and backs `/money/jars`.
 
 **Code is English; copy is Dutch.** Every folder, route, identifier and table is
 English. Only user-facing text is Dutch, and dates go through `Intl` with a

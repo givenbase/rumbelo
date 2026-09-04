@@ -112,6 +112,7 @@ export function AccountSettings() {
         null,
         live
     );
+    const accountSettingsQuery = useLiveQuery(api.account.settings.queryOptions(), null, live);
     const householdQuery = useLiveQuery(
         api.household.current.queryOptions({ input: { householdId: householdId! } }),
         null,
@@ -177,12 +178,11 @@ export function AccountSettings() {
 
     const saveLocale = useMutation({
         mutationFn: async (next: 'nl' | 'en') => {
-            if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({ householdId, locale: next });
+            return client.account.updateSettings({ locale: next });
         },
         onSuccess: (_data, next) => {
             if (locale !== next) toggleLocale();
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: api.account.settings.key() });
             showToast('Language saved', 'success');
         },
         onError: () => showToast('Language save failed', 'error'),
@@ -223,11 +223,10 @@ export function AccountSettings() {
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('rumbelo-theme', next);
             setDark(next === 'dark');
-            if (!householdId) return null;
-            return client.household.updateSettings({ householdId, theme: next });
+            return client.account.updateSettings({ theme: next });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: api.account.settings.key() });
         },
         onError: () => showToast('Theme save failed', 'error'),
     });
@@ -259,7 +258,7 @@ export function AccountSettings() {
 
     const displayName = user?.name?.trim() || 'Guest';
     const displayEmail = user?.email ?? '';
-    const activeLang = (settingsQuery.data?.locale ?? locale) as 'en' | 'nl';
+    const activeLang = (accountSettingsQuery.data?.locale ?? locale) as 'en' | 'nl';
 
     return (
         <SettingsPanel>

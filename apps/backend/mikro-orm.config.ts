@@ -22,33 +22,19 @@ loadEnv({ path: findRootEnv() });
 const isProd = process.env.NODE_ENV === 'production';
 
 export default defineConfig({
-    /**
-     * Convention-based discovery (Galighticus pattern): every `*.entity.ts` file
-     * next to its aggregate's service is an entity — no registry file to keep in
-     * sync when a product is added.
-     */
-    entities: ['./dist/**/*.entity.js'],
+    // Source entities only — we run under tsx (Galighticus). TsMorph must read
+    // .ts files; a dist/**/*.js glob makes it look for sibling .ts under dist.
+    entities: ['./src/**/*.entity.ts'],
     entitiesTs: ['./src/**/*.entity.ts'],
     clientUrl: process.env.DATABASE_URL,
     driverOptions:
         process.env.DATABASE_SSL === 'true'
             ? { connection: { ssl: { rejectUnauthorized: false } } }
             : {},
-    /**
-     * Tables are namespaced by domain — auth, platform, money, growth, energy,
-     * soul — so the database mirrors the module tree. `public` holds only
-     * MikroORM's own migrations table.
-     *
-     * The schema generator emits `create schema if not exists` for every schema an
-     * entity declares, so the first migration provisions them all.
-     */
+    // Domain schemas: auth, platform, money, growth, energy, soul.
+    // public holds only MikroORM's migrations table.
     schema: 'public',
-    /**
-     * TsMorph reads property types from source (Galighticus pattern). Required
-     * when running under `tsx`, which does not emit Reflect decorator metadata
-     * the way `tsc`/`nest build` does — ReflectMetadataProvider then fails on
-     * unions like `string | null`.
-     */
+    // TsMorph (Galighticus): tsx does not emit Reflect decorator metadata.
     metadataProvider: TsMorphMetadataProvider,
     extensions: [Migrator, SeedManager],
     // Never auto-sync a schema that holds money. Migrations only.
