@@ -11,8 +11,8 @@ Chosen because it means **direction**, which is what the product does.
 
 ## North star
 
-**Intention before chaos.**  
-Every euro gets a job. Calm overview. Direction — for people who are doing well, and for people who are ready to.
+**Stop wondering where it went.**  
+Money gets a job. Six jars. One calm overview.
 
 ---
 
@@ -20,34 +20,27 @@ Every euro gets a job. Calm overview. Direction — for people who are doing wel
 
 | Do | Don’t |
 |---|---|
-| Calm, clear, direct | Shame, panic, “you’re bad with money” |
-| Intention, direction, clarity | Luxury flex, crypto hype, neon fintech |
+| Direct, punchy, product-clear | Soft abstraction (“clarity”, “ambition”, “built to decide”) |
+| Name the problem (mystery spending / where it went) | Shame, panic, “you’re bad with money” |
+| Intention, assign, picture | Luxury flex, crypto hype, neon fintech |
 | Information + one next move | Alarm theatre without a CTA |
-| Dutch-first warmth, English clarity | Jargon, spreadsheet energy |
 
-**Tone:** modern, trustworthy, elegant — calm, not cold. Soft ambition, not hustle.
+**Tone:** strong and clear, still calm — not hustle, not soft fluff.
 
 ---
 
 ## Slogans & lines
 
-### Primary candidates (no steer / rein required)
+**Source of truth:** [quotes.md](./quotes.md)
 
 | Role | Line |
 |---|---|
-| Tagline (EN) | **Before life decides for you.** |
-| Tagline (NL) | **Vóór het leven beslist.** |
-| Brand / manifesto | **Wealth isn’t a number. It’s knowing where it goes.** |
-| Soft alt | **Quiet control. Clear direction.** |
-| Product lockup | **Money with intention.** / **Geld met intentie.** |
-| Product proof | **Six jars, one calm overview.** |
-| Audience line | **Built for people who are doing well — and for people who are ready to.** |
-
-### Classic lines still on-brand
-
-- *Rijkdom is geen getal. Het zijn de teugels in jouw handen.*
-- *Every euro gets a job before it arrives.*
-- *You earn fine. So where does it go?*
+| Primary | **Stop wondering where it went.** |
+| Support | **Money leaves. You’ll know why.** |
+| Punch | **No more mystery spending.** |
+| Product | **Assign it before you wonder where it went.** |
+| Overview | **Know where it went. Know where it’s going.** |
+| Income | **Paycheck in. Picture clear.** |
 
 Use **tagline under the wordmark** as a secondary lockup; wordmark alone for app icon / favicon.
 
@@ -73,6 +66,7 @@ Metaphors: jars/vessels, direction, quiet geometric glyph. **Not** pigs, coins, 
 
 ## Related
 
+- [Quotes & lines](./quotes.md)
 - [Audience](../product/audience.md)
 - [Research brief](../research/money-awareness.md)
 - [Design](../design/README.md)

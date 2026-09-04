@@ -14,7 +14,7 @@ Rumbelo is for people who take their life seriously — not only those already �
 
 | Audience | What they feel | What they need |
 |---|---|---|
-| **Successful people** | They earn well, but money and life still feel scattered. Success without a clear picture is expensive noise. | Calm control. Direction. Every euro (and hour) already assigned. |
+| **Successful people** | They earn well, but money and life still feel scattered. Success without a clear picture is expensive noise. | Calm control. Direction. Every amount (and hour) already assigned. |
 | **People who want change** | Something isn’t working — spending, energy, focus, or the sense that life is deciding for them. | A clear next system, not more guilt or complicated advice. |
 | **People who want to be successful — but don’t know exactly what to do** | Ambition without a map. They care, they try, but the details of income, expenses, and priorities stay fuzzy. | Intention before chaos: a simple structure that shows where things go and where they should go next. |
 
@@ -48,7 +48,7 @@ Traditional tools assume a steady surplus and time to become an accountant. Peop
 Balances split across cards, cash, wallets, BNPL, and partners. Bank “available” often ignores upcoming bills. Without a calm overview, neither the successful nor the aspiring know where things actually go.
 
 ### 6. Avoidance is common — even among capable people
-Facing every euro can mean facing shortfall, shame, or the gap between ambition and reality. Looking away is human. The product must make looking useful, not punishing.
+Facing every amount can mean facing shortfall, shame, or the gap between ambition and reality. Looking away is human. The product must make looking useful, not punishing.
 
 ---
 
@@ -60,7 +60,7 @@ Facing every euro can mean facing shortfall, shame, or the gap between ambition 
 | Blame people for “not tracking” | Assume volatility, ambition, and time poverty |
 | Ask them to become accountants | Assign money a job automatically |
 | Lead with shame or complexity | Lead with calm clarity and intention |
-| Sell “better budgeting discipline” | Sell **intention before chaos** — every euro already has a place |
+| Sell “better budgeting discipline” | Sell **intention before chaos** — every amount already has a place |
 
 **Brand implication:** The problem isn’t that people lack willpower. It’s that life (and success itself) can decide their cash flow before they do. Rumbelo exists so they can see direction — and act — before that happens.
 

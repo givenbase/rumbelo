@@ -8,7 +8,7 @@ Rumbelo is for people who take their life seriously — not only those already �
 
 | Audience | What they feel | What they need |
 |---|---|---|
-| **Successful people** | They earn well, but money and life still feel scattered. Success without a clear picture is expensive noise. | Calm control. Direction. Every euro (and hour) already assigned. |
+| **Successful people** | They earn well, but money and life still feel scattered. Success without a clear picture is expensive noise. | Calm control. Direction. Every amount (and hour) already assigned. |
 | **People who want change** | Something isn’t working — spending, energy, focus, or the sense that life is deciding for them. | A clear next system, not more guilt or complicated advice. |
 | **People who want to be successful — but don’t know exactly what to do** | Ambition without a map. They care, they try, but income, expenses, and priorities stay fuzzy. | Intention before chaos: a simple structure for where things go — and where they should go next. |
 

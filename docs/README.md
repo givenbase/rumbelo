@@ -9,7 +9,8 @@ Start here to understand the whole project — product direction, brand, researc
 | [product/overview.md](./product/overview.md) | What Rumbelo is, the loop, four portals |
 | [product/principles.md](./product/principles.md) | Non-negotiable product principles |
 | [product/audience.md](./product/audience.md) | Who we build for |
-| [brand/positioning.md](./brand/positioning.md) | Name, voice, slogans, lockups |
+| [brand/positioning.md](./brand/positioning.md) | Name, voice, visual direction |
+| [brand/quotes.md](./brand/quotes.md) | Approved slogans & quote bank |
 | [research/money-awareness.md](./research/money-awareness.md) | Why people lose the money picture — and what we solve |
 | [engineering/architecture.md](./engineering/architecture.md) | Stack, layout, hierarchy, conventions |
 | [engineering/traps.md](./engineering/traps.md) | Traps already hit — do not re-learn |
@@ -29,7 +30,7 @@ Start here to understand the whole project — product direction, brand, researc
 
 1. **Product** — [overview](./product/overview.md) → [audience](./product/audience.md) → [principles](./product/principles.md)
 2. **Why it exists** — [research brief](./research/money-awareness.md)
-3. **How we sound** — [brand positioning](./brand/positioning.md)
+3. **How we sound** — [brand positioning](./brand/positioning.md) → [quotes](./brand/quotes.md)
 4. **How it’s built** — [architecture](./engineering/architecture.md)
 5. **What not to break** — [traps](./engineering/traps.md) + root [`HANDOFF.md`](../HANDOFF.md) §7–9 (status & next steps)
 6. **UI truth** — [design](./design/README.md)
@@ -38,4 +39,4 @@ Start here to understand the whole project — product direction, brand, researc
 
 ## One-line north star
 
-**Intention before chaos.** Every euro gets a job. Built for people who are doing well — and for people who are ready to.
+**Stop wondering where it went.** Money gets a job. Six jars. One calm overview.
