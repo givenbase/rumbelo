@@ -5,14 +5,18 @@
 > Rijkdom is geen getal. Het zijn de teugels in jouw handen.
 
 Rumbelo is not a bookkeeping app. It is a single quiet view of where your money,
-energy and time go, so you can steer before life steers you.
+energy and time go — so intention leads, and life doesn’t decide first.
+
+**Organized docs (product, brand, research, engineering):** [`docs/`](./docs/README.md)
 
 ---
 
 ## 1. Read this first
 
 This document carries the **direction**, the **decisions and why**, and the
-**traps already hit**, so nobody re-derives them.
+**traps already hit**, so nobody re-derives them. Product, audience, brand, and
+research briefs live under [`docs/`](./docs/README.md); this file remains the
+living engineering handoff.
 
 **State in one line:** the platform is built and green (`pnpm build` and
 `pnpm check-types` both pass); the ~32 screens are a *reconstruction* and must be
@@ -37,7 +41,10 @@ Four products, which are also the navigation:
 | **Energie** | What am I running on? Sleep, training, food, rest — the floor under financial decisions, not lifestyle extras. |
 | **Ziel** | Why am I doing this? |
 
-**Audience:** the owner and friends first; a subscription product if it works.
+**Audience:** successful people, people who want change, and people who want to
+be successful but don’t yet know the exact next move — see
+[`docs/product/audience.md`](./docs/product/audience.md). Start with the owner
+and friends; a subscription product if it works.
 **Language:** Dutch first, English second.
 
 ### Principles the product must not violate
@@ -106,6 +113,7 @@ packages/
   contracts/     oRPC contracts + Zod schemas + typed client (dual CJS/ESM)
   ui/            shared React primitives
   eslint-config/ typescript-config/
+docs/            product, brand, research, engineering direction
 devops/          docker-compose (local), Railway notes
 design/          the Claude Design export — see §8
 ```

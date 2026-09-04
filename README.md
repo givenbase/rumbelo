@@ -3,9 +3,11 @@
 **Geld met intentie.** Six jars, one calm overview.
 
 Rumbelo is not a bookkeeping app. It is a single quiet view of where your money,
-energy and time go, so you can steer before life steers you.
+energy and time go — so intention leads, and life doesn’t decide first.
 
 > Rijkdom is geen getal. Het zijn de teugels in jouw handen.
+
+**Understand the project:** start in [`docs/`](./docs/README.md) (product, audience, brand, research, engineering). Living handoff: [`HANDOFF.md`](./HANDOFF.md).
 
 ## The loop
 
@@ -51,6 +53,7 @@ packages/
   contracts/     oRPC contracts + Zod schemas + typed client (dual CJS/ESM)
   ui/            shared React primitives
   eslint-config/ · typescript-config/
+docs/            product, brand, research, engineering
 ```
 
 ## One hierarchy, four layers
