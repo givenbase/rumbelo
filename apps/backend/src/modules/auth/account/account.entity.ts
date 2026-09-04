@@ -3,6 +3,7 @@ import { Entity, OneToOne } from '@mikro-orm/core';
 import type { AccountSettings } from './account-settings/account-settings.entity';
 
 import { BaseEntity } from '../../../common/database/base.entity';
+import { entityConfig } from '../../../common/database/entity-config.util';
 import { AuthUser } from '../better-auth/user/auth-user.entity';
 
 /**
@@ -17,7 +18,7 @@ import { AuthUser } from '../better-auth/user/auth-user.entity';
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity({ tableName: 'account', schema: 'auth' })
+@Entity(entityConfig({ schema: 'auth', tableName: 'account' }))
 export class Account extends BaseEntity {
     // ? RELATIONSHIPS
 

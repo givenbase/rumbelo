@@ -1,5 +1,5 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { JarTemplate } from './jar-template.entity';
 
@@ -12,7 +12,7 @@ import { JarTemplate } from './jar-template.entity';
 export class JarTemplateService {
     private readonly logger = new Logger(JarTemplateService.name);
 
-    constructor(private readonly em: EntityManager) {}
+    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
 
     // ====================================================================
     // ? CREATE Operations

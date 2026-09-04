@@ -8,15 +8,19 @@ pnpm --filter @rumbelo/backend dev   # :3002
 ```
 
 - `src/common/` — config, database primitives, household scoping, shared utils
-- `src/modules/` — audience → product → aggregate; see `src/modules/README.md`
+- `src/modules/` — plane → product → aggregate; see `src/modules/README.md`
   for CRUD shape (Create → Read → Update → Delete) and folder rules
-- `src/modules/auth/` — better-auth + Rumbelo `account` (identity plane)
-- `src/modules/platform/` — household + coach
-- `src/modules/product/` — money, growth, energy, soul (household portals)
+- `src/modules/auth/` — better-auth + Rumbelo `account` (identity plane → schema `auth`)
+- `src/modules/public/` — platform + product (household app → schema `public`)
+- `src/modules/backoffice/` — catalogs we publish (schema `backoffice`)
 - `src/banking/` — bank aggregation behind a port; null adapter by default
 - `src/database/` — migrations and seeders
   - `DatabaseSeeder` orchestrates `JarTemplateSeeder` + `PlanSeeder` (catalogs) then `DemoHouseholdSeeder`
   - Catalog seed **data** lives next to the aggregate (`modules/backoffice/.../seed/`)
+- Swagger UI (dev): `http://localhost:3002/api/docs` — controllers use `@ControllerSwagger`
+- Shared helpers: `common/database/entity-config.util.ts`, constraint → CONFLICT, `executeWithTransaction`, date/timezone utils
+- Outbound email: `modules/backoffice/communication/email` (`EMAIL_PROVIDER=memory|resend`)
+- System pages: `/` (dev portal), `/access-denied`, `/health*`, `/email-preview*`
 
 Migrations only; `schema:update` is never run against a database holding money.
 
@@ -32,14 +36,13 @@ households of several. One person can belong to up to five households
 
 | Concern | Location | Storage |
 |---|---|---|
-| Auth identity, sessions, org membership, invitations | better-auth (owns + migrates its tables via search_path) | `auth` |
-| Household settings, coach inbox | `modules/household`, `modules/coach` | `platform.*` |
-| Money / growth / energy / soul | feature modules | `money.*` etc., every row carries `household_id` |
+| Auth identity, sessions, org membership, invitations | better-auth (+ Rumbelo account) | `auth` |
+| Household settings, coach, money / growth / energy / soul | `modules/public/*` | `public.*` (every household row has `household_id`) |
+| Catalogs we publish (plans, jar templates, …) | `modules/backoffice/*` | `backoffice.*` |
 | Enforcement | `HouseholdContextModule` interceptor + `HouseholdScopedRepository` | AsyncLocalStorage |
 
-Postgres schemas (`auth`, `platform`, `money`, `growth`, `energy`, `soul`)
-are **domain namespaces**, never per-customer schemas. `public` holds only
-MikroORM's migrations table.
+Postgres schemas: `auth`, `public`, `backoffice`. Product areas are code folders
+under `modules/public/`, not separate DB schemas.
 
 ### How scoping is enforced
 

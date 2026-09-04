@@ -1,6 +1,7 @@
 import type { FastifyRequest } from 'fastify';
 
 import {
+    Inject,
     ForbiddenException,
     Injectable,
     type CallHandler,
@@ -12,11 +13,7 @@ import { fromNodeHeaders } from 'better-auth/node';
 import { Observable } from 'rxjs';
 
 import { toAuthHeaders } from './auth-headers.util';
-import {
-    authHeadersStorage,
-    householdStorage,
-    type HouseholdContext,
-} from './household.context';
+import { authHeadersStorage, householdStorage, type HouseholdContext } from './household.context';
 import { MembershipService } from './membership.service';
 
 type Req = FastifyRequest & {
@@ -27,18 +24,19 @@ type Req = FastifyRequest & {
 /**
  * Resolves household scope at oRPC handler time (when req.url is the real route path).
  * Middleware runs too early in Fastify/Nest and sees req.url as `/`.
+ * System pages (health, branded HTML, swagger) skip household scope entirely.
  */
 @Injectable()
 export class HouseholdScopeInterceptor implements NestInterceptor {
     constructor(
-        private readonly membership: MembershipService,
-        private readonly authService: AuthService
+        @Inject(MembershipService) private readonly membership: MembershipService,
+        @Inject(AuthService) private readonly authService: AuthService
     ) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
         const req = context.switchToHttp().getRequest<Req>();
         const pathname = (req.url ?? '').split('?')[0] ?? '';
-        if (pathname.startsWith('/api/auth')) return next.handle();
+        if (isSystemPublicPath(pathname)) return next.handle();
 
         return new Observable(subscriber => {
             void this.resolve(req)
@@ -54,6 +52,10 @@ export class HouseholdScopeInterceptor implements NestInterceptor {
     }
 
     private async resolve(req: Req): Promise<{ ctx: HouseholdContext; headers: Headers }> {
+        if (!this.authService?.api) {
+            throw new ForbiddenException('Auth is not ready');
+        }
+
         if (!req.user) {
             const session = await this.authService.api.getSession({
                 headers: fromNodeHeaders(req.headers),
@@ -82,6 +84,18 @@ export class HouseholdScopeInterceptor implements NestInterceptor {
 
         return { ctx: { userId, householdId, role }, headers };
     }
+}
+
+/** Pages + auth + swagger — no household context required. */
+function isSystemPublicPath(pathname: string): boolean {
+    if (pathname === '/' || pathname === '') return true;
+    return (
+        pathname.startsWith('/api/auth') ||
+        pathname.startsWith('/api/docs') ||
+        pathname.startsWith('/health') ||
+        pathname.startsWith('/access-denied') ||
+        pathname.startsWith('/email-preview')
+    );
 }
 
 /** Explicit header wins, then the oRPC input body, then the session's active org. */

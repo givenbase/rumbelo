@@ -1,7 +1,8 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
 
 import { BaseEntity } from '../../../../common/database/base.entity';
-import { JarKey } from '../../../product/money/plan/jar/jar.entity';
+import { entityConfig } from '../../../../common/database/entity-config.util';
+import { JarKey } from '../../../public/product/money/plan/jar/jar.entity';
 
 /**
  * Jar Template Entity
@@ -11,7 +12,7 @@ import { JarKey } from '../../../product/money/plan/jar/jar.entity';
  *
  * @see money.jar — household-owned instances
  */
-@Entity({ tableName: 'jar_template', schema: 'backoffice' })
+@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'jar_template' }))
 @Unique({ properties: ['key'] })
 export class JarTemplate extends BaseEntity {
     // ? PROPERTIES

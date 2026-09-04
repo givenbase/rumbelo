@@ -1,5 +1,5 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import type { HouseholdContext } from './household.context';
 
@@ -12,7 +12,7 @@ import { AuthMember } from '../../modules/auth/better-auth/member/auth-member.en
  */
 @Injectable()
 export class MembershipService {
-    constructor(private readonly em: EntityManager) {}
+    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
 
     // ====================================================================
     // ? READ Operations

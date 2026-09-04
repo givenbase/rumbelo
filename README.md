@@ -1,6 +1,6 @@
 # Rumbelo
 
-**Geld met intentie.** Six jars, one calm overview.
+**Stop wondering where it went.** Six jars, one calm overview.
 
 Rumbelo is not a bookkeeping app. It is a single quiet view of where your money,
 energy and time go — so intention leads, and life doesn’t decide first.
@@ -63,18 +63,19 @@ database. Learn it once and it holds everywhere.
 
 | Product | Backend module | Contract namespace | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/household` | `contract.household` | `/settings` | `platform` |
-| — | `modules/coach` | `contract.coach` | — | `platform` |
-| **Geld** | `modules/product/money/*` | `contract.money.*` | `/money/*` | `money` |
-| **Groei** | `modules/product/growth/*` | `contract.growth.*` | `/growth` | `growth` |
-| **Energie** | `modules/product/energy/*` | `contract.energy.*` | `/energy` | `energy` |
-| **Ziel** | `modules/product/soul/*` | `contract.soul.*` | `/soul` | `soul` |
+| — | `modules/public/platform/household` | `contract.household` | `/settings` | `public` |
+| — | `modules/public/platform/coach` | `contract.coach` | — | `public` |
+| **Geld** | `modules/public/product/money/*` | `contract.money.*` | `/money/*` | `public` |
+| **Groei** | `modules/public/product/growth/*` | `contract.growth.*` | `/growth` | `public` |
+| **Energie** | `modules/public/product/energy/*` | `contract.energy.*` | `/energy` | `public` |
+| **Ziel** | `modules/public/product/soul/*` | `contract.soul.*` | `/soul` | `public` |
 
 Money's children are the same list in all four places: `jars` `income`
 `fixed-costs` `accounts` `transactions` `rules` `goals` `debts` `turn` `ritual`
 `dashboard`. So `contract.money.jars.list` is served by
-`modules/product/money/plan/jar/jar.controller.ts`, reads `money.jar`, and backs `/money/jars`.
+`modules/public/product/money/plan/jar/jar.controller.ts`, reads `public.jar`, and backs `/money/jars`.
 
+Postgres planes: `auth` (identity), `public` (app/household), `backoffice` (catalogs we publish).
 **Code is English; copy is Dutch.** Every folder, route, identifier and table is
 English. Only user-facing text is Dutch, and dates go through `Intl` with a
 locale rather than hardcoded month tables, because the product ships NL and EN.

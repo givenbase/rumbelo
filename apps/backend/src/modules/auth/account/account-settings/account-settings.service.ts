@@ -1,5 +1,5 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import type { AccountSettings as AccountSettingsDto } from '@rumbelo/contracts';
 
@@ -24,7 +24,7 @@ export type AccountSettingsPatch = {
 export class AccountSettingsService {
     private readonly logger = new Logger(AccountSettingsService.name);
 
-    constructor(private readonly em: EntityManager) {}
+    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
 
     // ====================================================================
     // ? CREATE Operations
@@ -109,7 +109,11 @@ export class AccountSettingsService {
     // ====================================================================
 
     private async findEntityByUserId(userId: string): Promise<AccountSettings | null> {
-        const account = await this.em.findOne(Account, { user: userId }, { populate: ['settings'] });
+        const account = await this.em.findOne(
+            Account,
+            { user: userId },
+            { populate: ['settings'] }
+        );
         return account?.settings ?? null;
     }
 

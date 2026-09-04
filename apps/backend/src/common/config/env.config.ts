@@ -32,6 +32,17 @@ const EnvSchema = z.object({
 
     ANTHROPIC_API_KEY: z.string().optional(),
     SENTRY_DSN: z.string().optional(),
+
+    /** Swagger UI at /api/docs — on in development; elsewhere require true. */
+    ENABLE_SWAGGER: z
+        .union([z.boolean(), z.enum(['true', 'false', '0', '1'])])
+        .optional()
+        .transform(v => v === true || v === 'true' || v === '1'),
+
+    /** Outbound email — `memory` logs only (default); `resend` needs RESEND_API_KEY. */
+    EMAIL_PROVIDER: z.enum(['resend', 'memory']).default('memory'),
+    EMAIL_FROM: z.string().default('Rumbelo <onboarding@resend.dev>'),
+    RESEND_API_KEY: z.string().optional(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

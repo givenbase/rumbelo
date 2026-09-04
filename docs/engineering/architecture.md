@@ -43,12 +43,12 @@ The same product tree governs modules, API, routes, and database.
 
 | Product | Backend | Contract | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/household` | `contract.household` | `/settings` | `platform` |
-| — | `modules/coach` | `contract.coach` | — | `platform` |
-| **Money** | `modules/product/money/*` | `contract.money.*` | `/money/*` | `money` |
-| **Growth** | `modules/product/growth/*` | `contract.growth.*` | `/growth/*` | `growth` |
-| **Energy** | `modules/product/energy/*` | `contract.energy.*` | `/energy/*` | `energy` |
-| **Soul** | `modules/product/soul/*` | `contract.soul.*` | `/soul/*` | `soul` |
+| — | `modules/public/platform/household` | `contract.household` | `/settings` | `public` |
+| — | `modules/public/platform/coach` | `contract.coach` | — | `public` |
+| **Money** | `modules/public/product/money/*` | `contract.money.*` | `/money/*` | `public` |
+| **Growth** | `modules/public/product/growth/*` | `contract.growth.*` | `/growth/*` | `public` |
+| **Energy** | `modules/public/product/energy/*` | `contract.energy.*` | `/energy/*` | `public` |
+| **Soul** | `modules/public/product/soul/*` | `contract.soul.*` | `/soul/*` | `public` |
 
 **Add anything in all four places or not at all.**
 
@@ -60,7 +60,7 @@ Money children (same list everywhere): `jar` `income` `fixed-cost` `account` `tr
 
 1. **Backend is ESM** — `@orpc/*` is ESM-only; `packages/contracts` is dual CJS+ESM. Do not reintroduce an internal HTTP hop.
 2. **Household isolation is row-level** (`household_id` via `AsyncLocalStorage`) — not schema-per-tenant.
-3. **Postgres schemas group by product** (`platform`, `money`, `growth`, `energy`, `soul`) — orthogonal to household scoping.
+3. **Postgres schemas group by ownership** (`auth`, `public`, `backoffice`) — products are folders under `modules/public/`, not DB schemas.
 4. **Money is integer minor units** — never floats; split remainder via `money.util.ts`.
 5. **Styling is Tailwind only** — tokens in `packages/config/tailwind/theme.css`.
 6. **Code English, copy Dutch** — identifiers English; user-facing text Dutch (+ EN via i18n later).

@@ -1,6 +1,7 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
 
 import { BaseEntity } from '../../../common/database/base.entity';
+import { entityConfig } from '../../../common/database/entity-config.util';
 
 /**
  * Product tier keys — match frontend `PlanKey` (`grip` | `ritme` | `groei`).
@@ -20,7 +21,7 @@ export enum PlanKey {
  *
  * @see product/money/plan — household money split (jars), unrelated
  */
-@Entity({ tableName: 'plan', schema: 'backoffice' })
+@Entity(entityConfig({ schema: 'backoffice', tableName: 'plan' }))
 @Unique({ properties: ['key'] })
 export class Plan extends BaseEntity {
     // ? PROPERTIES

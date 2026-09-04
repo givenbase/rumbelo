@@ -1,8 +1,9 @@
 import { contract } from '@rumbelo/contracts';
 
-import { Controller } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
+import { ControllerSwagger } from '../../../../common/decorators/controller-swagger.decorators';
 import { AccountSettingsService } from './account-settings.service';
 
 /**
@@ -13,9 +14,11 @@ import { AccountSettingsService } from './account-settings.service';
  *
  * Handler order is always CRUD: Create → Read → Update → Delete.
  */
-@Controller()
+@ControllerSwagger('account/settings', 'auth')
 export class AccountSettingsController {
-    constructor(private readonly settings: AccountSettingsService) {}
+    constructor(
+        @Inject(AccountSettingsService) private readonly settings: AccountSettingsService
+    ) {}
 
     // ====================================================================
     // ? CREATE Operations

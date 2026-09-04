@@ -1,6 +1,6 @@
 # Product overview
 
-**Geld met intentie.** Six jars, one calm overview.
+**Stop wondering where it went.** Six jars, one calm overview.
 
 Rumbelo is not a bookkeeping app. It is a single quiet view of where your money, energy and time go — so intention leads, and life doesn’t decide first.
 

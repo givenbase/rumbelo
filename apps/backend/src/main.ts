@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 import { AppModule } from './app.module';
 import { loadEnv, type Env } from './common/config/env.config';
+import { setupOrpcErrorFix } from './common/config/setup-orpc-error-fix.config';
+import { setupSwagger } from './common/config/setup-swagger.config';
 
 import 'reflect-metadata';
 
@@ -48,11 +50,20 @@ async function setupApp(app: NestFastifyApplication, env: Env): Promise<void> {
 
     app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
     app.enableShutdownHooks();
+
+    await setupOrpcErrorFix(app);
+    await setupSwagger(app, env);
 }
 
 async function startApp(app: NestFastifyApplication, env: Env): Promise<void> {
     await app.listen({ port: env.PORT, host: '0.0.0.0' });
     Logger.log(`Rumbelo API listening on :${env.PORT}`, 'Bootstrap');
+    if (env.NODE_ENV === 'development') {
+        Logger.log(`API home → http://localhost:${env.PORT}/`, 'Bootstrap');
+        Logger.log(`Swagger UI → http://localhost:${env.PORT}/api/docs`, 'Bootstrap');
+        Logger.log(`Email preview → http://localhost:${env.PORT}/email-preview`, 'Bootstrap');
+        Logger.log(`Health → http://localhost:${env.PORT}/health`, 'Bootstrap');
+    }
 }
 
 async function bootstrap() {

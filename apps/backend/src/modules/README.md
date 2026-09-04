@@ -1,38 +1,36 @@
 # Modules
 
-Organised by **audience first, product second** — the same cut as Galighticus
-(`portal` = customers, `backoffice` = employees, `auth` = identity).
+Organised by **Postgres plane / who writes**, then product.
 A group is a parent module that imports its children; a child is one aggregate
 with its `*.entity.ts`, service, controller and module as flat siblings.
 
-| Audience | Where | What | Who writes |
+| Plane | Where | Postgres schema | Who writes |
 |---|---|---|---|
-| Shared (identity) | `auth/` | `better-auth/` (library) + `account/` (person prefs) | library / user |
-| Shared (plumbing) | `src/common/` | env, DB primitives, household scoping | — |
-| Shared (product plane) | `platform/` | household board + coach runtime | **household / user** |
-| Households | `product/` | money, growth, energy, soul | **household / user** |
-| Rumbelo (company) | `backoffice/` | plan catalog, countries, question bank, CMS-like content | **we (staff/system)** |
+| Identity | `auth/` | `auth` | library / user |
+| Plumbing | `src/common/` | — | — |
+| App / household | `public/` (`platform/` + `product/`) | `public` | **household / user** |
+| Company catalogs | `backoffice/` | `backoffice` | **we (staff/system)** |
 
 ### Who owns the row (control split — non-negotiable)
 
 | Control | Module | Examples |
 |---|---|---|
-| **Household / user writes** | `product/*`, `platform/household`, `auth/account` | jars, txs, board settings, theme, language, which plan the household is *on* |
+| **Household / user writes** | `public/product/*`, `public/platform/household`, `auth/account` | jars, txs, board settings, theme, language, which plan the household is *on* |
 | **We write** | `backoffice/*` | Grip/Engine/Compound **plan** catalog, countries, question bank, FAQ, coach tip **templates** (+ billing later if Stripe needs it) |
 | **Library writes** | `auth/better-auth/` | sessions, members, provider credentials |
 
-`platform/` is the app’s shared runtime plane (household + coach) — **not** a place for company-published catalogs. If Rumbelo authors it, it lives under `backoffice/` (app may read a public projection). Do not create empty `backoffice/` until the first real aggregate lands.
+`public/platform/` is shared app runtime (household + coach) — **not** company catalogs. If Rumbelo authors it, it lives under `backoffice/`.
 
 | Module | Children |
 |---|---|
 | `auth/` | `better-auth/` · `account/` (`account-settings`, …) |
-| `platform/` | `household` · `coach` |
-| `product/` | `money/` (Geld) · `growth/` (Groei) · `energy/` (Energie) · `soul/` (Ziel) |
-| `product/money/` | `plan/` (`jar` `income` `fixed-cost`) · `ledger/` (`account` `transaction` `rule`) · `targets/` (`goal` `debt`) · `rhythm/` (`turn` `ritual`) · `dashboard` |
-| `product/growth/` | `lever` `milestone` |
-| `product/energy/` | `log` |
-| `product/soul/` | `gratitude` |
-| `backoffice/` | `reference/jar-template` · `plan/` (Grip/Engine/Compound) · later `content/` |
+| `public/platform/` | `household` · `coach` |
+| `public/product/` | `money/` (Geld) · `growth/` (Groei) · `energy/` (Energie) · `soul/` (Ziel) |
+| `public/product/money/` | `plan/` (`jar` `income` `fixed-cost`) · `ledger/` (`account` `transaction` `rule`) · `targets/` (`goal` `debt`) · `rhythm/` (`turn` `ritual`) · `dashboard` |
+| `public/product/growth/` | `lever` `milestone` |
+| `public/product/energy/` | `log` |
+| `public/product/soul/` | `gratitude` |
+| `backoffice/` | `reference/jar-template` · `plan/` · `communication/email` · later `content/` |
 
 A product grows a sub-domain folder (like `money/plan/`) once it has several
 aggregates that belong together — never pre-emptively. `growth`, `energy` and
@@ -42,13 +40,23 @@ aggregates that belong together — never pre-emptively. `growth`, `energy` and
 
 - `auth/better-auth/` — better-auth owns writes; we map read entities + config
 - `auth/account/` — person prefs (theme, locale) — **user** writes
-- Board prefs → `platform/household` — **household** writes
-- Jar **instances** → `product/money/plan/jar` — **household** writes
-- Jar **templates** (name, icon, default %) → `backoffice/reference/jar-template` — **we** write; onboard copies into household jars
-- Product **tiers** (Grip / Engine / Compound) → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)
-- Seed data for catalogs lives next to the aggregate (`jar-template/seed/`); runners live in `src/database/seeders/` (`JarTemplateSeeder`, `DemoHouseholdSeeder`, orchestrated by `DatabaseSeeder`)
+- Board prefs → `public/platform/household` — **household** writes
+- Jar **instances** → `public/product/money/plan/jar` — **household** writes (table in `public`)
+- Jar **templates** → `backoffice/reference/jar-template` — **we** write; onboard copies into household jars
+- Product **tiers** → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)
+- Outbound **email** → `backoffice/communication/email` — **we** send (invites; digests later)
+- Seed data for catalogs lives next to the aggregate (`…/seed/`); runners in `src/database/seeders/`
 
-`FeatureModules` registers `AuthModule`, `PlatformModule`, `ProductModule`, `BackofficeModule`.
+`FeatureModules` registers `AuthModule`, `PublicModule`, `BackofficeModule`.
+
+### Table naming (`entityConfig`)
+
+Every Rumbelo-owned entity uses `entityConfig({ schema, domain?, tableName })` from
+`common/database/entity-config.util.ts`:
+
+- `auth` / `backoffice` / `public` schemas
+- Domain prefixes in `public` (`money_jar`, `platform_household_settings`, …)
+- Backoffice catalogs: `reference_jar_template`, etc.
 
 ---
 
@@ -140,7 +148,7 @@ create() {
 ### Cross-aggregate rules
 
 - **Never query another aggregate's tables directly.** Import its service —
-  see `product/money/dashboard`, which composes services rather than joining tables.
+  see `public/product/money/dashboard`, which composes services rather than joining tables.
 - **Household-owned entities extend `HouseholdEntity`** and are read through
   `HouseholdScopedRepository`, never `em.find` directly on those entities.
 - **Money is integer minor units.** Never a float, never arithmetic on a
@@ -156,6 +164,6 @@ create() {
 
 ### Adding a product portal
 
-Add a child under `product/`, register it in `product/product.module.ts`.
+Add a child under `public/product/`, register it in `public/product/product.module.ts`.
 Entities are discovered by convention — any `*.entity.ts` under `src/`
 (see `mikro-orm.config.ts`); there is no registry to edit.

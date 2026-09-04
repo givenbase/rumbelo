@@ -1,4 +1,4 @@
-import { JarKey } from '../../../../product/money/plan/jar/jar.entity';
+import { JarKey } from '../../../../public/product/money/plan/jar/jar.entity';
 
 /**
  * Canonical jar catalog seed data — Rumbelo-owned defaults.

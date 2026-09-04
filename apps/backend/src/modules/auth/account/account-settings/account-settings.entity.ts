@@ -1,6 +1,7 @@
 import { Entity, Enum, OneToOne } from '@mikro-orm/core';
 
 import { BaseEntity } from '../../../../common/database/base.entity';
+import { entityConfig } from '../../../../common/database/entity-config.util';
 import { Locale, Theme } from '../../../../common/database/enums';
 import { Account } from '../account.entity';
 
@@ -15,7 +16,7 @@ import { Account } from '../account.entity';
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity({ tableName: 'account_settings', schema: 'auth' })
+@Entity(entityConfig({ schema: 'auth', domain: 'account', tableName: 'settings' }))
 export class AccountSettings extends BaseEntity {
     // ? PROPERTIES
 

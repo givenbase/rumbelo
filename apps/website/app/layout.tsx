@@ -23,9 +23,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'Rumbelo — Money with intention',
+    title: 'Rumbelo — Stop wondering where it went.',
     description:
-        'Six jars, one calm overview. Rumbelo splits your income the second it lands — every euro gets a job before it arrives.',
+        'Six jars, one calm overview. Rumbelo splits your income the second it lands — every amount gets a job before it arrives.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

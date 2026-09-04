@@ -3,8 +3,8 @@ import type { EntityManager } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
 
 import { JarTemplate } from '../../modules/backoffice/reference/jar-template/jar-template.entity';
-import { HouseholdSettings } from '../../modules/platform/household/household-settings.entity';
-import { Jar } from '../../modules/product/money/plan/jar/jar.entity';
+import { HouseholdSettings } from '../../modules/public/platform/household/household-settings.entity';
+import { Jar } from '../../modules/public/product/money/plan/jar/jar.entity';
 
 /** Stable id for local demos — not a real better-auth org until onboard wires auth. */
 export const DEMO_HOUSEHOLD_ID = '0195f3a0-0000-7000-8000-000000000001';

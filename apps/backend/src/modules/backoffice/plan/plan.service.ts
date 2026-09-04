@@ -1,5 +1,5 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { Plan, PlanKey } from './plan.entity';
 
@@ -12,7 +12,7 @@ import { Plan, PlanKey } from './plan.entity';
 export class PlanService {
     private readonly logger = new Logger(PlanService.name);
 
-    constructor(private readonly em: EntityManager) {}
+    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
 
     // ====================================================================
     // ? CREATE Operations

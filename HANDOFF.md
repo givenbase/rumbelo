@@ -1,6 +1,6 @@
 # Rumbelo — direction & handoff
 
-**Geld met intentie.** Six jars, one calm overview.
+**Stop wondering where it went.** Six jars, one calm overview.
 
 > Rijkdom is geen getal. Het zijn de teugels in jouw handen.
 
@@ -96,10 +96,10 @@ O(households) migrations and catalog bloat. Every financial row carries
 a service cannot pass the wrong id or forget one. Schema-per-tenant remains
 correct for Meltizo; different problem.
 
-**Postgres schemas group by domain, not by household.** `auth`, `platform`,
-`money`, `growth`, `energy`, `soul`. Orthogonal to household scoping — it exists
-so the database mirrors the module tree. better-auth keeps its tables in `auth`
-via its pool's `search_path`; `public` holds only MikroORM's migrations table.
+**Postgres schemas group by ownership plane, not by product.** `auth` (identity),
+`public` (platform + product / household data), `backoffice` (catalogs we publish).
+Product areas (money/growth/…) are folders under `modules/public/`, not separate
+DB schemas. better-auth keeps its tables in `auth` via its pool's `search_path`.
 
 ---
 
@@ -127,36 +127,36 @@ The same product tree governs modules, API, routes and database. Learn it once.
 
 | Product | Backend module | Contract | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/platform/household` | `contract.household` | `/settings` | `platform` |
-| — | `modules/platform/coach` | `contract.coach` | — | `platform` |
-| **Geld** | `modules/product/money/*` | `contract.money.*` | `/money/*` | `money` |
-| **Groei** | `modules/product/growth/*` | `contract.growth.*` | `/growth/*` | `growth` |
-| **Energie** | `modules/product/energy/*` | `contract.energy.*` | `/energy/*` | `energy` |
-| **Ziel** | `modules/product/soul/*` | `contract.soul.*` | `/soul/*` | `soul` |
+| — | `modules/public/platform/household` | `contract.household` | `/settings` | `public` |
+| — | `modules/public/platform/coach` | `contract.coach` | — | `public` |
+| **Geld** | `modules/public/product/money/*` | `contract.money.*` | `/money/*` | `public` |
+| **Groei** | `modules/public/product/growth/*` | `contract.growth.*` | `/growth/*` | `public` |
+| **Energie** | `modules/public/product/energy/*` | `contract.energy.*` | `/energy/*` | `public` |
+| **Ziel** | `modules/public/product/soul/*` | `contract.soul.*` | `/soul/*` | `public` |
 
 Money's children are the same list in all four places: `jar` `income`
 `fixed-cost` `account` `transaction` `rule` `goal` `debt` `turn` `ritual`
 `dashboard`.
 
-So `contract.money.jars.list` is served by `modules/product/money/plan/jar/jar.controller.ts`,
-reads `money.jar`, and backs `/money/jars`. **Add anything in all four places or
+So `contract.money.jars.list` is served by `modules/public/product/money/plan/jar/jar.controller.ts`,
+reads `public.jar`, and backs `/money/jars`. **Add anything in all four places or
 not at all.**
 
 ---
 
 ## 6. Conventions — non-negotiable
 
-**Who owns the row.** Household/user writes → `product/*`, `platform/household`,
+**Who owns the row.** Household/user writes → `public/product/*`, `public/platform/*`,
 `auth/account`. Rumbelo writes → `backoffice/*` (`reference/jar-template`, `plan/` for
 Grip/Engine/Compound, later `content/`; billing only if Stripe needs its own home).
-better-auth library writes → `auth/better-auth/`. `platform/` is shared app
-runtime, not company CMS.
+better-auth library writes → `auth/better-auth/`. `public/` is the app/household
+plane (Postgres `public`); not company CMS.
 
 **Structure.** One folder per domain aggregate with flat siblings:
 `*.entity.ts`, service, controller, module, `index.ts` barrel — **no**
 `entities/` subfolder. A product is a parent module importing its children.
 Cross-cutting code in `common/`. Audience grouping under `modules/`
-(`auth`, `platform`, products, later `backoffice`). Full shape + CRUD rules:
+(`auth`, `public`, `backoffice`). Full shape + CRUD rules:
 `apps/backend/src/modules/README.md` and `.cursor/rules/backend-module-shape.mdc`.
 
 **CRUD order is Create → Read → Update → Delete.** Every service and
@@ -277,8 +277,8 @@ household scoping, DB schema, build pipeline.
 ## 9. Next steps, in priority order
 
 1. **Rebuild the screens from the real design** (§8).
-2. **First migration + seeder.** Docker is configured; provision the five schemas
-   and seed the six jars. Nothing runs end-to-end until this exists.
+2. **Migrate + seed.** Run migrations (`auth` / `public` / `backoffice`) and
+   seed jar templates + plans + demo household. Nothing runs end-to-end until this exists.
 3. **Wire auth.** better-auth is configured but sign-in/sign-up are
    presentational.
 4. **Implement onboarding.** It creates the household, seeds jars from the chosen

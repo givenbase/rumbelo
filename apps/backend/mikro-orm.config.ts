@@ -31,8 +31,8 @@ export default defineConfig({
         process.env.DATABASE_SSL === 'true'
             ? { connection: { ssl: { rejectUnauthorized: false } } }
             : {},
-    // Domain schemas: auth, platform, money, growth, energy, soul.
-    // public holds only MikroORM's migrations table.
+    // Planes: auth, public (app/household), backoffice.
+    // Product areas are folders under modules/public — not separate DB schemas.
     schema: 'public',
     // TsMorph (Galighticus): tsx does not emit Reflect decorator metadata.
     metadataProvider: TsMorphMetadataProvider,

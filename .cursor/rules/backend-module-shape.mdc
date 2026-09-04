@@ -23,7 +23,7 @@ modules/<audience>/<domain>/<aggregate>/
   index.ts
 ```
 
-Audience groups: `auth/` (identity), `platform/` (shared plane), `product/` (money|growth|energy|soul), `backoffice/` (employees, when needed).
+Audience groups: `auth/` (identity), `public/` (platform + product → Postgres `public`), `backoffice/` (company catalogs).
 
 ## Entity
 
@@ -104,11 +104,11 @@ Re-export module, service, entity, controller.
 
 | Control | Module |
 |---|---|
-| Household / user writes | `product/*`, `platform/household`, `auth/account` |
+| Household / user writes | `public/product/*`, `public/platform/*`, `auth/account` |
 | We (Rumbelo) write | `backoffice/*` — plan catalog (Grip/Engine/Compound), countries, question bank, published content |
 | Library writes | `auth/better-auth/` |
 
-`platform/` = shared app runtime (household + coach), not company CMS. Company-authored catalogs live in `backoffice/`.
+`public/` = app/household data (Postgres `public` schema). Company-authored catalogs live in `backoffice/`.
 
 ## Imports
 

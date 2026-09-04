@@ -2,7 +2,7 @@
 export const messages = {
     nl: {
         shell: {
-            tagline: 'Geld met intentie',
+            tagline: 'Stop met gissen waar het bleef.',
             settings: 'Instellingen',
             period: 'Periode',
             signIn: 'Inloggen',
@@ -23,7 +23,7 @@ export const messages = {
     },
     en: {
         shell: {
-            tagline: 'Money with intention',
+            tagline: 'Stop wondering where it went.',
             settings: 'Settings',
             period: 'Period',
             signIn: 'Sign in',
