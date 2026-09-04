@@ -1,6 +1,6 @@
 import { Entity, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../common/database/base.entity';
 
 @Entity({ tableName: 'income_milestone', schema: 'growth' })
 export class IncomeMilestone extends HouseholdEntity {

@@ -3,8 +3,8 @@ import { contract } from '@rumbelo/contracts';
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
-import { currentPeriod } from '../../../../common/utils/period.util.js';
-import { JarService } from './jar.service.js';
+import { currentPeriod } from '../../../../common/utils/period.util';
+import { JarService } from './jar.service';
 
 /** Transport only. All jar rules live in JarService. */
 @Controller()

@@ -1,6 +1,6 @@
 import { Entity, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../common/database/base.entity';
 
 /** Things that move earning power. A growth surface, not a budget line. */
 @Entity({ tableName: 'income_lever', schema: 'growth' })

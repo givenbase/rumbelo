@@ -1,6 +1,6 @@
-import { ReflectMetadataProvider } from '@mikro-orm/core';
 import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig } from '@mikro-orm/postgresql';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SeedManager } from '@mikro-orm/seeder';
 import { config as loadEnv } from 'dotenv';
 import { existsSync } from 'node:fs';
@@ -35,22 +35,21 @@ export default defineConfig({
             ? { connection: { ssl: { rejectUnauthorized: false } } }
             : {},
     /**
-     * Tables are namespaced by product — platform, money, growth, energy, soul —
-     * so the database mirrors the module tree. `public` stays the default because
-     * better-auth owns and migrates its own tables there.
+     * Tables are namespaced by domain — auth, platform, money, growth, energy,
+     * soul — so the database mirrors the module tree. `public` holds only
+     * MikroORM's own migrations table.
      *
      * The schema generator emits `create schema if not exists` for every schema an
-     * entity declares, so the first migration provisions all five.
+     * entity declares, so the first migration provisions them all.
      */
     schema: 'public',
     /**
-     * better-auth owns and migrates everything in `public` (user, session,
-     * organization, member, …). Those tables are not MikroORM entities and are
-     * absent from the snapshot, so `migration:create` never touches them — but
-     * `schema:update` diffs against the live DB and would propose dropping
-     * them. Migrations only; never run schema:update here.
+     * TsMorph reads property types from source (Galighticus pattern). Required
+     * when running under `tsx`, which does not emit Reflect decorator metadata
+     * the way `tsc`/`nest build` does — ReflectMetadataProvider then fails on
+     * unions like `string | null`.
      */
-    metadataProvider: ReflectMetadataProvider,
+    metadataProvider: TsMorphMetadataProvider,
     extensions: [Migrator, SeedManager],
     // Never auto-sync a schema that holds money. Migrations only.
     migrations: {

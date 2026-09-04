@@ -7,12 +7,12 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ORPCModule } from '@orpc/nest';
 import { AuthModule as BetterAuthModule } from '@thallesp/nestjs-better-auth';
 
-import type { Env } from './common/config/env.config.js';
+import type { Env } from './common/config/env.config';
 
-import ormConfig from '../mikro-orm.config.js';
-import { createAuth } from './auth/auth.config.js';
-import { HouseholdContextModule } from './common/household/household-context.module.js';
-import { FeatureModules } from './modules/index.js';
+import ormConfig from '../mikro-orm.config';
+import { HouseholdContextModule } from './common/household/household-context.module';
+import { createAuth } from './modules/auth/better-auth/auth.config';
+import { FeatureModules } from './modules/index';
 
 @Module({})
 export class AppModule {

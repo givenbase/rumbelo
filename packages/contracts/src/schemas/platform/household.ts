@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Currency, HouseholdId, Id, Locale, Theme, UserId } from '../common.js';
+import { Currency, HouseholdId, Id, Locale, Theme, UserId } from '../common';
 
 /**
  * Household is the isolation boundary. Every financial row carries householdId and
@@ -26,8 +26,8 @@ export const Household = z.object({
     id: HouseholdId,
     name: z.string().min(1).max(120),
     slug: z.string().min(1).max(120),
+    /** Accounting currency for the board — shared by every member. */
     currency: Currency,
-    locale: Locale,
     /** Day of month the budget period rolls over. 1 for most, 25 for salary-day budgeters. */
     periodStartDay: z.int().min(1).max(28),
     createdAt: z.iso.datetime(),
@@ -44,11 +44,13 @@ export const HouseholdMember = z.object({
     image: z.url().nullable(),
 });
 
+/**
+ * Money-board prefs for the household. Language and appearance live on
+ * AccountSettings — they can differ per person in the same household.
+ */
 export const HouseholdSettings = z.object({
     householdId: HouseholdId,
     kind: HouseholdKind,
-    theme: Theme,
-    locale: Locale,
     currency: Currency,
     periodStartDay: z.int().min(1).max(28),
     /** Weekly ritual reminder, local time HH:mm, null disables it. */
@@ -69,6 +71,7 @@ export const OnboardingInput = z.object({
     householdName: z.string().min(1).max(120),
     kind: HouseholdKind.default('solo'),
     currency: Currency.default('EUR'),
+    /** Creator's language — stored on their AccountSettings, not the board. */
     locale: Locale.default('nl'),
     monthlyNetIncome: z.int().min(0),
     split: z.array(z.object({ key: z.string(), percentage: z.number().min(0).max(100) })),

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, IsoDate, Money, HouseholdId } from '../common.js';
+import { Id, IsoDate, Money, HouseholdId } from '../common';
 
 export const IncomeMilestone = z.object({
     id: Id,

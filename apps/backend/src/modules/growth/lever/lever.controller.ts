@@ -3,7 +3,7 @@ import { contract } from '@rumbelo/contracts';
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
-import { LeverService } from './lever.service.js';
+import { LeverService } from './lever.service';
 
 @Controller()
 export class LeverController {

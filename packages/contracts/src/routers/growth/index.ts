@@ -1,6 +1,6 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../schemas/index.js';
+import * as S from '../../schemas/index';
 
 /** Product: Groei — raising earning power, not dividing what already arrived. */
 export const contract = {

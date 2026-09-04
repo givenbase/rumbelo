@@ -3,12 +3,12 @@ import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { loadEnv } from '../common/config/env.config.js';
-import { createAuth } from './auth.config.js';
+import { loadEnv } from '../../../common/config/env.config';
+import { createAuth } from './auth.config';
 
 function findRootEnv(): string {
     let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
         const candidate = resolve(dir, '.env');
         if (existsSync(candidate)) return candidate;
         dir = resolve(dir, '..');

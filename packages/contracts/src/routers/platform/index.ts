@@ -1,9 +1,15 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../schemas/index.js';
+import * as S from '../../schemas/index';
 
-/** Platform-level: the household itself, and advisory that reads across products. */
+/** Platform-level: account prefs, the household itself, and cross-product advisory. */
 export const contract = {
+    account: {
+        settings: oc.output(S.AccountSettings),
+        updateSettings: oc
+            .input(S.AccountSettings.partial().omit({ accountId: true }))
+            .output(S.AccountSettings),
+    },
     household: {
         list: oc.output(z.array(S.Household)),
         current: oc.input(z.object({ householdId: S.HouseholdId })).output(S.Household),

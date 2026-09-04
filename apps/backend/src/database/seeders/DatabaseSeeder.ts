@@ -2,8 +2,8 @@ import type { EntityManager } from '@mikro-orm/postgresql';
 
 import { Seeder } from '@mikro-orm/seeder';
 
-import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../../modules/money/plan/jar/jar.entity.js';
-import { HouseholdSettings } from '../../modules/platform/household/household-settings.entity.js';
+import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../../modules/money/plan/jar/jar.entity';
+import { HouseholdSettings } from '../../modules/platform/household/household-settings.entity';
 
 /** Stable id for local dev — matches nothing in better-auth until onboarding wires auth. */
 export const DEMO_HOUSEHOLD_ID = '0195f3a0-0000-7000-8000-000000000001';

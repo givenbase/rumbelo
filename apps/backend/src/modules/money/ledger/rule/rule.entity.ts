@@ -1,8 +1,8 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Category } from '../../plan/jar/category.entity.js';
-import { Jar } from '../../plan/jar/jar.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Category } from '../../plan/jar/category.entity';
+import { Jar } from '../../plan/jar/jar.entity';
 
 export enum RuleField {
     DESCRIPTION = 'DESCRIPTION',

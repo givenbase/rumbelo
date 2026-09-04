@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, UserId, HouseholdId, IsoDate } from '../common.js';
+import { Id, UserId, HouseholdId, IsoDate } from '../common';
 
 /**
  * "Energie draagt geld." Sleep, training and food are tracked because the product

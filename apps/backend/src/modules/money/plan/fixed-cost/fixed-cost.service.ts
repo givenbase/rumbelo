@@ -1,12 +1,12 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { Cadence, FlowDirection } from '../../../../common/database/enums.js';
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { Category } from '../jar/category.entity.js';
-import { Jar } from '../jar/jar.entity.js';
-import { FixedCost } from './fixed-cost.entity.js';
+import { Cadence, FlowDirection } from '../../../../common/database/enums';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { Category } from '../jar/category.entity';
+import { Jar } from '../jar/jar.entity';
+import { FixedCost } from './fixed-cost.entity';
 
 @Injectable()
 export class FixedCostService {

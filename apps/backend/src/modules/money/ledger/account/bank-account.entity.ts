@@ -1,6 +1,6 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
 
 export enum AccountKind {
     CHECKING = 'CHECKING',

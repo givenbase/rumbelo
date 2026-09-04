@@ -1,6 +1,6 @@
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
 
-import { Currency, Locale, Theme } from '../../../common/database/enums.js';
+import { Currency } from '../../../common/database/enums';
 
 /**
  * Nature of the group sharing the board — family, partners, friends or solo.
@@ -15,9 +15,9 @@ export enum HouseholdKind {
 }
 
 /**
- * Finance-specific settings for a household. The household itself — name, members,
- * invitations — lives in better-auth's organization tables, so this row hangs off
- * that id and auth state keeps exactly one writer.
+ * Money-board prefs for a household. Language and appearance live on
+ * auth.account_settings (person-scoped). Currency stays here — the board has
+ * one accounting currency for every member.
  */
 @Entity({ tableName: 'household_settings', schema: 'platform' })
 export class HouseholdSettings {
@@ -26,12 +26,6 @@ export class HouseholdSettings {
 
     @Enum(() => HouseholdKind)
     kind: HouseholdKind = HouseholdKind.solo;
-
-    @Enum(() => Theme)
-    theme: Theme = Theme.system;
-
-    @Enum(() => Locale)
-    locale: Locale = Locale.nl;
 
     @Enum(() => Currency)
     currency: Currency = Currency.EUR;

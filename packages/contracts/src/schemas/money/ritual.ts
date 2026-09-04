@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, Money, WeekKey, HouseholdId } from '../common.js';
+import { Id, Money, WeekKey, HouseholdId } from '../common';
 
 /**
  * The ten-minute weekly ritual: look, redirect, set intention.

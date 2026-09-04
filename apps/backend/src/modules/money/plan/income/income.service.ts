@@ -1,12 +1,12 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { Cadence } from '../../../../common/database/enums.js';
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { splitByPercentage } from '../../../../common/utils/money.util.js';
-import { JarService } from '../jar/jar.service.js';
-import { IncomeKind, IncomeSource } from './income-source.entity.js';
+import { Cadence } from '../../../../common/database/enums';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { splitByPercentage } from '../../../../common/utils/money.util';
+import { JarService } from '../jar/jar.service';
+import { IncomeKind, IncomeSource } from './income-source.entity';
 
 @Injectable()
 export class IncomeService {

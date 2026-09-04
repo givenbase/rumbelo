@@ -11,13 +11,13 @@ import { AuthService } from '@thallesp/nestjs-better-auth';
 import { fromNodeHeaders } from 'better-auth/node';
 import { Observable } from 'rxjs';
 
-import { toAuthHeaders } from './auth-headers.util.js';
+import { toAuthHeaders } from './auth-headers.util';
 import {
     authHeadersStorage,
     householdStorage,
     type HouseholdContext,
-} from './household.context.js';
-import { MembershipService } from './membership.service.js';
+} from './household.context';
+import { MembershipService } from './membership.service';
 
 type Req = FastifyRequest & {
     user?: { id: string } | null;

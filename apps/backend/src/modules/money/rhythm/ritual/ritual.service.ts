@@ -1,11 +1,11 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { Jar } from '../../plan/jar/jar.entity.js';
-import { RitualAllocation } from './ritual-allocation.entity.js';
-import { WeeklyRitual } from './weekly-ritual.entity.js';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { Jar } from '../../plan/jar/jar.entity';
+import { RitualAllocation } from './ritual-allocation.entity';
+import { WeeklyRitual } from './weekly-ritual.entity';
 
 @Injectable()
 export class RitualService {

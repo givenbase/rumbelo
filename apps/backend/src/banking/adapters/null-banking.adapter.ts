@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import type { BankingPort } from '../banking.port.js';
+import type { BankingPort } from '../banking.port';
 
 /**
  * Default adapter. Reports the feature as unavailable rather than throwing, so

@@ -1,6 +1,6 @@
 import { Entity, Index, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../common/database/base.entity';
 
 @Entity({ tableName: 'gratitude', schema: 'soul' })
 @Index({ properties: ['householdId', 'week'] })

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Cadence, Id, IsoDate, Money, HouseholdId } from '../common.js';
+import { Cadence, Id, IsoDate, Money, HouseholdId } from '../common';
 
 /** Recurring obligations. They draw from a jar, so they are visible before they hit. */
 export const FixedCost = z.object({

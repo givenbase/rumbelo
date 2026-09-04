@@ -1,6 +1,6 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../schemas/index.js';
+import * as S from '../../schemas/index';
 
 /** Product: Ziel — intention, gratitude, and the reason behind the numbers. */
 export const contract = {

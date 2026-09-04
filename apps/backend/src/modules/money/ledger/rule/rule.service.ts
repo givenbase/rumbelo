@@ -1,12 +1,12 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { Category } from '../../plan/jar/category.entity.js';
-import { Jar } from '../../plan/jar/jar.entity.js';
-import { Transaction, TransactionStatus } from '../transaction/transaction.entity.js';
-import { Rule, RuleField, RuleMatcher } from './rule.entity.js';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { Category } from '../../plan/jar/category.entity';
+import { Jar } from '../../plan/jar/jar.entity';
+import { Transaction, TransactionStatus } from '../transaction/transaction.entity';
+import { Rule, RuleField, RuleMatcher } from './rule.entity';
 
 @Injectable()
 export class RuleService {

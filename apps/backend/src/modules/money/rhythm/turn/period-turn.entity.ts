@@ -1,8 +1,8 @@
 import { Collection, Entity, OneToMany, Property, Unique } from '@mikro-orm/core';
 
-import type { TurnEvent } from './turn-event.entity.js';
+import type { TurnEvent } from './turn-event.entity';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
 
 /**
  * One period (month) is one Monopoly turn. Closing is irreversible by design —

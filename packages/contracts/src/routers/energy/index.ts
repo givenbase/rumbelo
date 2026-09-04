@@ -1,6 +1,6 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../schemas/index.js';
+import * as S from '../../schemas/index';
 
 /** Product: Energie — the floor under financial decisions. */
 export const contract = {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { LogModule } from './log/log.module.js';
+import { LogModule } from './log/log.module';
 
 /**
  * Product: Energie. Sleep, training, food and rest — tracked because the product

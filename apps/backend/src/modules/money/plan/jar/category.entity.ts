@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Jar } from './jar.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Jar } from './jar.entity';
 
 /** A spending line inside a jar. Budget is planned; actuals come from transactions. */
 @Entity({ tableName: 'category', schema: 'money' })

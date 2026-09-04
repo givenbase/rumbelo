@@ -1,7 +1,7 @@
 import { Entity, Enum, Index, ManyToOne, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { PeriodTurn } from './period-turn.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { PeriodTurn } from './period-turn.entity';
 
 export enum TurnEventKind {
     JAR_HELD = 'JAR_HELD',

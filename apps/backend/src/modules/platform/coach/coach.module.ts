@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { CoachController } from './coach.controller.js';
-import { CoachService } from './coach.service.js';
+import { CoachController } from './coach.controller';
+import { CoachService } from './coach.service';
 
 @Module({
     controllers: [CoachController],

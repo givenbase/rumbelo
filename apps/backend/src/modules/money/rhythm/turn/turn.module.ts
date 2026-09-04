@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { JarModule } from '../../plan/jar/jar.module.js';
-import { TurnController } from './turn.controller.js';
-import { TurnService } from './turn.service.js';
+import { JarModule } from '../../plan/jar/jar.module';
+import { TurnController } from './turn.controller';
+import { TurnService } from './turn.service';
 
 @Module({
     imports: [JarModule],

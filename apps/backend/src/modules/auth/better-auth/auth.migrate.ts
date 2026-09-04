@@ -3,13 +3,14 @@ import { config as loadDotenv } from 'dotenv';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Pool } from 'pg';
 
-import { loadEnv } from '../common/config/env.config.js';
-import { createAuth } from './auth.config.js';
+import { loadEnv } from '../../../common/config/env.config';
+import { createAuth } from './auth.config';
 
 function findRootEnv(): string {
     let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
         const candidate = resolve(dir, '.env');
         if (existsSync(candidate)) return candidate;
         dir = resolve(dir, '..');
@@ -19,7 +20,17 @@ function findRootEnv(): string {
 
 loadDotenv({ path: findRootEnv() });
 
-const auth = createAuth(loadEnv());
+const env = loadEnv();
+
+// better-auth's pool runs with search_path=auth; the schema must exist first.
+const bootstrap = new Pool({
+    connectionString: env.DATABASE_URL,
+    ssl: env.DATABASE_SSL ? { rejectUnauthorized: false } : undefined,
+});
+await bootstrap.query('CREATE SCHEMA IF NOT EXISTS auth');
+await bootstrap.end();
+
+const auth = createAuth(env);
 const { toBeCreated, toBeAdded, runMigrations } = await getMigrations(auth.options);
 
 if (toBeCreated.length === 0 && toBeAdded.length === 0) {

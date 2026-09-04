@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, Money, PeriodKey, HouseholdId } from '../common.js';
+import { Id, Money, PeriodKey, HouseholdId } from '../common';
 
 /**
  * The Monopoly layer. One period (month) is one "turn"; it accrues a score from

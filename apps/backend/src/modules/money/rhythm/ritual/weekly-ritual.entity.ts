@@ -1,8 +1,8 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
 
-import type { RitualAllocation } from './ritual-allocation.entity.js';
+import type { RitualAllocation } from './ritual-allocation.entity';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
 
 export enum RitualStage {
     LOOK = 'LOOK',

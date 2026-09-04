@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, HouseholdId } from '../common.js';
+import { Id, HouseholdId } from '../common';
 
 export const RuleMatcher = z.enum(['CONTAINS', 'EQUALS', 'STARTS_WITH', 'REGEX']);
 export const RuleField = z.enum(['DESCRIPTION', 'COUNTERPARTY', 'AMOUNT']);

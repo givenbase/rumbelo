@@ -9,8 +9,8 @@ import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { AppModule } from './app.module.js';
-import { loadEnv, type Env } from './common/config/env.config.js';
+import { AppModule } from './app.module';
+import { loadEnv, type Env } from './common/config/env.config';
 
 import 'reflect-metadata';
 

@@ -1,28 +1,27 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import type { HouseholdContext } from './household.context.js';
+import type { HouseholdContext } from './household.context';
+
+import { AuthMember } from '../../modules/auth/better-auth/member/auth-member.entity';
 
 /**
- * Membership lives in better-auth's organization tables, which better-auth owns
- * and migrates. We read them directly rather than mapping MikroORM entities over
- * them, so there is exactly one writer for auth state.
+ * Membership lives in better-auth's organization tables, which better-auth owns,
+ * writes and migrates. The AuthMember entity maps that table read-only, so auth
+ * state keeps exactly one writer.
  */
 @Injectable()
 export class MembershipService {
     constructor(private readonly em: EntityManager) {}
 
     async roleFor(userId: string, householdId: string): Promise<HouseholdContext['role'] | null> {
-        const rows = await this.em
-            .getConnection()
-            .execute<{ role: string }[]>(
-                `SELECT role FROM public."member" WHERE "userId" = ? AND "organizationId" = ? LIMIT 1`,
-                [userId, householdId]
-            );
-        const raw = rows[0]?.role;
-        if (!raw) return null;
+        const membership = await this.em.findOne(AuthMember, {
+            user: userId,
+            organization: householdId,
+        });
+        if (!membership) return null;
 
-        switch (raw.toLowerCase()) {
+        switch (membership.role.toLowerCase()) {
             case 'owner':
             case 'admin':
                 return 'OWNER';

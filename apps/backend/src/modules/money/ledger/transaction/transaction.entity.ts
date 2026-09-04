@@ -1,9 +1,9 @@
 import { Entity, Enum, Index, ManyToOne, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Category } from '../../plan/jar/category.entity.js';
-import { Jar } from '../../plan/jar/jar.entity.js';
-import { BankAccount } from '../account/bank-account.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Category } from '../../plan/jar/category.entity';
+import { Jar } from '../../plan/jar/jar.entity';
+import { BankAccount } from '../account/bank-account.entity';
 
 /**
  * INBOX   — arrived, no jar yet. The only state that demands user attention.

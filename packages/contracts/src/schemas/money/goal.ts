@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, IsoDate, Money, HouseholdId } from '../common.js';
+import { Id, IsoDate, Money, HouseholdId } from '../common';
 
 export const GoalStatus = z.enum(['ACTIVE', 'REACHED', 'PAUSED', 'ARCHIVED']);
 

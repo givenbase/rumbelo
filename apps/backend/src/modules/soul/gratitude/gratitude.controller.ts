@@ -3,8 +3,8 @@ import { contract } from '@rumbelo/contracts';
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
-import { currentWeek } from '../../../common/utils/period.util.js';
-import { GratitudeService } from './gratitude.service.js';
+import { currentWeek } from '../../../common/utils/period.util';
+import { GratitudeService } from './gratitude.service';
 
 @Controller()
 export class GratitudeController {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { RuleController } from './rule.controller.js';
-import { RuleService } from './rule.service.js';
+import { RuleController } from './rule.controller';
+import { RuleService } from './rule.service';
 
 @Module({
     controllers: [RuleController],

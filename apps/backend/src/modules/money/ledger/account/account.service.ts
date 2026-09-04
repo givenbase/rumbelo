@@ -1,9 +1,9 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { AccountKind, BankAccount } from './bank-account.entity.js';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { AccountKind, BankAccount } from './bank-account.entity';
 
 @Injectable()
 export class AccountService {

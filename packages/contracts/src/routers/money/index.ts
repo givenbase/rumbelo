@@ -1,6 +1,6 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../schemas/index.js';
+import * as S from '../../schemas/index';
 
 const ok = z.object({ ok: z.literal(true) });
 

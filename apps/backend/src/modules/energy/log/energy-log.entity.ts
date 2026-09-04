@@ -1,6 +1,6 @@
 import { Entity, Enum, Index, Property, Unique } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../common/database/base.entity';
 
 export enum EnergyMetric {
     SLEEP = 'SLEEP',

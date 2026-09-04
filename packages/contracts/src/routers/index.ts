@@ -1,9 +1,9 @@
 import { populateContractRouterPaths } from '@orpc/contract';
-import { contract as platform } from './platform/index.js';
-import { contract as money } from './money/index.js';
-import { contract as growth } from './growth/index.js';
-import { contract as energy } from './energy/index.js';
-import { contract as soul } from './soul/index.js';
+import { contract as platform } from './platform/index';
+import { contract as money } from './money/index';
+import { contract as growth } from './growth/index';
+import { contract as energy } from './energy/index';
+import { contract as soul } from './soul/index';
 
 /**
  * Contract-first oRPC, grouped by product.

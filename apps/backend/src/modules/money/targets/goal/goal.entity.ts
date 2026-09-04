@@ -1,7 +1,7 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Jar } from '../../plan/jar/jar.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Jar } from '../../plan/jar/jar.entity';
 
 export enum GoalStatus {
     ACTIVE = 'ACTIVE',

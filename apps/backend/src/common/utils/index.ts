@@ -1,2 +1,2 @@
-export * from './period.util.js';
-export * from './money.util.js';
+export * from './period.util';
+export * from './money.util';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { GratitudeModule } from './gratitude/gratitude.module.js';
+import { GratitudeModule } from './gratitude/gratitude.module';
 
 /**
  * Product: Ziel. Intention, gratitude and the "why" behind the numbers.

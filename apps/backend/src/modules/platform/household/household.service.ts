@@ -6,13 +6,16 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 
-import type { Auth } from '../../../auth/auth.config.js';
+import type { Auth } from '../../auth/better-auth/auth.config';
 
-import { Currency, Locale } from '../../../common/database/enums.js';
-import { currentUserId, currentAuthHeaders } from '../../../common/household/household.context.js';
-import { IncomeKind, IncomeSource } from '../../money/plan/income/income-source.entity.js';
-import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../../money/plan/jar/jar.entity.js';
-import { HouseholdSettings } from './household-settings.entity.js';
+import { Currency } from '../../../common/database/enums';
+import { currentUserId, currentAuthHeaders } from '../../../common/household/household.context';
+import { AccountSettingsService } from '../../auth/account/account-settings/account-settings.service';
+import { AuthMember } from '../../auth/better-auth/member/auth-member.entity';
+import { AuthOrganization } from '../../auth/better-auth/organization/auth-organization.entity';
+import { IncomeKind, IncomeSource } from '../../money/plan/income/income-source.entity';
+import { DEFAULT_JAR_SPLIT, Jar, JarKey } from '../../money/plan/jar/jar.entity';
+import { HouseholdSettings } from './household-settings.entity';
 
 const JAR_META: {
     key: JarKey;
@@ -63,7 +66,8 @@ const JAR_META: {
 export class HouseholdService {
     constructor(
         private readonly em: EntityManager,
-        private readonly authService: AuthService<Auth>
+        private readonly authService: AuthService<Auth>,
+        private readonly accountSettings: AccountSettingsService
     ) {}
 
     /** Settings row is created lazily so onboarding never has to pre-seed it. */
@@ -90,65 +94,40 @@ export class HouseholdService {
 
     async listHouseholds() {
         const userId = currentUserId();
-        const rows = await this.em
-            .getConnection()
-            .execute<{ id: string; name: string; slug: string; createdAt: Date }[]>(
-                `SELECT o.id, o.name, o.slug, o."createdAt"
-         FROM public."organization" o
-         JOIN public."member" m ON m."organizationId" = o.id
-        WHERE m."userId" = ?
-        ORDER BY o."createdAt" DESC`,
-                [userId]
-            );
-        return rows.map(r => ({
-            id: r.id,
-            name: r.name,
-            slug: r.slug,
+        const memberships = await this.em.find(
+            AuthMember,
+            { user: userId },
+            { populate: ['organization'], orderBy: { organization: { createdAt: 'DESC' } } }
+        );
+        return memberships.map(m => ({
+            id: m.organization.id,
+            name: m.organization.name,
+            slug: m.organization.slug,
             currency: Currency.EUR,
-            locale: Locale.nl,
             periodStartDay: 1,
-            createdAt: new Date(r.createdAt).toISOString(),
+            createdAt: m.organization.createdAt.toISOString(),
         }));
     }
 
     async members(householdId: string) {
-        const rows = await this.em
-            .getConnection()
-            .execute<
-                {
-                    id: string;
-                    userId: string;
-                    role: string;
-                    name: string;
-                    email: string;
-                    image: string | null;
-                }[]
-            >(
-                `SELECT m.id, m."userId", m.role, u.name, u.email, u.image
-         FROM public."member" m
-         JOIN public."user" u ON u.id = m."userId"
-        WHERE m."organizationId" = ?`,
-                [householdId]
-            );
-        return rows.map(r => ({
-            id: r.id,
+        const memberships = await this.em.find(
+            AuthMember,
+            { organization: householdId },
+            { populate: ['user'] }
+        );
+        return memberships.map(m => ({
+            id: m.id,
             householdId,
-            userId: r.userId,
-            role: mapRole(r.role),
-            name: r.name,
-            email: r.email,
-            image: r.image,
+            userId: m.user.id,
+            role: mapRole(m.role),
+            name: m.user.name,
+            email: m.user.email,
+            image: m.user.image ?? null,
         }));
     }
 
     async current(householdId: string) {
-        const rows = await this.em
-            .getConnection()
-            .execute<{ id: string; name: string; slug: string; createdAt: Date }[]>(
-                `SELECT id, name, slug, "createdAt" FROM public."organization" WHERE id = ? LIMIT 1`,
-                [householdId]
-            );
-        const org = rows[0];
+        const org = await this.em.findOne(AuthOrganization, { id: householdId });
         if (!org) throw new BadRequestException('Household not found');
 
         const settings = await this.settings(householdId);
@@ -157,7 +136,6 @@ export class HouseholdService {
             name: org.name,
             slug: org.slug,
             currency: settings.currency,
-            locale: settings.locale,
             periodStartDay: settings.periodStartDay,
             createdAt: new Date(org.createdAt).toISOString(),
         };
@@ -216,9 +194,10 @@ export class HouseholdService {
             householdId: org.id,
             kind: input.kind,
             currency: input.currency,
-            locale: input.locale,
             why: input.why,
         } as never);
+
+        await this.accountSettings.ensureForUser(userId, { locale: input.locale as never });
 
         if (input.monthlyNetIncome > 0) {
             this.em.create(IncomeSource, {
@@ -232,13 +211,11 @@ export class HouseholdService {
 
         await this.em.flush();
 
-        void userId;
         return {
             id: org.id,
             name: org.name,
             slug: org.slug,
             currency: input.currency,
-            locale: input.locale,
             periodStartDay: 1,
             createdAt: new Date().toISOString(),
         };
@@ -288,8 +265,6 @@ function toSettingsDto(row: HouseholdSettings) {
     return {
         householdId: row.householdId,
         kind: row.kind,
-        theme: row.theme,
-        locale: row.locale,
         currency: row.currency,
         periodStartDay: row.periodStartDay,
         ritualReminderAt: row.ritualReminderAt,

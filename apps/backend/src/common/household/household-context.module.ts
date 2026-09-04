@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
-import { HouseholdScopeInterceptor } from './household-scope.interceptor.js';
-import { MembershipService } from './membership.service.js';
+import { HouseholdScopeInterceptor } from './household-scope.interceptor';
+import { MembershipService } from './membership.service';
 
 /**
  * Global because every domain module resolves the same household identity, and

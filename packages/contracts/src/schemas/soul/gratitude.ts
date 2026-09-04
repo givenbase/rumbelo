@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, UserId, HouseholdId, WeekKey } from '../common.js';
+import { Id, UserId, HouseholdId, WeekKey } from '../common';
 
 export const Gratitude = z.object({
     id: Id,

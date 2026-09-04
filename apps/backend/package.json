@@ -2,10 +2,11 @@
   "name": "@rumbelo/backend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "nest start --watch",
+    "dev": "tsx watch src/main.ts",
     "build": "nest build",
-    "start": "node dist/src/main.js",
+    "start": "tsx src/main.ts",
     "lint": "eslint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
@@ -13,7 +14,7 @@
     "db:create": "NODE_OPTIONS='--import tsx/esm' mikro-orm migration:create",
     "db:fresh": "NODE_OPTIONS='--import tsx/esm' mikro-orm schema:fresh --run --seed",
     "db:seed": "NODE_OPTIONS='--import tsx/esm' mikro-orm seeder:run",
-    "auth:migrate": "NODE_OPTIONS='--import tsx/esm' tsx ./src/auth/auth.migrate.ts"
+    "auth:migrate": "NODE_OPTIONS='--import tsx/esm' tsx ./src/modules/auth/better-auth/auth.migrate.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

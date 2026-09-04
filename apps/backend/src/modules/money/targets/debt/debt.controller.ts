@@ -3,8 +3,8 @@ import { contract } from '@rumbelo/contracts';
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
-import { PayoffStrategy } from './debt.entity.js';
-import { DebtService } from './debt.service.js';
+import { PayoffStrategy } from './debt.entity';
+import { DebtService } from './debt.service';
 
 @Controller()
 export class DebtController {

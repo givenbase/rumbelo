@@ -1,9 +1,9 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
-import { currentUserId } from '../../../common/household/household.context.js';
-import { Gratitude } from './gratitude.entity.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository';
+import { currentUserId } from '../../../common/household/household.context';
+import { Gratitude } from './gratitude.entity';
 
 @Injectable()
 export class GratitudeService {

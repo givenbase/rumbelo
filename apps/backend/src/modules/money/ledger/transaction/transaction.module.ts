@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { RuleModule } from '../rule/rule.module.js';
-import { TransactionController } from './transaction.controller.js';
-import { TransactionService } from './transaction.service.js';
+import { RuleModule } from '../rule/rule.module';
+import { TransactionController } from './transaction.controller';
+import { TransactionService } from './transaction.service';
 
 @Module({
     imports: [RuleModule],

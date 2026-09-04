@@ -3,8 +3,8 @@ import { contract } from '@rumbelo/contracts';
 import { Controller } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
-import { currentPeriod } from '../../../common/utils/period.util.js';
-import { CoachService } from './coach.service.js';
+import { currentPeriod } from '../../../common/utils/period.util';
+import { CoachService } from './coach.service';
 
 @Controller()
 export class CoachController {

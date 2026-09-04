@@ -1,8 +1,8 @@
 import { Entity, ManyToOne, Property, Unique } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Jar } from '../../plan/jar/jar.entity.js';
-import { WeeklyRitual } from './weekly-ritual.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Jar } from '../../plan/jar/jar.entity';
+import { WeeklyRitual } from './weekly-ritual.entity';
 
 /**
  * Where the week's surplus was redirected.

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { DashboardModule } from './dashboard/dashboard.module.js';
-import { LedgerModule } from './ledger/ledger.module.js';
-import { PlanModule } from './plan/plan.module.js';
-import { RhythmModule } from './rhythm/rhythm.module.js';
-import { TargetsModule } from './targets/targets.module.js';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { LedgerModule } from './ledger/ledger.module';
+import { PlanModule } from './plan/plan.module';
+import { RhythmModule } from './rhythm/rhythm.module';
+import { TargetsModule } from './targets/targets.module';
 
 /**
  * Product: Geld. Children are grouped by sub-domain:

@@ -1,13 +1,13 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { sum } from '../../../../common/utils/money.util.js';
-import { daysInPeriod } from '../../../../common/utils/period.util.js';
-import { JarService } from '../../plan/jar/jar.service.js';
-import { PeriodTurn } from './period-turn.entity.js';
-import { TurnEvent } from './turn-event.entity.js';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { sum } from '../../../../common/utils/money.util';
+import { daysInPeriod } from '../../../../common/utils/period.util';
+import { JarService } from '../../plan/jar/jar.service';
+import { PeriodTurn } from './period-turn.entity';
+import { TurnEvent } from './turn-event.entity';
 
 /** Level thresholds are cumulative score. Labels follow the product's steering language. */
 export const LEVELS = [

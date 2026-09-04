@@ -1,8 +1,8 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository.js';
-import { CoachMessage } from './coach-message.entity.js';
+import { HouseholdScopedRepository } from '../../../common/household/household-scoped.repository';
+import { CoachMessage } from './coach-message.entity';
 
 @Injectable()
 export class CoachService {

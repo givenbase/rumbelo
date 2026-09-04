@@ -1,7 +1,7 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Cadence } from '../../../../common/database/enums.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Cadence } from '../../../../common/database/enums';
 
 export enum IncomeKind {
     SALARY = 'SALARY',

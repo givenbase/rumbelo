@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { GoalController } from './goal.controller.js';
-import { GoalService } from './goal.service.js';
+import { GoalController } from './goal.controller';
+import { GoalService } from './goal.service';
 
 @Module({
     controllers: [GoalController],

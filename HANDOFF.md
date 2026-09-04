@@ -96,9 +96,10 @@ O(households) migrations and catalog bloat. Every financial row carries
 a service cannot pass the wrong id or forget one. Schema-per-tenant remains
 correct for Meltizo; different problem.
 
-**Postgres schemas group by product, not by household.** `platform`, `money`,
-`growth`, `energy`, `soul`. Orthogonal to household scoping — it exists so the
-database mirrors the module tree. better-auth keeps its own tables in `public`.
+**Postgres schemas group by domain, not by household.** `auth`, `platform`,
+`money`, `growth`, `energy`, `soul`. Orthogonal to household scoping — it exists
+so the database mirrors the module tree. better-auth keeps its tables in `auth`
+via its pool's `search_path`; `public` holds only MikroORM's migrations table.
 
 ---
 

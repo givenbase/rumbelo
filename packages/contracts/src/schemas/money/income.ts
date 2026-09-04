@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Cadence, Id, IsoDate, Money, HouseholdId } from '../common.js';
+import { Cadence, Id, IsoDate, Money, HouseholdId } from '../common';
 
 export const IncomeKind = z.enum(['SALARY', 'FREELANCE', 'BENEFIT', 'RENTAL', 'DIVIDEND', 'OTHER']);
 

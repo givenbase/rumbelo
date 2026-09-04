@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, Money, PeriodKey, HouseholdId } from '../common.js';
+import { Id, Money, PeriodKey, HouseholdId } from '../common';
 
 /**
  * The six jars. Keys are stable and used as enum values in the database —

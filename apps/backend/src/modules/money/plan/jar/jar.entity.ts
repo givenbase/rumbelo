@@ -1,8 +1,8 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
 
-import type { Category } from './category.entity.js';
+import type { Category } from './category.entity';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
 
 export enum JarKey {
     NECESSITIES = 'NECESSITIES',

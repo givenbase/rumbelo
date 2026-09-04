@@ -28,13 +28,14 @@ households of several. One person can belong to up to five households
 
 | Concern | Location | Storage |
 |---|---|---|
-| Auth identity, sessions, org membership, invitations | better-auth (owns + migrates its tables) | `public` |
+| Auth identity, sessions, org membership, invitations | better-auth (owns + migrates its tables via search_path) | `auth` |
 | Household settings, coach inbox | `modules/household`, `modules/coach` | `platform.*` |
 | Money / growth / energy / soul | feature modules | `money.*` etc., every row carries `household_id` |
 | Enforcement | `HouseholdContextModule` interceptor + `HouseholdScopedRepository` | AsyncLocalStorage |
 
-Postgres schemas (`public`, `platform`, `money`, `growth`, `energy`, `soul`)
-are **product domain namespaces**, never per-customer schemas.
+Postgres schemas (`auth`, `platform`, `money`, `growth`, `energy`, `soul`)
+are **domain namespaces**, never per-customer schemas. `public` holds only
+MikroORM's migrations table.
 
 ### How scoping is enforced
 

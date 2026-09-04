@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, PeriodKey, HouseholdId } from '../common.js';
+import { Id, PeriodKey, HouseholdId } from '../common';
 
 /**
  * The Coach never scolds — the manifesto is "informatie, nooit schaamte".

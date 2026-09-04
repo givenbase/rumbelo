@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { FixedCostController } from './fixed-cost.controller.js';
-import { FixedCostService } from './fixed-cost.service.js';
+import { FixedCostController } from './fixed-cost.controller';
+import { FixedCostService } from './fixed-cost.service';
 
 @Module({
     controllers: [FixedCostController],

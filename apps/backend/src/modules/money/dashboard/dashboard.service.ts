@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { sum } from '../../../common/utils/money.util.js';
-import { daysInPeriod } from '../../../common/utils/period.util.js';
-import { CoachService } from '../../platform/coach/coach.service.js';
-import { HouseholdService } from '../../platform/household/household.service.js';
-import { TransactionService } from '../ledger/transaction/transaction.service.js';
-import { JarService } from '../plan/jar/jar.service.js';
-import { TurnService } from '../rhythm/turn/turn.service.js';
+import { sum } from '../../../common/utils/money.util';
+import { daysInPeriod } from '../../../common/utils/period.util';
+import { CoachService } from '../../platform/coach/coach.service';
+import { HouseholdService } from '../../platform/household/household.service';
+import { TransactionService } from '../ledger/transaction/transaction.service';
+import { JarService } from '../plan/jar/jar.service';
+import { TurnService } from '../rhythm/turn/turn.service';
 
 /**
  * Composition root for the dashboard. The design puts jars, coach, turn and four

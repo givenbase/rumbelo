@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { Money, PeriodKey } from '../common.js';
-import { JarBalance } from './jar.js';
-import { CoachMessage } from '../platform/coach.js';
-import { Turn } from './turn.js';
+import { Money, PeriodKey } from '../common';
+import { JarBalance } from './jar';
+import { CoachMessage } from '../platform/coach';
+import { Turn } from './turn';
 
 /** One aggregated read for the dashboard — avoids a waterfall of round trips. */
 export const Dashboard = z.object({

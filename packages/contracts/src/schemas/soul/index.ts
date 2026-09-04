@@ -1,2 +1,2 @@
 // Product barrel — keeps cross-product imports explicit.
-export * from './gratitude.js';
+export * from './gratitude';

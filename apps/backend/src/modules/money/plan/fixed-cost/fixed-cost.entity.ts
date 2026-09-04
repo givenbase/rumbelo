@@ -1,9 +1,9 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../common/database/base.entity.js';
-import { Cadence, FlowDirection } from '../../../../common/database/enums.js';
-import { Category } from '../jar/category.entity.js';
-import { Jar } from '../jar/jar.entity.js';
+import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { Cadence, FlowDirection } from '../../../../common/database/enums';
+import { Category } from '../jar/category.entity';
+import { Jar } from '../jar/jar.entity';
 
 /** Recurring obligations. They draw from a jar so they are visible before they hit. */
 @Entity({ tableName: 'fixed_cost', schema: 'money' })

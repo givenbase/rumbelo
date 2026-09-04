@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id, IsoDate, Money, PeriodKey, Pagination, HouseholdId } from '../common.js';
+import { Id, IsoDate, Money, PeriodKey, Pagination, HouseholdId } from '../common';
 
 /**
  * INBOX  — arrived, not yet given a jar. The only state that demands user attention.

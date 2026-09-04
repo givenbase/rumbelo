@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { JarController } from './jar.controller.js';
-import { JarService } from './jar.service.js';
+import { JarController } from './jar.controller';
+import { JarService } from './jar.service';
 
 @Module({
     controllers: [JarController],

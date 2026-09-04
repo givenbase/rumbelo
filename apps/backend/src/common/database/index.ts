@@ -1,2 +1,2 @@
-export * from './base.entity.js';
-export * from './enums.js';
+export * from './base.entity';
+export * from './enums';

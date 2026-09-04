@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 
 import type { Jar as ContractJar } from '@rumbelo/contracts';
 
-import { CADENCE_TO_MONTHLY, Cadence } from '../../../../common/database/enums.js';
-import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository.js';
-import { currentHouseholdId } from '../../../../common/household/household.context.js';
-import { Category } from './category.entity.js';
-import { Jar } from './jar.entity.js';
+import { CADENCE_TO_MONTHLY, Cadence } from '../../../../common/database/enums';
+import { HouseholdScopedRepository } from '../../../../common/household/household-scoped.repository';
+import { currentHouseholdId } from '../../../../common/household/household.context';
+import { Category } from './category.entity';
+import { Jar } from './jar.entity';
 
 /**
  * The contract is the source of truth for wire shapes; deriving the DTO from it

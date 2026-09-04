@@ -7,8 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button, Field, Input } from '@rumbelo/ui';
 
-import { AUTH_SIGN_IN } from '@/app/_lib/brand-quotes';
 import { signIn } from '@/app/_lib/auth';
+import { AUTH_SIGN_IN } from '@/app/_lib/brand-quotes';
 
 function safeRedirectPath(value: string | null): string {
     if (value && value.startsWith('/') && !value.startsWith('//')) return value;
