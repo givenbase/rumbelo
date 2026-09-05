@@ -7,7 +7,7 @@
  * @see apps/website app/_lib/api.ts in galighticus-platform
  */
 
-import { createClient } from '@rumbelo/contracts';
+import { createClient, type AppClient } from '@rumbelo/contracts';
 
 import { getClientHouseholdHeaders } from '@/app/_lib/household-api-context';
 import { env } from '@/app/_utils/get-env';
@@ -19,7 +19,7 @@ function getApiBaseURL(): string {
     return `${origin.replace(/\/$/, '')}/api/backend`;
 }
 
-export const api = createClient({
+export const api: AppClient = createClient({
     url: getApiBaseURL(),
     headers: getClientHouseholdHeaders,
     logErrors: process.env.NODE_ENV === 'development',

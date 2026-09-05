@@ -4,18 +4,19 @@
 
 'use client';
 
-import { createAPIUtils } from '@rumbelo/contracts/react';
+import type { AppClient } from '@rumbelo/contracts';
+import { createAPIUtils, type APIUtils } from '@rumbelo/contracts/react';
 
 import { api } from './api';
 
-export const apiUtils = createAPIUtils(api);
+export const apiUtils: APIUtils = createAPIUtils(api);
 
 /** Prefer importing `apiUtils` directly; kept for existing call sites. */
-export function useApi() {
+export function useApi(): APIUtils {
     return apiUtils;
 }
 
 /** Prefer importing `api` from `./api`; kept for existing call sites. */
-export function useApiClient() {
+export function useApiClient(): AppClient {
     return api;
 }
