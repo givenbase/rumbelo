@@ -39,16 +39,16 @@ export class MerchantPresetService {
         const active = await this.listActive();
         const mcc = input.mcc?.trim();
         if (mcc) {
-            const byMcc = active.find(r => r.mcc === mcc);
+            const byMcc = active.find(preset => preset.mcc === mcc);
             if (byMcc) return byMcc;
         }
         const text = (input.text ?? '').trim().toLowerCase();
         if (!text) return null;
         for (const row of active) {
             const needles = [row.matchValue, ...row.aliases]
-                .map(s => s.trim().toLowerCase())
+                .map(alias => alias.trim().toLowerCase())
                 .filter(Boolean);
-            if (needles.some(n => text.includes(n))) return row;
+            if (needles.some(needle => text.includes(needle))) return row;
         }
         return null;
     }

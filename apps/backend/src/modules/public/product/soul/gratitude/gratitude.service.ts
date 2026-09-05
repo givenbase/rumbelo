@@ -40,13 +40,13 @@ export class GratitudeService {
 
     async forWeek(week: string) {
         const rows = await this.repo.find({ week }, { orderBy: { createdAt: 'DESC' } });
-        return rows.map(g => ({
-            id: g.id,
-            householdId: g.householdId,
-            userId: g.userId,
-            week: g.week,
-            text: g.text,
-            createdAt: g.createdAt.toISOString(),
+        return rows.map(gratitude => ({
+            id: gratitude.id,
+            householdId: gratitude.householdId,
+            userId: gratitude.userId,
+            week: gratitude.week,
+            text: gratitude.text,
+            createdAt: gratitude.createdAt.toISOString(),
         }));
     }
 }

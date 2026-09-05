@@ -82,7 +82,7 @@ export class FixedCostService {
             jarId,
             jarKey: group.jarKey,
             jarName: group.jarName,
-            total: group.items.reduce((s, i) => s + i.amount, 0),
+            total: group.items.reduce((total, item) => total + item.amount, 0),
             items: group.items,
         }));
     }
@@ -136,19 +136,19 @@ export class FixedCostService {
     }
 }
 
-export function toDto(f: FixedCost) {
+export function toDto(fixedCost: FixedCost) {
     return {
-        id: f.id,
-        householdId: f.householdId,
-        jarId: f.jar.id,
-        categoryId: f.category?.id ?? null,
-        name: f.name,
-        amount: Number(f.amount),
-        cadence: f.cadence,
-        dueDay: f.dueDay,
-        direction: f.direction,
-        active: f.active,
-        endsOn: f.endsOn,
-        note: f.note,
+        id: fixedCost.id,
+        householdId: fixedCost.householdId,
+        jarId: fixedCost.jar.id,
+        categoryId: fixedCost.category?.id ?? null,
+        name: fixedCost.name,
+        amount: Number(fixedCost.amount),
+        cadence: fixedCost.cadence,
+        dueDay: fixedCost.dueDay,
+        direction: fixedCost.direction,
+        active: fixedCost.active,
+        endsOn: fixedCost.endsOn,
+        note: fixedCost.note,
     };
 }

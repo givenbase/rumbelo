@@ -57,28 +57,28 @@ export class GoalService {
     /** Straight-line projection at the current contribution rate. */
     async projections() {
         const rows = await this.repo.find({ status: GoalStatus.ACTIVE });
-        return rows.map(g => {
-            const remaining = Number(g.target) - Number(g.saved);
-            const monthly = Number(g.monthlyContribution);
+        return rows.map(goal => {
+            const remaining = Number(goal.target) - Number(goal.saved);
+            const monthly = Number(goal.monthlyContribution);
             const months = monthly > 0 ? Math.ceil(remaining / monthly) : null;
 
             const projectedDate = months === null ? null : addMonths(new Date(), months);
             const onTrack =
-                g.targetDate === null || projectedDate === null
+                goal.targetDate === null || projectedDate === null
                     ? monthly > 0
-                    : projectedDate <= g.targetDate;
+                    : projectedDate <= goal.targetDate;
 
             // What the monthly contribution would need to be to hit a stated deadline.
             const shortfall =
-                g.targetDate && monthly >= 0
+                goal.targetDate && monthly >= 0
                     ? Math.max(
                           0,
-                          Math.ceil(remaining / Math.max(1, monthsUntil(g.targetDate))) - monthly
+                          Math.ceil(remaining / Math.max(1, monthsUntil(goal.targetDate))) - monthly
                       )
                     : 0;
 
             return {
-                goalId: g.id,
+                goalId: goal.id,
                 projectedDate,
                 monthsRemaining: months,
                 onTrack,
@@ -135,8 +135,8 @@ export class GoalService {
 }
 
 function addMonths(from: Date, months: number): string {
-    const d = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() + months, 1));
-    return d.toISOString().slice(0, 10);
+    const date = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() + months, 1));
+    return date.toISOString().slice(0, 10);
 }
 
 function monthsUntil(isoDate: string): number {
@@ -149,18 +149,18 @@ function monthsUntil(isoDate: string): number {
     );
 }
 
-export function toDto(g: Goal) {
+export function toDto(goal: Goal) {
     return {
-        id: g.id,
-        householdId: g.householdId,
-        jarId: g.jar?.id ?? null,
-        name: g.name,
-        icon: g.icon,
-        target: Number(g.target),
-        saved: Number(g.saved),
-        monthlyContribution: Number(g.monthlyContribution),
-        targetDate: g.targetDate,
-        status: g.status,
-        why: g.why,
+        id: goal.id,
+        householdId: goal.householdId,
+        jarId: goal.jar?.id ?? null,
+        name: goal.name,
+        icon: goal.icon,
+        target: Number(goal.target),
+        saved: Number(goal.saved),
+        monthlyContribution: Number(goal.monthlyContribution),
+        targetDate: goal.targetDate,
+        status: goal.status,
+        why: goal.why,
     };
 }

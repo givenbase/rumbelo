@@ -78,9 +78,9 @@ export class DebtService {
                 : Number(a.balance) - Number(b.balance)
         );
 
-        const totalBalance = debts.reduce((s, d) => s + Number(d.balance), 0);
+        const totalBalance = debts.reduce((total, debt) => total + Number(debt.balance), 0);
         const monthlyPool = debts.reduce(
-            (s, d) => s + Number(d.minimumPayment) + Number(d.extraPayment),
+            (total, debt) => total + Number(debt.minimumPayment) + Number(debt.extraPayment),
             0
         );
 
@@ -94,7 +94,7 @@ export class DebtService {
             totalInterestProjected: 0,
             debtFreeOn: months === null ? null : addMonths(months),
             monthsRemaining: months,
-            order: ordered.map(d => ({ debtId: d.id, name: d.name, payoffOn: null })),
+            order: ordered.map(debt => ({ debtId: debt.id, name: debt.name, payoffOn: null })),
         };
     }
 
@@ -150,18 +150,18 @@ function addMonths(months: number): string {
         .slice(0, 10);
 }
 
-export function toDto(d: Debt) {
+export function toDto(debt: Debt) {
     return {
-        id: d.id,
-        householdId: d.householdId,
-        name: d.name,
-        kind: d.kind,
-        balance: Number(d.balance),
-        originalBalance: Number(d.originalBalance),
-        interestRate: Number(d.interestRate),
-        minimumPayment: Number(d.minimumPayment),
-        extraPayment: Number(d.extraPayment),
-        dueDay: d.dueDay,
-        closedOn: d.closedOn,
+        id: debt.id,
+        householdId: debt.householdId,
+        name: debt.name,
+        kind: debt.kind,
+        balance: Number(debt.balance),
+        originalBalance: Number(debt.originalBalance),
+        interestRate: Number(debt.interestRate),
+        minimumPayment: Number(debt.minimumPayment),
+        extraPayment: Number(debt.extraPayment),
+        dueDay: debt.dueDay,
+        closedOn: debt.closedOn,
     };
 }

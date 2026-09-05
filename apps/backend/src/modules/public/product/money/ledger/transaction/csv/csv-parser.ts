@@ -20,13 +20,13 @@ const COLUMNS = {
 } as const;
 
 export function parseStatementCsv(content: string): ParsedRow[] {
-    const lines = content.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const lines = content.split(/\r?\n/).filter(line => line.trim().length > 0);
     if (lines.length < 2) return [];
 
     const delimiter = sniffDelimiter(lines[0]!);
     const header = splitRow(lines[0]!, delimiter).map(h => h.toLowerCase());
     const col = (aliases: readonly string[]) =>
-        header.findIndex(h => aliases.some(a => h.includes(a)));
+        header.findIndex(headerCol => aliases.some(alias => headerCol.includes(alias)));
 
     const iDate = col(COLUMNS.date);
     const iAmount = col(COLUMNS.amount);
@@ -75,9 +75,9 @@ function parseAmount(raw: string): number | null {
 
 /** Accepts YYYY-MM-DD, YYYYMMDD and DD-MM-YYYY, covering the major NL exports. */
 function normaliseDate(raw: string): string | null {
-    const s = raw.trim();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-    if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
-    const m = s.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
-    return m ? `${m[3]}-${m[2]}-${m[1]}` : null;
+    const trimmed = raw.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+    if (/^\d{8}$/.test(trimmed)) return `${trimmed.slice(0, 4)}-${trimmed.slice(4, 6)}-${trimmed.slice(6, 8)}`;
+    const match = trimmed.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+    return match ? `${match[3]}-${match[2]}-${match[1]}` : null;
 }

@@ -37,14 +37,14 @@ export class DashboardService {
             this.households.settings(householdId),
         ]);
 
-        const allocatedTotal = sum(jars.map(j => j.allocated));
-        const spentTotal = sum(jars.map(j => j.spent));
-        const play = jars.find(j => j.key === 'PLAY');
+        const allocatedTotal = sum(jars.map(jar => jar.allocated));
+        const spentTotal = sum(jars.map(jar => jar.spent));
+        const play = jars.find(jar => jar.key === 'PLAY');
 
         // What is safe to spend today without pushing any spendable jar over its line.
         const daysLeft = Math.max(1, daysInPeriod(period) - new Date().getUTCDate());
         const spendableRemaining = sum(
-            jars.filter(j => j.spendable).map(j => Math.max(0, j.remaining))
+            jars.filter(jar => jar.spendable).map(jar => Math.max(0, jar.remaining))
         );
 
         return {

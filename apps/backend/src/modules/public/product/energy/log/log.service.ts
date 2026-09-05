@@ -66,14 +66,14 @@ export class LogService {
 
     async logs() {
         const rows = await this.repo.find({}, { orderBy: { loggedOn: 'DESC' }, limit: 200 });
-        return rows.map(l => ({
-            id: l.id,
-            householdId: l.householdId,
-            userId: l.userId,
-            on: l.loggedOn,
-            metric: l.metric,
-            value: Number(l.value),
-            note: l.note,
+        return rows.map(log => ({
+            id: log.id,
+            householdId: log.householdId,
+            userId: log.userId,
+            on: log.loggedOn,
+            metric: log.metric,
+            value: Number(log.value),
+            note: log.note,
         }));
     }
 
@@ -85,11 +85,11 @@ export class LogService {
     async summary() {
         const rows = await this.repo.find({}, { orderBy: { loggedOn: 'DESC' }, limit: 400 });
         return Object.values(EnergyMetric).map(metric => {
-            const forMetric = rows.filter(r => r.metric === metric);
+            const forMetric = rows.filter(row => row.metric === metric);
             const avg = (n: number) => {
                 const slice = forMetric.slice(0, n);
                 return slice.length
-                    ? slice.reduce((s, r) => s + Number(r.value), 0) / slice.length
+                    ? slice.reduce((total, row) => total + Number(row.value), 0) / slice.length
                     : 0;
             };
             const a7 = avg(7);

@@ -26,6 +26,6 @@ export class FixedCostPresetService {
             { orderBy: { sortOrder: 'ASC' }, populate: ['jarTemplate'] }
         );
         if (!filters?.audienceTag) return rows;
-        return rows.filter(r => r.audienceTags.includes(filters.audienceTag!));
+        return rows.filter(preset => preset.audienceTags.includes(filters.audienceTag!));
     }
 }

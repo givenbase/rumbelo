@@ -67,13 +67,13 @@ export class TransactionService {
      */
     async importCsv(accountId: string, content: string, dryRun: boolean) {
         const parsed = parseStatementCsv(content);
-        const keys = parsed.map(r => dedupeKey(accountId, r.bookedOn, r.amount, r.description));
+        const keys = parsed.map(row => dedupeKey(accountId, row.bookedOn, row.amount, row.description));
 
         const existing = keys.length
             ? await this.transactions.find({ dedupeKey: { $in: keys } })
             : [];
-        const seen = new Set(existing.map(e => e.dedupeKey));
-        const freshCount = keys.filter(k => !seen.has(k)).length;
+        const seen = new Set(existing.map(transaction => transaction.dedupeKey));
+        const freshCount = keys.filter(key => !seen.has(key)).length;
 
         if (!dryRun) {
             parsed.forEach((row, i) => {
@@ -196,22 +196,22 @@ export class TransactionService {
     }
 }
 
-export function toDto(t: Transaction) {
+export function toDto(transaction: Transaction) {
     return {
-        id: t.id,
-        householdId: t.householdId,
-        accountId: t.account?.id ?? null,
-        jarId: t.jar?.id ?? null,
-        categoryId: t.category?.id ?? null,
-        amount: Number(t.amount),
-        bookedOn: t.bookedOn,
-        description: t.description,
-        counterparty: t.counterparty,
-        status: t.status,
-        source: t.source,
-        appliedRuleId: t.appliedRuleId,
-        note: t.note,
-        createdAt: t.createdAt.toISOString(),
+        id: transaction.id,
+        householdId: transaction.householdId,
+        accountId: transaction.account?.id ?? null,
+        jarId: transaction.jar?.id ?? null,
+        categoryId: transaction.category?.id ?? null,
+        amount: Number(transaction.amount),
+        bookedOn: transaction.bookedOn,
+        description: transaction.description,
+        counterparty: transaction.counterparty,
+        status: transaction.status,
+        source: transaction.source,
+        appliedRuleId: transaction.appliedRuleId,
+        note: transaction.note,
+        createdAt: transaction.createdAt.toISOString(),
     };
 }
 

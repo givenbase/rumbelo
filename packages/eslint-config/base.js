@@ -19,6 +19,15 @@ export const sharedRules = {
   "prefer-const": "error",
   "no-var": "error",
   "no-debugger": "error",
+  /** Ban single-letter identifiers (`g`, `d`, `j`) — use `goal`, `debt`, `jar`. */
+  "id-length": [
+    "error",
+    {
+      min: 2,
+      exceptions: ["_"],
+      properties: "never",
+    },
+  ],
   "no-console": ["warn", { allow: ["warn", "error"] }],
   "turbo/no-undeclared-env-vars": "warn",
 };

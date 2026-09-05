@@ -50,14 +50,14 @@ export class TurnService {
             closed: turn?.closed ?? false,
             level: level.index,
             levelLabel: level.label,
-            events: events.map(e => ({
-                id: e.id,
-                householdId: e.householdId,
-                period: e.period,
-                kind: e.kind,
-                day: e.day,
-                text: e.text,
-                points: e.points,
+            events: events.map(event => ({
+                id: event.id,
+                householdId: event.householdId,
+                period: event.period,
+                kind: event.kind,
+                day: event.day,
+                text: event.text,
+                points: event.points,
             })),
         };
     }
@@ -107,19 +107,19 @@ export class TurnService {
     private async buildRecap(period: string, turn?: PeriodTurn | null) {
         const jarRows = await this.jars.balances(period);
         const income = await this.jars.monthlyNetIncome();
-        const allocated = sum(jarRows.map(j => j.allocated));
-        const spent = sum(jarRows.map(j => j.spent));
+        const allocated = sum(jarRows.map(jar => jar.allocated));
+        const spent = sum(jarRows.map(jar => jar.spent));
         const leftOver = allocated - spent;
 
-        const spendable = jarRows.filter(j => j.spendable);
-        const held = spendable.filter(j => !j.overspent).length;
+        const spendable = jarRows.filter(jar => jar.spendable);
+        const held = spendable.filter(jar => !jar.overspent).length;
         const score =
             turn?.score ?? (spendable.length ? Math.round((held / spendable.length) * 100) : 0);
 
-        const best = jarRows.reduce((a, b) => (a.remaining >= b.remaining ? a : b), jarRows[0]!);
+        const best = jarRows.reduce((left, right) => (left.remaining >= right.remaining ? left : right), jarRows[0]!);
         const worst =
-            jarRows.find(j => j.overspent) ??
-            jarRows.reduce((a, b) => (a.remaining <= b.remaining ? a : b), jarRows[0]!);
+            jarRows.find(jar => jar.overspent) ??
+            jarRows.reduce((left, right) => (left.remaining <= right.remaining ? left : right), jarRows[0]!);
 
         const headline =
             leftOver >= 0
@@ -141,7 +141,7 @@ export class TurnService {
 }
 
 export function levelFor(score: number) {
-    return [...LEVELS].reverse().find(l => score >= l.threshold) ?? LEVELS[0]!;
+    return [...LEVELS].reverse().find(level => score >= level.threshold) ?? LEVELS[0]!;
 }
 
 function formatEuro(cents: number) {

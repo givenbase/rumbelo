@@ -15,17 +15,19 @@ export function splitByPercentage(
 ): { id: string; amount: number }[] {
     if (shares.length === 0) return [];
 
-    const allocated = shares.map(s => ({
-        id: s.id,
-        amount: Math.floor((total * s.percentage) / 100),
-        percentage: s.percentage,
+    const allocated = shares.map(share => ({
+        id: share.id,
+        amount: Math.floor((total * share.percentage) / 100),
+        percentage: share.percentage,
     }));
 
-    const distributed = allocated.reduce((sum, a) => sum + a.amount, 0);
+    const distributed = allocated.reduce((sum, share) => sum + share.amount, 0);
     const remainder = total - distributed;
 
     if (remainder !== 0) {
-        const largest = allocated.reduce((a, b) => (b.percentage > a.percentage ? b : a));
+        const largest = allocated.reduce((left, right) =>
+            right.percentage > left.percentage ? right : left
+        );
         largest.amount += remainder;
     }
 
@@ -33,5 +35,5 @@ export function splitByPercentage(
 }
 
 export function sum(values: number[]): number {
-    return values.reduce((a, b) => a + b, 0);
+    return values.reduce((total, value) => total + value, 0);
 }

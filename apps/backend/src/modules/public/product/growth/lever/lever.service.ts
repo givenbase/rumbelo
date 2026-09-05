@@ -18,13 +18,13 @@ export class LeverService {
 
     async list() {
         const rows = await this.repo.find();
-        return rows.map(l => ({
-            id: l.id,
-            householdId: l.householdId,
-            label: l.label,
-            note: l.note,
-            potentialMonthly: Number(l.potentialMonthly),
-            done: l.done,
+        return rows.map(lever => ({
+            id: lever.id,
+            householdId: lever.householdId,
+            label: lever.label,
+            note: lever.note,
+            potentialMonthly: Number(lever.potentialMonthly),
+            done: lever.done,
         }));
     }
 }

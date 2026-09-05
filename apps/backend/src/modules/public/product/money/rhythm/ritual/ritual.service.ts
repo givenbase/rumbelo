@@ -37,7 +37,7 @@ export class RitualService {
 
     async history() {
         const rows = await this.rituals.find({}, { orderBy: { week: 'DESC' }, limit: 26 });
-        return Promise.all(rows.map(r => this.toDto(r)));
+        return Promise.all(rows.map(ritual => this.toDto(ritual)));
     }
 
     // ====================================================================
@@ -63,14 +63,14 @@ export class RitualService {
         if (input.intention !== undefined) ritual.intention = input.intention;
         if (input.stage === RitualStage.DONE) ritual.completedAt = new Date();
         if (input.allocations?.length) {
-            ritual.surplus = input.allocations.reduce((sum, a) => sum + a.amount, 0);
+            ritual.surplus = input.allocations.reduce((sum, allocation) => sum + allocation.amount, 0);
             await this.em.nativeDelete(RitualAllocation, { ritual: ritual.id });
-            for (const a of input.allocations) {
+            for (const allocation of input.allocations) {
                 this.em.create(RitualAllocation, {
                     householdId: currentHouseholdId(),
                     ritual,
-                    jar: this.em.getReference(Jar, a.jarId),
-                    amount: a.amount,
+                    jar: this.em.getReference(Jar, allocation.jarId),
+                    amount: allocation.amount,
                 } as never);
             }
         }
@@ -89,7 +89,7 @@ export class RitualService {
             week: ritual.week,
             stage: ritual.stage,
             surplus: Number(ritual.surplus),
-            allocations: allocations.map(a => ({ jarId: a.jar.id, amount: Number(a.amount) })),
+            allocations: allocations.map(allocation => ({ jarId: allocation.jar.id, amount: Number(allocation.amount) })),
             intention: ritual.intention,
             completedAt: ritual.completedAt?.toISOString() ?? null,
         };

@@ -26,6 +26,22 @@ Migrations only; `schema:update` is never run against a database holding money.
 
 ## Conventions (do not regress)
 
+### Naming — no single-letter locals
+
+```ts
+// ✅
+rows.map(goal => goal.target)
+inbox.map(transaction => transaction.amount)
+
+// ❌
+rows.map(g => g.target)
+inbox.map(tx => tx.amount) // jargon shorthand — not clear enough
+```
+
+Enforced by ESLint `id-length` (`@rumbelo/eslint-config`, min 2; only `_` excepted).
+Also avoid cryptic abbreviations that pass the rule (`tx`, `alloc`, `str`) — prefer the domain word: `transaction`, `allocation`, `alias`.
+`em` / `id` are fine.
+
 ### MikroORM persistence — no `*AndFlush`
 
 MikroORM 6 deprecates `em.persistAndFlush` / `em.removeAndFlush`. Always chain:

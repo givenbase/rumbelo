@@ -4,8 +4,8 @@
  */
 
 /** Budget period key, YYYY-MM. One period is one Monopoly turn. */
-export function currentPeriod(d = new Date()): string {
-    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+export function currentPeriod(date = new Date()): string {
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
 }
 
 export function previousPeriod(period: string): string {
@@ -19,11 +19,11 @@ export function daysInPeriod(period: string): number {
 }
 
 /** ISO week key, YYYY-Www. The unit of the weekly ritual. */
-export function currentWeek(d = new Date()): string {
-    const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-    const day = t.getUTCDay() || 7;
-    t.setUTCDate(t.getUTCDate() + 4 - day);
-    const yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
-    const week = Math.ceil(((t.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
-    return `${t.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
+export function currentWeek(date = new Date()): string {
+    const thursday = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+    const day = thursday.getUTCDay() || 7;
+    thursday.setUTCDate(thursday.getUTCDate() + 4 - day);
+    const yearStart = new Date(Date.UTC(thursday.getUTCFullYear(), 0, 1));
+    const week = Math.ceil(((thursday.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
+    return `${thursday.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
 }

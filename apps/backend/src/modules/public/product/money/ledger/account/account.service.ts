@@ -40,15 +40,15 @@ export class AccountService {
     }
 }
 
-export function toDto(a: BankAccount) {
+export function toDto(account: BankAccount) {
     return {
-        id: a.id,
-        householdId: a.householdId,
-        name: a.name,
-        iban: a.iban,
-        kind: a.kind,
-        balance: Number(a.balance),
-        connectionId: a.connectionId,
-        lastSyncedAt: a.lastSyncedAt?.toISOString() ?? null,
+        id: account.id,
+        householdId: account.householdId,
+        name: account.name,
+        iban: account.iban,
+        kind: account.kind,
+        balance: Number(account.balance),
+        connectionId: account.connectionId,
+        lastSyncedAt: account.lastSyncedAt?.toISOString() ?? null,
     };
 }

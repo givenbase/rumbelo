@@ -34,6 +34,7 @@ Audience groups: `auth/` (identity), `public/` (platform + product → Postgres 
 - Household money rows extend `HouseholdEntity` and go through `HouseholdScopedRepository`
 - Enums from `@rumbelo/contracts` only — `@Enum(NativeEnum({ DebtKind, domain: 'money', … }))`, never local `export enum`
 - Persistence: `await em.persist(e).flush()` / `await em.remove(e).flush()` — never deprecated `persistAndFlush` / `removeAndFlush`
+- Naming: no single-letter locals; prefer domain words (`goal`/`debt`/`transaction`, not `g`/`d`/`tx`) — ESLint `id-length`
 
 ## CRUD order — non-negotiable
 

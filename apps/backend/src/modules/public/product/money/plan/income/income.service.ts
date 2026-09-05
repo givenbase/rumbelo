@@ -92,10 +92,10 @@ export class IncomeService {
         const jars = await this.jars.list();
         const allocations = splitByPercentage(
             amount,
-            jars.map(j => ({ id: j.id, percentage: j.percentage }))
+            jars.map(jar => ({ id: jar.id, percentage: jar.percentage }))
         );
         // TODO: persist allocations as ledger rows once the allocation table lands.
-        return { allocations: allocations.map(a => ({ jarId: a.id, amount: a.amount })) };
+        return { allocations: allocations.map(allocation => ({ jarId: allocation.id, amount: allocation.amount })) };
     }
 
     // ====================================================================
@@ -109,16 +109,16 @@ export class IncomeService {
     }
 }
 
-export function toDto(s: IncomeSource) {
+export function toDto(source: IncomeSource) {
     return {
-        id: s.id,
-        householdId: s.householdId,
-        name: s.name,
-        kind: s.kind,
-        amount: Number(s.amount),
-        cadence: s.cadence,
-        expectedDay: s.expectedDay,
-        active: s.active,
-        startedOn: s.startedOn,
+        id: source.id,
+        householdId: source.householdId,
+        name: source.name,
+        kind: source.kind,
+        amount: Number(source.amount),
+        cadence: source.cadence,
+        expectedDay: source.expectedDay,
+        active: source.active,
+        startedOn: source.startedOn,
     };
 }

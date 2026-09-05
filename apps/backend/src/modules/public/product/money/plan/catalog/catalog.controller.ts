@@ -31,11 +31,11 @@ export class CatalogController {
                 const rows = await this.categories.listActive({
                     jarKey: (input.jarKey as JarKey | null) ?? undefined,
                 });
-                return rows.map(r => ({
-                    key: r.key,
-                    name: r.name,
-                    sortOrder: r.sortOrder,
-                    jarKey: r.jarTemplate.key,
+                return rows.map(template => ({
+                    key: template.key,
+                    name: template.name,
+                    sortOrder: template.sortOrder,
+                    jarKey: template.jarTemplate.key,
                 }));
             }
         );
@@ -49,16 +49,16 @@ export class CatalogController {
                 categoryTemplateKey: input.categoryTemplateKey ?? undefined,
                 audienceTag: input.audienceTag ?? undefined,
             });
-            return rows.map(r => ({
-                key: r.key,
-                name: r.name,
-                sortOrder: r.sortOrder,
-                jarKey: r.jarTemplate.key,
-                categoryTemplateKey: r.categoryTemplateKey,
-                defaultCadence: r.defaultCadence,
-                suggestedDueDay: r.suggestedDueDay,
-                direction: r.direction,
-                audienceTags: r.audienceTags,
+            return rows.map(preset => ({
+                key: preset.key,
+                name: preset.name,
+                sortOrder: preset.sortOrder,
+                jarKey: preset.jarTemplate.key,
+                categoryTemplateKey: preset.categoryTemplateKey,
+                defaultCadence: preset.defaultCadence,
+                suggestedDueDay: preset.suggestedDueDay,
+                direction: preset.direction,
+                audienceTags: preset.audienceTags,
             }));
         });
     }
@@ -69,11 +69,11 @@ export class CatalogController {
             const rows = await this.debts.listActive({
                 kind: (input.kind as DebtKind | null) ?? undefined,
             });
-            return rows.map(r => ({
-                key: r.key,
-                name: r.name,
-                sortOrder: r.sortOrder,
-                kind: r.kind,
+            return rows.map(preset => ({
+                key: preset.key,
+                name: preset.name,
+                sortOrder: preset.sortOrder,
+                kind: preset.kind,
             }));
         });
     }
@@ -85,12 +85,12 @@ export class CatalogController {
                 const rows = await this.incomes.listActive({
                     kind: (input.kind as IncomeKind | null) ?? undefined,
                 });
-                return rows.map(r => ({
-                    key: r.key,
-                    name: r.name,
-                    sortOrder: r.sortOrder,
-                    kind: r.kind,
-                    defaultCadence: r.defaultCadence,
+                return rows.map(preset => ({
+                    key: preset.key,
+                    name: preset.name,
+                    sortOrder: preset.sortOrder,
+                    kind: preset.kind,
+                    defaultCadence: preset.defaultCadence,
                 }));
             }
         );
@@ -102,13 +102,13 @@ export class CatalogController {
             const rows = await this.goals.listActive({
                 jarKey: (input.jarKey as JarKey | null) ?? undefined,
             });
-            return rows.map(r => ({
-                key: r.key,
-                name: r.name,
-                sortOrder: r.sortOrder,
-                jarKey: r.jarTemplate.key,
-                categoryTemplateKey: r.categoryTemplateKey,
-                icon: r.icon,
+            return rows.map(preset => ({
+                key: preset.key,
+                name: preset.name,
+                sortOrder: preset.sortOrder,
+                jarKey: preset.jarTemplate.key,
+                categoryTemplateKey: preset.categoryTemplateKey,
+                icon: preset.icon,
             }));
         });
     }
@@ -121,15 +121,15 @@ export class CatalogController {
                 categoryTemplateKey: input.categoryTemplateKey ?? undefined,
                 mcc: input.mcc ?? undefined,
             });
-            return rows.map(r => ({
-                key: r.key,
-                name: r.name,
-                sortOrder: r.sortOrder,
-                matchValue: r.matchValue,
-                aliases: r.aliases,
-                mcc: r.mcc,
-                jarKey: r.jarTemplate.key,
-                categoryTemplateKey: r.categoryTemplateKey,
+            return rows.map(preset => ({
+                key: preset.key,
+                name: preset.name,
+                sortOrder: preset.sortOrder,
+                matchValue: preset.matchValue,
+                aliases: preset.aliases,
+                mcc: preset.mcc,
+                jarKey: preset.jarTemplate.key,
+                categoryTemplateKey: preset.categoryTemplateKey,
             }));
         });
     }

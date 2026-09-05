@@ -77,13 +77,13 @@ export class JarService {
                     progress:
                         allocated > 0 ? Math.min(1, Math.max(0, remaining / allocated)) : null,
                     overspent: remaining < 0,
-                    categories: cats.map(c => ({
-                        id: c.id,
+                    categories: cats.map(category => ({
+                        id: category.id,
                         jarId: jar.id,
-                        name: c.name,
-                        budgeted: Number(c.budgeted),
+                        name: category.name,
+                        budgeted: Number(category.budgeted),
                         actual: 0,
-                        archived: c.archived,
+                        archived: category.archived,
                     })),
                 };
             })
@@ -100,7 +100,7 @@ export class JarService {
             );
         return Math.round(
             rows.reduce(
-                (sum, r) => sum + Number(r.amount) * (CADENCE_TO_MONTHLY[r.cadence] ?? 0),
+                (sum, row) => sum + Number(row.amount) * (CADENCE_TO_MONTHLY[row.cadence] ?? 0),
                 0
             )
         );
@@ -115,7 +115,7 @@ export class JarService {
      * rejected rather than normalised.
      */
     async updateSplit(split: { jarId: string; percentage: number }[]): Promise<JarDto[]> {
-        const total = split.reduce((sum, s) => sum + s.percentage, 0);
+        const total = split.reduce((sum, entry) => sum + entry.percentage, 0);
         if (Math.abs(total - 100) > 0.01) {
             throw new Error(`Jar split must total 100%, received ${total}%`);
         }
@@ -175,7 +175,7 @@ export class JarService {
         GROUP BY jar_id`,
             [currentHouseholdId(), period]
         );
-        return new Map(rows.filter(r => r.jar_id).map(r => [r.jar_id, Number(r.total)]));
+        return new Map(rows.filter(row => row.jar_id).map(row => [row.jar_id, Number(row.total)]));
     }
 }
 

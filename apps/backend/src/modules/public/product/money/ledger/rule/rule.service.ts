@@ -101,14 +101,14 @@ export class RuleService {
         );
 
         let sorted = 0;
-        for (const tx of inbox) {
+        for (const transaction of inbox) {
             for (const rule of rules) {
-                const haystack = fieldValue(tx, rule.field);
+                const haystack = fieldValue(transaction, rule.field);
                 if (!this.matches(rule, haystack)) continue;
-                tx.jar = rule.jar;
-                tx.category = rule.category;
-                tx.status = TransactionStatus.SORTED;
-                tx.appliedRuleId = rule.id;
+                transaction.jar = rule.jar;
+                transaction.category = rule.category;
+                transaction.status = TransactionStatus.SORTED;
+                transaction.appliedRuleId = rule.id;
                 rule.hitCount += 1;
                 sorted += 1;
                 break;
@@ -157,29 +157,29 @@ export class RuleService {
     }
 }
 
-function fieldValue(tx: Transaction, field: RuleField): string {
+function fieldValue(transaction: Transaction, field: RuleField): string {
     switch (field) {
         case RuleField.COUNTERPARTY:
-            return tx.counterparty ?? '';
+            return transaction.counterparty ?? '';
         case RuleField.AMOUNT:
-            return String(tx.amount);
+            return String(transaction.amount);
         case RuleField.DESCRIPTION:
         default:
-            return tx.description;
+            return transaction.description;
     }
 }
 
-export function toDto(r: Rule) {
+export function toDto(rule: Rule) {
     return {
-        id: r.id,
-        householdId: r.householdId,
-        field: r.field,
-        matcher: r.matcher,
-        value: r.value,
-        jarId: r.jar.id,
-        categoryId: r.category?.id ?? null,
-        priority: r.priority,
-        active: r.active,
-        hitCount: r.hitCount,
+        id: rule.id,
+        householdId: rule.householdId,
+        field: rule.field,
+        matcher: rule.matcher,
+        value: rule.value,
+        jarId: rule.jar.id,
+        categoryId: rule.category?.id ?? null,
+        priority: rule.priority,
+        active: rule.active,
+        hitCount: rule.hitCount,
     };
 }

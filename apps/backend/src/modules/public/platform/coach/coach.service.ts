@@ -20,16 +20,16 @@ export class CoachService {
             { period, dismissedAt: null },
             { orderBy: { createdAt: 'DESC' }, limit: 20 }
         );
-        return rows.map(m => ({
-            id: m.id,
-            householdId: m.householdId,
-            period: m.period,
-            kind: m.kind,
-            text: m.text,
-            ctaLabel: m.ctaLabel,
-            ctaHref: m.ctaHref,
-            dismissedAt: m.dismissedAt?.toISOString() ?? null,
-            createdAt: m.createdAt.toISOString(),
+        return rows.map(message => ({
+            id: message.id,
+            householdId: message.householdId,
+            period: message.period,
+            kind: message.kind,
+            text: message.text,
+            ctaLabel: message.ctaLabel,
+            ctaHref: message.ctaHref,
+            dismissedAt: message.dismissedAt?.toISOString() ?? null,
+            createdAt: message.createdAt.toISOString(),
         }));
     }
 

@@ -17,12 +17,12 @@ export class MilestoneService {
 
     async list() {
         const rows = await this.repo.find();
-        return rows.map(m => ({
-            id: m.id,
-            householdId: m.householdId,
-            label: m.label,
-            targetMonthly: Number(m.targetMonthly),
-            reachedOn: m.reachedOn,
+        return rows.map(milestone => ({
+            id: milestone.id,
+            householdId: milestone.householdId,
+            label: milestone.label,
+            targetMonthly: Number(milestone.targetMonthly),
+            reachedOn: milestone.reachedOn,
         }));
     }
 }

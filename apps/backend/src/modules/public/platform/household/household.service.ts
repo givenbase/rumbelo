@@ -71,13 +71,13 @@ export class HouseholdService {
             { user: userId },
             { populate: ['organization'], orderBy: { organization: { createdAt: 'DESC' } } }
         );
-        return memberships.map(m => ({
-            id: m.organization.id,
-            name: m.organization.name,
-            slug: m.organization.slug,
+        return memberships.map(member => ({
+            id: member.organization.id,
+            name: member.organization.name,
+            slug: member.organization.slug,
             currency: Currency.EUR,
             periodStartDay: 1,
-            createdAt: m.organization.createdAt.toISOString(),
+            createdAt: member.organization.createdAt.toISOString(),
         }));
     }
 
@@ -87,14 +87,14 @@ export class HouseholdService {
             { organization: householdId },
             { populate: ['user'] }
         );
-        return memberships.map(m => ({
-            id: m.id,
+        return memberships.map(member => ({
+            id: member.id,
             householdId,
-            userId: m.user.id,
-            role: mapRole(m.role),
-            name: m.user.name,
-            email: m.user.email,
-            image: m.user.image ?? null,
+            userId: member.user.id,
+            role: mapRole(member.role),
+            name: member.user.name,
+            email: member.user.email,
+            image: member.user.image ?? null,
         }));
     }
 
@@ -146,7 +146,7 @@ export class HouseholdService {
     private async onboardInternal(input: z.infer<typeof OnboardingInput>, headers: Headers) {
         const userId = currentUserId();
         const splitTotal = input.split.reduce(
-            (sum: number, s: { percentage: number }) => sum + s.percentage,
+            (sum: number, share: { percentage: number }) => sum + share.percentage,
             0
         );
         if (Math.abs(splitTotal - 100) > 0.01) {
@@ -167,9 +167,9 @@ export class HouseholdService {
         });
 
         const splitByKey = new Map(
-            input.split.map((s: { key: string; percentage: number }) => [
-                s.key.toUpperCase(),
-                s.percentage,
+            input.split.map((share: { key: string; percentage: number }) => [
+                share.key.toUpperCase(),
+                share.percentage,
             ])
         );
 

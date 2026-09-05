@@ -154,6 +154,10 @@ create() {
 - **Money is integer minor units.** Never a float, never arithmetic on a
   decimal string. Splitting goes through `common/utils/money.util.ts`.
 
+### Naming
+
+No single-letter locals (`g`, `d`, `j`). Prefer domain words: `goal`, `debt`, `jar`, `row`, `preset`, `transaction` — not jargon shorthand (`tx`, `alloc`). Accumulators: `sum` / `total`. Enforced by ESLint `id-length` in `@rumbelo/eslint-config` (min 2; only `_` excepted).
+
 ### Persistence (MikroORM 6)
 
 Never use deprecated `persistAndFlush` / `removeAndFlush`:
