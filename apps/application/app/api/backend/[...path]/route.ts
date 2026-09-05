@@ -1,15 +1,15 @@
 /**
  * Same-origin API proxy — Galighticus website `/api/[...path]` pattern.
  *
- * Browser → `http://localhost:3000/api/backend/money/jars/list`
- * Proxy  → `http://localhost:3002/money/jars/list` (Nest OpenAPI routes)
+ * Browser → `{DOMAIN_APP}/api/backend/money/jars/list`
+ * Proxy  → `{DOMAIN_BACK}/money/jars/list` (Nest; private on Railway)
  *
  * `/api/auth/*` stays on `api/auth/[...all]/route.ts`.
  */
 
 import { env } from '@/app/_utils/get-env';
 
-const backendUrl = env.NEXT_PUBLIC_DOMAIN_BACK.replace(/\/$/, '');
+const backendUrl = env.DOMAIN_BACK.replace(/\/$/, '');
 
 export async function GET(request: Request) {
     return proxy(request);

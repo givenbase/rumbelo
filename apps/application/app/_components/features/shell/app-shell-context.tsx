@@ -62,7 +62,6 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
     const [quickOpen, setQuickOpen] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingStep, setOnboardingStep] = useState(0);
-    const [plan, setPlan] = useState<PlanKey>(resolvePreviewPlan(DEFAULT_PLAN));
     const [locale, setLocale] = useState<Locale>(Locale.EN);
 
     const now = new Date();
@@ -78,10 +77,17 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
         enabled: Boolean(householdId),
     });
 
-    useEffect(() => {
-        const key = settingsQuery.data?.planKey;
-        if (key) setPlan(resolvePreviewPlan(key));
-    }, [settingsQuery.data?.planKey]);
+    const settingsPlanKey = settingsQuery.data?.planKey;
+    const basePlan = resolvePreviewPlan(settingsPlanKey ?? DEFAULT_PLAN);
+    /** Manual override — cleared automatically when settings `planKey` changes. */
+    const [planBump, setPlanBump] = useState<{ key: string | undefined; plan: PlanKey } | null>(
+        null
+    );
+    const plan = planBump && planBump.key === settingsPlanKey ? planBump.plan : basePlan;
+    const setPlan = useCallback(
+        (next: PlanKey) => setPlanBump({ key: settingsPlanKey, plan: next }),
+        [settingsPlanKey]
+    );
 
     const showToast = useCallback((message: string, type: Toast['type'] = 'info') => {
         if (toastTimer.current) clearTimeout(toastTimer.current);

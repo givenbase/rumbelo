@@ -17,7 +17,14 @@ import { JarTemplate } from '../../template/jar/jar.entity';
  * @see money.fixed_cost — household-owned instances
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'fixed_cost_preset' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'money',
+        tableName: 'fixed_cost_preset',
+    })
+)
 @Unique({ properties: ['key'] })
 export class FixedCostPreset extends BaseEntity {
     // ? PROPERTIES

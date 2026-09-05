@@ -14,9 +14,10 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { type FastifyReply } from 'fastify';
 
+import { type RedisService } from '../../common/redis';
 import { renderBrandPage } from '../shared/brand-shell';
 
-type DbStatus = 'connected' | 'disconnected' | 'error';
+type ProbeStatus = 'connected' | 'disconnected' | 'error' | 'disabled';
 
 /**
  * Health checks for Railway / load balancers — no auth, no throttle.
@@ -28,21 +29,30 @@ type DbStatus = 'connected' | 'disconnected' | 'error';
 @AllowAnonymous()
 @Controller()
 export class HealthController {
-    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
+    constructor(
+        @Inject(EntityManager) private readonly em: EntityManager,
+        private readonly redis: RedisService
+    ) {}
 
     @Get('health')
-    @ApiOperation({ summary: 'Liveness + DB probe' })
+    @ApiOperation({ summary: 'Liveness + DB / Redis probe' })
     async getHealth(
         @Headers('accept') accept: string | undefined,
         @Res() reply: FastifyReply
     ): Promise<void> {
-        const { database, detail } = await this.probeDatabase();
+        const [{ database, detail }, redis] = await Promise.all([
+            this.probeDatabase(),
+            this.probeRedis(),
+        ]);
+
+        const ok = database === 'connected';
         const body = {
-            status: database === 'connected' ? 'ok' : 'degraded',
+            status: ok ? 'ok' : 'degraded',
             timestamp: new Date().toISOString(),
             uptime: process.uptime(),
             environment: process.env.NODE_ENV ?? 'development',
             database,
+            redis,
             ...(detail ? { detail } : {}),
         };
 
@@ -54,8 +64,8 @@ export class HealthController {
                     headline: body.status === 'ok' ? 'Alles draait' : 'Degraded',
                     message:
                         body.status === 'ok'
-                            ? 'API en database zijn bereikbaar.'
-                            : `Database: ${database}${detail ? ` — ${detail}` : ''}`,
+                            ? `API en database OK · Redis: ${redis}`
+                            : `Database: ${database}${detail ? ` — ${detail}` : ''} · Redis: ${redis}`,
                     code: body.status.toUpperCase(),
                     primaryHref: '/',
                     primaryLabel: 'API home',
@@ -87,6 +97,7 @@ export class HealthController {
             status: 'ready',
             timestamp: new Date().toISOString(),
             database: 'connected',
+            redis: await this.probeRedis(),
         };
     }
 
@@ -101,7 +112,7 @@ export class HealthController {
     }
 
     /** Real round-trip — more reliable than `isConnected()` alone. */
-    private async probeDatabase(): Promise<{ database: DbStatus; detail?: string }> {
+    private async probeDatabase(): Promise<{ database: ProbeStatus; detail?: string }> {
         try {
             await this.em.getConnection().execute('select 1 as ok');
             return { database: 'connected' };
@@ -109,6 +120,12 @@ export class HealthController {
             const detail = error instanceof Error ? error.message : 'Unknown error';
             return { database: 'error', detail };
         }
+    }
+
+    private async probeRedis(): Promise<ProbeStatus> {
+        if (!this.redis.client) return 'disabled';
+        if (await this.redis.ping()) return 'connected';
+        return this.redis.isAvailable ? 'error' : 'disconnected';
     }
 }
 

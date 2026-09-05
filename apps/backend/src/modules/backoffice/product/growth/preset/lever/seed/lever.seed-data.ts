@@ -19,8 +19,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
     {
         key: 'RAISE_RATE',
         name: 'Raise your rate',
-        summary:
-            'Every €100 more per day is €2,000 extra per month. One conversation can do it.',
+        summary: 'Every €100 more per day is €2,000 extra per month. One conversation can do it.',
         accentColor: 'var(--color-accent)',
         forPostureKeys: [INCOME_POSTURE_KEYS.SKILL_TRADE, INCOME_POSTURE_KEYS.TIME_TRADE],
         forCharacters: [],
@@ -29,8 +28,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
     {
         key: 'ADD_SERVICE',
         name: 'Add a service',
-        summary:
-            'A second product or service has zero fixed costs once the first is running.',
+        summary: 'A second product or service has zero fixed costs once the first is running.',
         accentColor: 'var(--color-jar-lts)',
         forPostureKeys: [INCOME_POSTURE_KEYS.SKILL_TRADE, INCOME_POSTURE_KEYS.SYSTEM],
         forCharacters: [],
@@ -48,8 +46,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
     {
         key: 'ACTIVATE_NETWORK',
         name: 'Activate your network',
-        summary:
-            'Revenue from people costs no marketing. Every happy client is a channel.',
+        summary: 'Revenue from people costs no marketing. Every happy client is a channel.',
         accentColor: 'var(--color-jar-edu)',
         forPostureKeys: [
             INCOME_POSTURE_KEYS.SKILL_TRADE,
@@ -72,8 +69,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
     {
         key: 'SCALE_SYSTEM',
         name: 'Scale what already works',
-        summary:
-            'Document the offer that sells. Repeatability beats one more custom project.',
+        summary: 'Document the offer that sells. Repeatability beats one more custom project.',
         accentColor: 'var(--color-accent)',
         forPostureKeys: [INCOME_POSTURE_KEYS.SYSTEM, INCOME_POSTURE_KEYS.SKILL_TRADE],
         forCharacters: [],

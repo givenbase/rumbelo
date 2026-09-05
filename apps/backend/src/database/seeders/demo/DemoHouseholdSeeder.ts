@@ -189,7 +189,12 @@ export class DemoHouseholdSeeder extends Seeder {
                 demo.persona === 'basic' ? 180_000 : demo.persona === 'plus' ? 320_000 : 650_000;
             em.create(IncomeSource, {
                 householdId,
-                name: demo.persona === 'plus' ? 'Freelance' : demo.persona === 'max' ? 'Bedrijf' : 'Salaris',
+                name:
+                    demo.persona === 'plus'
+                        ? 'Freelance'
+                        : demo.persona === 'max'
+                          ? 'Bedrijf'
+                          : 'Salaris',
                 kind:
                     demo.persona === 'plus'
                         ? IncomeKind.FREELANCE

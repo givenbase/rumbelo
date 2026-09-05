@@ -24,11 +24,32 @@ Dutch bank transaction data stays EU-resident under GDPR:
 3. **backend** — root directory `/`, start command `pnpm --filter @rumbelo/backend run start`.
 4. **application** — root directory `/`, start command `pnpm --filter @rumbelo/application run start`.
 
-Services reach each other over Railway's private network, so only `application`
-and `website` need public domains. Set every variable from the root
-`.env.example` (or `apps/backend/.env.example`) on the backend service;
-bake `NEXT_PUBLIC_*` from `apps/application/.env.example` /
-`apps/website/.env.example` into the Next builds. Use `DATABASE_SSL=true` in
-production.
+### Private vs public
+
+```
+Browser ──HTTPS──► Application (public)
+                      │  /api/backend + /api/auth (server-only)
+                      │  DOMAIN_BACK = http://backend.railway.internal:PORT
+                      ▼
+                   Backend
+                      ├── Postgres (private)
+                      └── Redis (private)
+```
+
+| Variable | Service | Value |
+|----------|---------|-------|
+| `DOMAIN_BACK` | Backend + Application (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` |
+| `DOMAIN_BACK_PUBLIC` | Backend | `https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}` |
+| `NEXT_PUBLIC_DOMAIN_APP` | Application + Website (build) | Application public HTTPS |
+| `NEXT_PUBLIC_DOMAIN_WEB` | Application + Website (build) | Website public HTTPS |
+| `NEXT_PUBLIC_DOMAIN_BACK` | Application + Website (build) | Backend **public** HTTPS (optional links; not used by proxies) |
+| `DATABASE_REDIS_URL` | Backend | Redis plugin URL (`redis://` / `rediss://`) |
+
+Private mesh uses **http + PORT** (no TLS). Public uses **https**. Browsers never call
+`.railway.internal` — only the Application Next server does via `DOMAIN_BACK`.
+
+See `apps/backend/.env.example`, `apps/application/.env.example`, and
+`apps/website/.env.example`. Use `DATABASE_SSL=true` and `DATABASE_SYNC=false`
+in production.
 
 Estimated cost at the owner-plus-friends stage: roughly $5–10/month.

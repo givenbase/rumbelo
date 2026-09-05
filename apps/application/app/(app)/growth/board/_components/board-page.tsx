@@ -268,7 +268,9 @@ export function BoardPageClient() {
                                                         </span>
                                                         <span
                                                             className={
-                                                                pays ? 'text-accent' : 'text-fg-muted'
+                                                                pays
+                                                                    ? 'text-accent'
+                                                                    : 'text-fg-muted'
                                                             }>
                                                             {h.locked
                                                                 ? 'not available yet'

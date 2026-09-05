@@ -9,7 +9,14 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'growth', tableName: 'wealth_stage' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'growth',
+        tableName: 'wealth_stage',
+    })
+)
 @Unique({ properties: ['key'] })
 export class WealthStage extends BaseEntity {
     // ? PROPERTIES

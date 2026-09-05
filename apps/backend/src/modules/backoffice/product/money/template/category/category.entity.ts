@@ -14,7 +14,14 @@ import { JarTemplate } from '../jar/jar.entity';
  * @see money.category — household-owned instances
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'category_template' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'money',
+        tableName: 'category_template',
+    })
+)
 @Unique({ properties: ['key'] })
 export class CategoryTemplate extends BaseEntity {
     // ? PROPERTIES

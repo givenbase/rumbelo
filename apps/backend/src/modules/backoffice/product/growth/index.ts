@@ -8,9 +8,4 @@ export {
     WealthStageModule,
     WealthStageService,
 } from './catalog';
-export {
-    GrowthPresetModule,
-    LeverPreset,
-    LeverPresetModule,
-    LeverPresetService,
-} from './preset';
+export { GrowthPresetModule, LeverPreset, LeverPresetModule, LeverPresetService } from './preset';

@@ -6,7 +6,12 @@ export type BetterAuthProxyOptions = {
 };
 
 function resolveBackendUrl(backendUrl?: string): string {
-    return backendUrl ?? process.env.NEXT_PUBLIC_DOMAIN_BACK ?? 'http://localhost:3002';
+    return (
+        backendUrl ??
+        process.env.DOMAIN_BACK ??
+        process.env.NEXT_PUBLIC_DOMAIN_BACK ??
+        'http://localhost:3002'
+    );
 }
 
 /**

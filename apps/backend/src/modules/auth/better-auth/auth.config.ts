@@ -37,13 +37,14 @@ export function createAuth(env: Env) {
     return betterAuth({
         database: pool,
         secret: env.BETTER_AUTH_SECRET,
-        baseURL: env.DOMAIN_BACK,
+        // Public origin — private DOMAIN_BACK is for service-to-service only.
+        baseURL: env.DOMAIN_BACK_PUBLIC,
         trustedOrigins: [env.DOMAIN_APP, env.DOMAIN_WEB],
 
         emailAndPassword: {
             enabled: true,
             minPasswordLength: 12,
-            requireEmailVerification: env.NODE_ENV === 'production',
+            requireEmailVerification: env.EMAIL_VERIFICATION_ENABLED,
         },
 
         user: {

@@ -22,7 +22,9 @@ export class WealthStageService {
             summary: row.summary,
             badgeLabel: row.badgeLabel,
             minNetWorth:
-                row.minNetWorth == null ? null : Number(row.minNetWorth),
+                row.minNetWorth === null || row.minNetWorth === undefined
+                    ? null
+                    : Number(row.minNetWorth),
         }));
     }
 

@@ -26,11 +26,15 @@ Match `apps/backend/.env.example` and app `get-env.ts`:
 |-----|------|---------|
 | `DATABASE_URL` | secret | migrate |
 | `BETTER_AUTH_SECRET` | secret | migrate / auth |
-| `DOMAIN_APP` | var | migrate, e2e |
-| `DOMAIN_WEB` | var | migrate |
-| `DOMAIN_BACK` | var | migrate, api-smoke, e2e |
+| `DOMAIN_APP` | var | migrate, e2e (public HTTPS) |
+| `DOMAIN_WEB` | var | migrate (public HTTPS) |
+| `DOMAIN_BACK` | var | migrate env validation |
+| `DOMAIN_BACK_PUBLIC` | var | api-smoke, e2e (public Nest HTTPS; preferred over `DOMAIN_BACK` for probes) |
 | `DATABASE_SSL` | var | optional (`true` on managed Postgres) |
 | `E2E_*_EMAIL` / `E2E_*_PASSWORD` | secret | optional e2e (defaults = seed demos) |
+
+CI runners are outside Railway’s private mesh — never point smoke/e2e at `*.railway.internal`.
+On Railway, Application’s server-only `DOMAIN_BACK` is the private Nest URL for proxies.
 
 ## Workflows
 

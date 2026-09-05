@@ -12,6 +12,7 @@ import { renderHouseholdInviteEmail } from './templates/household-invite';
  * Providers:
  *   memory  — log only (default; safe for local)
  *   resend  — Resend API when EMAIL_PROVIDER=resend + RESEND_API_KEY
+ * EMAIL_LOG_ONLY=true forces memory behaviour even when provider is resend.
  */
 @Injectable()
 export class EmailService {
@@ -23,7 +24,7 @@ export class EmailService {
 
     constructor() {
         const env = loadEnv();
-        this.provider = env.EMAIL_PROVIDER;
+        this.provider = env.EMAIL_LOG_ONLY ? 'memory' : env.EMAIL_PROVIDER;
         this.defaultFrom = env.EMAIL_FROM;
         this.appOrigin = env.DOMAIN_APP.replace(/\/$/, '');
 
@@ -35,7 +36,9 @@ export class EmailService {
             }
         }
 
-        this.logger.log(`Email ready (provider=${this.provider}, from=${this.defaultFrom})`);
+        this.logger.log(
+            `Email ready (provider=${this.provider}${env.EMAIL_LOG_ONLY ? ', log-only' : ''}, from=${this.defaultFrom})`
+        );
     }
 
     // ====================================================================

@@ -14,7 +14,14 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * @see money.debt — household-owned instances
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'debt_preset' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'money',
+        tableName: 'debt_preset',
+    })
+)
 @Unique({ properties: ['key'] })
 export class DebtPreset extends BaseEntity {
     // ? PROPERTIES

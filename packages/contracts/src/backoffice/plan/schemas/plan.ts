@@ -67,9 +67,7 @@ export function capabilitiesFor(plan: PlanKey): PlanCapabilities {
 }
 
 /** Screens that require a paid/higher tier somewhere in the catalog. */
-const GATED_SCREENS = new Set(
-    Object.values(PLAN_CAPABILITIES).flatMap(caps => caps.screens)
-);
+const GATED_SCREENS = new Set(Object.values(PLAN_CAPABILITIES).flatMap(caps => caps.screens));
 
 /** True when `plan` may open this screenKey (ungated screens always open). */
 export function isScreenUnlocked(screenKey: string | null | undefined, plan: PlanKey): boolean {

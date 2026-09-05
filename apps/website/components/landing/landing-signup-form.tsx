@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { ASSURANCES } from '@/lib/landing-content';
+import { appSignInUrl, appSignUpUrl } from '@/lib/portal-urls';
 
 import { LandingIcon } from './landing-icon';
 
@@ -32,13 +33,12 @@ export function LandingSignupForm() {
             else setNote('Please agree to the terms.');
             return;
         }
-        setNoteOk(true);
-        setNote('Account created — this is a prototype. Better Auth would sign you in here.');
+        // Real auth lives on the application — hand off to sign-up.
+        window.location.href = appSignUpUrl();
     };
 
     const googleIn = () => {
-        setNoteOk(true);
-        setNote('Google sign-in would open here — this is a prototype.');
+        window.location.href = appSignUpUrl();
     };
 
     const hasError = (key: FieldKey) => note && !noteOk && !String(vals[key]).trim();
@@ -170,7 +170,9 @@ export function LandingSignupForm() {
 
                             <span className="text-center font-mono text-xs font-medium tracking-wide text-fg-faint">
                                 Already have an account?{' '}
-                                <a href="/sign-in" className="text-accent hover:text-accent-hover">
+                                <a
+                                    href={appSignInUrl()}
+                                    className="text-accent hover:text-accent-hover">
                                     Sign in
                                 </a>
                             </span>

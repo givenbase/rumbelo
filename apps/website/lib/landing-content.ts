@@ -285,7 +285,10 @@ export const PLANS: Plan[] = [
 ];
 
 export const ASSURANCES: { t: string; icon: IconName }[] = [
-    { t: 'Basic needs no card to start — price can stay €0 or become a small fee later.', icon: 'shield' },
+    {
+        t: 'Basic needs no card to start — price can stay €0 or become a small fee later.',
+        icon: 'shield',
+    },
     { t: 'Bank data is read-only, via PSD2, and only after you connect it yourself.', icon: 'eye' },
     { t: 'Cancel a paid plan and everything you entered stays readable.', icon: 'db' },
 ];

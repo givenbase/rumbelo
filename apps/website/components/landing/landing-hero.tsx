@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { DEMO_INCOME_DEFAULT, FLOATERS, JARS, PROOF, TICKER } from '../../lib/landing-content';
+import { appSignUpUrl } from '@/lib/portal-urls';
 
 function fmt(n: number) {
     return '€' + Number(n).toLocaleString('en-IE');
@@ -126,7 +127,7 @@ export function LandingHero() {
                     </p>
                     <div className="flex flex-wrap items-center gap-3">
                         <a
-                            href="#signup"
+                            href={appSignUpUrl()}
                             className="rounded-full px-6 py-4 font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95"
                             style={{ background: 'var(--gradient-accent)' }}>
                             Start free — no card

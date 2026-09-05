@@ -15,7 +15,14 @@ import { JarTemplate } from '../../template/jar/jar.entity';
  * @see money.rule / money.transaction — household consumers
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'merchant_preset' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'money',
+        tableName: 'merchant_preset',
+    })
+)
 @Unique({ properties: ['key'] })
 export class MerchantPreset extends BaseEntity {
     // ? PROPERTIES

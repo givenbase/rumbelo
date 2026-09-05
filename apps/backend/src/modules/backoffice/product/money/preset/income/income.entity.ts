@@ -15,7 +15,12 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(
-    entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'income_source_preset' })
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'money',
+        tableName: 'income_source_preset',
+    })
 )
 @Unique({ properties: ['key'] })
 export class IncomeSourcePreset extends BaseEntity {

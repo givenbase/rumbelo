@@ -1,5 +1,5 @@
-import { PlanKey } from '@rumbelo/contracts';
 import {
+    PlanKey,
     PLAN_CAPABILITIES,
     PLAN_RANK,
     capabilitiesFor,

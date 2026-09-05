@@ -14,7 +14,7 @@ export function backendRpcUrl(): string {
 }
 
 /**
- * Nest Better Auth mount — `{DOMAIN_BACK}/api/auth`.
+ * Nest Better Auth mount on the **public** Nest origin.
  * Browser clients should use DOMAIN_APP + `/api/auth` (Next proxy), not this URL.
  */
 export function backendAuthUrl(): string {
@@ -25,6 +25,7 @@ export function portalDomains() {
     return {
         app: env.NEXT_PUBLIC_DOMAIN_APP,
         web: env.NEXT_PUBLIC_DOMAIN_WEB,
+        /** Nest public origin — not the private proxy target. */
         back: env.NEXT_PUBLIC_DOMAIN_BACK,
     };
 }

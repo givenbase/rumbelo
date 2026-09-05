@@ -3,58 +3,146 @@ import { z } from 'zod';
 /**
  * Fail fast on boot rather than at the first request. A finance backend with a
  * half-configured environment is worse than one that refuses to start.
+ *
+ * Key names match Railway (Backend service). Local `.env` uses the same names.
  */
+const boolish = (fallback: boolean) =>
+    z
+        .union([z.boolean(), z.enum(['true', 'false', '0', '1'])])
+        .default(fallback)
+        .transform(v => v === true || v === 'true' || v === '1');
+
 const EnvSchema = z.object({
+    // ── Runtime ──────────────────────────────────────────────────────────
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    /** Local listen port. Railway injects PORT automatically. */
     PORT: z.coerce.number().default(3002),
+    LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 
-    DATABASE_URL: z.string().min(1),
-    DATABASE_SSL: z
-        .union([z.boolean(), z.enum(['true', 'false', '0', '1'])])
-        .default(false)
-        .transform(v => v === true || v === 'true' || v === '1'),
-    REDIS_URL: z.string().optional(),
-
-    BETTER_AUTH_SECRET: z.string().min(32, 'Use at least 32 chars; this signs sessions'),
-
-    /** Public origins — mirror NEXT_PUBLIC_DOMAIN_* in the Next apps. */
+    // ── Domains ───────────────────────────────────────────────────────────
+    /** Product app (public). */
     DOMAIN_APP: z.url(),
+    /** Marketing site (public). */
     DOMAIN_WEB: z.url(),
+    /**
+     * Backend origin for private / service-to-service traffic.
+     * Railway: `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}`
+     * (http + PORT — not https; private mesh has no TLS).
+     * Local: same as DOMAIN_BACK_PUBLIC (`http://localhost:3002`).
+     */
     DOMAIN_BACK: z.url(),
+    /**
+     * Backend public origin (Better Auth baseURL, webhooks, external smoke).
+     * Railway: `https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}`.
+     * Falls back to DOMAIN_BACK when unset (local / CI).
+     */
+    DOMAIN_BACK_PUBLIC: z.url().optional(),
 
-    /** Bank sync stays off until an aggregator is configured. CSV import is always on. */
-    FEATURE_BANK_SYNC: z
-        .union([z.boolean(), z.enum(['true', 'false', '0', '1'])])
-        .default(false)
-        .transform(v => v === true || v === 'true' || v === '1'),
+    // ── Database ──────────────────────────────────────────────────────────
+    DATABASE_URL: z.string().min(1),
+    DATABASE_SSL: boolish(false),
+    /**
+     * Reserved — schema changes go through migrations only.
+     * Must stay false; MikroORM synchronize is never enabled.
+     */
+    DATABASE_SYNC: boolish(false),
+    /** Redis — was REDIS_URL. Prefer `redis://` / `rediss://`. */
+    DATABASE_REDIS_URL: z.string().optional(),
+
+    // ── Auth ──────────────────────────────────────────────────────────────
+    BETTER_AUTH_SECRET: z.string().min(32, 'Use at least 32 chars; this signs sessions'),
+    EMAIL_VERIFICATION_ENABLED: boolish(false),
+
+    // ── Email ─────────────────────────────────────────────────────────────
+    EMAIL_PROVIDER: z.enum(['resend', 'memory']).default('memory'),
+    RESEND_API_KEY: z.string().optional(),
+    /** When true, never call the provider — log only (even if provider is resend). */
+    EMAIL_LOG_ONLY: boolish(false),
+    /** Shared default From (Railway shared var). */
+    EMAIL_DEFAULT_FROM: z.string().optional(),
+    /** Optional override; wins over EMAIL_DEFAULT_FROM when set. */
+    EMAIL_FROM: z.string().optional(),
+
+    // ── Payments (optional until Stripe is wired) ─────────────────────────
+    STRIPE_SECRET_KEY: z.string().optional(),
+    STRIPE_WEBHOOK_SIGNING_SECRET: z.string().optional(),
+
+    // ── AI / maps (optional) ──────────────────────────────────────────────
+    OPENAI_API_KEY: z.string().optional(),
+    OPENAI_MODEL: z.string().optional(),
+    GOOGLE_MAPS_API: z.string().optional(),
+
+    // ── Bank sync (optional — off by default) ─────────────────────────────
+    FEATURE_BANK_SYNC: boolish(false),
     ENABLE_BANKING_APP_ID: z.string().optional(),
     ENABLE_BANKING_PRIVATE_KEY: z.string().optional(),
 
-    ANTHROPIC_API_KEY: z.string().optional(),
+    // ── Local / ops extras (not required on Railway) ──────────────────────
     SENTRY_DSN: z.string().optional(),
-
     /** Swagger UI at /api/docs — on in development; elsewhere require true. */
     ENABLE_SWAGGER: z
         .union([z.boolean(), z.enum(['true', 'false', '0', '1'])])
         .optional()
         .transform(v => v === true || v === 'true' || v === '1'),
-
-    /** Outbound email — `memory` logs only (default); `resend` needs RESEND_API_KEY. */
-    EMAIL_PROVIDER: z.enum(['resend', 'memory']).default('memory'),
-    EMAIL_FROM: z.string().default('Rumbelo <onboarding@resend.dev>'),
-    RESEND_API_KEY: z.string().optional(),
 });
 
-export type Env = z.infer<typeof EnvSchema>;
+export type Env = z.infer<typeof EnvSchema> & {
+    /** Resolved public backend origin (DOMAIN_BACK_PUBLIC ?? DOMAIN_BACK). */
+    DOMAIN_BACK_PUBLIC: string;
+    /** Resolved From address (EMAIL_FROM ?? EMAIL_DEFAULT_FROM ?? default). */
+    EMAIL_FROM: string;
+};
+
+/** Treat blank env values as unset (common in .env templates). */
+function blankToUndefined(value: string | undefined): string | undefined {
+    if (value === undefined) return undefined;
+    return value.trim() === '' ? undefined : value;
+}
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
-    const parsed = EnvSchema.safeParse(source);
+    // Soft alias: REDIS_URL → DATABASE_REDIS_URL (pre-rename local envs).
+    const normalized: NodeJS.ProcessEnv = {
+        ...source,
+        DATABASE_REDIS_URL: blankToUndefined(source.DATABASE_REDIS_URL ?? source.REDIS_URL),
+        EMAIL_FROM: blankToUndefined(source.EMAIL_FROM),
+        EMAIL_DEFAULT_FROM: blankToUndefined(source.EMAIL_DEFAULT_FROM),
+        RESEND_API_KEY: blankToUndefined(source.RESEND_API_KEY),
+        ENABLE_SWAGGER: blankToUndefined(source.ENABLE_SWAGGER),
+        SENTRY_DSN: blankToUndefined(source.SENTRY_DSN),
+        STRIPE_SECRET_KEY: blankToUndefined(source.STRIPE_SECRET_KEY),
+        STRIPE_WEBHOOK_SIGNING_SECRET: blankToUndefined(source.STRIPE_WEBHOOK_SIGNING_SECRET),
+        OPENAI_API_KEY: blankToUndefined(source.OPENAI_API_KEY),
+        OPENAI_MODEL: blankToUndefined(source.OPENAI_MODEL),
+        GOOGLE_MAPS_API: blankToUndefined(source.GOOGLE_MAPS_API),
+        ENABLE_BANKING_APP_ID: blankToUndefined(source.ENABLE_BANKING_APP_ID),
+        ENABLE_BANKING_PRIVATE_KEY: blankToUndefined(source.ENABLE_BANKING_PRIVATE_KEY),
+        DOMAIN_BACK_PUBLIC: blankToUndefined(source.DOMAIN_BACK_PUBLIC),
+    };
+
+    const parsed = EnvSchema.safeParse(normalized);
     if (!parsed.success) {
         const issues = parsed.error.issues.map(i => `  - ${i.path.join('.')}: ${i.message}`);
         throw new Error(`Invalid environment:\n${issues.join('\n')}`);
     }
-    if (parsed.data.FEATURE_BANK_SYNC && !parsed.data.ENABLE_BANKING_APP_ID) {
+
+    const data = parsed.data;
+
+    if (data.FEATURE_BANK_SYNC && !data.ENABLE_BANKING_APP_ID) {
         throw new Error('FEATURE_BANK_SYNC is on but ENABLE_BANKING_APP_ID is missing');
     }
-    return parsed.data;
+    if (data.DATABASE_SYNC) {
+        throw new Error(
+            'DATABASE_SYNC must stay false — Rumbelo applies schema via migrations only'
+        );
+    }
+    if (data.EMAIL_PROVIDER === 'resend' && !data.RESEND_API_KEY && !data.EMAIL_LOG_ONLY) {
+        throw new Error('EMAIL_PROVIDER=resend requires RESEND_API_KEY (or EMAIL_LOG_ONLY=true)');
+    }
+
+    return {
+        ...data,
+        DOMAIN_BACK_PUBLIC: data.DOMAIN_BACK_PUBLIC ?? data.DOMAIN_BACK,
+        EMAIL_FROM:
+            data.EMAIL_FROM ?? data.EMAIL_DEFAULT_FROM ?? 'Rumbelo <info@rumbelo.app>',
+    };
 }

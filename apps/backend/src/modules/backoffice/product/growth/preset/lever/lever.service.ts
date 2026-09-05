@@ -2,7 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-    MoneyCharacter,
+    type MoneyCharacter,
     WEALTH_STAGE_KEYS,
     filterGrowthLeverPresets,
     type GrowthLeverPreset,
@@ -33,8 +33,7 @@ export class LeverPresetService {
         const mapped = rows.map(row => toDto(row, sortByKey));
 
         const stageKey = filters?.stageKey ?? WEALTH_STAGE_KEYS.BUILDING;
-        const stageSortOrder =
-            filters?.stageSortOrder ?? sortByKey.get(stageKey) ?? 0;
+        const stageSortOrder = filters?.stageSortOrder ?? sortByKey.get(stageKey) ?? 0;
 
         return filterGrowthLeverPresets(mapped, {
             postureKey: filters?.postureKey,
@@ -45,10 +44,7 @@ export class LeverPresetService {
     }
 }
 
-function toDto(
-    row: LeverPreset,
-    sortByKey: Map<string, number>
-): GrowthLeverPreset {
+function toDto(row: LeverPreset, sortByKey: Map<string, number>): GrowthLeverPreset {
     return {
         key: row.key,
         name: row.name,

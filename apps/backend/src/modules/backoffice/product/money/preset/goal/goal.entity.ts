@@ -14,7 +14,14 @@ import { JarTemplate } from '../../template/jar/jar.entity';
  * @see money.goal — household-owned instances
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'goal_preset' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'money',
+        tableName: 'goal_preset',
+    })
+)
 @Unique({ properties: ['key'] })
 export class GoalPreset extends BaseEntity {
     // ? PROPERTIES

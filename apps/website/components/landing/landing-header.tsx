@@ -1,3 +1,5 @@
+import { appSignUpUrl } from '@/lib/portal-urls';
+
 import { LandingThemeToggle } from './landing-theme-toggle';
 
 export function LandingHeader() {
@@ -39,7 +41,7 @@ export function LandingHeader() {
                 <LandingThemeToggle />
 
                 <a
-                    href="#signup"
+                    href={appSignUpUrl()}
                     className="shrink-0 rounded-full px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95"
                     style={{ background: 'var(--gradient-accent)' }}>
                     Start free

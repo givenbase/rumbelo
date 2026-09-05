@@ -12,7 +12,14 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'growth', tableName: 'lever_preset' }))
+@Entity(
+    entityConfig({
+        schema: 'backoffice',
+        domain: 'reference',
+        group: 'growth',
+        tableName: 'lever_preset',
+    })
+)
 @Unique({ properties: ['key'] })
 export class LeverPreset extends BaseEntity {
     // ? PROPERTIES

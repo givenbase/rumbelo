@@ -13,6 +13,7 @@ import ormConfig from '../mikro-orm.config';
 import { OrpcErrorFilter } from './common/filters/orpc-error.filter';
 import { HouseholdContextModule } from './common/household/household-context.module';
 import { MarkErrorsDefinedPlugin } from './common/plugins/mark-errors-defined.plugin';
+import { RedisModule } from './common/redis';
 import { mapDatabaseConstraintErrorInterceptor } from './common/utils/database-constraint-error.util';
 import { createAuth } from './modules/auth/better-auth/auth.config';
 import { FeatureModules } from './modules/index';
@@ -26,6 +27,7 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot({ isGlobal: true, cache: true }),
                 MikroOrmModule.forRoot(ormConfig),
+                RedisModule,
                 ScheduleModule.forRoot(),
                 ThrottlerModule.forRoot([{ ttl: 60_000, limit: 240 }]),
                 BetterAuthModule.forRoot({ auth: createAuth(env) }),

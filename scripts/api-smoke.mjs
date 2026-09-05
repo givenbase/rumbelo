@@ -126,7 +126,9 @@ async function main() {
                 const ok = ep.healthStatus.includes(body.status);
                 if (!ok) {
                     if (ep.readyStrict && strictReady) {
-                        fail(`${ep.label}: status=${body.status} (want ${ep.healthStatus.join('|')})`);
+                        fail(
+                            `${ep.label}: status=${body.status} (want ${ep.healthStatus.join('|')})`
+                        );
                         failures++;
                         continue;
                     }
