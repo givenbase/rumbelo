@@ -29,7 +29,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'ritual',
         section: 'WEEKTELLING',
-        route: '/ritual',
+        route: '/product/ritual',
         navGroup: 'home',
         status: 'partial',
         gap: 'RitualWizard + ritual.advance persistence when live',
@@ -37,7 +37,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'why',
         section: 'WAAROM KLUIS',
-        route: '/why',
+        route: '/product/why',
         navGroup: 'home',
         status: 'shell',
         gap: 'Foundation layout — 4 principles + quote',
@@ -46,7 +46,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'geldhome',
         section: 'PORTAL OVERZICHT',
-        route: '/money/overview',
+        route: '/product/money/overview',
         navGroup: 'money',
         status: 'shell',
         gap: 'PortalHub money config',
@@ -54,7 +54,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'jars',
         section: 'POTTEN / JARS',
-        route: '/money/jars',
+        route: '/product/money/jars',
         navGroup: 'money',
         status: 'partial',
         gap: 'Card grid + split simulator from design; ListToolbar Move money + URL modal; live balances when not in preview',
@@ -62,7 +62,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'tx',
         section: 'TRANSACTIES',
-        route: '/money/transactions',
+        route: '/product/money/transactions',
         navGroup: 'money',
         status: 'partial',
         gap: 'Live inbox + sort mutation when household active',
@@ -70,7 +70,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'debt',
         section: 'SCHULDEN',
-        route: '/money/debts',
+        route: '/product/money/debts',
         navGroup: 'money',
         status: 'partial',
         gap: 'Freedom date hero + list; simulator simplified',
@@ -78,7 +78,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'fixed',
         section: 'VASTE LASTEN',
-        route: '/money/fixed-costs',
+        route: '/product/money/fixed-costs',
         navGroup: 'money',
         status: 'partial',
         gap: 'In/out tabs + list',
@@ -87,7 +87,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'groeihome',
         section: 'PORTAL OVERZICHT',
-        route: '/growth',
+        route: '/product/growth',
         navGroup: 'growth',
         status: 'shell',
         gap: 'PortalHub growth config',
@@ -95,7 +95,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'goals',
         section: 'DOELEN',
-        route: '/growth/goals',
+        route: '/product/growth/goals',
         navGroup: 'growth',
         status: 'partial',
         gap: 'Goal cards + tabs',
@@ -103,7 +103,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'income',
         section: 'MIJN INKOMEN',
-        route: '/growth/income',
+        route: '/product/growth/income',
         navGroup: 'growth',
         status: 'partial',
         gap: 'Income hero + levers',
@@ -111,7 +111,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'learn',
         section: 'WAT IK LEER',
-        route: '/growth/learn',
+        route: '/product/growth/learn',
         navGroup: 'growth',
         status: 'partial',
         gap: 'Book list states',
@@ -119,7 +119,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'board',
         section: 'BORD / BOARD',
-        route: '/growth/board',
+        route: '/product/growth/board',
         navGroup: 'growth',
         status: 'partial',
         gap: 'Holdings groups + filters from mock; create via URL modal stub; live asset API TBD',
@@ -128,7 +128,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'energiehome',
         section: 'PORTAL OVERZICHT',
-        route: '/energy',
+        route: '/product/energy',
         navGroup: 'energy',
         status: 'shell',
         gap: 'PortalHub energy config',
@@ -136,7 +136,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'week',
         section: 'MIJN WEEK',
-        route: '/energy/week',
+        route: '/product/energy/week',
         navGroup: 'energy',
         status: 'partial',
         gap: '168h bar + sleep slider',
@@ -144,7 +144,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'sleep',
         section: 'MIJN SLAAP',
-        route: '/energy/sleep',
+        route: '/product/energy/sleep',
         navGroup: 'energy',
         status: 'partial',
         gap: 'Sleep stage breakdown',
@@ -152,7 +152,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'train',
         section: 'TRAINEN',
-        route: '/energy/train',
+        route: '/product/energy/train',
         navGroup: 'energy',
         status: 'partial',
         gap: 'Session toggles',
@@ -160,7 +160,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'food',
         section: 'VOEDING',
-        route: '/energy/food',
+        route: '/product/energy/food',
         navGroup: 'energy',
         status: 'partial',
         gap: 'Macro rings + meals',
@@ -169,7 +169,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'zielhome',
         section: 'PORTAL OVERZICHT',
-        route: '/soul',
+        route: '/product/soul',
         navGroup: 'soul',
         status: 'shell',
         gap: 'PortalHub soul config',
@@ -177,7 +177,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'mind',
         section: 'STILTE',
-        route: '/soul/mind',
+        route: '/product/soul/mind',
         navGroup: 'soul',
         status: 'partial',
         gap: 'Stillness timer',
@@ -185,7 +185,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'grat',
         section: 'DANKBAARHEID',
-        route: '/soul/gratitude',
+        route: '/product/soul/gratitude',
         navGroup: 'soul',
         status: 'partial',
         gap: 'Weekly gratitude list',
@@ -193,7 +193,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'intent',
         section: 'INTENTIE',
-        route: '/soul/intent',
+        route: '/product/soul/intent',
         navGroup: 'soul',
         status: 'partial',
         gap: 'Intention field',
@@ -201,7 +201,7 @@ export const DESIGN_SCREENS: DesignScreen[] = [
     {
         key: 'chakra',
         section: 'CENTRA / CHAKRA',
-        route: '/soul/chakra',
+        route: '/product/soul/chakra',
         navGroup: 'soul',
         status: 'partial',
         gap: 'Centre picker + CTA',
@@ -244,8 +244,8 @@ export const DESIGN_SCREENS: DesignScreen[] = [
 
 export const DESIGN_GROUP_ENTRY: Record<string, string> = {
     home: '/',
-    geld: '/money/overview',
-    groeien: '/growth',
-    energie: '/energy',
-    ziel: '/soul',
+    geld: '/product/money/overview',
+    groeien: '/product/growth',
+    energie: '/product/energy',
+    ziel: '/product/soul',
 };

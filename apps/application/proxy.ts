@@ -1,9 +1,11 @@
 import { type NextRequest, NextResponse } from 'next/server';
-
+import createMiddleware from 'next-intl/middleware';
 import { getSessionCookie } from 'better-auth/cookies';
 
+import { routing } from './i18n/routing';
+
 /**
- * Next.js 16 Proxy with Better Auth (cookie existence only).
+ * Next.js 16 Proxy: next-intl + Better Auth cookie checks (Galighticus pattern).
  *
  * Per Better Auth:
  * - Uses getSessionCookie() for fast, optimistic session checks
@@ -16,29 +18,33 @@ import { getSessionCookie } from 'better-auth/cookies';
  */
 
 const AUTH_COOKIE_PREFIX = 'rumbelo';
+const intlMiddleware = createMiddleware(routing);
+
+function isAuthRoute(pathname: string): boolean {
+    return (
+        pathname.startsWith('/sign-in') ||
+        pathname.startsWith('/sign-up') ||
+        pathname.startsWith('/verify') ||
+        pathname.startsWith('/forgot-password') ||
+        pathname.startsWith('/reset-password')
+    );
+}
 
 export async function proxy(request: NextRequest) {
-    // Design preview: allow browsing without a session (fixtures only).
+    const intlResponse = await intlMiddleware(request);
+
     if (process.env.NEXT_PUBLIC_PREVIEW_MODE === 'true') {
-        return NextResponse.next();
+        return intlResponse;
     }
 
     const sessionCookie = getSessionCookie(request, {
         cookiePrefix: AUTH_COOKIE_PREFIX,
     });
     const hasSession = !!sessionCookie;
-
     const pathname = request.nextUrl.pathname;
 
-    const isAuthRoute =
-        pathname.startsWith('/sign-in') ||
-        pathname.startsWith('/sign-up') ||
-        pathname.startsWith('/forgot-password') ||
-        pathname.startsWith('/reset-password');
-
     const isSystemRoute = pathname.startsWith('/api/') || pathname.startsWith('/_next/');
-
-    const isProtectedRoute = !isAuthRoute && !isSystemRoute;
+    const isProtectedRoute = !isAuthRoute(pathname) && !isSystemRoute;
 
     if (!hasSession && isProtectedRoute) {
         const signInUrl = new URL('/sign-in', request.url);
@@ -48,7 +54,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(signInUrl);
     }
 
-    if (hasSession && isAuthRoute) {
+    if (hasSession && isAuthRoute(pathname) && !pathname.startsWith('/verify')) {
         const redirectTo = request.nextUrl.searchParams.get('redirectTo');
         const target =
             redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')
@@ -57,7 +63,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL(target, request.url));
     }
 
-    return NextResponse.next();
+    return intlResponse;
 }
 
 export const config = {

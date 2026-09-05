@@ -21,7 +21,7 @@ export function LockedGate({ requiredPlan }: { requiredPlan: PlanKey }) {
                     inside it.
                 </p>
             </div>
-            <Button as="a" href="/settings/plan">
+            <Button as="a" href="/settings/general/plan">
                 View plan
             </Button>
         </div>

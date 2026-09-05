@@ -17,7 +17,7 @@ export const moneyPortalHub: PortalHubProps = {
         kind: 'START HERE',
         text: 'Add income and fixed costs first — then your jars show what is left to steer.',
         cta: 'Open jars',
-        href: '/money/jars',
+        href: '/product/money/jars',
     },
     cards: [
         {
@@ -26,7 +26,7 @@ export const moneyPortalHub: PortalHubProps = {
             note: 'jars on track this month',
             color: 'var(--color-jar-nec)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/money/jars',
+            href: '/product/money/jars',
         },
         {
             name: 'Spending',
@@ -34,7 +34,7 @@ export const moneyPortalHub: PortalHubProps = {
             note: 'booked this month',
             color: 'var(--color-jar-play)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/money/transactions',
+            href: '/product/money/transactions',
         },
         {
             name: 'Debt',
@@ -42,7 +42,7 @@ export const moneyPortalHub: PortalHubProps = {
             note: 'the month you are free',
             color: 'var(--color-danger)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/money/debts',
+            href: '/product/money/debts',
         },
         {
             name: 'Fixed',
@@ -50,7 +50,7 @@ export const moneyPortalHub: PortalHubProps = {
             note: 'fixed costs per month',
             color: 'var(--color-jar-nec)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/money/fixed-costs',
+            href: '/product/money/fixed-costs',
         },
     ],
 };
@@ -66,7 +66,7 @@ export const growthPortalHub: PortalHubProps = {
         kind: 'THE LEVER',
         text: 'Cutting costs has a floor; raising income does not. Income is the faster lever.',
         cta: 'Open income',
-        href: '/growth/income',
+        href: '/product/growth/income',
     },
     cards: [
         {
@@ -75,7 +75,7 @@ export const growthPortalHub: PortalHubProps = {
             note: 'goals in progress',
             color: 'var(--color-jar-lts)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/growth/goals',
+            href: '/product/growth/goals',
         },
         {
             name: 'Income',
@@ -83,7 +83,7 @@ export const growthPortalHub: PortalHubProps = {
             note: 'per month now',
             color: 'var(--color-accent)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/growth/income',
+            href: '/product/growth/income',
         },
         {
             name: 'Learn',
@@ -91,7 +91,7 @@ export const growthPortalHub: PortalHubProps = {
             note: 'books in your queue',
             color: 'var(--color-jar-edu)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/growth/learn',
+            href: '/product/growth/learn',
         },
         {
             name: 'Net worth',
@@ -99,7 +99,7 @@ export const growthPortalHub: PortalHubProps = {
             note: 'truly yours',
             color: 'var(--color-jar-ff)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/growth/board',
+            href: '/product/growth/board',
         },
     ],
 };
@@ -115,7 +115,7 @@ export const energyPortalHub: PortalHubProps = {
         kind: 'COMING SOON',
         text: 'Energy tracking is on the way — sleep, training, and nutrition in one place.',
         cta: 'Open your week',
-        href: '/energy/week',
+        href: '/product/energy/week',
     },
     cards: [
         {
@@ -124,7 +124,7 @@ export const energyPortalHub: PortalHubProps = {
             note: 'hours you steer',
             color: 'var(--color-accent)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/energy/week',
+            href: '/product/energy/week',
         },
         {
             name: 'Sleep',
@@ -132,7 +132,7 @@ export const energyPortalHub: PortalHubProps = {
             note: 'per night',
             color: 'var(--color-jar-lts)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/energy/sleep',
+            href: '/product/energy/sleep',
         },
         {
             name: 'Training',
@@ -140,7 +140,7 @@ export const energyPortalHub: PortalHubProps = {
             note: 'sessions this week',
             color: 'var(--color-jar-ff)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/energy/train',
+            href: '/product/energy/train',
         },
         {
             name: 'Food',
@@ -148,7 +148,7 @@ export const energyPortalHub: PortalHubProps = {
             note: 'protein today',
             color: 'var(--color-jar-play)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/energy/food',
+            href: '/product/energy/food',
         },
     ],
 };
@@ -164,7 +164,7 @@ export const soulPortalHub: PortalHubProps = {
         kind: 'START SMALL',
         text: 'One minute of stillness or one line of gratitude — both protect the jars.',
         cta: 'Open stillness',
-        href: '/soul/mind',
+        href: '/product/soul/mind',
     },
     cards: [
         {
@@ -173,7 +173,7 @@ export const soulPortalHub: PortalHubProps = {
             note: 'days in a row',
             color: 'var(--color-portal-soul)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/soul/mind',
+            href: '/product/soul/mind',
         },
         {
             name: 'Thanks',
@@ -181,7 +181,7 @@ export const soulPortalHub: PortalHubProps = {
             note: 'things noted',
             color: 'var(--color-jar-give)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/soul/gratitude',
+            href: '/product/soul/gratitude',
         },
         {
             name: 'Intent',
@@ -189,7 +189,7 @@ export const soulPortalHub: PortalHubProps = {
             note: 'for this week',
             color: 'var(--color-accent)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/soul/intent',
+            href: '/product/soul/intent',
         },
         {
             name: 'Centres',
@@ -197,7 +197,7 @@ export const soulPortalHub: PortalHubProps = {
             note: 'centres named today',
             color: 'var(--color-jar-edu)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/soul/chakra',
+            href: '/product/soul/chakra',
         },
     ],
 };

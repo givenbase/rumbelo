@@ -1,19 +1,19 @@
 'use client';
 
-import { GoalCreatePage, GoalUpdatePage } from '@/app/(app)/growth/goals/_components/goal-pages';
+import { GoalCreatePage, GoalUpdatePage } from '@/product/growth/goals/_components/goal-pages';
 import {
     IncomeCreatePage,
     IncomeUpdatePage,
-} from '@/app/(app)/growth/income/_components/income-pages';
-import { DebtCreatePage, DebtUpdatePage } from '@/app/(app)/money/debts/_components/debt-pages';
+} from '@/product/growth/income/_components/income-pages';
+import { DebtCreatePage, DebtUpdatePage } from '@/product/money/debts/_components/debt-pages';
 import {
     FixedCostCreatePage,
     FixedCostUpdatePage,
-} from '@/app/(app)/money/fixed-costs/_components/fixed-cost-pages';
+} from '@/product/money/fixed-costs/_components/fixed-cost-pages';
 import {
     ExpenseCreatePage,
     ExpenseUpdatePage,
-} from '@/app/(app)/money/transactions/_components/expense-pages';
+} from '@/product/money/transactions/_components/expense-pages';
 import { SheetStubForm } from '@/components/features/forms/sheet-stub-form';
 import { RouteModalShell } from '@/components/layout/route-modal-shell';
 

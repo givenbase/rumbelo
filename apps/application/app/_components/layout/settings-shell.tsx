@@ -66,7 +66,7 @@ function NavLink({
 
 /**
  * Shared settings chrome. Active section comes from the URL path
- * (`/settings/jars`), not query params — each section is a real page.
+ * (`/settings/product/money/jars`), not query params — each section is a real page.
  */
 export function SettingsShell({ children }: { children: ReactNode }) {
     const pathname = usePathname();

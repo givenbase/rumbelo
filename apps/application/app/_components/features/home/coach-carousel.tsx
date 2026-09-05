@@ -118,7 +118,7 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
                     </Link>
                 ))}
                 <Link
-                    href="/ritual"
+                    href="/product/ritual"
                     className="ml-auto flex items-center border-l border-line px-4.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:text-accent">
                     Detail
                 </Link>

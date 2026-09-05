@@ -64,7 +64,7 @@ export function HeroKluis({
             <div className="flex items-center justify-between">
                 <Eyebrow>✦ The six jars</Eyebrow>
                 <Link
-                    href="/money/jars"
+                    href="/product/money/jars"
                     className="font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase hover:text-accent">
                     Manage ▸
                 </Link>

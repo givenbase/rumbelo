@@ -1,29 +1,19 @@
 /**
- * Settings IA — product-scoped, not a flat preference dump.
- *
- * 1. Platform (General / Data): account, plan, export — cross-product.
- * 2. Per product (Money / Growth / Energy / Soul): same groups as NAV_GROUPS.
- * 3. Only product *children* that need prefs get an entry (hubs / overview skip).
- *
- * Money children → settings:
- *   jars → split %, jar→account, coach
- *   debt → avalanche / snowball
- *   bank (account infra) → manual accounts + PSD2
- *   systeem (rules infra) → automation toggles
- *
- * Growth → groei (goals horizon). Energy → energie (week/body). Soul → ziel (stillness).
+ * Settings IA — product prefs under `/settings/product/{money|growth|energy|soul}/…`.
+ * Cross-cutting prefs under `/settings/general/…` and `/settings/data/…`.
+ * Account stays at `/settings`.
  */
 export type SettingsTab =
     | 'account'
+    | 'plan'
+    | 'export'
     | 'jars'
     | 'debt'
     | 'bank'
-    | 'groei'
-    | 'energie'
-    | 'ziel'
-    | 'systeem'
-    | 'plan'
-    | 'export';
+    | 'automation'
+    | 'goals'
+    | 'week'
+    | 'stillness';
 
 export const DEFAULT_TAB: SettingsTab = 'account';
 
@@ -37,12 +27,26 @@ export type SettingsNavItem = {
 
 export type SettingsNavSection = {
     title: string;
-    /** `platform` or a NAV_GROUPS key. */
+    /** `platform` / `data` or a product key. */
     product: 'platform' | 'money' | 'growth' | 'energy' | 'soul' | 'data';
     items: SettingsNavItem[];
 };
 
-/** Grouped nav — platform first, then products, then data. */
+/** Absolute href for each settings tab. */
+export const SETTINGS_HREF: Record<SettingsTab, string> = {
+    account: '/settings',
+    plan: '/settings/general/plan',
+    export: '/settings/data/export',
+    jars: '/settings/product/money/jars',
+    debt: '/settings/product/money/debt',
+    bank: '/settings/product/money/bank',
+    automation: '/settings/product/money/automation',
+    goals: '/settings/product/growth/goals',
+    week: '/settings/product/energy/week',
+    stillness: '/settings/product/soul/stillness',
+};
+
+/** Grouped nav — general first, then products, then data. */
 export const SETTINGS_SECTIONS: SettingsNavSection[] = [
     {
         title: 'General',
@@ -60,7 +64,7 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
             { key: 'debt', label: 'Debt', sub: 'Payoff method', productChild: 'debt' },
             { key: 'bank', label: 'Bank', sub: 'Accounts and PSD2', productChild: 'account' },
             {
-                key: 'systeem',
+                key: 'automation',
                 label: 'Automation',
                 sub: 'Rules without asking',
                 productChild: 'rule',
@@ -70,14 +74,14 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
     {
         title: 'Growth',
         product: 'growth',
-        items: [{ key: 'groei', label: 'Goals', sub: 'Planning horizon', productChild: 'goals' }],
+        items: [{ key: 'goals', label: 'Goals', sub: 'Planning horizon', productChild: 'goals' }],
     },
     {
         title: 'Energy',
         product: 'energy',
         items: [
             {
-                key: 'energie',
+                key: 'week',
                 label: 'Week',
                 sub: 'Hours, sleep and weight',
                 productChild: 'week',
@@ -89,7 +93,7 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
         product: 'soul',
         items: [
             {
-                key: 'ziel',
+                key: 'stillness',
                 label: 'Stillness',
                 sub: 'Minutes a day and reminders',
                 productChild: 'mind',
@@ -107,17 +111,19 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
 export const SETTINGS_TABS: SettingsNavItem[] = SETTINGS_SECTIONS.flatMap(s => s.items);
 
 const TAB_KEYS = new Set<string>(SETTINGS_TABS.map(t => t.key));
+const HREF_TO_TAB = new Map(
+    (Object.entries(SETTINGS_HREF) as [SettingsTab, string][]).map(([tab, href]) => [href, tab])
+);
 
 export function isSettingsTab(value: string | undefined | null): value is SettingsTab {
     return Boolean(value && TAB_KEYS.has(value));
 }
 
-/** Active section from `/settings` (account) or `/settings/jars`, etc. */
+/** Active section from pathname (supports nested `/settings/product/…`). */
 export function settingsTabFromPathname(pathname: string): SettingsTab {
-    const segments = pathname.split('/').filter(Boolean);
-    if (segments[0] !== 'settings') return DEFAULT_TAB;
-    const section = segments[1];
-    return isSettingsTab(section) ? section : DEFAULT_TAB;
+    const normalized = pathname.replace(/\/$/, '') || '/settings';
+    if (normalized === '/settings') return DEFAULT_TAB;
+    return HREF_TO_TAB.get(normalized) ?? DEFAULT_TAB;
 }
 
 /** Map portal nav group → default settings section for that product. */
@@ -126,11 +132,11 @@ export function settingsTabForNavGroup(groupKey: string | null | undefined): Set
         case 'money':
             return 'jars';
         case 'growth':
-            return 'groei';
+            return 'goals';
         case 'energy':
-            return 'energie';
+            return 'week';
         case 'soul':
-            return 'ziel';
+            return 'stillness';
         case 'home':
             return 'account';
         default:
@@ -138,9 +144,8 @@ export function settingsTabForNavGroup(groupKey: string | null | undefined): Set
     }
 }
 
-/** Account lives at `/settings`; every other section at `/settings/[section]`. */
 export function settingsHref(tab: SettingsTab = DEFAULT_TAB): string {
-    return tab === 'account' ? '/settings' : `/settings/${tab}`;
+    return SETTINGS_HREF[tab];
 }
 
 export function settingsHrefForNavGroup(groupKey: string | null | undefined): string {

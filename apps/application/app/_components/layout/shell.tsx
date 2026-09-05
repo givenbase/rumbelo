@@ -36,7 +36,12 @@ interface MenuItem {
 
 const MENU_ITEMS: MenuItem[] = [
     { label: 'Settings', sub: 'Jars, rules, automatic split', href: '/settings', danger: false },
-    { label: 'My plan', sub: 'Manage your subscription', href: '/settings/plan', danger: false },
+    {
+        label: 'My plan',
+        sub: 'Manage your subscription',
+        href: '/settings/general/plan',
+        danger: false,
+    },
     {
         label: 'Reset setup',
         sub: 'Run through the first setup again',

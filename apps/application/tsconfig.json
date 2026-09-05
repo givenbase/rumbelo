@@ -11,7 +11,9 @@
         "paths": {
             "@/*": ["./*"],
             "@/app/*": ["./app/*"],
-            "@/components/*": ["./app/_components/*"]
+            "@/components/*": ["./app/_components/*"],
+            "@/product/*": ["./app/(routes)/[locale]/(app)/product/*"],
+            "@/platform/*": ["./app/(routes)/[locale]/(app)/(platform)/*"]
         }
     },
     "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.js", ".next/types/**/*.ts"],

@@ -34,9 +34,9 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         ],
         notAllowed: 'Not for eating out, clothes or fun — that is Play.',
         links: [
-            { href: '/money/fixed-costs', label: 'Fixed costs ›' },
-            { href: '/money/debts', label: 'Debt ›' },
-            { href: '/money/transactions', label: 'Spending ›' },
+            { href: '/product/money/fixed-costs', label: 'Fixed costs ›' },
+            { href: '/product/money/debts', label: 'Debt ›' },
+            { href: '/product/money/transactions', label: 'Spending ›' },
         ],
     },
     FINANCIAL_FREEDOM: {
@@ -51,8 +51,8 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         notAllowed:
             'Never withdraw to buy something. Only the return may leave — and better to leave that in too.',
         links: [
-            { href: '/growth/board', label: 'My net worth ›' },
-            { href: '/growth/goals', label: 'My goals ›' },
+            { href: '/product/growth/board', label: 'My net worth ›' },
+            { href: '/product/growth/goals', label: 'My goals ›' },
         ],
         subs: [
             { label: 'Index funds', pct: 70 },
@@ -74,8 +74,8 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         notAllowed:
             'Only if it raises your earning power. A course you never finish belongs in Play.',
         links: [
-            { href: '/money/transactions', label: 'Spending ›' },
-            { href: '/growth/goals', label: 'My goals ›' },
+            { href: '/product/money/transactions', label: 'Spending ›' },
+            { href: '/product/growth/goals', label: 'My goals ›' },
         ],
     },
     LONG_TERM_SAVINGS: {
@@ -90,8 +90,8 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         notAllowed:
             'Known, planned, not urgent. Urgent and unexpected? That is exactly what the emergency fund is for.',
         links: [
-            { href: '/growth/goals', label: 'My goals ›' },
-            { href: '/money/transactions', label: 'Spending ›' },
+            { href: '/product/growth/goals', label: 'My goals ›' },
+            { href: '/product/money/transactions', label: 'Spending ›' },
         ],
     },
     PLAY: {
@@ -104,7 +104,7 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
             'Gifts to yourself',
         ],
         notAllowed: 'No brakes, no guilt — but no top-up from another jar when it is empty either.',
-        links: [{ href: '/money/transactions', label: 'Spending ›' }],
+        links: [{ href: '/product/money/transactions', label: 'Spending ›' }],
     },
     GIVE: {
         note: 'Giving keeps money a tool and not a master. Transferred automatically.',
@@ -115,6 +115,6 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
             'Helping someone who needs it',
         ],
         notAllowed: 'No favours expected, no tax-deduction thinking. Giving keeps money a tool.',
-        links: [{ href: '/money/transactions', label: 'Spending ›' }],
+        links: [{ href: '/product/money/transactions', label: 'Spending ›' }],
     },
 };

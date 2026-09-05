@@ -155,7 +155,7 @@ export function CoachVerdict({
                     </Link>
                 ))}
                 <Link
-                    href="/ritual"
+                    href="/product/ritual"
                     className="col-span-2 flex items-center justify-center border-t border-line px-4.5 py-2.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:text-accent sm:col-span-1 sm:ml-auto sm:border-t-0 sm:border-l">
                     Detail
                 </Link>

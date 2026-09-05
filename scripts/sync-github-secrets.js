@@ -21,10 +21,10 @@
  *   pnpm sync:github-secrets --staging | --production
  */
 
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const { execSync } = require('child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { execSync } = require('node:child_process');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -228,14 +228,14 @@ function printMissingFilesHelp() {
 }
 
 function main() {
-    const args = process.argv.slice(2);
-    if (args.includes('--init') || args.includes('-i')) {
+    const args = new Set(process.argv.slice(2));
+    if (args.has('--init') || args.has('-i')) {
         initFromExamples();
         return;
     }
 
-    const stagingOnly = args.includes('--staging') || args.includes('-s');
-    const productionOnly = args.includes('--production') || args.includes('-p');
+    const stagingOnly = args.has('--staging') || args.has('-s');
+    const productionOnly = args.has('--production') || args.has('-p');
 
     console.log('🔐 GitHub Secrets Sync\n');
     console.log('Checking gh auth...');

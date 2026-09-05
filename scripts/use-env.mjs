@@ -16,8 +16,8 @@
  *   .env.{staging|production}
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const ROOT = path.join(__dirname, '..');
 const TARGETS = new Set(['staging', 'production']);
