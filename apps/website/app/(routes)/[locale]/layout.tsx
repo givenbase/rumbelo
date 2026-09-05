@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { getLocale, getMessages } from 'next-intl/server';
 
-import { locales, type Locale } from '@rumbelo/i18n';
+import { locales } from '@rumbelo/i18n';
 
 import '../../globals.css';
 
@@ -39,17 +38,10 @@ export function generateStaticParams() {
 
 type LocaleLayoutProps = Readonly<{
     children: React.ReactNode;
-    params: Promise<{ locale: string }>;
 }>;
 
-export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
-    const { locale } = await params;
-
-    if (!locales.includes(locale as Locale)) {
-        notFound();
-    }
-
-    setRequestLocale(locale);
+export default async function LocaleLayout({ children }: LocaleLayoutProps) {
+    const locale = await getLocale();
     const messages = await getMessages();
 
     return (

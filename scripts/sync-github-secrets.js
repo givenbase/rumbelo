@@ -98,7 +98,7 @@ function parseEnvLines(content) {
 }
 
 function isNonEmptyValue(value) {
-    return value != null && String(value).trim().length > 0;
+    return value !== null && value !== undefined && String(value).trim().length > 0;
 }
 
 /** One dotenv line; quote value if needed for gh -f */

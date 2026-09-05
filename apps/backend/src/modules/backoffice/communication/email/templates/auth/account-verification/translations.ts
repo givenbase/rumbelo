@@ -18,8 +18,7 @@ export const languageObject: EmailLanguageObject = {
             'If you did not create a Rumbelo account, you can safely ignore this message.',
     },
     nl: {
-        'email.auth.verification.header.preview_text':
-            'Bevestig je e-mail om Rumbelo af te ronden',
+        'email.auth.verification.header.preview_text': 'Bevestig je e-mail om Rumbelo af te ronden',
         'email.auth.verification.header.title': 'Verifieer je e-mail — Rumbelo',
         'email.auth.verification.header.heading': 'Bevestig je e-mail',
         'email.auth.verification.body.greeting': 'Hallo {firstName},',

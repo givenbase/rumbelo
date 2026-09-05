@@ -49,10 +49,7 @@ export function LandingHeader() {
             style={{ background: 'var(--color-chrome)' }}>
             <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-3 px-4 py-3 lg:gap-5 lg:px-6">
                 <div className="flex min-w-0 flex-1 items-baseline gap-2 lg:flex-none">
-                    <a
-                        href="#"
-                        className="font-display text-xl font-bold tracking-tight"
-                        onClick={close}>
+                    <a href="/" className="font-display text-xl font-bold tracking-tight">
                         Rumbelo
                     </a>
                     <span className="hidden font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint sm:inline">

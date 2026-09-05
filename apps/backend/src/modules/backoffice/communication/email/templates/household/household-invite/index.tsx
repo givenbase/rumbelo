@@ -39,9 +39,7 @@ export const HouseholdInviteTemplate: React.FC<HouseholdInviteTemplateProps> = (
             darkMode={darkMode}
             previewText={t('email.household.invite.header.preview_text')}
             title={t('email.household.invite.header.title')}>
-            <Heading style={styles.heading}>
-                {t('email.household.invite.header.heading')}
-            </Heading>
+            <Heading style={styles.heading}>{t('email.household.invite.header.heading')}</Heading>
 
             <Section style={styles.section}>
                 <Text style={styles.text}>

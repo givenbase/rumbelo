@@ -2,7 +2,13 @@ import { Body, Container, Head, Html, Preview } from '@react-email/components';
 
 import * as React from 'react';
 
-import { emailBrand, emailFonts, emailLayout, emailRadii, emailShadow } from '../styles/email-tokens';
+import {
+    emailBrand,
+    emailFonts,
+    emailLayout,
+    emailRadii,
+    emailShadow,
+} from '../styles/email-tokens';
 import { getTheme } from '../styles/theme-styles';
 import EmailFooter from './EmailFooter';
 import EmailHeader from './EmailHeader';

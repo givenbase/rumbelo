@@ -19,6 +19,14 @@ import { Account } from '../account.entity';
  */
 @Entity(entityConfig({ schema: 'auth', domain: 'account', tableName: 'settings' }))
 export class AccountSettings extends BaseEntity {
+    // ? PROPERTIES
+    /**
+     * When personal onboarding finished. Null = still new at person level.
+     * Separate from Better Auth `email_verified`.
+     */
+    @Property({ type: 'timestamptz', nullable: true })
+    onboardedAt: Date | null = null;
+
     // ? ENUMS
     /** Preferred language (NL | EN). */
     @Enum(NativeEnum({ Locale, domain: 'auth', defaultValue: Locale.NL }))
@@ -37,13 +45,6 @@ export class AccountSettings extends BaseEntity {
         })
     )
     moneyCharacter: MoneyCharacter = MoneyCharacter.UNKNOWN;
-
-    /**
-     * When personal onboarding finished. Null = still new at person level.
-     * Separate from Better Auth `email_verified`.
-     */
-    @Property({ type: 'timestamptz', nullable: true })
-    onboardedAt: Date | null = null;
 
     // ? RELATIONSHIPS
     /**

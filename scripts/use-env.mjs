@@ -103,10 +103,7 @@ function main() {
     if (merged.DOMAIN_WEB && !merged.NEXT_PUBLIC_DOMAIN_WEB) {
         merged.NEXT_PUBLIC_DOMAIN_WEB = merged.DOMAIN_WEB;
     }
-    if (
-        (merged.DOMAIN_BACK_PUBLIC || merged.DOMAIN_BACK) &&
-        !merged.NEXT_PUBLIC_DOMAIN_BACK
-    ) {
+    if ((merged.DOMAIN_BACK_PUBLIC || merged.DOMAIN_BACK) && !merged.NEXT_PUBLIC_DOMAIN_BACK) {
         merged.NEXT_PUBLIC_DOMAIN_BACK = merged.DOMAIN_BACK_PUBLIC || merged.DOMAIN_BACK;
     }
 
@@ -163,7 +160,9 @@ function main() {
 
     console.log(`✅ Wrote ${path.basename(outPath)}`);
     console.log(`   DATABASE host: ${host}`);
-    console.log(`   Domains: ${merged.DOMAIN_APP || '—'} / ${merged.DOMAIN_BACK_PUBLIC || merged.DOMAIN_BACK || '—'}`);
+    console.log(
+        `   Domains: ${merged.DOMAIN_APP || '—'} / ${merged.DOMAIN_BACK_PUBLIC || merged.DOMAIN_BACK || '—'}`
+    );
     console.log('');
     console.log('Examples:');
     console.log(`  NODE_ENV=${target} pnpm db:push`);

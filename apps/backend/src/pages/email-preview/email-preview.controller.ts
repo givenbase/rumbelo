@@ -33,10 +33,7 @@ export class EmailPreviewController {
     }
 
     @Get(':template')
-    async preview(
-        @Param('template') template: string,
-        @Res() reply: FastifyReply
-    ): Promise<void> {
+    async preview(@Param('template') template: string, @Res() reply: FastifyReply): Promise<void> {
         if (!this.assertEnabled(reply)) return;
 
         if (!TEMPLATES.includes(template as TemplateId)) {
@@ -78,7 +75,8 @@ export class EmailPreviewController {
                     EmailTemplate.ACCOUNT_VERIFICATION,
                     {
                         firstName: 'Anna',
-                        verificationUrl: 'https://app.rumbelo.local/api/auth/verify-email?token=demo',
+                        verificationUrl:
+                            'https://app.rumbelo.local/api/auth/verify-email?token=demo',
                         expiresInHours: 48,
                     },
                     'en'
