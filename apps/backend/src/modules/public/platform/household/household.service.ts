@@ -277,7 +277,7 @@ export class HouseholdService {
                 subtitle: meta.subtitle,
                 icon: meta.icon,
                 percentage: Number(pct).toFixed(2),
-                isSpendable: meta.isSpendable,
+                capabilities: { ...meta.capabilities },
                 sortOrder: meta.sortOrder,
             } as never);
         }

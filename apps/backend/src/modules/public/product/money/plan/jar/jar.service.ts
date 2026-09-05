@@ -189,7 +189,7 @@ function toJarDto(jar: Jar): JarDto {
         subtitle: jar.subtitle,
         icon: jar.icon,
         percentage: Number(jar.percentage),
-        isSpendable: jar.isSpendable,
+        capabilities: jar.capabilities,
         sortOrder: jar.sortOrder,
     };
 }

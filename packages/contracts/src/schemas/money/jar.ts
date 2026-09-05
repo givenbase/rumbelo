@@ -15,6 +15,58 @@ export const DEFAULT_JAR_SPLIT: Record<JarKey, number> = {
     [JarKey.GIVE]: 5,
 };
 
+/**
+ * What a jar may do — identity stays on JarKey; behavior lives here.
+ * Seeded from JAR_CAPABILITIES onto templates → household jars at onboard.
+ */
+export const JarCapabilities = z.object({
+    /** Day-to-day expenses / inbox sorting may land here. */
+    canSpend: z.boolean(),
+    /** Goals and buffers may attach here. */
+    canSave: z.boolean(),
+    /** Money leaves only as invest / holdings transfer (never day-to-day spend). */
+    canInvest: z.boolean(),
+    /** Included in dashboard "safe to spend" / play-left maths. */
+    countsTowardSafeToSpend: z.boolean(),
+});
+export type JarCapabilities = z.infer<typeof JarCapabilities>;
+
+const SPEND: JarCapabilities = {
+    canSpend: true,
+    canSave: false,
+    canInvest: false,
+    countsTowardSafeToSpend: true,
+};
+
+/** Canonical capabilities per jar key — runtime checks import from here. */
+export const JAR_CAPABILITIES: Record<JarKey, JarCapabilities> = {
+    [JarKey.NECESSITIES]: { ...SPEND },
+    [JarKey.PLAY]: { ...SPEND },
+    [JarKey.GIVE]: { ...SPEND },
+    [JarKey.EDUCATION]: {
+        canSpend: true,
+        canSave: true,
+        canInvest: false,
+        countsTowardSafeToSpend: true,
+    },
+    [JarKey.LONG_TERM_SAVINGS]: {
+        canSpend: true,
+        canSave: true,
+        canInvest: false,
+        countsTowardSafeToSpend: false,
+    },
+    [JarKey.FINANCIAL_FREEDOM]: {
+        canSpend: false,
+        canSave: false,
+        canInvest: true,
+        countsTowardSafeToSpend: false,
+    },
+};
+
+export function jarCapabilitiesFor(key: JarKey): JarCapabilities {
+    return JAR_CAPABILITIES[key];
+}
+
 export const Category = z.object({
     id: Id,
     jarId: Id,
@@ -34,8 +86,7 @@ export const Jar = z.object({
     icon: z.string().max(8).nullable(),
     /** Share of net income routed here on arrival. All jars must sum to 100. */
     percentage: z.number().min(0).max(100),
-    /** Financial Freedom is never spendable — it may only be invested out. */
-    isSpendable: z.boolean().default(true),
+    capabilities: JarCapabilities,
     sortOrder: z.int(),
 });
 export type Jar = z.infer<typeof Jar>;

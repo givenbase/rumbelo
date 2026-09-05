@@ -5659,22 +5659,6 @@
           "enumItems": [],
           "mappedType": "decimal"
         },
-        "is_spendable": {
-          "name": "is_spendable",
-          "type": "bool",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "true",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "boolean"
-        },
         "sort_order": {
           "name": "sort_order",
           "type": "int4",
@@ -5690,6 +5674,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "integer"
+        },
+        "capabilities": {
+          "name": "capabilities",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'{}'",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
         }
       },
       "name": "money_jar",
@@ -13232,22 +13232,6 @@
           "enumItems": [],
           "mappedType": "decimal"
         },
-        "is_spendable": {
-          "name": "is_spendable",
-          "type": "bool",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "true",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "boolean"
-        },
         "sort_order": {
           "name": "sort_order",
           "type": "int4",
@@ -13279,6 +13263,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
+        },
+        "capabilities": {
+          "name": "capabilities",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'{}'",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
         }
       },
       "name": "reference_jar_template",

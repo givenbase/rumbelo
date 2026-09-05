@@ -1,8 +1,9 @@
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey, JAR_CAPABILITIES } from '@rumbelo/contracts';
 
 /**
  * Canonical jar catalog seed data — Rumbelo-owned defaults.
  * Loaded into backoffice.reference_jar_template by JarTemplateSeeder.
+ * Capabilities mirror contracts JAR_CAPABILITIES.
  */
 export const JAR_TEMPLATE_SEED = [
     {
@@ -11,7 +12,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Must-pays',
         icon: '🏠',
         defaultPercentage: '55.00',
-        isSpendable: true,
+        capabilities: JAR_CAPABILITIES[JarKey.NECESSITIES],
     },
     {
         key: JarKey.FINANCIAL_FREEDOM,
@@ -19,7 +20,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Never spend',
         icon: '🔒',
         defaultPercentage: '10.00',
-        isSpendable: false,
+        capabilities: JAR_CAPABILITIES[JarKey.FINANCIAL_FREEDOM],
     },
     {
         key: JarKey.LONG_TERM_SAVINGS,
@@ -27,7 +28,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Big things',
         icon: '🎯',
         defaultPercentage: '10.00',
-        isSpendable: true,
+        capabilities: JAR_CAPABILITIES[JarKey.LONG_TERM_SAVINGS],
     },
     {
         key: JarKey.EDUCATION,
@@ -35,7 +36,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Grow yourself',
         icon: '📚',
         defaultPercentage: '10.00',
-        isSpendable: true,
+        capabilities: JAR_CAPABILITIES[JarKey.EDUCATION],
     },
     {
         key: JarKey.PLAY,
@@ -43,7 +44,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Guilt-free',
         icon: '✨',
         defaultPercentage: '10.00',
-        isSpendable: true,
+        capabilities: JAR_CAPABILITIES[JarKey.PLAY],
     },
     {
         key: JarKey.GIVE,
@@ -51,6 +52,6 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Pass it on',
         icon: '🤲',
         defaultPercentage: '5.00',
-        isSpendable: true,
+        capabilities: JAR_CAPABILITIES[JarKey.GIVE],
     },
 ] as const;

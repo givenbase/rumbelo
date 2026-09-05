@@ -317,6 +317,7 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
     isPublished: 10,
     isArchived: 10,
     isSpendable: 10,
+    capabilities: 8,
     isBankSyncEnabled: 10,
     isCoachEnabled: 10,
     isDone: 10,

@@ -1,5 +1,5 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey, type JarCapabilities } from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../../../common/database/base.entity';
 import { NativeEnum } from '../../../../../common/database/native-enum.util';
@@ -8,7 +8,7 @@ import { entityConfig } from '../../../../../common/database/entity-config.util'
 /**
  * Jar Template Entity
  *
- * Rumbelo-owned catalog for the six jars (name, subtitle, icon, default %).
+ * Rumbelo-owned catalog for the six jars (name, subtitle, icon, default %, capabilities).
  * We write these rows; households only copy them into money.jar on onboard.
  *
  * @see money.jar — household-owned instances
@@ -36,9 +36,12 @@ export class JarTemplate extends BaseEntity {
     @Property({ default: 0 })
     sortOrder = 0;
 
-    /** Financial Freedom is never spendable — enforced when seeding household jars. */
-    @Property({ default: true })
-    isSpendable = true;
+    /**
+     * What jars of this key may do (spend / save / invest / safe-to-spend).
+     * Mirror of contracts JAR_CAPABILITIES[key]; copied onto household jars.
+     */
+    @Property({ type: 'json' })
+    capabilities!: JarCapabilities;
 
     /** Soft-disable without deleting historical household jars that used this key. */
     @Property({ default: true })

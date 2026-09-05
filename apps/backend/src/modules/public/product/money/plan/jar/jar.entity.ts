@@ -1,5 +1,5 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey, type JarCapabilities } from '@rumbelo/contracts';
 
 import type { Category } from './category.entity';
 
@@ -10,7 +10,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
 /**
  * Jar Entity
  *
- * Household-owned jar instance. Display defaults come from
+ * Household-owned jar instance. Display defaults + capabilities come from
  * backoffice.jar_template at onboard; the household may rename / re-split after.
  *
  * @see JarTemplate
@@ -37,9 +37,12 @@ export class Jar extends HouseholdEntity {
     @Property({ default: 0 })
     sortOrder = 0;
 
-    /** Financial Freedom is never spent, only invested out. Enforced in JarService. */
-    @Property({ default: true })
-    isSpendable = true;
+    /**
+     * Behavior flags (spend / save / invest / safe-to-spend).
+     * Copied from the template at onboard — do not infer from key in services.
+     */
+    @Property({ type: 'json' })
+    capabilities!: JarCapabilities;
 
     // ? ENUMS
     @Enum(NativeEnum({ JarKey, domain: 'money' }))

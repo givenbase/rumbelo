@@ -170,7 +170,7 @@ export class DemoHouseholdSeeder extends Seeder {
                     subtitle: meta.subtitle,
                     icon: meta.icon,
                     percentage: meta.defaultPercentage,
-                    isSpendable: meta.isSpendable,
+                    capabilities: { ...meta.capabilities },
                     sortOrder: meta.sortOrder,
                 } as never);
             }

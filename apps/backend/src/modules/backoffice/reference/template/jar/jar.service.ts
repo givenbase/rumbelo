@@ -22,7 +22,6 @@ export class JarTemplateService {
             this.em.create(JarTemplate, {
                 sortOrder: row.sortOrder ?? sortOrder,
                 isActive: true,
-                isSpendable: row.isSpendable ?? true,
                 ...row,
             } as never);
         }

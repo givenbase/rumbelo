@@ -111,10 +111,10 @@ export class TurnService {
         const spent = sum(jarRows.map(jar => jar.spent));
         const leftOver = allocated - spent;
 
-        const isSpendable = jarRows.filter(jar => jar.isSpendable);
-        const held = isSpendable.filter(jar => !jar.overspent).length;
+        const spendable = jarRows.filter(jar => jar.capabilities?.canSpend);
+        const held = spendable.filter(jar => !jar.overspent).length;
         const score =
-            turn?.score ?? (isSpendable.length ? Math.round((held / isSpendable.length) * 100) : 0);
+            turn?.score ?? (spendable.length ? Math.round((held / spendable.length) * 100) : 0);
 
         const best = jarRows.reduce(
             (left, right) => (left.remaining >= right.remaining ? left : right),
