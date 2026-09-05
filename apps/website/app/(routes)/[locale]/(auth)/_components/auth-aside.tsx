@@ -1,13 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { AUTH_QUOTES } from '@rumbelo/i18n';
 
 const ROTATE_MS = 7000;
 
-/** Desktop auth manifesto — quotes only (no video asset on the marketing site). */
+/** Pexels clip (download id 27908405). */
+const AUTH_ASIDE_VIDEO =
+    'https://videos.pexels.com/video-files/27908405/12260011_1920_1080_60fps.mp4';
+
+/**
+ * Desktop auth manifesto panel — looping muted Pexels video with brand quotes.
+ * Respects prefers-reduced-motion (quotes only; first quote stays).
+ */
 export function AuthAside() {
+    const videoRef = useRef<HTMLVideoElement>(null);
     const [reduceMotion, setReduceMotion] = useState(false);
     const [quoteIndex, setQuoteIndex] = useState(0);
 
@@ -18,6 +26,14 @@ export function AuthAside() {
         media.addEventListener('change', sync);
         return () => media.removeEventListener('change', sync);
     }, []);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video || reduceMotion) return;
+        void video.play().catch(() => {
+            // Autoplay can fail without user gesture; overlay copy remains visible.
+        });
+    }, [reduceMotion]);
 
     useEffect(() => {
         if (reduceMotion || AUTH_QUOTES.length < 2) return;
@@ -31,20 +47,51 @@ export function AuthAside() {
     if (!quote) return null;
 
     return (
-        <aside className="relative hidden overflow-hidden bg-raised lg:block">
+        <aside className="relative hidden overflow-hidden bg-black lg:block">
+            {!reduceMotion ? (
+                <video
+                    ref={videoRef}
+                    aria-hidden
+                    className="absolute inset-0 size-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata">
+                    <source src={AUTH_ASIDE_VIDEO} type="video/mp4" />
+                </video>
+            ) : null}
+
             <div
-                className="absolute inset-0 opacity-90"
-                style={{ background: 'var(--gradient-page)' }}
                 aria-hidden
+                className="absolute inset-0 bg-linear-to-t from-black/75 via-black/45 to-black/30"
             />
-            <div className="relative flex h-full flex-col justify-end p-10 xl:p-14">
-                <p className="font-mono text-[10px] tracking-[0.2em] text-fg-faint uppercase">
-                    {quote.eyebrow}
-                </p>
-                <p className="mt-3 max-w-md font-display text-3xl font-semibold tracking-tight text-fg xl:text-4xl">
-                    {quote.headline}
-                </p>
-                <p className="mt-4 max-w-sm text-sm leading-relaxed text-fg-muted">{quote.support}</p>
+
+            <div className="relative z-10 flex h-full min-h-dvh flex-col justify-end px-12 py-16">
+                <div key={quoteIndex} className="animate-rise">
+                    <p className="text-xs font-semibold tracking-widest text-white/70 uppercase">
+                        ✦ {quote.eyebrow}
+                    </p>
+                    <p className="mt-4 max-w-md font-display text-3xl leading-tight font-semibold tracking-tight text-white">
+                        {quote.headline}
+                    </p>
+                    <p className="mt-6 max-w-md text-sm leading-relaxed text-white/80">
+                        {quote.support}
+                    </p>
+                </div>
+
+                <div className="mt-10 flex gap-1.5" aria-hidden>
+                    {AUTH_QUOTES.map((_, i) => (
+                        <span
+                            key={i}
+                            className={
+                                i === quoteIndex
+                                    ? 'h-1 w-6 rounded-full bg-white'
+                                    : 'h-1 w-1.5 rounded-full bg-white/35'
+                            }
+                        />
+                    ))}
+                </div>
             </div>
         </aside>
     );
