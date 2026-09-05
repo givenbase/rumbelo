@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { BRAND_TAGLINE } from '@rumbelo/i18n';
+import { ThemeToggle } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 import { Locale } from '@rumbelo/contracts';
 
@@ -22,7 +23,6 @@ import { OnboardingOverlay } from '@/components/features/shell/onboarding-overla
 import { PeriodSelector } from './period-selector';
 import { PeriodTravelBanner } from './period-travel-banner';
 import { QuickAddFab } from './quick-add';
-import { ThemeToggle } from './theme-toggle';
 import { ToastPill } from './toast';
 // ── Menu items ───────────────────────────────────────────────────────────────
 

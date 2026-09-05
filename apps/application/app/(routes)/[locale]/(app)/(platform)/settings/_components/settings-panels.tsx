@@ -31,6 +31,7 @@ import {
     Select,
     StubNotice,
     Toggle,
+    useTheme,
 } from '@rumbelo/ui';
 import { cn, formatMoney, formatPercent } from '@rumbelo/utils';
 
@@ -142,9 +143,8 @@ export function AccountSettings() {
     const [currencyDraft, setCurrencyDraft] = useState<string | null>(null);
     const activeCurrency = currencyDraft ?? currency;
 
-    const [dark, setDark] = useState(
-        () => typeof window !== 'undefined' && localStorage.getItem('rumbelo-theme') === 'dark'
-    );
+    const { resolvedTheme, setTheme } = useTheme();
+    const dark = resolvedTheme === 'dark';
     const [periodDayDraft, setPeriodDayDraft] = useState<number | null>(null);
     const periodDay = periodDayDraft ?? settingsQuery.data?.money?.periodStartDay ?? 1;
 
@@ -239,10 +239,8 @@ export function AccountSettings() {
 
     const saveTheme = useMutation({
         mutationFn: async (next: Theme) => {
-            const css = next === Theme.DARK ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', css);
-            localStorage.setItem('rumbelo-theme', css);
-            setDark(next === Theme.DARK);
+            const css = next === Theme.DARK ? 'dark' : next === Theme.SYSTEM ? 'system' : 'light';
+            setTheme(css);
             return client.account.updateSettings({ theme: next });
         },
         onSuccess: () => {
@@ -657,7 +655,7 @@ export function AccountSettings() {
                     <Toggle
                         checked={dark}
                         label="Dark mode"
-                        hint="Saved locally and in household settings."
+                        hint="Saved on this device and in your account settings."
                         onCheckedChange={next => saveTheme.mutate(next ? Theme.DARK : Theme.LIGHT)}
                     />
                 </div>

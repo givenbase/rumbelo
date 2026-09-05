@@ -11,6 +11,7 @@
         "./layout": "./src/layout/index.ts",
         "./display": "./src/display/index.ts",
         "./navigation": "./src/navigation/index.ts",
+        "./theme": "./src/theme/index.ts",
         "./lib/utils": "./src/lib/utils.ts"
     },
     "scripts": {

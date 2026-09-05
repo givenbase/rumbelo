@@ -3,9 +3,8 @@
 import { useEffect, useId, useState } from 'react';
 
 import { BRAND_TAGLINE } from '@rumbelo/i18n';
+import { ThemeToggle } from '@rumbelo/ui';
 import { appSignUpUrl } from '@/lib/portal-urls';
-
-import { LandingThemeToggle } from './landing-theme-toggle';
 
 const NAV_LINKS = [
     { href: '#pillars', label: 'The portals' },
@@ -69,7 +68,7 @@ export function LandingHeader() {
                 </nav>
 
                 <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-                    <LandingThemeToggle />
+                    <ThemeToggle className="size-8 rounded-full bg-transparent text-sm text-fg-muted hover:border-accent hover:bg-transparent hover:text-accent" />
 
                     <a
                         href={appSignUpUrl()}

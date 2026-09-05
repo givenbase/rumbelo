@@ -67,17 +67,6 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
     return (
         <html lang={locale} suppressHydrationWarning>
-            <head>
-                {/*
-          Applied before paint so an explicitly-chosen theme never flashes the
-          other palette. Kept inline and tiny for exactly that reason.
-        */}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `try{var t=localStorage.getItem('rumbelo-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}`,
-                    }}
-                />
-            </head>
             <body
                 className={`${display.variable} ${sans.variable} ${mono.variable} bg-bg font-sans text-fg antialiased`}>
                 <NextIntlClientProvider locale={locale} messages={messages}>

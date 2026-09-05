@@ -5,6 +5,8 @@ import { getLocale, getMessages } from 'next-intl/server';
 
 import { locales } from '@rumbelo/i18n';
 
+import { Providers } from './providers';
+
 import '../../globals.css';
 
 const display = Bricolage_Grotesque({
@@ -46,17 +48,10 @@ export default async function LocaleLayout({ children }: LocaleLayoutProps) {
 
     return (
         <html lang={locale} suppressHydrationWarning>
-            <head>
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `try{var t=localStorage.getItem('rumbelo-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}`,
-                    }}
-                />
-            </head>
             <body
                 className={`${display.variable} ${sans.variable} ${mono.variable} min-h-dvh bg-bg bg-(image:--gradient-page) font-sans text-fg antialiased`}>
                 <NextIntlClientProvider locale={locale} messages={messages}>
-                    {children}
+                    <Providers>{children}</Providers>
                 </NextIntlClientProvider>
             </body>
         </html>

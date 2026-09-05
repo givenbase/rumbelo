@@ -8,6 +8,7 @@
  * - layout     Section, Sheet, Dialog, Tabs
  * - display    Meter, StatTile, HeroNumber
  * - navigation DropdownMenu
+ * - theme      ThemeProvider, ThemeToggle, useTheme
  */
 export * from './forms';
 export * from './cards';
@@ -15,4 +16,5 @@ export * from './feedback';
 export * from './layout';
 export * from './display';
 export * from './navigation';
+export * from './theme';
 export { cn } from './lib/utils';

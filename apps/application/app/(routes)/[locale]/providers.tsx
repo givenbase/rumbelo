@@ -3,6 +3,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState, type ReactNode } from 'react';
 
+import { ThemeProvider } from '@rumbelo/ui';
+
 import { setClientHouseholdId } from '@/app/_lib/household-api-context';
 import { AppShellProvider } from '@/components/features/shell/app-shell-context';
 import { AuthProvider, useAuth } from '@/components/features/shell/auth-provider';
@@ -34,12 +36,14 @@ export function Providers({ children }: { children: ReactNode }) {
     );
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-                <HouseholdHeaderSync>
-                    <AppShellProvider>{children}</AppShellProvider>
-                </HouseholdHeaderSync>
-            </AuthProvider>
-        </QueryClientProvider>
+        <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+                <AuthProvider>
+                    <HouseholdHeaderSync>
+                        <AppShellProvider>{children}</AppShellProvider>
+                    </HouseholdHeaderSync>
+                </AuthProvider>
+            </QueryClientProvider>
+        </ThemeProvider>
     );
 }
