@@ -19,19 +19,19 @@ type TemplateId = (typeof TEMPLATES)[number];
 @Controller('email-preview')
 export class EmailPreviewController {
     @Get()
-    list() {
-        this.assertEnabled();
-        return {
+    list(@Res() reply: FastifyReply): void {
+        if (!this.assertEnabled(reply)) return;
+        void reply.send({
             templates: TEMPLATES.map(id => ({
                 id,
                 preview: `/email-preview/${id}`,
             })),
-        };
+        });
     }
 
     @Get(':template')
     preview(@Param('template') template: string, @Res() reply: FastifyReply): void {
-        this.assertEnabled();
+        if (!this.assertEnabled(reply)) return;
 
         if (!TEMPLATES.includes(template as TemplateId)) {
             throw new NotFoundException({
@@ -43,11 +43,14 @@ export class EmailPreviewController {
         void reply.type('text/html').send(this.render(template as TemplateId));
     }
 
-    private assertEnabled(): void {
+    /** @returns false when the request was already redirected */
+    private assertEnabled(reply: FastifyReply): boolean {
         const env = loadEnv();
         if (!isSwaggerEnabled(env)) {
-            throw new NotFoundException('Email preview is disabled');
+            void reply.redirect('/access-denied', 302);
+            return false;
         }
+        return true;
     }
 
     private render(template: TemplateId): string {

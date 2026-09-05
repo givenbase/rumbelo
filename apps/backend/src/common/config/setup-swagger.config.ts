@@ -19,8 +19,17 @@ export function isSwaggerEnabled(env: Env): boolean {
 
 export async function setupSwagger(app: NestFastifyApplication, env: Env): Promise<void> {
     if (!isSwaggerEnabled(env)) {
+        // Explicit deny — bare 404 would look like a misconfig, not a policy.
+        const fastify = app.getHttpAdapter().getInstance();
+        const deny = (_request: unknown, reply: { redirect: (url: string, code?: number) => void }) => {
+            void reply.redirect('/access-denied', 302);
+        };
+        fastify.get('/api/docs', deny);
+        fastify.get('/api/docs/', deny);
+        fastify.get('/api/docs-json', deny);
+        fastify.get('/api/docs/json', deny);
         swaggerLogger.log(
-            'Swagger disabled (set ENABLE_SWAGGER=true to enable outside development)'
+            'Swagger disabled — /api/docs redirects to /access-denied (set ENABLE_SWAGGER=true to enable)'
         );
         return;
     }

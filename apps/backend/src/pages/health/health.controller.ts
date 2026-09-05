@@ -57,22 +57,28 @@ export class HealthController {
         };
 
         if (wantsHtml(accept)) {
+            const isProd = (process.env.NODE_ENV ?? 'development') === 'production';
             void reply.type('text/html').send(
                 renderBrandPage({
                     title: 'Health',
                     eyebrow: body.status,
                     headline: body.status === 'ok' ? 'Alles draait' : 'Degraded',
-                    message:
-                        body.status === 'ok'
-                            ? `API en database OK · Redis: ${redis}`
-                            : `Database: ${database}${detail ? ` — ${detail}` : ''} · Redis: ${redis}`,
+                    message: isProd
+                        ? body.status === 'ok'
+                            ? 'API is online and ready.'
+                            : 'API is up but a dependency check failed.'
+                        : body.status === 'ok'
+                          ? `API en database OK · Redis: ${redis}`
+                          : `Database: ${database}${detail ? ` — ${detail}` : ''} · Redis: ${redis}`,
                     code: body.status.toUpperCase(),
                     primaryHref: '/',
                     primaryLabel: 'API home',
                     secondaryHref: '/health/live',
                     secondaryLabel: 'Liveness JSON',
-                    footerHtml: `uptime ${Math.floor(body.uptime)}s · ${body.environment}`,
-                    lang: 'nl',
+                    footerHtml: isProd
+                        ? `uptime ${Math.floor(body.uptime)}s`
+                        : `uptime ${Math.floor(body.uptime)}s · ${body.environment}`,
+                    lang: isProd ? 'en' : 'nl',
                 })
             );
             return;

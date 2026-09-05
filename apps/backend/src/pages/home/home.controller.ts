@@ -7,6 +7,10 @@ import { loadEnv } from '../../common/config/env.config';
 import { isSwaggerEnabled } from '../../common/config/setup-swagger.config';
 import { escapeHtml, renderBrandPage } from '../shared/brand-shell';
 
+/**
+ * `/` — developer portal in development (or ENABLE_SWAGGER).
+ * In production: minimal “API is online” page only (no docs / previews).
+ */
 @ApiExcludeController()
 @AllowAnonymous()
 @Controller()
@@ -16,7 +20,20 @@ export class HomeController {
         const env = loadEnv();
 
         if (!isSwaggerEnabled(env)) {
-            void reply.redirect('/access-denied', 302);
+            const html = renderBrandPage({
+                title: 'API',
+                eyebrow: 'Online',
+                headline: 'Rumbelo API',
+                message: 'This API is running. Documentation and developer tools are not public.',
+                code: 'OK',
+                primaryHref: '/health',
+                primaryLabel: 'Health check',
+                secondaryHref: env.DOMAIN_WEB,
+                secondaryLabel: 'Website',
+                footerHtml: 'Operational probes only · no public API docs on this host.',
+                lang: 'en',
+            });
+            void reply.type('text/html').send(html);
             return;
         }
 

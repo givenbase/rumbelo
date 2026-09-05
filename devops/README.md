@@ -38,12 +38,15 @@ Browser ──HTTPS──► Application (public)
 
 | Variable | Service | Value |
 |----------|---------|-------|
+| `DATABASE_URL` | Backend | `${{Postgres.DATABASE_URL}}` — must include `/dbname` path (do not assemble from host-only vars) |
+| `DATABASE_SSL` | Backend | `true` |
+| `DATABASE_SYNC` | Backend | `false` |
+| `DATABASE_REDIS_URL` | Backend | `${{Redis.REDIS_URL}}` or plugin URL (`redis://` / `rediss://`) |
 | `DOMAIN_BACK` | Backend + Application (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` |
 | `DOMAIN_BACK_PUBLIC` | Backend | `https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}` |
 | `NEXT_PUBLIC_DOMAIN_APP` | Application + Website (build) | Application public HTTPS |
 | `NEXT_PUBLIC_DOMAIN_WEB` | Application + Website (build) | Website public HTTPS |
 | `NEXT_PUBLIC_DOMAIN_BACK` | Application + Website (build) | Backend **public** HTTPS (optional links; not used by proxies) |
-| `DATABASE_REDIS_URL` | Backend | Redis plugin URL (`redis://` / `rediss://`) |
 
 Private mesh uses **http + PORT** (no TLS). Public uses **https**. Browsers never call
 `.railway.internal` — only the Application Next server does via `DOMAIN_BACK`.
