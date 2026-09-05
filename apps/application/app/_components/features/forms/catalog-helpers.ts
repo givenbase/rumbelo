@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, type useApiClient } from '@/app/_lib/api-hooks';
+import type { AppClient } from '@rumbelo/contracts';
+import { useApi } from '@/app/_lib/api-hooks';
 import { useLiveQuery } from '@rumbelo/hooks';
 
 import { isLiveData } from '@/app/_lib/preview';
@@ -8,7 +9,7 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 
 /** Resolve or create a household category under a jar by display name. */
 export async function resolveCategoryId(opts: {
-    client: ReturnType<typeof useApiClient>;
+    client: AppClient;
     householdId: string;
     jarId: string;
     categoryName: string;
@@ -17,7 +18,7 @@ export async function resolveCategoryId(opts: {
     const name = opts.categoryName.trim();
     if (!name) return null;
     const found = opts.existing.find(
-        c => !c.isArchived && c.name.toLowerCase() === name.toLowerCase()
+        category => !category.isArchived && category.name.toLowerCase() === name.toLowerCase()
     );
     if (found) return found.id;
     const created = await opts.client.money.jars.createCategory({
