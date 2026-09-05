@@ -1,3 +1,4 @@
-# TsMorphMetadataProvider cache (regenerated on boot)
-temp
-.temp
+# TsMorphMetadataProvider cache (regenerated on boot / CLI)
+src/database/.temp
+# Legacy default cache path (pre-relocation) — safe to delete if present
+/temp

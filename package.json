@@ -35,7 +35,7 @@
         "test:e2e": "pnpm --filter @rumbelo/e2e test",
         "test:e2e:smoke": "pnpm --filter @rumbelo/e2e test:smoke",
         "test:e2e:plan": "pnpm --filter @rumbelo/e2e test:plan",
-        "clean": "rm -rf .turbo apps/*/.turbo packages/*/.turbo node_modules apps/*/node_modules packages/*/node_modules apps/*/.next packages/*/dist apps/*/dist apps/backend/temp && pnpm store prune && pnpm install",
+        "clean": "rm -rf .turbo apps/*/.turbo packages/*/.turbo node_modules apps/*/node_modules packages/*/node_modules apps/*/.next packages/*/dist apps/*/dist apps/backend/temp apps/backend/src/database/.temp && pnpm store prune && pnpm install",
         "infra:up": "docker compose -f devops/docker-compose.dev.yml up -d",
         "infra:down": "docker compose -f devops/docker-compose.dev.yml down",
         "db:gen": "pnpm --filter @rumbelo/backend run db:gen",

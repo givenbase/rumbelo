@@ -1,3 +1,5 @@
+import { join } from 'node:path';
+
 import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
@@ -9,6 +11,7 @@ import { loadEnvFiles } from './src/common/config/load-env';
 loadEnvFiles();
 
 const isProd = process.env.NODE_ENV === 'production';
+const baseDir = process.cwd();
 
 export default defineConfig({
     // Source entities only — we run under tsx (Galighticus). TsMorph must read
@@ -25,6 +28,10 @@ export default defineConfig({
     schema: 'public',
     // TsMorph (Galighticus): tsx does not emit Reflect decorator metadata.
     metadataProvider: TsMorphMetadataProvider,
+    // Keep reflection cache next to migrations/seeders (not apps/backend/temp).
+    metadataCache: {
+        options: { cacheDir: join(baseDir, './src/database/.temp') },
+    },
     extensions: [Migrator, SeedManager],
     // Never auto-sync a schema that holds money. Migrations only.
     migrations: {

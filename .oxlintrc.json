@@ -21,6 +21,8 @@
         "**/build/**",
         "**/coverage/**",
         "**/temp/**",
+        "**/src/database/.temp/**",
+        "**/src/database/cache/**",
         "design/**",
         "apps/backend/src/database/migrations/**",
         "**/*.d.ts",
