@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 
 import { Providers } from './providers';
 
@@ -41,9 +43,12 @@ export const viewport: Viewport = {
     ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    const locale = await getLocale();
+    const messages = await getMessages();
+
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang={locale} suppressHydrationWarning>
             <head>
                 {/*
           Applied before paint so an explicitly-chosen theme never flashes the
@@ -57,7 +62,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body
                 className={`${display.variable} ${sans.variable} ${mono.variable} bg-bg font-sans text-fg antialiased`}>
-                <Providers>{children}</Providers>
+                <NextIntlClientProvider messages={messages}>
+                    <Providers>{children}</Providers>
+                </NextIntlClientProvider>
             </body>
         </html>
     );

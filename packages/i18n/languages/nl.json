@@ -1,0 +1,162 @@
+{
+    "common": {
+        "action": {
+            "create": "{entity} aanmaken",
+            "update": "{entity} bijwerken",
+            "delete": "{entity} verwijderen",
+            "save": "{entity} opslaan",
+            "cancel": "Annuleren",
+            "confirm": "Bevestigen",
+            "back": "Terug",
+            "next": "Volgende",
+            "continue": "Doorgaan",
+            "close": "Sluiten",
+            "search": "Zoeken",
+            "export": "{entity} exporteren",
+            "import": "{entity} importeren",
+            "select": "{entity} selecteren",
+            "edit": "Bewerken",
+            "add": "{entity} toevoegen",
+            "remove": "{entity} verwijderen"
+        },
+        "message": {
+            "success": {
+                "saved": "Opgeslagen",
+                "deleted": "Verwijderd",
+                "created": "{entity} aangemaakt",
+                "updated": "{entity} bijgewerkt"
+            },
+            "error": {
+                "generic": "Er ging iets mis",
+                "save_failed": "Opslaan mislukt",
+                "delete_failed": "Verwijderen mislukt",
+                "load_failed": "Laden mislukt",
+                "sign_in_required": "Log in om door te gaan"
+            }
+        },
+        "status": {
+            "labels": {
+                "ACTIVE": "Actief",
+                "INACTIVE": "Inactief",
+                "ARCHIVED": "Gearchiveerd",
+                "PENDING": "In afwachting",
+                "COMPLETED": "Afgerond",
+                "IN_PROGRESS": "Bezig",
+                "CANCELLED": "Geannuleerd",
+                "OVERDUE": "Achterstallig",
+                "DRAFT": "Concept",
+                "OK": "OK",
+                "DEGRADED": "Verminderd",
+                "ERROR": "Fout"
+            }
+        }
+    },
+    "ui": {
+        "button": {
+            "actions": {
+                "accept": "Accepteren",
+                "cancel": "Annuleren",
+                "submit": "Versturen",
+                "back": "Terug",
+                "next": "Volgende",
+                "continue": "Doorgaan",
+                "save": "Opslaan",
+                "delete": "Verwijderen",
+                "edit": "Bewerken",
+                "confirm": "Bevestigen",
+                "close": "Sluiten",
+                "search": "Zoeken",
+                "send": "Versturen",
+                "download": "Downloaden",
+                "upload": "Uploaden",
+                "clear": "Wissen",
+                "reset": "Resetten",
+                "sign_in": "Inloggen",
+                "sign_up": "Account aanmaken",
+                "sign_out": "Uitloggen"
+            }
+        },
+        "form": {
+            "required": "Verplicht",
+            "optional": "Optioneel",
+            "incomplete_title": "Formulier onvolledig",
+            "incomplete_description": "Controleer de verplichte velden en probeer opnieuw.",
+            "saving": "Opslaan…",
+            "deleting": "Verwijderen…"
+        }
+    },
+    "features": {
+        "auth": {
+            "sign_in": {
+                "title": "Welkom terug",
+                "subtitle": "Stop met gissen waar het bleef."
+            },
+            "sign_up": {
+                "title": "Stop met gissen waar het bleef.",
+                "subtitle": "Zes potten. Één rustig overzicht."
+            },
+            "actions": {
+                "log_out": "Uitloggen",
+                "try_again": "Opnieuw proberen",
+                "cancel": "Annuleren"
+            },
+            "notifications": {
+                "login_success": "Ingelogd",
+                "login_failure": "Inloggen mislukt",
+                "logout_success": "Uitgelogd",
+                "logout_failure": "Uitloggen mislukt"
+            }
+        },
+        "brand": {
+            "tagline": "Stop met gissen waar het bleef.",
+            "core": {
+                "one": "Stop met gissen waar het bleef.",
+                "two": "Geld gaat weg. Jij weet waarom.",
+                "three": "Geen mysterie-uitgaven meer."
+            },
+            "auth_quotes": {
+                "money_picture": {
+                    "eyebrow": "Het geldbeeld",
+                    "headline": "Stop met gissen waar het bleef.",
+                    "support": "Geld gaat weg. Jij weet waarom. Geen mysterie-uitgaven meer."
+                },
+                "how_it_works": {
+                    "eyebrow": "Hoe het werkt",
+                    "headline": "Eerst verdelen. Dan uitgeven.",
+                    "support": "Inkomen landt en krijgt meteen een taak over zes potten. Salaris binnen. Beeld helder."
+                },
+                "who_its_for": {
+                    "eyebrow": "Voor wie",
+                    "headline": "Voor mensen die het goed doen — en voor wie er klaar voor is.",
+                    "support": "Jaag niet op het getal. Eigen de richting. Ambitie met een kaart — geen giswerk."
+                },
+                "bigger_than_balance": {
+                    "eyebrow": "Groter dan het saldo",
+                    "headline": "Wijs het geld toe. Bescherm de energie. Bewaar het waarom.",
+                    "support": "Geld, groei, energie en ziel — één rustig overzicht. Een moe hoofd geeft uit; een uitgerust hoofd beslist."
+                }
+            }
+        }
+    },
+    "pages": {
+        "dashboard": {
+            "close_turn": "Beurt afsluiten",
+            "closing": "Bezig…",
+            "turn_closed": "Maand afgesloten",
+            "close_failed": "Afsluiten mislukt"
+        },
+        "onboarding": {
+            "welcome": "Welkom bij Rumbelo",
+            "income": "Jouw inkomen",
+            "jars": "De zes potten",
+            "why": "Jouw waarom"
+        },
+        "shell": {
+            "tagline": "Stop met gissen waar het bleef.",
+            "settings": "Instellingen",
+            "period": "Periode",
+            "sign_in": "Inloggen",
+            "sign_up": "Account aanmaken"
+        }
+    }
+}

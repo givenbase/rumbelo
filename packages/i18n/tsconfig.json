@@ -1,8 +1,13 @@
 {
     "extends": "@rumbelo/typescript-config/base.json",
     "compilerOptions": {
-        "outDir": "dist",
-        "rootDir": "src"
+        "baseUrl": ".",
+        "jsx": "preserve",
+        "lib": ["ES2022", "DOM"],
+        "declaration": false,
+        "declarationMap": false,
+        "noEmit": true
     },
-    "include": ["src"]
+    "include": ["src/**/*.ts", "translations/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
 }

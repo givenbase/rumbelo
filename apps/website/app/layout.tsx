@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 
 import './globals.css';
 
@@ -28,9 +30,12 @@ export const metadata: Metadata = {
         'Six jars, one calm overview. Rumbelo splits your income the second it lands — every amount gets a job before it arrives.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    const locale = await getLocale();
+    const messages = await getMessages();
+
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang={locale} suppressHydrationWarning>
             <head>
                 <script
                     dangerouslySetInnerHTML={{
@@ -40,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body
                 className={`${display.variable} ${sans.variable} ${mono.variable} min-h-dvh bg-bg bg-(image:--gradient-page) font-sans text-fg antialiased`}>
-                {children}
+                <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
             </body>
         </html>
     );
