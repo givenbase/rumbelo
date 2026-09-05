@@ -58,6 +58,22 @@ await this.em.removeAndFlush(entity);
 
 For already-managed entities (loaded or previously persisted), mutate then `await this.em.flush()`.
 
+### Field naming — booleans / enums / relations / time / json
+
+See `docs/ENTITY_STYLE.md`. Enforced by `pnpm lint:entities`:
+
+| Kind | Pattern | Example |
+|------|---------|---------|
+| Boolean | `is*` / `has*` / `can*` | `isActive`, not `active` |
+| Enum | noun for kind/status | `kind`, `payoffStrategy` |
+| Day ordinal | `*Day` (`int`) | `dueDay`, `expectedDay` — **not** `dueDate` |
+| Calendar date | `*On` (`date`) | `startedOn`, `endsOn` |
+| Instant | `*At` (`timestamptz`) | `closedAt` |
+| JSON array | plural | `aliases`, `unlocks` |
+| JSON object | bag / `*Json` | `metadata`, `payloadJson` |
+| FK | `*Id` | `householdId` |
+| Collection | plural relation | `events` |
+
 ### Enums — contracts + `NativeEnum` + Zod 4
 
 - **Define once** in `packages/contracts/src/enums/` (ALL_CAPS keys and values). Never `export enum` inside a backend entity.

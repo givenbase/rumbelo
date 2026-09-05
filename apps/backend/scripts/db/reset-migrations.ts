@@ -73,7 +73,7 @@ function main(): void {
     console.log('db:reset — squash migrations → gen initial → push');
     clearMigrationFiles();
 
-    run('pnpm', ['exec', 'tsx', 'scripts/db/drop-schemas.ts', '--yes'], 'db:drop schemas');
+    run('pnpm', ['exec', 'tsx', 'scripts/db/drop-schema-cascade.ts', '--yes'], 'db:drop schemas');
 
     run(
         'pnpm',
