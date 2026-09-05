@@ -24,9 +24,11 @@
         "db:fresh": "pnpm --filter @rumbelo/backend run db:fresh",
         "db:seed": "pnpm --filter @rumbelo/backend run db:seed",
         "auth:migrate": "pnpm --filter @rumbelo/backend run auth:migrate",
-        "rename": "node scripts/rename-project.mjs"
+        "rename": "node scripts/rename-project.mjs",
+        "prepare": "husky"
     },
     "devDependencies": {
+        "husky": "^9.1.7",
         "oxfmt": "^0.66.0",
         "oxlint": "^1.81.0",
         "turbo": "^2.10.12",

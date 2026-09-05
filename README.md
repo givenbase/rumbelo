@@ -108,6 +108,8 @@ Config: root `.oxlintrc.json` (shared baseline) plus nested configs:
 `apps/backend`, `apps/application`, `apps/website`, `packages/ui`, `packages/hooks`.
 Format: `.oxfmtrc.json`. Backend also runs `lint:entities` (MikroORM entity conventions).
 
+**Pre-commit:** Husky runs `pnpm lint` on every commit. Autofixes/format are re-staged into the commit; remaining errors abort it (`--no-verify` skips — don't).
+
 Env templates follow the same documented style as Galighticus/Meltizo (sectioned
 banners + comments). Root `.env.example` is the source of truth for local API
 secrets; per-app examples under `apps/*/`.env.example` cover client-safe

@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+set -e
+
+# Auto-fix + format + entity style. Non-zero exit aborts the commit.
+pnpm lint
+
+# Re-stage previously staged paths so autofixes land in this commit
+# (does not pick up unrelated unstaged work).
+staged="$(git diff --cached --name-only --diff-filter=ACMR)"
+if [ -n "$staged" ]; then
+  printf '%s\n' "$staged" | while IFS= read -r file; do
+    if [ -f "$file" ]; then
+      git add -- "$file"
+    fi
+  done
+fi
