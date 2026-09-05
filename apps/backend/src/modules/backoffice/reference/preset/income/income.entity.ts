@@ -14,11 +14,12 @@ import { entityConfig } from '../../../../../common/database/entity-config.util'
  * @see money.income_source — household-owned instances
  * @see https://mikro-orm.io/docs/defining-entities
  */
-@Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'income_source_preset' }))
+@Entity(
+    entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'income_source_preset' })
+)
 @Unique({ properties: ['key'] })
 export class IncomeSourcePreset extends BaseEntity {
     // ? PROPERTIES
-
     /** Stable catalog key (e.g. PARTNER_SALARY) — never rename in place. */
     @Property({ length: 64 })
     key!: string;
@@ -36,7 +37,6 @@ export class IncomeSourcePreset extends BaseEntity {
     isActive = true;
 
     // ? ENUMS
-
     /** Maps onto money.income_source.kind; also used to group the picker. */
     @Enum(NativeEnum({ IncomeKind, domain: 'money' }))
     kind!: IncomeKind;

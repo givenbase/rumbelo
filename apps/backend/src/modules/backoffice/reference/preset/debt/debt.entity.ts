@@ -18,7 +18,6 @@ import { entityConfig } from '../../../../../common/database/entity-config.util'
 @Unique({ properties: ['key'] })
 export class DebtPreset extends BaseEntity {
     // ? PROPERTIES
-
     /** Stable catalog key (e.g. STUDENT) — never rename in place. */
     @Property({ length: 64 })
     key!: string;
@@ -36,7 +35,6 @@ export class DebtPreset extends BaseEntity {
     isActive = true;
 
     // ? ENUMS
-
     /** Maps onto money.debt.kind when the preset is selected. */
     @Enum(NativeEnum({ DebtKind, domain: 'money' }))
     kind!: DebtKind;

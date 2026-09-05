@@ -39,7 +39,8 @@ export const AUTH_QUOTES: readonly BrandQuote[] = [
     {
         eyebrow: 'How it works',
         headline: 'Split first. Spend second.',
-        support: 'Income lands and gets a job across six jars before you touch it. Paycheck in. Picture clear.',
+        support:
+            'Income lands and gets a job across six jars before you touch it. Paycheck in. Picture clear.',
     },
     {
         eyebrow: 'Who it’s for',
@@ -49,7 +50,8 @@ export const AUTH_QUOTES: readonly BrandQuote[] = [
     {
         eyebrow: 'Bigger than the balance',
         headline: 'Assign the money. Protect the energy. Keep the why.',
-        support: 'Money, growth, energy, and soul — one calm overview. A tired head spends; a rested head decides.',
+        support:
+            'Money, growth, energy, and soul — one calm overview. A tired head spends; a rested head decides.',
     },
 ] as const;
 

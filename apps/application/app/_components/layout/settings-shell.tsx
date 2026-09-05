@@ -108,11 +108,7 @@ export function SettingsShell({ children }: { children: ReactNode }) {
                             <ul className="grid gap-px">
                                 {section.items.map(tab => (
                                     <li key={tab.key}>
-                                        <NavLink
-                                            tab={tab}
-                                            active={tab.key === activeTab}
-                                            compact
-                                        />
+                                        <NavLink tab={tab} active={tab.key === activeTab} compact />
                                     </li>
                                 ))}
                             </ul>

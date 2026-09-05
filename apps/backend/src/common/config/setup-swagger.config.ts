@@ -19,7 +19,9 @@ export function isSwaggerEnabled(env: Env): boolean {
 
 export async function setupSwagger(app: NestFastifyApplication, env: Env): Promise<void> {
     if (!isSwaggerEnabled(env)) {
-        swaggerLogger.log('Swagger disabled (set ENABLE_SWAGGER=true to enable outside development)');
+        swaggerLogger.log(
+            'Swagger disabled (set ENABLE_SWAGGER=true to enable outside development)'
+        );
         return;
     }
 
@@ -44,7 +46,12 @@ Cookie session from the application. Optional header: \`x-household-id\`.
         .setVersion('0.1.0')
         .addCookieAuth('session')
         .addApiKey(
-            { type: 'apiKey', name: 'x-household-id', in: 'header', description: 'Active household id' },
+            {
+                type: 'apiKey',
+                name: 'x-household-id',
+                in: 'header',
+                description: 'Active household id',
+            },
             'household'
         )
         .build();

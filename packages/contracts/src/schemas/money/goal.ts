@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { GoalStatus, JarKey } from '../../enums';
+import { GoalStatus } from '../../enums';
 import { HouseholdId, Id, IsoDate, Money } from '../common';
 
 export { GoalStatus } from '../../enums';

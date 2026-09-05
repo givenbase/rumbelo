@@ -18,9 +18,7 @@ export const contract = {
             .input(S.AccountSettings.partial().omit({ accountId: true }))
             .output(S.AccountSettings),
         /** DELETE */
-        deleteSettings: oc
-            .input(z.object({ id: S.Id }))
-            .output(z.object({ ok: z.literal(true) })),
+        deleteSettings: oc.input(z.object({ id: S.Id })).output(z.object({ ok: z.literal(true) })),
     },
     household: {
         list: oc.output(z.array(S.Household)),

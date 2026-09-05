@@ -3,9 +3,14 @@ import { Entity, Property } from '@mikro-orm/core';
 import { HouseholdEntity } from '../../../../../common/database/base.entity';
 import { entityConfig } from '../../../../../common/database/entity-config.util';
 
-/** Things that move earning power. A growth surface, not a budget line. */
+/**
+ * Things that move earning power. A growth surface, not a budget line.
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
+ */
 @Entity(entityConfig({ schema: 'public', domain: 'growth', tableName: 'lever' }))
 export class IncomeLever extends HouseholdEntity {
+    // ? PROPERTIES
     @Property({ length: 160 })
     label!: string;
 

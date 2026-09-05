@@ -27,24 +27,27 @@ const ERROR_STATUS_MAP: Record<string, number> = {
 export async function setupOrpcErrorFix(app: NestFastifyApplication): Promise<void> {
     const fastifyInstance = app.getHttpAdapter().getInstance();
 
-    fastifyInstance.addHook('preHandler', async (request: { body?: unknown; method?: string; url?: string }) => {
-        const hasEmptyBody =
-            request.body == null ||
-            request.body === '' ||
-            (typeof request.body === 'string' && request.body.trim() === '');
+    fastifyInstance.addHook(
+        'preHandler',
+        async (request: { body?: unknown; method?: string; url?: string }) => {
+            const hasEmptyBody =
+                request.body === null ||
+                request.body === '' ||
+                (typeof request.body === 'string' && request.body.trim() === '');
 
-        if (!hasEmptyBody) return;
+            if (!hasEmptyBody) return;
 
-        const method = request.method?.toUpperCase();
-        const isMutating =
-            method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE';
-        if (!isMutating) return;
+            const method = request.method?.toUpperCase();
+            const isMutating =
+                method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE';
+            if (!isMutating) return;
 
-        const url = request.url?.split('?')[0] ?? '';
-        if (url.startsWith('/rpc/') || url.startsWith('/api/')) {
-            request.body = {};
+            const url = request.url?.split('?')[0] ?? '';
+            if (url.startsWith('/rpc/') || url.startsWith('/api/')) {
+                request.body = {};
+            }
         }
-    });
+    );
 
     fastifyInstance.addHook('onSend', async (request, reply, payload) => {
         const contentType = reply.getHeader('content-type');
@@ -74,7 +77,10 @@ export async function setupOrpcErrorFix(app: NestFastifyApplication): Promise<vo
             ) {
                 const code = (body as { code: string }).code;
                 const properStatusCode = ERROR_STATUS_MAP[code] || 500;
-                if (code === 'BAD_REQUEST' && (body as { data?: { issues?: unknown } }).data?.issues) {
+                if (
+                    code === 'BAD_REQUEST' &&
+                    (body as { data?: { issues?: unknown } }).data?.issues
+                ) {
                     logger.warn(
                         `Input validation failed: ${JSON.stringify((body as { data?: unknown }).data)}`
                     );

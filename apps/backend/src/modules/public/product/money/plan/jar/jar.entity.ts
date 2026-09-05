@@ -14,15 +14,13 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * backoffice.jar_template at onboard; the household may rename / re-split after.
  *
  * @see JarTemplate
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'jar' }))
 @Unique({ properties: ['householdId', 'key'] })
 export class Jar extends HouseholdEntity {
     // ? PROPERTIES
-
-    @Enum(NativeEnum({ JarKey, domain: 'money' }))
-    key!: JarKey;
-
     @Property({ length: 80 })
     name!: string;
 
@@ -36,15 +34,18 @@ export class Jar extends HouseholdEntity {
     @Property({ type: 'decimal', precision: 5, scale: 2 })
     percentage!: string;
 
+    @Property({ default: 0 })
+    sortOrder = 0;
+
     /** Financial Freedom is never spent, only invested out. Enforced in JarService. */
     @Property({ default: true })
     isSpendable = true;
 
-    @Property({ default: 0 })
-    sortOrder = 0;
+    // ? ENUMS
+    @Enum(NativeEnum({ JarKey, domain: 'money' }))
+    key!: JarKey;
 
     // ? RELATIONSHIPS
-
     @OneToMany('Category', 'jar')
     categories = new Collection<Category>(this);
 }

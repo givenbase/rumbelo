@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@rumbelo/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@rumbelo/ui';
 import { cn, describePeriodTravel } from '@rumbelo/utils';
 
 import { useAppShell, type Period } from '@/components/features/shell/app-shell-context';
@@ -145,7 +141,11 @@ export function PeriodSelector() {
                                     : 'border-accent/50 bg-accent-soft text-accent hover:border-accent')
                         )}>
                         <span aria-hidden className="text-[11px] opacity-80">
-                            {travel.direction === 'past' ? '↩' : travel.direction === 'future' ? '↪' : '◇'}
+                            {travel.direction === 'past'
+                                ? '↩'
+                                : travel.direction === 'future'
+                                  ? '↪'
+                                  : '◇'}
                         </span>
                         <span className="truncate">{labelShort(period)}</span>
                         {travel.direction !== 'current' ? (
@@ -195,9 +195,7 @@ export function PeriodSelector() {
                             </p>
                             <p className="text-xs leading-tight text-fg-muted">
                                 {period.year}
-                                {travel.direction !== 'current'
-                                    ? ` · ${travel.relativeLabel}`
-                                    : ''}
+                                {travel.direction !== 'current' ? ` · ${travel.relativeLabel}` : ''}
                             </p>
                         </div>
                     </div>

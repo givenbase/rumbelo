@@ -19,7 +19,6 @@ import { JarTemplate } from '../../template/jar/jar.entity';
 @Unique({ properties: ['key'] })
 export class MerchantPreset extends BaseEntity {
     // ? PROPERTIES
-
     /** Stable catalog key (e.g. SPOTIFY) — never rename in place. */
     @Property({ length: 64 })
     key!: string;
@@ -56,7 +55,6 @@ export class MerchantPreset extends BaseEntity {
     isActive = true;
 
     // ? RELATIONSHIPS
-
     /** Default jar template when this merchant is auto-sorted. */
     @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
     jarTemplate!: JarTemplate;

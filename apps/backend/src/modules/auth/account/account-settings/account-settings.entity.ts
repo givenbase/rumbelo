@@ -20,7 +20,6 @@ import { Account } from '../account.entity';
 @Entity(entityConfig({ schema: 'auth', domain: 'account', tableName: 'settings' }))
 export class AccountSettings extends BaseEntity {
     // ? ENUMS
-
     /** Preferred language (NL | EN). */
     @Enum(NativeEnum({ Locale, domain: 'auth', defaultValue: Locale.NL }))
     locale: Locale = Locale.NL;
@@ -40,7 +39,6 @@ export class AccountSettings extends BaseEntity {
     moneyCharacter: MoneyCharacter = MoneyCharacter.UNKNOWN;
 
     // ? RELATIONSHIPS
-
     /**
      * Owning account (1:1). Cascades when the account is deleted.
      */

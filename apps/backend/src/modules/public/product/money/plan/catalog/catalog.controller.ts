@@ -43,24 +43,26 @@ export class CatalogController {
 
     @Implement(contract.money.catalogs.fixedCostPresets.list)
     listFixedCostPresets() {
-        return implement(contract.money.catalogs.fixedCostPresets.list).handler(async ({ input }) => {
-            const rows = await this.fixedCosts.listActive({
-                jarKey: (input.jarKey as JarKey | null) ?? undefined,
-                categoryTemplateKey: input.categoryTemplateKey ?? undefined,
-                audienceTag: input.audienceTag ?? undefined,
-            });
-            return rows.map(preset => ({
-                key: preset.key,
-                name: preset.name,
-                sortOrder: preset.sortOrder,
-                jarKey: preset.jarTemplate.key,
-                categoryTemplateKey: preset.categoryTemplateKey,
-                defaultCadence: preset.defaultCadence,
-                suggestedDueDay: preset.suggestedDueDay,
-                direction: preset.direction,
-                audienceTags: preset.audienceTags,
-            }));
-        });
+        return implement(contract.money.catalogs.fixedCostPresets.list).handler(
+            async ({ input }) => {
+                const rows = await this.fixedCosts.listActive({
+                    jarKey: (input.jarKey as JarKey | null) ?? undefined,
+                    categoryTemplateKey: input.categoryTemplateKey ?? undefined,
+                    audienceTag: input.audienceTag ?? undefined,
+                });
+                return rows.map(preset => ({
+                    key: preset.key,
+                    name: preset.name,
+                    sortOrder: preset.sortOrder,
+                    jarKey: preset.jarTemplate.key,
+                    categoryTemplateKey: preset.categoryTemplateKey,
+                    defaultCadence: preset.defaultCadence,
+                    suggestedDueDay: preset.suggestedDueDay,
+                    direction: preset.direction,
+                    audienceTags: preset.audienceTags,
+                }));
+            }
+        );
     }
 
     @Implement(contract.money.catalogs.debtPresets.list)
@@ -115,22 +117,24 @@ export class CatalogController {
 
     @Implement(contract.money.catalogs.merchantPresets.list)
     listMerchantPresets() {
-        return implement(contract.money.catalogs.merchantPresets.list).handler(async ({ input }) => {
-            const rows = await this.merchants.listActive({
-                jarKey: (input.jarKey as JarKey | null) ?? undefined,
-                categoryTemplateKey: input.categoryTemplateKey ?? undefined,
-                mcc: input.mcc ?? undefined,
-            });
-            return rows.map(preset => ({
-                key: preset.key,
-                name: preset.name,
-                sortOrder: preset.sortOrder,
-                matchValue: preset.matchValue,
-                aliases: preset.aliases,
-                mcc: preset.mcc,
-                jarKey: preset.jarTemplate.key,
-                categoryTemplateKey: preset.categoryTemplateKey,
-            }));
-        });
+        return implement(contract.money.catalogs.merchantPresets.list).handler(
+            async ({ input }) => {
+                const rows = await this.merchants.listActive({
+                    jarKey: (input.jarKey as JarKey | null) ?? undefined,
+                    categoryTemplateKey: input.categoryTemplateKey ?? undefined,
+                    mcc: input.mcc ?? undefined,
+                });
+                return rows.map(preset => ({
+                    key: preset.key,
+                    name: preset.name,
+                    sortOrder: preset.sortOrder,
+                    matchValue: preset.matchValue,
+                    aliases: preset.aliases,
+                    mcc: preset.mcc,
+                    jarKey: preset.jarTemplate.key,
+                    categoryTemplateKey: preset.categoryTemplateKey,
+                }));
+            }
+        );
     }
 }

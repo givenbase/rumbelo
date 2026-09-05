@@ -8,10 +8,13 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
 /**
  * One period (month) is one Monopoly turn. Closing is irreversible by design —
  * the log is the user's honest history, not a scoreboard to replay.
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'period_turn' }))
 @Unique({ properties: ['householdId', 'period'] })
 export class PeriodTurn extends HouseholdEntity {
+    // ? PROPERTIES
     /** YYYY-MM */
     @Property({ length: 7 })
     period!: string;
@@ -31,6 +34,7 @@ export class PeriodTurn extends HouseholdEntity {
     @Property({ type: 'timestamptz', nullable: true })
     closedAt: Date | null = null;
 
+    // ? RELATIONSHIPS
     @OneToMany('TurnEvent', 'turn')
     events = new Collection<TurnEvent>(this);
 }

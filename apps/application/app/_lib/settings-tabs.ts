@@ -70,9 +70,7 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
     {
         title: 'Growth',
         product: 'growth',
-        items: [
-            { key: 'groei', label: 'Goals', sub: 'Planning horizon', productChild: 'goals' },
-        ],
+        items: [{ key: 'groei', label: 'Goals', sub: 'Planning horizon', productChild: 'goals' }],
     },
     {
         title: 'Energy',

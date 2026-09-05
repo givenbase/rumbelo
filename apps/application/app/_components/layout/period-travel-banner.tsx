@@ -37,9 +37,7 @@ export function PeriodTravelBanner() {
             role="status"
             className={cn(
                 'mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border px-3.5 py-2.5',
-                past
-                    ? 'border-amber-500/35 bg-amber-500/8'
-                    : 'border-accent/35 bg-accent-soft'
+                past ? 'border-amber-500/35 bg-amber-500/8' : 'border-accent/35 bg-accent-soft'
             )}>
             <div className="min-w-0">
                 <p

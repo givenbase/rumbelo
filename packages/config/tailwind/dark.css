@@ -1,79 +1,87 @@
 /* Dark palette — overrides Layer 1 vars; shadcn aliases flip automatically. */
 
 @layer base {
-  :root:not([data-theme='light']) {
-    @media (prefers-color-scheme: dark) {
-      --color-bg: #0b0f16;
-      --color-bg-app: #0e131b;
-      --color-surface: #141a24;
-      --color-raised: #1b2331;
-      --color-sunken: #243044;
-      --color-line: rgb(255 255 255 / 0.09);
-      --color-line-strong: rgb(255 255 255 / 0.18);
-      --color-fg: #f2f5f9;
-      --color-fg-strong: #dce3ed;
-      --color-fg-secondary: #a7b2c3;
-      --color-fg-muted: #93a0b2;
-      --color-fg-faint: #8592a5;
-      --color-accent: #2dd4bf;
-      --color-accent-hover: #5eead4;
-      --color-accent-press: #14b8a6;
-      --color-accent-soft: rgb(45 212 191 / 0.14);
-      --color-on-accent: #0b0f16;
-      --color-success: #34d399;
-      --color-warning: #fbbf24;
-      --color-danger: #f87171;
-      --color-jar-nec: #94a3b8;
-      --color-jar-ff: #2dd4bf;
-      --color-jar-edu: #22d3ee;
-      --color-jar-lts: #60a5fa;
-      --color-jar-play: #fbbf24;
-      --color-jar-give: #4ade80;
-      --color-portal-soul: #a78bfa;
-      --color-scrim: rgb(5 8 13 / 0.72);
-      --color-chrome: rgb(14 19 27 / 0.86);
-      --shadow-md: 0 2px 8px rgb(0 0 0 / 0.35);
-      --shadow-lg: 0 10px 30px rgb(0 0 0 / 0.45);
-      --shadow-xl: 0 30px 70px rgb(0 0 0 / 0.55);
-      --shadow-glow: 0 8px 28px rgb(45 212 191 / 0.28);
-      --gradient-page: radial-gradient(90% 46% at 50% 0%, rgb(45 212 191 / 0.14), transparent 72%);
+    :root:not([data-theme='light']) {
+        @media (prefers-color-scheme: dark) {
+            --color-bg: #0b0f16;
+            --color-bg-app: #0e131b;
+            --color-surface: #141a24;
+            --color-raised: #1b2331;
+            --color-sunken: #243044;
+            --color-line: rgb(255 255 255 / 0.09);
+            --color-line-strong: rgb(255 255 255 / 0.18);
+            --color-fg: #f2f5f9;
+            --color-fg-strong: #dce3ed;
+            --color-fg-secondary: #a7b2c3;
+            --color-fg-muted: #93a0b2;
+            --color-fg-faint: #8592a5;
+            --color-accent: #2dd4bf;
+            --color-accent-hover: #5eead4;
+            --color-accent-press: #14b8a6;
+            --color-accent-soft: rgb(45 212 191 / 0.14);
+            --color-on-accent: #0b0f16;
+            --color-success: #34d399;
+            --color-warning: #fbbf24;
+            --color-danger: #f87171;
+            --color-jar-nec: #94a3b8;
+            --color-jar-ff: #2dd4bf;
+            --color-jar-edu: #22d3ee;
+            --color-jar-lts: #60a5fa;
+            --color-jar-play: #fbbf24;
+            --color-jar-give: #4ade80;
+            --color-portal-soul: #a78bfa;
+            --color-scrim: rgb(5 8 13 / 0.72);
+            --color-chrome: rgb(14 19 27 / 0.86);
+            --shadow-md: 0 2px 8px rgb(0 0 0 / 0.35);
+            --shadow-lg: 0 10px 30px rgb(0 0 0 / 0.45);
+            --shadow-xl: 0 30px 70px rgb(0 0 0 / 0.55);
+            --shadow-glow: 0 8px 28px rgb(45 212 191 / 0.28);
+            --gradient-page: radial-gradient(
+                90% 46% at 50% 0%,
+                rgb(45 212 191 / 0.14),
+                transparent 72%
+            );
+        }
     }
-  }
 
-  [data-theme='dark'] {
-    --color-bg: #0b0f16;
-    --color-bg-app: #0e131b;
-    --color-surface: #141a24;
-    --color-raised: #1b2331;
-    --color-sunken: #243044;
-    --color-line: rgb(255 255 255 / 0.09);
-    --color-line-strong: rgb(255 255 255 / 0.18);
-    --color-fg: #f2f5f9;
-    --color-fg-strong: #dce3ed;
-    --color-fg-secondary: #a7b2c3;
-    --color-fg-muted: #93a0b2;
-    --color-fg-faint: #8592a5;
-    --color-accent: #2dd4bf;
-    --color-accent-hover: #5eead4;
-    --color-accent-press: #14b8a6;
-    --color-accent-soft: rgb(45 212 191 / 0.14);
-    --color-on-accent: #0b0f16;
-    --color-success: #34d399;
-    --color-warning: #fbbf24;
-    --color-danger: #f87171;
-    --color-jar-nec: #94a3b8;
-    --color-jar-ff: #2dd4bf;
-    --color-jar-edu: #22d3ee;
-    --color-jar-lts: #60a5fa;
-    --color-jar-play: #fbbf24;
-    --color-jar-give: #4ade80;
-    --color-portal-soul: #a78bfa;
-    --color-scrim: rgb(5 8 13 / 0.72);
-    --color-chrome: rgb(14 19 27 / 0.86);
-    --shadow-md: 0 2px 8px rgb(0 0 0 / 0.35);
-    --shadow-lg: 0 10px 30px rgb(0 0 0 / 0.45);
-    --shadow-xl: 0 30px 70px rgb(0 0 0 / 0.55);
-    --shadow-glow: 0 8px 28px rgb(45 212 191 / 0.28);
-    --gradient-page: radial-gradient(90% 46% at 50% 0%, rgb(45 212 191 / 0.14), transparent 72%);
-  }
+    [data-theme='dark'] {
+        --color-bg: #0b0f16;
+        --color-bg-app: #0e131b;
+        --color-surface: #141a24;
+        --color-raised: #1b2331;
+        --color-sunken: #243044;
+        --color-line: rgb(255 255 255 / 0.09);
+        --color-line-strong: rgb(255 255 255 / 0.18);
+        --color-fg: #f2f5f9;
+        --color-fg-strong: #dce3ed;
+        --color-fg-secondary: #a7b2c3;
+        --color-fg-muted: #93a0b2;
+        --color-fg-faint: #8592a5;
+        --color-accent: #2dd4bf;
+        --color-accent-hover: #5eead4;
+        --color-accent-press: #14b8a6;
+        --color-accent-soft: rgb(45 212 191 / 0.14);
+        --color-on-accent: #0b0f16;
+        --color-success: #34d399;
+        --color-warning: #fbbf24;
+        --color-danger: #f87171;
+        --color-jar-nec: #94a3b8;
+        --color-jar-ff: #2dd4bf;
+        --color-jar-edu: #22d3ee;
+        --color-jar-lts: #60a5fa;
+        --color-jar-play: #fbbf24;
+        --color-jar-give: #4ade80;
+        --color-portal-soul: #a78bfa;
+        --color-scrim: rgb(5 8 13 / 0.72);
+        --color-chrome: rgb(14 19 27 / 0.86);
+        --shadow-md: 0 2px 8px rgb(0 0 0 / 0.35);
+        --shadow-lg: 0 10px 30px rgb(0 0 0 / 0.45);
+        --shadow-xl: 0 30px 70px rgb(0 0 0 / 0.55);
+        --shadow-glow: 0 8px 28px rgb(45 212 191 / 0.28);
+        --gradient-page: radial-gradient(
+            90% 46% at 50% 0%,
+            rgb(45 212 191 / 0.14),
+            transparent 72%
+        );
+    }
 }

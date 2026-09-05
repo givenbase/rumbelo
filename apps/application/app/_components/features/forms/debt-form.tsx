@@ -34,7 +34,7 @@ const euros = z
     .refine(
         v => {
             const cents = parseEurosToCents(v);
-            return cents != null && cents >= 0;
+            return cents !== null && cents >= 0;
         },
         { message: 'Enter a valid amount' }
     );
@@ -112,7 +112,7 @@ export function DebtForm({
         mutationFn: async (values: DebtFormValues) => {
             if (!householdId) throw new Error('No household');
             const balance = parseEurosToCents(values.balance);
-            if (balance == null || balance < 0) throw new Error('Invalid balance');
+            if (balance === null || balance < 0) throw new Error('Invalid balance');
             const minimum = values.minimumPayment?.trim()
                 ? (parseEurosToCents(values.minimumPayment) ?? 0)
                 : 0;

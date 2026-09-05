@@ -14,40 +14,42 @@
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 @layer base {
-  [data-reveal] {
-    opacity: 0;
-    transform: translateY(26px);
-    transition:
-      opacity 640ms var(--ease-out),
-      transform 640ms var(--ease-out);
-  }
-
-  [data-reveal='in'] {
-    opacity: 1;
-    transform: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-float],
-    [data-ticker] {
-      animation: none !important;
-      opacity: 0.05 !important;
-    }
-
     [data-reveal] {
-      opacity: 1;
-      transform: none;
-      transition: none;
+        opacity: 0;
+        transform: translateY(26px);
+        transition:
+            opacity 640ms var(--ease-out),
+            transform 640ms var(--ease-out);
     }
-  }
 
-  body {
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: 'tnum' 1, 'ss01' 1;
-  }
+    [data-reveal='in'] {
+        opacity: 1;
+        transform: none;
+    }
 
-  button:not(:disabled),
-  [role='button']:not(:disabled) {
-    cursor: pointer;
-  }
+    @media (prefers-reduced-motion: reduce) {
+        [data-float],
+        [data-ticker] {
+            animation: none !important;
+            opacity: 0.05 !important;
+        }
+
+        [data-reveal] {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+
+    body {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings:
+            'tnum' 1,
+            'ss01' 1;
+    }
+
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+        cursor: pointer;
+    }
 }

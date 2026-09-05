@@ -1,7 +1,4 @@
-export {
-    evaluateSplitCoach,
-    pctByJarKey,
-} from './evaluate';
+export { evaluateSplitCoach, pctByJarKey } from './evaluate';
 export {
     DEFAULT_JAR_SPLIT,
     MoneyCharacter,

@@ -5,13 +5,16 @@ import { HouseholdEntity } from '../../../../../../common/database/base.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 
+/**
+ * Debt Entity
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
+ */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'debt' }))
 export class Debt extends HouseholdEntity {
+    // ? PROPERTIES
     @Property({ length: 120 })
     name!: string;
-
-    @Enum(NativeEnum({ DebtKind, domain: 'money', defaultValue: DebtKind.LOAN }))
-    kind: DebtKind = DebtKind.LOAN;
 
     @Property({ type: 'bigint' })
     balance!: number;
@@ -34,4 +37,8 @@ export class Debt extends HouseholdEntity {
 
     @Property({ type: 'date', nullable: true })
     closedOn: string | null = null;
+
+    // ? ENUMS
+    @Enum(NativeEnum({ DebtKind, domain: 'money', defaultValue: DebtKind.LOAN }))
+    kind: DebtKind = DebtKind.LOAN;
 }

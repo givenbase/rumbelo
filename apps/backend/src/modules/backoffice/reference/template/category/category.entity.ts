@@ -18,7 +18,6 @@ import { JarTemplate } from '../jar/jar.entity';
 @Unique({ properties: ['key'] })
 export class CategoryTemplate extends BaseEntity {
     // ? PROPERTIES
-
     /** Stable key referenced by presets (e.g. HOUSING) — never rename in place. */
     @Property({ length: 64 })
     key!: string;
@@ -36,7 +35,6 @@ export class CategoryTemplate extends BaseEntity {
     isActive = true;
 
     // ? RELATIONSHIPS
-
     /** Parent jar in the reference catalog (not a household money.jar row). */
     @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
     jarTemplate!: JarTemplate;

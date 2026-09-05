@@ -18,7 +18,6 @@ import { entityConfig } from '../../../common/database/entity-config.util';
 @Unique({ properties: ['key'] })
 export class Plan extends BaseEntity {
     // ? PROPERTIES
-
     /** Product name shown in UI (Grip, Engine, Compound). */
     @Property({ length: 40 })
     name!: string;
@@ -46,7 +45,6 @@ export class Plan extends BaseEntity {
     isActive = true;
 
     // ? ENUMS
-
     /** Stable tier key — used in gating and billing mapping. */
     @Enum(NativeEnum({ PlanKey, domain: 'backoffice' }))
     key!: PlanKey;

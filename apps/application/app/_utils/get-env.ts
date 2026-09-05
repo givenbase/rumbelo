@@ -4,8 +4,7 @@ import { z } from 'zod';
 
 const isProdBuild = process.env.NODE_ENV === 'production' && !process.env.SKIP_ENV_VALIDATION;
 
-const portalOrigin = (devDefault: string) =>
-    isProdBuild ? z.url() : z.url().default(devDefault);
+const portalOrigin = (devDefault: string) => (isProdBuild ? z.url() : z.url().default(devDefault));
 
 /**
  * Three public origins — same shape for every app:

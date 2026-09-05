@@ -36,7 +36,7 @@ const euros = z
     .refine(
         v => {
             const cents = parseEurosToCents(v);
-            return cents != null && cents > 0;
+            return cents !== null && cents > 0;
         },
         { message: 'Enter a valid amount' }
     );
@@ -141,9 +141,9 @@ export function FixedCostForm({
         mutationFn: async (values: FixedCostFormValues) => {
             if (!householdId) throw new Error('No household');
             const cents = parseEurosToCents(values.amount);
-            if (cents == null || cents <= 0) throw new Error('Invalid amount');
+            if (cents === null || cents <= 0) throw new Error('Invalid amount');
             const due = values.dueDay?.trim() ? Number(values.dueDay) : null;
-            const dueDay = due != null && due >= 1 && due <= 31 ? due : null;
+            const dueDay = due !== null && due >= 1 && due <= 31 ? due : null;
             const name = values.name.trim();
 
             let categoryId = values.categoryId ?? null;
@@ -274,7 +274,7 @@ export function FixedCostForm({
                                         if (!full) return;
                                         const jar = jars.find(j => j.key === full.jarKey);
                                         if (jar) form.setValue('jarId', jar.id);
-                                        if (full.suggestedDueDay != null) {
+                                        if (full.suggestedDueDay !== null) {
                                             form.setValue('dueDay', String(full.suggestedDueDay));
                                         }
                                         pendingCategoryName.current =

@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
-import { DebtKind, PayoffStrategy } from '@rumbelo/contracts';
+import { type DebtKind, PayoffStrategy } from '@rumbelo/contracts';
 import { HouseholdSettings } from '../../../../platform/household/household-settings.entity';
 
 import { Debt } from './debt.entity';

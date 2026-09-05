@@ -34,7 +34,7 @@ const euros = z
     .refine(
         v => {
             const cents = parseEurosToCents(v);
-            return cents != null && cents > 0;
+            return cents !== null && cents > 0;
         },
         { message: 'Enter a valid amount' }
     );
@@ -122,7 +122,7 @@ export function GoalForm({
         mutationFn: async (values: GoalFormValues) => {
             if (!householdId) throw new Error('No household');
             const target = parseEurosToCents(values.target);
-            if (target == null || target <= 0) throw new Error('Invalid target');
+            if (target === null || target <= 0) throw new Error('Invalid target');
             const monthly = values.monthlyContribution?.trim()
                 ? (parseEurosToCents(values.monthlyContribution) ?? 0)
                 : 0;

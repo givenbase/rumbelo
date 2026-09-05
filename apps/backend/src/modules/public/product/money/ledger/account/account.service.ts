@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
-import { AccountKind } from '@rumbelo/contracts';
+import { type AccountKind } from '@rumbelo/contracts';
 
 import { BankAccount } from './bank-account.entity';
 

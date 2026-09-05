@@ -67,7 +67,7 @@ export function findInheritedFieldRedeclarations(text: string): string[] {
     }
 
     const redeclarations: string[] = [];
-    const pattern = /@(?:PrimaryKey|Property|Enum)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?[=:]/g;
+    const pattern = /@(?:PrimaryKey|Property|Enum)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
         const fieldName = match[1]!;
@@ -95,7 +95,7 @@ export function extractBooleanPropertyNames(text: string): string[] {
         const fieldName = match[2]!;
         const hasBoolDefault = /default:\s*(true|false)/.test(opts);
         const hasBoolType = /type:\s*['"]boolean['"]/.test(opts);
-        const hasBoolAssign = match[3] != null;
+        const hasBoolAssign = match[3] === 'true' || match[3] === 'false';
         const hasBoolAnnotation = /:\s*boolean/.test(
             text.slice(match.index, match.index + match[0].length)
         );
@@ -129,7 +129,7 @@ type PropertyDecl = {
 /** Parse @Property blocks → field name + decorator options. */
 export function extractPropertyDeclarations(text: string): PropertyDecl[] {
     const decls: PropertyDecl[] = [];
-    const pattern = /@Property\(([\s\S]*?)\)\s*\n\s*(\w+)[!?]?[=:]/g;
+    const pattern = /@Property\(([\s\S]*?)\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
         decls.push({ opts: match[1] ?? '', fieldName: match[2]! });
@@ -155,10 +155,10 @@ export function findTemporalNamingViolations(text: string): string[] {
     const violations: string[] = [];
     for (const { fieldName, opts } of extractPropertyDeclarations(text)) {
         const kind = propertyType(opts);
-        const endsDay = /Day$/.test(fieldName);
-        const endsOn = /On$/.test(fieldName);
-        const endsAt = /At$/.test(fieldName);
-        const endsDate = /Date$/.test(fieldName);
+        const endsDay = fieldName.endsWith('Day');
+        const endsOn = fieldName.endsWith('On');
+        const endsAt = fieldName.endsWith('At');
+        const endsDate = fieldName.endsWith('Date');
 
         if (endsDay && (kind === 'date' || kind === 'timestamptz')) {
             violations.push(
@@ -184,9 +184,7 @@ export function findTemporalNamingViolations(text: string): string[] {
             );
         }
         if (kind === 'date' && !endsOn && !endsDate) {
-            violations.push(
-                `"${fieldName}" is type date — name it *On (e.g. startedOn, endsOn)`
-            );
+            violations.push(`"${fieldName}" is type date — name it *On (e.g. startedOn, endsOn)`);
         }
         if (kind === 'timestamptz' && !endsAt) {
             violations.push(
@@ -212,9 +210,9 @@ const JSON_BAG_SUFFIX_RE = /(Json|Metadata|Settings|Config|Payload|Snapshot)$/;
 
 function looksPluralField(name: string): boolean {
     // Simple plural heuristic — aliases, unlocks, tags, audienceTags
-    if (/ies$/.test(name)) return true;
-    if (/ses$/.test(name)) return true;
-    if (/s$/.test(name) && !/ss$|us$|is$status|Status$/.test(name)) return true;
+    if (name.endsWith('ies')) return true;
+    if (name.endsWith('ses')) return true;
+    if (name.endsWith('s') && !/ss$|us$|is$status|Status$/.test(name)) return true;
     return false;
 }
 
@@ -412,7 +410,7 @@ export function compareFieldOrder(
 
 export function extractPropertyFieldNames(block: string): string[] {
     const fields: string[] = [];
-    const pattern = /@Property\([\s\S]*?\)\s*\n\s*(\w+)[!?]?[=:]/g;
+    const pattern = /@Property\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(block)) !== null) {
         fields.push(match[1]!);

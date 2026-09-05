@@ -80,6 +80,13 @@ export const ImportCsv = z.object({
     dryRun: z.boolean().default(true),
 });
 
+export const ImportPreview = z.object({
+    detected: z.int(),
+    duplicates: z.int(),
+    willImport: z.int(),
+    sample: z.array(z.string()),
+});
+
 export const ImportCsvResult = z.object({
     imported: z.int(),
     skipped: z.int(),

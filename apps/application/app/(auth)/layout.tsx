@@ -17,7 +17,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                             <span className="block font-display text-lg font-semibold tracking-tight">
                                 Rumbelo
                             </span>
-                            <span className="mt-0.5 block text-xs text-fg-muted">{BRAND_TAGLINE}</span>
+                            <span className="mt-0.5 block text-xs text-fg-muted">
+                                {BRAND_TAGLINE}
+                            </span>
                         </span>
                     </Link>
                     {children}

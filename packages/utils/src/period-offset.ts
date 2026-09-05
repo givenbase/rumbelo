@@ -42,9 +42,7 @@ export function describePeriodTravel(selected: YearMonth, now = new Date()): Per
     const monthsDelta = monthsBetween(current, selected);
     const selectedStart = new Date(selected.year, selected.month - 1, 1);
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const daysApprox = Math.round(
-        (selectedStart.getTime() - startOfToday.getTime()) / 86_400_000
-    );
+    const daysApprox = Math.round((selectedStart.getTime() - startOfToday.getTime()) / 86_400_000);
 
     if (monthsDelta === 0) {
         return {

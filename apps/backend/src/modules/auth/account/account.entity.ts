@@ -21,7 +21,6 @@ import { AuthUser } from '../better-auth/user/auth-user.entity';
 @Entity(entityConfig({ schema: 'auth', tableName: 'account' }))
 export class Account extends BaseEntity {
     // ? RELATIONSHIPS
-
     /**
      * The better-auth user this account belongs to (1:1).
      * Owner side — Account holds the foreign key.

@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Cadence, IncomeKind } from '@rumbelo/contracts';
+import { Cadence, type IncomeKind } from '@rumbelo/contracts';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
@@ -95,7 +95,12 @@ export class IncomeService {
             jars.map(jar => ({ id: jar.id, percentage: jar.percentage }))
         );
         // TODO: persist allocations as ledger rows once the allocation table lands.
-        return { allocations: allocations.map(allocation => ({ jarId: allocation.id, amount: allocation.amount })) };
+        return {
+            allocations: allocations.map(allocation => ({
+                jarId: allocation.id,
+                amount: allocation.amount,
+            })),
+        };
     }
 
     // ====================================================================

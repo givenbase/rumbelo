@@ -16,11 +16,8 @@ export function rewriteBetterAuthSetCookie(cookieValue: string): string {
     const parts = cookieValue.split(';').map(part => part.trim());
 
     if (process.env.NODE_ENV === 'development') {
-        return parts
-            .filter(part => !part.toLowerCase().startsWith('domain='))
-            .join('; ');
+        return parts.filter(part => !part.toLowerCase().startsWith('domain=')).join('; ');
     }
 
     return parts.join('; ');
 }
-

@@ -208,7 +208,7 @@ export function FixedCostsPageClient() {
                                             </div>
                                             <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
                                                 Monthly
-                                                {f.dueDay != null ? ` · day ${f.dueDay}` : ''}
+                                                {f.dueDay !== null ? ` · day ${f.dueDay}` : ''}
                                             </div>
                                         </div>
                                         <span className="font-mono text-sm whitespace-nowrap text-fg">
@@ -279,7 +279,7 @@ export function FixedCostsPageClient() {
                                         <div className="text-sm text-fg">{s.label}</div>
                                         <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
                                             Monthly
-                                            {s.dueDay != null
+                                            {s.dueDay !== null
                                                 ? ` · pay day ${s.dueDay}`
                                                 : ' · pay day'}
                                         </div>

@@ -20,7 +20,9 @@ export function daysInPeriod(period: string): number {
 
 /** ISO week key, YYYY-Www. The unit of the weekly ritual. */
 export function currentWeek(date = new Date()): string {
-    const thursday = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+    const thursday = new Date(
+        Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    );
     const day = thursday.getUTCDay() || 7;
     thursday.setUTCDate(thursday.getUTCDate() + 4 - day);
     const yearStart = new Date(Date.UTC(thursday.getUTCFullYear(), 0, 1));

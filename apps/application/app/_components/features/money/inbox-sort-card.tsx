@@ -169,20 +169,20 @@ export function InboxSortCard({
                 <Button
                     size="sm"
                     onClick={() => void confirm(false)}
-                    disabled={pending != null || !jarId}>
+                    disabled={pending !== null || !jarId}>
                     {pending === 'sort' ? 'Working…' : 'Correct'}
                 </Button>
                 <Button
                     variant="secondary"
                     size="sm"
                     onClick={() => void confirm(true)}
-                    disabled={pending != null || !onConfirm || !jarId}>
+                    disabled={pending !== null || !onConfirm || !jarId}>
                     {pending === 'rule' ? 'Working…' : 'Always this'}
                 </Button>
                 <Button
                     variant="ghost"
                     size="sm"
-                    disabled={pending != null || !jarId}
+                    disabled={pending !== null || !jarId}
                     onClick={() => onChange?.(t, jarId)}>
                     Other
                 </Button>
@@ -214,7 +214,7 @@ export function TabPills({
                             : 'border-line text-fg-muted hover:border-line-strong hover:text-fg'
                     )}>
                     {tab.label}
-                    {tab.count != null && tab.count > 0 && (
+                    {tab.count !== null && tab.count > 0 && (
                         <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
                             {tab.count}
                         </span>

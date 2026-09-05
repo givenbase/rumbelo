@@ -34,7 +34,7 @@ const expenseFormSchema = z.object({
         .refine(
             v => {
                 const cents = parseEurosToCents(v);
-                return cents != null && cents > 0;
+                return cents !== null && cents > 0;
             },
             { message: 'Enter a valid amount' }
         ),
@@ -103,7 +103,7 @@ export function ExpenseForm({
         mutationFn: async (values: ExpenseFormValues) => {
             if (!householdId) throw new Error('No household');
             const cents = parseEurosToCents(values.amount);
-            if (cents == null || cents <= 0) throw new Error('Invalid amount');
+            if (cents === null || cents <= 0) throw new Error('Invalid amount');
             const description = values.description.trim();
 
             if (mode === 'edit' && entityId) {

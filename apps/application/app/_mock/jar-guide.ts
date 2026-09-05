@@ -4,7 +4,12 @@
  */
 
 export type JarGuideKey =
-    'NECESSITIES' | 'FINANCIAL_FREEDOM' | 'LONG_TERM_SAVINGS' | 'EDUCATION' | 'PLAY' | 'GIVE';
+    | 'NECESSITIES'
+    | 'FINANCIAL_FREEDOM'
+    | 'LONG_TERM_SAVINGS'
+    | 'EDUCATION'
+    | 'PLAY'
+    | 'GIVE';
 
 export interface JarGuide {
     note: string;

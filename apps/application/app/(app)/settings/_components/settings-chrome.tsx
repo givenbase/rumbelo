@@ -61,13 +61,7 @@ export function SettingsRow({
     );
 }
 
-export function SettingsRowLabel({
-    title,
-    sub,
-}: {
-    title: ReactNode;
-    sub?: ReactNode;
-}) {
+export function SettingsRowLabel({ title, sub }: { title: ReactNode; sub?: ReactNode }) {
     return (
         <span className="grid min-w-0 gap-px">
             <span className="text-sm text-fg">{title}</span>

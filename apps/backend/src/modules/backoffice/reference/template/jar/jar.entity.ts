@@ -18,7 +18,6 @@ import { entityConfig } from '../../../../../common/database/entity-config.util'
 @Unique({ properties: ['key'] })
 export class JarTemplate extends BaseEntity {
     // ? PROPERTIES
-
     /** Display name shown at onboard (household may rename their copy later). */
     @Property({ length: 80 })
     name!: string;
@@ -33,20 +32,19 @@ export class JarTemplate extends BaseEntity {
     @Property({ type: 'decimal', precision: 5, scale: 2 })
     defaultPercentage!: string;
 
-    /** Financial Freedom is never spendable — enforced when seeding household jars. */
-    @Property({ default: true })
-    isSpendable = true;
-
     /** Display / seed order within the catalog. */
     @Property({ default: 0 })
     sortOrder = 0;
+
+    /** Financial Freedom is never spendable — enforced when seeding household jars. */
+    @Property({ default: true })
+    isSpendable = true;
 
     /** Soft-disable without deleting historical household jars that used this key. */
     @Property({ default: true })
     isActive = true;
 
     // ? ENUMS
-
     /** Stable key — copied onto household jars; never renamed in place. */
     @Enum(NativeEnum({ JarKey, domain: 'money' }))
     key!: JarKey;

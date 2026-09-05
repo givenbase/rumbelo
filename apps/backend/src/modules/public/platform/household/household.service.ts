@@ -1,6 +1,13 @@
 import type { z } from 'zod';
 
-import { Currency, HouseholdRole, IncomeKind, IncomeRhythm, OnboardingInput, PayoffStrategy } from '@rumbelo/contracts';
+import {
+    Currency,
+    HouseholdRole,
+    IncomeKind,
+    IncomeRhythm,
+    type OnboardingInput,
+    PayoffStrategy,
+} from '@rumbelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, BadRequestException, Injectable } from '@nestjs/common';

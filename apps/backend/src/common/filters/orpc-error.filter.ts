@@ -3,9 +3,9 @@
  * Without this, @orpc/nest often turns contract errors into 500s.
  */
 
-import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
+import { type ArgumentsHost, Catch, type ExceptionFilter, Logger } from '@nestjs/common';
 import { ORPCError } from '@orpc/server';
-import { FastifyReply } from 'fastify';
+import { type FastifyReply } from 'fastify';
 
 @Catch(ORPCError)
 export class OrpcErrorFilter implements ExceptionFilter {

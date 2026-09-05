@@ -3,8 +3,4 @@
  */
 export { Account } from './account.entity';
 export { AccountModule } from './account.module';
-export {
-    AccountSettings,
-    AccountSettingsModule,
-    AccountSettingsService,
-} from './account-settings';
+export { AccountSettings, AccountSettingsModule, AccountSettingsService } from './account-settings';

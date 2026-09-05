@@ -21,7 +21,6 @@ import { JarTemplate } from '../../template/jar/jar.entity';
 @Unique({ properties: ['key'] })
 export class FixedCostPreset extends BaseEntity {
     // ? PROPERTIES
-
     /** Stable catalog key (e.g. RENT) — never rename in place. */
     @Property({ length: 64 })
     key!: string;
@@ -54,7 +53,6 @@ export class FixedCostPreset extends BaseEntity {
     isActive = true;
 
     // ? ENUMS
-
     /** Suggested recurrence when creating the household fixed cost. */
     @Enum(NativeEnum({ Cadence, domain: 'money', defaultValue: Cadence.MONTHLY }))
     defaultCadence: Cadence = Cadence.MONTHLY;
@@ -64,7 +62,6 @@ export class FixedCostPreset extends BaseEntity {
     direction: FlowDirection = FlowDirection.OUT;
 
     // ? RELATIONSHIPS
-
     /** Default jar template; app resolves household jar by jarTemplate.key. */
     @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
     jarTemplate!: JarTemplate;

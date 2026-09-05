@@ -67,7 +67,9 @@ export class TransactionService {
      */
     async importCsv(accountId: string, content: string, dryRun: boolean) {
         const parsed = parseStatementCsv(content);
-        const keys = parsed.map(row => dedupeKey(accountId, row.bookedOn, row.amount, row.description));
+        const keys = parsed.map(row =>
+            dedupeKey(accountId, row.bookedOn, row.amount, row.description)
+        );
 
         const existing = keys.length
             ? await this.transactions.find({ dedupeKey: { $in: keys } })

@@ -79,7 +79,9 @@ async function main(): Promise<void> {
 
         await client.query(`CREATE DATABASE "${databaseName}"`);
         console.log(`✅ Created database "${databaseName}"`);
-        console.log('\n✨ Database drop complete — run pnpm db:create-schemas && pnpm db:push next');
+        console.log(
+            '\n✨ Database drop complete — run pnpm db:create-schemas && pnpm db:push next'
+        );
     } catch (error) {
         console.error('❌ Database drop failed:', error);
         console.error(

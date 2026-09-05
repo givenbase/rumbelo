@@ -63,7 +63,10 @@ export class RitualService {
         if (input.intention !== undefined) ritual.intention = input.intention;
         if (input.stage === RitualStage.DONE) ritual.completedAt = new Date();
         if (input.allocations?.length) {
-            ritual.surplus = input.allocations.reduce((sum, allocation) => sum + allocation.amount, 0);
+            ritual.surplus = input.allocations.reduce(
+                (sum, allocation) => sum + allocation.amount,
+                0
+            );
             await this.em.nativeDelete(RitualAllocation, { ritual: ritual.id });
             for (const allocation of input.allocations) {
                 this.em.create(RitualAllocation, {
@@ -89,7 +92,10 @@ export class RitualService {
             week: ritual.week,
             stage: ritual.stage,
             surplus: Number(ritual.surplus),
-            allocations: allocations.map(allocation => ({ jarId: allocation.jar.id, amount: Number(allocation.amount) })),
+            allocations: allocations.map(allocation => ({
+                jarId: allocation.jar.id,
+                amount: Number(allocation.amount),
+            })),
             intention: ritual.intention,
             completedAt: ritual.completedAt?.toISOString() ?? null,
         };

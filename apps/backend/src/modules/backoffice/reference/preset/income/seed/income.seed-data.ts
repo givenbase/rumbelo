@@ -33,7 +33,12 @@ export const INCOME_SOURCE_PRESET_SEED = [
     { key: 'CONTRACTING', name: 'Contracting', kind: IncomeKind.FREELANCE, defaultCadence: M },
     { key: 'CONSULTING', name: 'Consulting', kind: IncomeKind.FREELANCE, defaultCadence: M },
     { key: 'GIG_WORK', name: 'Gig work', kind: IncomeKind.FREELANCE, defaultCadence: W },
-    { key: 'CREATOR_INCOME', name: 'Creator income', kind: IncomeKind.FREELANCE, defaultCadence: M },
+    {
+        key: 'CREATOR_INCOME',
+        name: 'Creator income',
+        kind: IncomeKind.FREELANCE,
+        defaultCadence: M,
+    },
     {
         key: 'BUSINESS_PROFIT',
         name: 'Business profit',

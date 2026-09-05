@@ -363,10 +363,7 @@ export function AccountSettings() {
                 </SettingsRow>
 
                 <SettingsRow>
-                    <SettingsRowLabel
-                        title="Sign-in method"
-                        sub="Email, through Better Auth"
-                    />
+                    <SettingsRowLabel title="Sign-in method" sub="Email, through Better Auth" />
                     <SettingsPill tone="accent">Connected</SettingsPill>
                 </SettingsRow>
 
@@ -402,10 +399,7 @@ export function AccountSettings() {
                 </SettingsRow>
 
                 <SettingsRow>
-                    <SettingsRowLabel
-                        title="Currency"
-                        sub="How every amount is written"
-                    />
+                    <SettingsRowLabel title="Currency" sub="How every amount is written" />
                     <div className="flex flex-wrap justify-end gap-1.5">
                         {CURRENCY_OPTIONS.map(opt => {
                             const on = activeCurrency === opt.code;
@@ -459,10 +453,7 @@ export function AccountSettings() {
                 eyebrow="How you handle money"
                 blurb="Personal style — partners can differ. Tips on the jar split use this. Debt payoff order lives under Debt settings for the whole board.">
                 <SettingsRow>
-                    <SettingsRowLabel
-                        title="I tend to…"
-                        sub="Descriptive, never a verdict"
-                    />
+                    <SettingsRowLabel title="I tend to…" sub="Descriptive, never a verdict" />
                     <div className="flex flex-wrap justify-end gap-1.5">
                         {(
                             [
@@ -643,9 +634,7 @@ export function AccountSettings() {
                         checked={dark}
                         label="Dark mode"
                         hint="Saved locally and in household settings."
-                        onCheckedChange={next =>
-                            saveTheme.mutate(next ? Theme.DARK : Theme.LIGHT)
-                        }
+                        onCheckedChange={next => saveTheme.mutate(next ? Theme.DARK : Theme.LIGHT)}
                     />
                 </div>
                 <SettingsRow last>
@@ -737,8 +726,7 @@ export function JarsSettings() {
     const balanced = Math.abs(total - 100) < 0.01;
 
     const coachTips = useMemo(() => {
-        const character =
-            accountSettingsQuery.data?.moneyCharacter ?? MoneyCharacter.UNKNOWN;
+        const character = accountSettingsQuery.data?.moneyCharacter ?? MoneyCharacter.UNKNOWN;
         const tips = evaluateSplitCoach(pctByJarKey(jars, pct), character);
         return tips.filter(tip => !dismissedTips[tip.id]);
     }, [jars, pct, dismissedTips, accountSettingsQuery.data?.moneyCharacter]);
@@ -752,7 +740,9 @@ export function JarsSettings() {
         if (!live) {
             return mockJars.reduce((s, j) => s + j.allocated, 0);
         }
-        return (incomeQuery.data ?? []).filter(s => s.isActive).reduce((sum, s) => sum + s.amount, 0);
+        return (incomeQuery.data ?? [])
+            .filter(s => s.isActive)
+            .reduce((sum, s) => sum + s.amount, 0);
     }, [live, incomeQuery.data]);
 
     const saveSplit = useMutation({
@@ -782,7 +772,7 @@ export function JarsSettings() {
     }
 
     const defaultAccountLabel =
-        accounts[0]?.name != null
+        accounts[0]?.name !== null
             ? `${accounts[0].name}${accounts[0].iban ? ` · ${accounts[0].iban.slice(-4)}` : ''}`
             : null;
 
@@ -956,8 +946,7 @@ export function DebtSettings() {
         live
     );
 
-    const strategy =
-        settingsQuery.data?.payoffStrategy ?? PayoffStrategy.AVALANCHE;
+    const strategy = settingsQuery.data?.payoffStrategy ?? PayoffStrategy.AVALANCHE;
 
     const saveStrategy = useMutation({
         mutationFn: async (next: PayoffStrategy) => {
@@ -1345,8 +1334,9 @@ export function SysteemSettings() {
     const [hhNameDraft, setHhNameDraft] = useState<string | null>(null);
     const hhName = hhNameDraft ?? householdQuery.data?.name ?? '';
 
-    const [rules, setRules] = useState(() =>
-        Object.fromEntries(AUTO_RULES.map(r => [r.key, r.defaultOn])) as Record<string, boolean>
+    const [rules, setRules] = useState(
+        () =>
+            Object.fromEntries(AUTO_RULES.map(r => [r.key, r.defaultOn])) as Record<string, boolean>
     );
 
     const saveHouseholdName = useMutation({
@@ -1741,7 +1731,7 @@ export function ExportSettings() {
                     <div className="flex flex-wrap gap-2.5">
                         <Button
                             className="min-w-[190px] flex-1 rounded-full font-mono text-[10.5px] tracking-[0.13em] uppercase"
-                            disabled={!live || busy != null}
+                            disabled={!live || busy !== null}
                             onClick={() => {
                                 showToast(
                                     'Excel multi-sheet export coming soon — use CSV or JSON for now.',
@@ -1753,7 +1743,7 @@ export function ExportSettings() {
                         <Button
                             variant="secondary"
                             className="min-w-[190px] flex-1 rounded-full font-mono text-[10.5px] tracking-[0.13em] uppercase"
-                            disabled={!live || busy != null}
+                            disabled={!live || busy !== null}
                             onClick={() => {
                                 if (scope === 'all') void exportJson();
                                 else void exportCsv();

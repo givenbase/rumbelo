@@ -327,11 +327,13 @@ function validateEntity(absPath: string): EntityIssue[] {
 
     // @Index / @Unique belong on the class (with @Entity), never on fields
     const classDeclMatch = text.match(/\bexport\s+class\s+\w+/);
-    if (classDeclMatch?.index != null) {
+    if (classDeclMatch?.index !== null) {
         const classBody = text.slice(classDeclMatch.index);
         const fieldIndexOrUnique = classBody.match(/@(Index|Unique)\s*\(/g);
         if (fieldIndexOrUnique) {
-            const kinds = [...new Set(fieldIndexOrUnique.map(match => match.replace(/\s*\($/, '')))];
+            const kinds = [
+                ...new Set(fieldIndexOrUnique.map(match => match.replace(/\s*\($/, ''))),
+            ];
             pushIssue(
                 issues,
                 file,

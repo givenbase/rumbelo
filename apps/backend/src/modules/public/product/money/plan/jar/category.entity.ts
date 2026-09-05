@@ -4,12 +4,14 @@ import { HouseholdEntity } from '../../../../../../common/database/base.entity';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 import { Jar } from './jar.entity';
 
-/** A spending line inside a jar. Budget is planned; actuals come from transactions. */
+/**
+ * A spending line inside a jar. Budget is planned; actuals come from transactions.
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
+ */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'category' }))
 export class Category extends HouseholdEntity {
-    @ManyToOne(() => Jar, { deleteRule: 'cascade' })
-    jar!: Jar;
-
+    // ? PROPERTIES
     @Property({ length: 80 })
     name!: string;
 
@@ -18,4 +20,8 @@ export class Category extends HouseholdEntity {
 
     @Property({ default: false })
     isArchived = false;
+
+    // ? RELATIONSHIPS
+    @ManyToOne(() => Jar, { deleteRule: 'cascade' })
+    jar!: Jar;
 }

@@ -18,7 +18,6 @@ import { JarTemplate } from '../../template/jar/jar.entity';
 @Unique({ properties: ['key'] })
 export class GoalPreset extends BaseEntity {
     // ? PROPERTIES
-
     /** Stable catalog key (e.g. EMERGENCY_FUND) — never rename in place. */
     @Property({ length: 64 })
     key!: string;
@@ -44,7 +43,6 @@ export class GoalPreset extends BaseEntity {
     isActive = true;
 
     // ? RELATIONSHIPS
-
     /** Default jar template; app resolves household jar by jarTemplate.key. */
     @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
     jarTemplate!: JarTemplate;

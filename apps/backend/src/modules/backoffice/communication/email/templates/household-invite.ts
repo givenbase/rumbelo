@@ -27,9 +27,7 @@ export function renderHouseholdInviteEmail(input: HouseholdInviteEmailInput): {
 
     const text = [
         `Je bent uitgenodigd voor ${input.householdName} op Rumbelo.`,
-        input.inviterName
-            ? `${input.inviterName} nodigt je uit als ${role}.`
-            : `Rol: ${role}.`,
+        input.inviterName ? `${input.inviterName} nodigt je uit als ${role}.` : `Rol: ${role}.`,
         `Open: ${input.inviteUrl}`,
     ].join('\n\n');
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { useApi, type useApiClient } from '@/app/_lib/api-hooks';
 import { useLiveQuery } from '@rumbelo/hooks';
 
 import { isLiveData } from '@/app/_lib/preview';

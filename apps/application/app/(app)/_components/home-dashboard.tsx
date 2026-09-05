@@ -91,7 +91,7 @@ export function HomeDashboardClient() {
 
     const mock = mockDashboard;
     const liveData = dashboardQuery.data;
-    const d = live ? { ...mock, ...(liveData ?? {}) } : (liveData ?? mock);
+    const d = live ? { ...mock, ...liveData } : (liveData ?? mock);
     const jars = live ? (liveData?.jars?.length ? liveData.jars : []) : mockJars;
     const turn = liveData?.turn ?? mockTurn;
     const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'en-US');

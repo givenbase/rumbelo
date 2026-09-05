@@ -12,20 +12,21 @@ import { BankAccount } from '../account/bank-account.entity';
  * INBOX   — arrived, no jar yet. The only state that demands user attention.
  * SORTED  — has a jar, and usually a category.
  * IGNORED — deliberately outside budget maths (internal transfers, corrections).
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'transaction' }))
 // The dashboard reads by period and the inbox reads by status; cover both.
 @Index({ properties: ['householdId', 'bookedOn'] })
 @Index({ properties: ['householdId', 'status'] })
+@Index({ properties: ['dedupeKey'] })
 export class Transaction extends HouseholdEntity {
-    @ManyToOne(() => BankAccount, { nullable: true })
-    account: BankAccount | null = null;
+    // ? PROPERTIES
+    @Property({ length: 280 })
+    description!: string;
 
-    @ManyToOne(() => Jar, { nullable: true })
-    jar: Jar | null = null;
-
-    @ManyToOne(() => Category, { nullable: true })
-    category: Category | null = null;
+    @Property({ length: 160, nullable: true })
+    counterparty: string | null = null;
 
     /** Negative = money out, positive = money in. Integer minor units, never floats. */
     @Property({ type: 'bigint' })
@@ -33,18 +34,6 @@ export class Transaction extends HouseholdEntity {
 
     @Property({ type: 'date' })
     bookedOn!: string;
-
-    @Property({ length: 280 })
-    description!: string;
-
-    @Property({ length: 160, nullable: true })
-    counterparty: string | null = null;
-
-    @Enum(NativeEnum({ TransactionStatus, domain: 'money', defaultValue: TransactionStatus.INBOX }))
-    status: TransactionStatus = TransactionStatus.INBOX;
-
-    @Enum(NativeEnum({ TransactionSource, domain: 'money', defaultValue: TransactionSource.MANUAL }))
-    source: TransactionSource = TransactionSource.MANUAL;
 
     /** Set when a rule auto-sorted this, keeping the automation visible and undoable. */
     @Property({ type: 'uuid', nullable: true })
@@ -55,9 +44,27 @@ export class Transaction extends HouseholdEntity {
      * re-importing the same statement must never duplicate rows.
      */
     @Property({ length: 64, nullable: true })
-    @Index()
     dedupeKey: string | null = null;
 
     @Property({ type: 'text', nullable: true })
     note: string | null = null;
+
+    // ? ENUMS
+    @Enum(NativeEnum({ TransactionStatus, domain: 'money', defaultValue: TransactionStatus.INBOX }))
+    status: TransactionStatus = TransactionStatus.INBOX;
+
+    @Enum(
+        NativeEnum({ TransactionSource, domain: 'money', defaultValue: TransactionSource.MANUAL })
+    )
+    source: TransactionSource = TransactionSource.MANUAL;
+
+    // ? RELATIONSHIPS
+    @ManyToOne(() => BankAccount, { nullable: true })
+    account: BankAccount | null = null;
+
+    @ManyToOne(() => Jar, { nullable: true })
+    jar: Jar | null = null;
+
+    @ManyToOne(() => Category, { nullable: true })
+    category: Category | null = null;
 }

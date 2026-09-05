@@ -1,7 +1,10 @@
 'use client';
 
 import { GoalCreatePage, GoalUpdatePage } from '@/app/(app)/growth/goals/_components/goal-pages';
-import { IncomeCreatePage, IncomeUpdatePage } from '@/app/(app)/growth/income/_components/income-pages';
+import {
+    IncomeCreatePage,
+    IncomeUpdatePage,
+} from '@/app/(app)/growth/income/_components/income-pages';
 import { DebtCreatePage, DebtUpdatePage } from '@/app/(app)/money/debts/_components/debt-pages';
 import {
     FixedCostCreatePage,

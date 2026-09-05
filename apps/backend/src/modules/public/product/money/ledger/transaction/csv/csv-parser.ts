@@ -77,7 +77,8 @@ function parseAmount(raw: string): number | null {
 function normaliseDate(raw: string): string | null {
     const trimmed = raw.trim();
     if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
-    if (/^\d{8}$/.test(trimmed)) return `${trimmed.slice(0, 4)}-${trimmed.slice(4, 6)}-${trimmed.slice(6, 8)}`;
+    if (/^\d{8}$/.test(trimmed))
+        return `${trimmed.slice(0, 4)}-${trimmed.slice(4, 6)}-${trimmed.slice(6, 8)}`;
     const match = trimmed.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
     return match ? `${match[3]}-${match[2]}-${match[1]}` : null;
 }

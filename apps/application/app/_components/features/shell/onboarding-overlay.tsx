@@ -13,7 +13,10 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
 const STEPS = [
-    { title: 'Welcome to Rumbelo', body: 'Stop wondering where it went. Six jars, one calm overview.' },
+    {
+        title: 'Welcome to Rumbelo',
+        body: 'Stop wondering where it went. Six jars, one calm overview.',
+    },
     { title: 'Your income', body: 'What is your net monthly income?' },
     { title: 'The six jars', body: 'Your income is split immediately — pay your future first.' },
     {
