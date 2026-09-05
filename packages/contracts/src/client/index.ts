@@ -49,12 +49,15 @@ export function createClient(options: CreateClientOptions): AppClient {
 
         if (options.logErrors && !response.ok && response.status !== 404) {
             try {
-                const errorData = await response.clone().json();
+                const errorData = (await response.clone().json()) as {
+                    code?: unknown;
+                    message?: unknown;
+                };
                 console.error('ORPC request failed', {
                     url: String(input),
                     status: response.status,
-                    code: errorData?.code,
-                    message: errorData?.message,
+                    code: errorData.code,
+                    message: errorData.message,
                 });
             } catch {
                 console.error('ORPC request failed', String(input), response.status);

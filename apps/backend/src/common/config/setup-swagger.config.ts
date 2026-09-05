@@ -21,7 +21,10 @@ export async function setupSwagger(app: NestFastifyApplication, env: Env): Promi
     if (!isSwaggerEnabled(env)) {
         // Explicit deny — bare 404 would look like a misconfig, not a policy.
         const fastify = app.getHttpAdapter().getInstance();
-        const deny = (_request: unknown, reply: { redirect: (url: string, code?: number) => void }) => {
+        const deny = (
+            _request: unknown,
+            reply: { redirect: (url: string, code?: number) => void }
+        ) => {
             void reply.redirect('/access-denied', 302);
         };
         fastify.get('/api/docs', deny);

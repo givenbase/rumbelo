@@ -12,9 +12,9 @@
     },
     "scripts": {
         "build": "turbo run build --output-logs=errors-only",
-        "build:application": "turbo run build --filter=@rumbelo/application",
-        "build:website": "turbo run build --filter=@rumbelo/website",
-        "build:backend": "turbo run build --filter=@rumbelo/backend",
+        "build:application": "turbo run build --filter=@rumbelo/application...",
+        "build:website": "turbo run build --filter=@rumbelo/website...",
+        "build:backend": "turbo run build --filter=@rumbelo/backend...",
         "build:packages": "turbo run build --filter=./packages/*",
         "start": "turbo run start",
         "start:application": "pnpm --filter @rumbelo/application start",

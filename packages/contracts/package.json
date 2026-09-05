@@ -5,56 +5,66 @@
     "type": "module",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "types": "./src/index.ts",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
+            "types": "./src/index.ts",
             "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
+            "require": "./dist/index.cjs",
+            "default": "./src/index.ts"
         },
         "./react": {
-            "types": "./dist/react.d.ts",
-            "import": "./dist/react.js",
-            "require": "./dist/react.cjs"
+            "types": "./src/client/react.tsx",
+            "import": "./src/client/react.tsx",
+            "require": "./dist/react.cjs",
+            "default": "./src/client/react.tsx"
         },
         "./money": {
-            "types": "./dist/money.d.ts",
+            "types": "./src/money/index.ts",
             "import": "./dist/money.js",
-            "require": "./dist/money.cjs"
+            "require": "./dist/money.cjs",
+            "default": "./src/money/index.ts"
         },
         "./growth": {
-            "types": "./dist/growth.d.ts",
+            "types": "./src/growth/index.ts",
             "import": "./dist/growth.js",
-            "require": "./dist/growth.cjs"
+            "require": "./dist/growth.cjs",
+            "default": "./src/growth/index.ts"
         },
         "./platform": {
-            "types": "./dist/platform.d.ts",
+            "types": "./src/platform/index.ts",
             "import": "./dist/platform.js",
-            "require": "./dist/platform.cjs"
+            "require": "./dist/platform.cjs",
+            "default": "./src/platform/index.ts"
         },
         "./energy": {
-            "types": "./dist/energy.d.ts",
+            "types": "./src/energy/index.ts",
             "import": "./dist/energy.js",
-            "require": "./dist/energy.cjs"
+            "require": "./dist/energy.cjs",
+            "default": "./src/energy/index.ts"
         },
         "./soul": {
-            "types": "./dist/soul.d.ts",
+            "types": "./src/soul/index.ts",
             "import": "./dist/soul.js",
-            "require": "./dist/soul.cjs"
+            "require": "./dist/soul.cjs",
+            "default": "./src/soul/index.ts"
         },
         "./backoffice": {
-            "types": "./dist/backoffice.d.ts",
+            "types": "./src/backoffice/index.ts",
             "import": "./dist/backoffice.js",
-            "require": "./dist/backoffice.cjs"
+            "require": "./dist/backoffice.cjs",
+            "default": "./src/backoffice/index.ts"
         },
         "./common": {
-            "types": "./dist/common.d.ts",
+            "types": "./src/common/index.ts",
             "import": "./dist/common.js",
-            "require": "./dist/common.cjs"
+            "require": "./dist/common.cjs",
+            "default": "./src/common/index.ts"
         }
     },
     "files": [
-        "dist"
+        "dist",
+        "src"
     ],
     "scripts": {
         "build": "tsup && node scripts/add-use-client.mjs",
