@@ -8,6 +8,9 @@ import { defineConfig } from 'tsup';
  *
  * Two configs, not one: bundlers strip module-level directives, so the React entry
  * needs "use client" re-attached as a banner or Next will treat it as a server module.
+ *
+ * Domain subpaths (`money`, `growth`, …) ship ownership in the import path so
+ * callers need not rename symbols to MoneyDebtKind.
  */
 const shared = {
     format: ['esm', 'cjs'] as const,
@@ -17,8 +20,22 @@ const shared = {
     external: ['react', '@tanstack/react-query'],
 };
 
+const domainEntries = {
+    money: 'src/public/product/money/index.ts',
+    growth: 'src/public/product/growth/index.ts',
+    platform: 'src/public/platform/index.ts',
+    energy: 'src/public/product/energy/index.ts',
+    soul: 'src/public/product/soul/index.ts',
+    backoffice: 'src/backoffice/index.ts',
+    common: 'src/common/index.ts',
+} as const;
+
 export default defineConfig([
-    { ...shared, entry: { index: 'src/index.ts' }, clean: true },
+    {
+        ...shared,
+        entry: { index: 'src/index.ts', ...domainEntries },
+        clean: true,
+    },
     {
         ...shared,
         entry: { react: 'src/client/react.tsx' },

@@ -12,8 +12,8 @@
  *   // → { tableName: 'money_jar', schema: 'public' }
  *
  * @example
- *   @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'jar_template' }))
- *   // → { tableName: 'reference_jar_template', schema: 'backoffice' }
+ *   @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', group: 'money', tableName: 'jar_template' }))
+ *   // → { tableName: 'reference_money_jar_template', schema: 'backoffice' }
  */
 
 const VALID_DOMAINS = [

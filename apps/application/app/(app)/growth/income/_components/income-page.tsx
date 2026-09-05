@@ -4,6 +4,12 @@ import { useApi } from '@/app/_lib/api-hooks';
 
 import { useRouter } from 'next/navigation';
 
+import {
+    INCOME_POSTURE_KEYS,
+    MoneyCharacter,
+    WEALTH_STAGE_KEYS,
+    type GrowthLeverPreset,
+} from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { AccentCard, Card, Eyebrow } from '@rumbelo/ui';
 import { formatMoney, toPeriodKey } from '@rumbelo/utils';
@@ -16,33 +22,6 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 const TARGET = 600_000;
-
-const LEVERS = [
-    {
-        meta: 'Lever 1',
-        name: 'Raise your rate',
-        desc: 'Every €100 more per day is €2,000 extra per month. One conversation can do it.',
-        color: 'var(--color-accent)',
-    },
-    {
-        meta: 'Lever 2',
-        name: 'Add a service',
-        desc: 'A second product or service has zero fixed costs once the first is running.',
-        color: 'var(--color-jar-lts)',
-    },
-    {
-        meta: 'Lever 3',
-        name: 'Build passive income',
-        desc: 'Something made once that keeps working. Starts small, never zero.',
-        color: 'var(--color-jar-ff)',
-    },
-    {
-        meta: 'Lever 4',
-        name: 'Activate your network',
-        desc: 'Revenue from people costs no marketing. Every happy client is a channel.',
-        color: 'var(--color-jar-edu)',
-    },
-] as const;
 
 export function IncomePageClient() {
     const api = useApi();
@@ -66,10 +45,26 @@ export function IncomePageClient() {
         live
     );
 
+    const accountSettingsQuery = useLiveQuery(api.account.settings.queryOptions(), null, live);
+
+    const leversQuery = useLiveQuery(
+        api.growth.catalogs.leverPresets.list.queryOptions({
+            input: {
+                householdId: householdId!,
+                character: accountSettingsQuery.data?.moneyCharacter ?? MoneyCharacter.UNKNOWN,
+                postureKey: INCOME_POSTURE_KEYS.UNKNOWN,
+                stageKey: WEALTH_STAGE_KEYS.BUILDING,
+            },
+        }),
+        [] as GrowthLeverPreset[],
+        live
+    );
+
     const NET = (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0);
     const GAP = TARGET - NET;
     const jars = jarsQuery.data ?? [];
     const sources = (incomeQuery.data ?? []).filter(s => s.isActive);
+    const levers = leversQuery.data ?? [];
 
     return (
         <div className="grid animate-rise gap-8">
@@ -188,22 +183,33 @@ export function IncomePageClient() {
                 )}
             </Card>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {LEVERS.map(l => (
-                    <AccentCard key={l.name} tint={l.color} className="grid content-start gap-2.5">
-                        <span
-                            className="font-mono text-xs font-medium tracking-widest uppercase"
-                            style={{ color: l.color }}>
-                            {l.meta}
-                        </span>
-                        <h3 className="font-display text-xl leading-snug font-semibold tracking-tight text-fg">
-                            {l.name}
-                        </h3>
-                        <p className="text-sm leading-relaxed text-pretty text-fg-muted">
-                            {l.desc}
-                        </p>
-                    </AccentCard>
-                ))}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {levers.length === 0 ? (
+                    <p className="text-sm text-fg-muted sm:col-span-2 lg:col-span-3">
+                        {live
+                            ? 'No growth methods for your profile yet — check back after seeding catalogs.'
+                            : 'Sign in to see earning methods matched to your profile.'}
+                    </p>
+                ) : (
+                    levers.map((lever, index) => (
+                        <AccentCard
+                            key={lever.key}
+                            tint={lever.accentColor}
+                            className="grid content-start gap-2.5">
+                            <span
+                                className="font-mono text-xs font-medium tracking-widest uppercase"
+                                style={{ color: lever.accentColor }}>
+                                Method {index + 1}
+                            </span>
+                            <h3 className="font-display text-xl leading-snug font-semibold tracking-tight text-fg">
+                                {lever.name}
+                            </h3>
+                            <p className="text-sm leading-relaxed text-pretty text-fg-muted">
+                                {lever.summary}
+                            </p>
+                        </AccentCard>
+                    ))
+                )}
             </div>
         </div>
     );

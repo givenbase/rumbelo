@@ -30,7 +30,7 @@ import { AuthInvitation } from '../../../auth/better-auth/invitation/auth-invita
 import { AuthMember } from '../../../auth/better-auth/member/auth-member.entity';
 import { AuthOrganization } from '../../../auth/better-auth/organization/auth-organization.entity';
 import { EmailService } from '../../../backoffice/communication/email';
-import { JarTemplateService } from '../../../backoffice/reference/template/jar/jar.service';
+import { JarTemplateService } from '../../../backoffice/product/money/template/jar/jar.service';
 import { IncomeSource } from '../../product/money/plan/income/income-source.entity';
 import { Jar } from '../../product/money/plan/jar/jar.entity';
 import {
@@ -265,7 +265,9 @@ export class HouseholdService {
 
         const templates = await this.jarTemplates.listActive();
         if (templates.length === 0) {
-            throw new BadRequestException('Jar catalog is empty — seed backoffice.jar_template');
+            throw new BadRequestException(
+                'Jar catalog is empty — seed backoffice.reference_money_jar_template'
+            );
         }
 
         for (const meta of templates) {

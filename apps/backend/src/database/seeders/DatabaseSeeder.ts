@@ -2,18 +2,22 @@ import type { EntityManager } from '@mikro-orm/postgresql';
 
 import { Seeder } from '@mikro-orm/seeder';
 
-import { CategoryTemplateSeeder } from './CategoryTemplateSeeder';
-import { DebtPresetSeeder } from './DebtPresetSeeder';
-import { DemoHouseholdSeeder } from './DemoHouseholdSeeder';
-import { FixedCostPresetSeeder } from './FixedCostPresetSeeder';
-import { GoalPresetSeeder } from './GoalPresetSeeder';
-import { IncomeSourcePresetSeeder } from './IncomeSourcePresetSeeder';
-import { JarTemplateSeeder } from './JarTemplateSeeder';
-import { MerchantPresetSeeder } from './MerchantPresetSeeder';
-import { PlanSeeder } from './PlanSeeder';
+import { PlanSeeder } from './plan/PlanSeeder';
+import { CategoryTemplateSeeder } from './product/money/CategoryTemplateSeeder';
+import { DebtPresetSeeder } from './product/money/DebtPresetSeeder';
+import { FixedCostPresetSeeder } from './product/money/FixedCostPresetSeeder';
+import { GoalPresetSeeder } from './product/money/GoalPresetSeeder';
+import { IncomeSourcePresetSeeder } from './product/money/IncomeSourcePresetSeeder';
+import { JarTemplateSeeder } from './product/money/JarTemplateSeeder';
+import { MerchantPresetSeeder } from './product/money/MerchantPresetSeeder';
+import { IncomePostureSeeder } from './product/growth/IncomePostureSeeder';
+import { LeverPresetSeeder } from './product/growth/LeverPresetSeeder';
+import { WealthStageSeeder } from './product/growth/WealthStageSeeder';
+import { DemoHouseholdSeeder } from './demo/DemoHouseholdSeeder';
 
 /**
- * Root seeder — catalog templates/presets first, then plans, then demo data.
+ * Root seeder — backoffice product catalogs first, then plans, then demo data.
+ * Layout mirrors backoffice/product/{money|growth} and backoffice/plan.
  */
 export class DatabaseSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
@@ -25,6 +29,9 @@ export class DatabaseSeeder extends Seeder {
             IncomeSourcePresetSeeder,
             GoalPresetSeeder,
             MerchantPresetSeeder,
+            IncomePostureSeeder,
+            WealthStageSeeder,
+            LeverPresetSeeder,
             PlanSeeder,
             DemoHouseholdSeeder,
         ]);

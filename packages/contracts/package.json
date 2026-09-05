@@ -16,6 +16,41 @@
             "types": "./dist/react.d.ts",
             "import": "./dist/react.js",
             "require": "./dist/react.cjs"
+        },
+        "./money": {
+            "types": "./dist/money.d.ts",
+            "import": "./dist/money.js",
+            "require": "./dist/money.cjs"
+        },
+        "./growth": {
+            "types": "./dist/growth.d.ts",
+            "import": "./dist/growth.js",
+            "require": "./dist/growth.cjs"
+        },
+        "./platform": {
+            "types": "./dist/platform.d.ts",
+            "import": "./dist/platform.js",
+            "require": "./dist/platform.cjs"
+        },
+        "./energy": {
+            "types": "./dist/energy.d.ts",
+            "import": "./dist/energy.js",
+            "require": "./dist/energy.cjs"
+        },
+        "./soul": {
+            "types": "./dist/soul.d.ts",
+            "import": "./dist/soul.js",
+            "require": "./dist/soul.cjs"
+        },
+        "./backoffice": {
+            "types": "./dist/backoffice.d.ts",
+            "import": "./dist/backoffice.js",
+            "require": "./dist/backoffice.cjs"
+        },
+        "./common": {
+            "types": "./dist/common.d.ts",
+            "import": "./dist/common.js",
+            "require": "./dist/common.cjs"
         }
     },
     "files": [

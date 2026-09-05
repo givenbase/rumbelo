@@ -23,6 +23,19 @@ Reference implementations:
 
 Enums come from `@rumbelo/contracts` + `NativeEnum({ … })` — never `export enum` inside an entity file.
 
+**Postgres type prefix (mandatory):** every `@Enum` uses `NativeEnum({ EnumName, domain: '…' })`.
+`domain` is the product/plane of the **column** (where the row lives), not the TS file name:
+
+| Domain | Example PG type |
+|--------|-----------------|
+| `money` | `money_debt_kind`, `money_cadence` |
+| `platform` | `platform_household_kind`, `platform_currency` |
+| `auth` | `auth_locale`, `auth_money_character` |
+| `backoffice` | `backoffice_plan_key` |
+| `energy` / `growth` / `soul` | `energy_metric`, … |
+
+Shared TS enums (`Cadence` in `enums/common.ts`) still take the domain of the table that stores them (`domain: 'money'` on income/fixed-cost). Do not invent a second PG type by using another domain for the same concept.
+
 ## Inheritance (mandatory)
 
 Every domain entity must extend one of:
@@ -197,5 +210,5 @@ Domain-specific field sequences are declared in `SAME_PRIORITY_ORDER` inside `sc
 - [ ] Every `@Property` and relationship has JSDoc
 - [ ] No `@Enum` outside `// ? ENUMS`
 - [ ] No relationships outside `// ? RELATIONSHIPS`
-- [ ] Enums imported from `@rumbelo/contracts` + `NativeEnum`
+- [ ] Enums imported from `@rumbelo/contracts` + `NativeEnum({ EnumName, domain: '…' })` (explicit domain → PG prefix)
 - [ ] No redeclared `id` / `createdAt` / `updatedAt` / `householdId`

@@ -147,8 +147,9 @@ not at all.**
 ## 6. Conventions — non-negotiable
 
 **Who owns the row.** Household/user writes → `public/product/*`, `public/platform/*`,
-`auth/account`. Rumbelo writes → `backoffice/*` (`reference/jar-template`, `plan/` for
-Grip/Engine/Compound, later `content/`; billing only if Stripe needs its own home).
+`auth/account`. Rumbelo writes → `backoffice/*` (`product/{money|growth}/…` with kinds
+`template` | `preset` | `catalog`, plus root `plan/` for Basic/Plus/Max tiers and
+`communication/`; reserved `reference/` for cross-product lookups later).
 better-auth library writes → `auth/better-auth/`. `public/` is the app/household
 plane (Postgres `public`); not company CMS.
 

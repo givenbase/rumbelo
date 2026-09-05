@@ -108,10 +108,10 @@ Re-export module, service, entity, controller.
 | Control | Module |
 |---|---|
 | Household / user writes | `public/product/*`, `public/platform/*`, `auth/account` |
-| We (Rumbelo) write | `backoffice/*` — plan catalog (Grip/Engine/Compound), countries, question bank, published content |
+| We (Rumbelo) write | `backoffice/product/{money\|growth}/…` (kinds: `template` \| `preset` \| `catalog`), `backoffice/plan` (Basic/Plus/Max), `communication/`; reserved `reference/` for cross-product lookups |
 | Library writes | `auth/better-auth/` |
 
-`public/` = app/household data (Postgres `public` schema). Company-authored catalogs live in `backoffice/`.
+`public/` = app/household data (Postgres `public` schema). Company-authored catalogs live in `backoffice/`. Table names: `reference_{money|growth}_{table}` via `entityConfig({ domain: 'reference', group })`.
 
 ## Imports
 

@@ -1,18 +1,20 @@
 /**
- * Domain prefixes for enum naming. Matches the backend module structure.
+ * Domain prefixes for Postgres enum types. Matches the backend module structure.
  * All PostgreSQL enum types live in the `public` schema (even when the table
- * lives in `auth` / `backoffice`). Always pass `domain` when the enum name
- * has no recognised prefix.
+ * lives in `auth` / `backoffice`). Always pass `domain` — it is the product/plane
+ * of the **column** (where the row lives), not the TypeScript enum file.
  *
- * | Domain     | Module path                                      |
- * |------------|--------------------------------------------------|
- * | auth       | modules/auth                                     |
- * | backoffice | modules/backoffice                               |
- * | platform   | modules/public/platform                          |
- * | money      | modules/public/product/money                     |
- * | energy     | modules/public/product/energy                    |
- * | growth     | modules/public/product/growth                    |
- * | soul       | modules/public/product/soul                      |
+ * | Domain     | Module path                                      | Example PG type        |
+ * |------------|--------------------------------------------------|------------------------|
+ * | auth       | modules/auth                                     | auth_locale            |
+ * | backoffice | modules/backoffice                               | backoffice_plan_key    |
+ * | platform   | modules/public/platform                          | platform_currency      |
+ * | money      | modules/public/product/money (+ backoffice money)| money_debt_kind        |
+ * | energy     | modules/public/product/energy                    | energy_metric          |
+ * | growth     | modules/public/product/growth                    | growth_*               |
+ * | soul       | modules/public/product/soul                      | soul_*                 |
+ *
+ * Shared TS enums (Cadence, FlowDirection) still use the storing table’s domain.
  */
 export type EnumDomain =
     | 'auth'

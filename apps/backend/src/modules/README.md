@@ -26,15 +26,35 @@ with its `*.entity.ts`, service, controller and module as flat siblings.
 | `auth/` | `better-auth/` · `account/` (`account-settings`, …) |
 | `public/platform/` | `household` · `coach` |
 | `public/product/` | `money/` (Geld) · `growth/` (Groei) · `energy/` (Energie) · `soul/` (Ziel) |
-| `public/product/money/` | `plan/` (`jar` `income` `fixed-cost`) · `ledger/` (`account` `transaction` `rule`) · `targets/` (`goal` `debt`) · `rhythm/` (`turn` `ritual`) · `dashboard` |
-| `public/product/growth/` | `lever` `milestone` |
+| `public/product/money/` | `plan/` (`jar` `income` `fixed-cost` `catalogs`) · `ledger/` · `targets/` · `rhythm/` · `dashboard` |
+| `public/product/growth/` | `lever` `milestone` `catalogs` |
 | `public/product/energy/` | `log` |
 | `public/product/soul/` | `gratitude` |
-| `backoffice/` | `reference/jar-template` · `plan/` · `communication/email` · later `content/` |
+| `backoffice/` | `product/` · `plan/` · `communication/email` · reserved `reference/` |
+| `backoffice/product/` | `money/` · `growth/` (mirrors `public/product/*`) |
+| `backoffice/product/money/` | `template/` (jar, category) · `preset/` (fixed-cost, debt, income, goal, merchant) |
+| `backoffice/product/growth/` | `preset/` (lever) · `catalog/` (income-posture, wealth-stage) |
 
 A product grows a sub-domain folder (like `money/plan/`) once it has several
 aggregates that belong together — never pre-emptively. `growth`, `energy` and
-`soul` stay flat under `product/` until they earn grouping.
+`soul` stay flat under `public/product/` until they earn grouping.
+
+### Backoffice: product vs reference + kinds
+
+| Child | Meaning |
+|---|---|
+| **`product/`** | Catalogs tied to a product line (Geld, Groei, …) |
+| **`reference/`** | Reserved — cross-product lookups (countries, FAQ, …) when they exist |
+| **`plan/`** | Commercial tiers (span products via capabilities) |
+| **`communication/`** | Ops outbound email |
+
+Under **each** `backoffice/product/{money\|growth\|…}` only these kind folders (create when used):
+
+| Kind | Meaning |
+|---|---|
+| **`template/`** | We author shape; household **copies** on onboard |
+| **`preset/`** | We author suggestions; household **may adopt** |
+| **`catalog/`** | Taxonomy / lookup — filter & label, not copied into household rows |
 
 ### Auth vs account vs catalogs
 
@@ -42,10 +62,10 @@ aggregates that belong together — never pre-emptively. `growth`, `energy` and
 - `auth/account/` — person prefs (theme, locale) — **user** writes
 - Board prefs → `public/platform/household` — **household** writes
 - Jar **instances** → `public/product/money/plan/jar` — **household** writes (table in `public`)
-- Jar **templates** → `backoffice/reference/jar-template` — **we** write; onboard copies into household jars
+- Jar **templates** → `backoffice/product/money/template/jar` — **we** write; onboard copies into household jars
 - Product **tiers** → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)
 - Outbound **email** → `backoffice/communication/email` — **we** send (invites; digests later)
-- Seed data for catalogs lives next to the aggregate (`…/seed/`); runners in `src/database/seeders/`
+- Seed data for catalogs lives next to the aggregate (`…/seed/`); runners in `src/database/seeders/` mirroring backoffice (`product/money`, `product/growth`, `plan`)
 
 `FeatureModules` registers `AuthModule`, `PublicModule`, `BackofficeModule`.
 
@@ -56,7 +76,7 @@ Every Rumbelo-owned entity uses `entityConfig({ schema, domain?, tableName })` f
 
 - `auth` / `backoffice` / `public` schemas
 - Domain prefixes in `public` (`money_jar`, `platform_household_settings`, …)
-- Backoffice catalogs: `reference_jar_template`, etc.
+- Backoffice product catalogs: `reference_{money|growth}_{table}` via `domain: 'reference', group: 'money'|'growth'` (e.g. `reference_money_jar_template`)
 
 ---
 

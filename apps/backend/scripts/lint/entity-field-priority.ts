@@ -298,6 +298,8 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
     currency: 7,
     icon: 7,
     color: 7,
+    badgeLabel: 7,
+    minNetWorth: 7,
 
     metadata: 8,
     settings: 8,
@@ -307,6 +309,10 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
     featureSettings: 8,
     answers: 8,
     capabilities: 8,
+    forPostureKeys: 8,
+    forCharacters: 8,
+    minStageKey: 8,
+
 
     url: 9,
     imageUrl: 9,

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { GrowthCatalogsModule } from './catalogs/catalogs.module';
 import { LeverModule } from './lever/lever.module';
 import { MilestoneModule } from './milestone/milestone.module';
 
@@ -8,7 +9,7 @@ import { MilestoneModule } from './milestone/milestone.module';
  * what already arrived. Mirrors the Groei portal in the application navigation.
  */
 @Module({
-    imports: [LeverModule, MilestoneModule],
-    exports: [LeverModule, MilestoneModule],
+    imports: [LeverModule, MilestoneModule, GrowthCatalogsModule],
+    exports: [LeverModule, MilestoneModule, GrowthCatalogsModule],
 })
 export class GrowthModule {}

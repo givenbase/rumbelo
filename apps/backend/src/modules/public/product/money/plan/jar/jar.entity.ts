@@ -11,7 +11,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * Jar Entity
  *
  * Household-owned jar instance. Display defaults + capabilities come from
- * backoffice.jar_template at onboard; the household may rename / re-split after.
+ * backoffice.reference_money_jar_template at onboard; the household may rename / re-split after.
  *
  * @see JarTemplate
  *

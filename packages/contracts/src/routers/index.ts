@@ -1,18 +1,16 @@
 import { populateContractRouterPaths } from '@orpc/contract';
-import { contract as platform } from './platform/index';
-import { contract as money } from './money/index';
-import { contract as growth } from './growth/index';
-import { contract as energy } from './energy/index';
-import { contract as soul } from './soul/index';
+import { contract as platform } from '../public/platform/router';
+import { contract as money } from '../public/product/money/router';
+import { contract as growth } from '../public/product/growth/router';
+import { contract as energy } from '../public/product/energy/router';
+import { contract as soul } from '../public/product/soul/router';
 
 /**
- * Contract-first oRPC, grouped by product.
+ * Contract-first oRPC, grouped by product (wire paths stay short for nav parity):
+ * `contract.money.jars.list` → `/money/jars/list`.
  *
- * The nesting is the hierarchy: `contract.money.jars.list` becomes the route
- * `/money/jars/list`, so the API surface, the backend module tree and the
- * application navigation all read the same way.
- *
- * Paths are auto-filled for Nest `@Implement` (requires explicit route paths).
+ * Folder ownership mirrors the backend plane tree
+ * (`public/product/money`, …) — see README “Where does it belong?”.
  */
 const rawContract = {
     ...platform,

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { CatalogModule } from './catalog/catalog.module';
+import { MoneyCatalogsModule } from './catalogs/catalogs.module';
 import { FixedCostModule } from './fixed-cost/fixed-cost.module';
 import { IncomeModule } from './income/income.module';
 import { JarModule } from './jar/jar.module';
 
-/** The split setup: six jars, income sources, fixed costs, and reference catalogs. */
+/** The split setup: six jars, income sources, fixed costs, and company catalogs. */
 @Module({
-    imports: [JarModule, IncomeModule, FixedCostModule, CatalogModule],
-    exports: [JarModule, IncomeModule, FixedCostModule, CatalogModule],
+    imports: [JarModule, IncomeModule, FixedCostModule, MoneyCatalogsModule],
+    exports: [JarModule, IncomeModule, FixedCostModule, MoneyCatalogsModule],
 })
 export class PlanModule {}

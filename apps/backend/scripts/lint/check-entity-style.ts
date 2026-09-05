@@ -323,6 +323,44 @@ function validateEntity(absPath: string): EntityIssue[] {
                 'Relationship decorators must be under // ? RELATIONSHIPS'
             );
         }
+
+        // Every @Enum must use NativeEnum({ …, domain: '…' }) so PG types are
+        // product-prefixed (money_debt_kind, platform_currency, …).
+        const enumCalls = enumsBlock.match(/@Enum\s*\(/g) ?? [];
+        if (enumCalls.length > 0) {
+            if (!/NativeEnum\s*\(/.test(enumsBlock)) {
+                pushIssue(
+                    issues,
+                    file,
+                    'enum-missing-native-enum',
+                    '@Enum must use NativeEnum({ EnumName, domain: "…" }) — see native-enum.util.ts'
+                );
+            } else {
+                // Each NativeEnum call must include domain: '…'
+                const nativeCalls = [
+                    ...enumsBlock.matchAll(/NativeEnum\s*\(\s*\{([\s\S]*?)\}\s*\)/g),
+                ];
+                for (const match of nativeCalls) {
+                    const body = match[1] ?? '';
+                    if (!/\bdomain\s*:/.test(body)) {
+                        pushIssue(
+                            issues,
+                            file,
+                            'enum-missing-domain',
+                            'NativeEnum must set domain (auth|backoffice|platform|money|growth|energy|soul) so the PG type is prefixed'
+                        );
+                    }
+                }
+                if (nativeCalls.length === 0 && /NativeEnum\s*\(/.test(enumsBlock)) {
+                    pushIssue(
+                        issues,
+                        file,
+                        'enum-native-enum-shape',
+                        'NativeEnum call could not be parsed — use NativeEnum({ EnumName, domain: "…" })'
+                    );
+                }
+            }
+        }
     }
 
     // @Index / @Unique belong on the class (with @Entity), never on fields
