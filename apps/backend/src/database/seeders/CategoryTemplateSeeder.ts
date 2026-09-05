@@ -15,7 +15,7 @@ export class CategoryTemplateSeeder extends Seeder {
                 existing.name = row.name;
                 existing.jarTemplate = jarTemplate;
                 existing.sortOrder = sortOrder;
-                existing.active = true;
+                existing.isActive = true;
                 continue;
             }
             em.create(CategoryTemplate, {
@@ -23,7 +23,7 @@ export class CategoryTemplateSeeder extends Seeder {
                 name: row.name,
                 jarTemplate,
                 sortOrder,
-                active: true,
+                isActive: true,
             } as never);
         }
         await em.flush();

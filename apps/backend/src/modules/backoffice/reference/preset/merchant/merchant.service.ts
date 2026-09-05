@@ -17,7 +17,7 @@ export class MerchantPresetService {
         return this.em.find(
             MerchantPreset,
             {
-                active: true,
+                isActive: true,
                 ...(filters?.jarKey ? { jarTemplate: { key: filters.jarKey } } : {}),
                 ...(filters?.categoryTemplateKey
                     ? { categoryTemplateKey: filters.categoryTemplateKey }
@@ -36,15 +36,15 @@ export class MerchantPresetService {
         text?: string | null;
         mcc?: string | null;
     }): Promise<MerchantPreset | null> {
-        const active = await this.listActive();
+        const isActive = await this.listActive();
         const mcc = input.mcc?.trim();
         if (mcc) {
-            const byMcc = active.find(preset => preset.mcc === mcc);
+            const byMcc = isActive.find(preset => preset.mcc === mcc);
             if (byMcc) return byMcc;
         }
         const text = (input.text ?? '').trim().toLowerCase();
         if (!text) return null;
-        for (const row of active) {
+        for (const row of isActive) {
             const needles = [row.matchValue, ...row.aliases]
                 .map(alias => alias.trim().toLowerCase())
                 .filter(Boolean);

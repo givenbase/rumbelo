@@ -17,7 +17,7 @@ export class FixedCostPresetSeeder extends Seeder {
                 existing.categoryTemplateKey = row.categoryTemplateKey;
                 existing.audienceTags = [...row.audienceTags];
                 existing.sortOrder = sortOrder;
-                existing.active = true;
+                existing.isActive = true;
                 continue;
             }
             em.create(FixedCostPreset, {
@@ -27,7 +27,7 @@ export class FixedCostPresetSeeder extends Seeder {
                 categoryTemplateKey: row.categoryTemplateKey,
                 audienceTags: [...row.audienceTags],
                 sortOrder,
-                active: true,
+                isActive: true,
             } as never);
         }
         await em.flush();

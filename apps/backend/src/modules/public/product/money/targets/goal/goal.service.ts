@@ -25,7 +25,7 @@ export class GoalService {
         icon?: string | null;
         target: number;
         monthlyContribution?: number;
-        targetDate?: string | null;
+        targetOn?: string | null;
         status?: string;
         why?: string | null;
     }) {
@@ -37,7 +37,7 @@ export class GoalService {
             target: input.target,
             saved: 0,
             monthlyContribution: input.monthlyContribution ?? 0,
-            targetDate: input.targetDate ?? null,
+            targetOn: input.targetOn ?? null,
             status: (input.status as GoalStatus) ?? GoalStatus.ACTIVE,
             why: input.why ?? null,
         } as never);
@@ -64,16 +64,16 @@ export class GoalService {
 
             const projectedDate = months === null ? null : addMonths(new Date(), months);
             const onTrack =
-                goal.targetDate === null || projectedDate === null
+                goal.targetOn === null || projectedDate === null
                     ? monthly > 0
-                    : projectedDate <= goal.targetDate;
+                    : projectedDate <= goal.targetOn;
 
             // What the monthly contribution would need to be to hit a stated deadline.
             const shortfall =
-                goal.targetDate && monthly >= 0
+                goal.targetOn && monthly >= 0
                     ? Math.max(
                           0,
-                          Math.ceil(remaining / Math.max(1, monthsUntil(goal.targetDate))) - monthly
+                          Math.ceil(remaining / Math.max(1, monthsUntil(goal.targetOn))) - monthly
                       )
                     : 0;
 
@@ -100,7 +100,7 @@ export class GoalService {
             target: number;
             saved: number;
             monthlyContribution: number;
-            targetDate: string | null;
+            targetOn: string | null;
             status: string;
             why: string | null;
         }>
@@ -116,7 +116,7 @@ export class GoalService {
         if (patch.monthlyContribution !== undefined) {
             entity.monthlyContribution = patch.monthlyContribution;
         }
-        if (patch.targetDate !== undefined) entity.targetDate = patch.targetDate;
+        if (patch.targetOn !== undefined) entity.targetOn = patch.targetOn;
         if (patch.status !== undefined) entity.status = patch.status as GoalStatus;
         if (patch.why !== undefined) entity.why = patch.why;
         await this.em.flush();
@@ -159,7 +159,7 @@ export function toDto(goal: Goal) {
         target: Number(goal.target),
         saved: Number(goal.saved),
         monthlyContribution: Number(goal.monthlyContribution),
-        targetDate: goal.targetDate,
+        targetOn: goal.targetOn,
         status: goal.status,
         why: goal.why,
     };

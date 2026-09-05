@@ -55,8 +55,8 @@ export const HouseholdSettings = z.object({
         .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
         .nullable(),
     ritualReminderDay: z.int().min(1).max(7).nullable(),
-    bankSyncEnabled: z.boolean(),
-    coachEnabled: z.boolean(),
+    isBankSyncEnabled: z.boolean(),
+    isCoachEnabled: z.boolean(),
     /** Surfaced on the dashboard as the "why" line. */
     why: z.string().max(500).nullable().optional(),
     /** Avalanche / snowball — one order for the shared debt list. */

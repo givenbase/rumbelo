@@ -27,7 +27,7 @@ export class PlanService {
             if (existing) continue;
             this.em.create(Plan, {
                 sortOrder: row.sortOrder ?? sortOrder,
-                active: true,
+                isActive: true,
                 priceMonthly: row.priceMonthly ?? '0.00',
                 unlocks: row.unlocks ?? [],
                 ...row,
@@ -43,10 +43,10 @@ export class PlanService {
 
     /** Active tiers in rank / display order. */
     async listActive(): Promise<Plan[]> {
-        return this.em.find(Plan, { active: true }, { orderBy: { sortOrder: 'ASC' } });
+        return this.em.find(Plan, { isActive: true }, { orderBy: { sortOrder: 'ASC' } });
     }
 
     async findByKey(key: PlanKey): Promise<Plan | null> {
-        return this.em.findOne(Plan, { key, active: true });
+        return this.em.findOne(Plan, { key, isActive: true });
     }
 }

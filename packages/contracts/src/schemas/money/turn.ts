@@ -27,7 +27,7 @@ export const Turn = z.object({
     score: z.int(),
     maxScore: z.int(),
     daysLeft: z.int(),
-    closed: z.boolean(),
+    isClosed: z.boolean(),
     level: z.int().min(1),
     levelLabel: z.string(),
     events: z.array(TurnEvent),

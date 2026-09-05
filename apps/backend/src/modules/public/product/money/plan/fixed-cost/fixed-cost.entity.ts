@@ -32,7 +32,7 @@ export class FixedCost extends HouseholdEntity {
     direction: FlowDirection = FlowDirection.OUT;
 
     @Property({ default: true })
-    active = true;
+    isActive = true;
 
     @Property({ type: 'date', nullable: true })
     endsOn: string | null = null;

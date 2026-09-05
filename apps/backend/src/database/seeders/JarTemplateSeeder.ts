@@ -10,7 +10,7 @@ export class JarTemplateSeeder extends Seeder {
         for (const [sortOrder, row] of JAR_TEMPLATE_SEED.entries()) {
             const existing = await em.findOne(JarTemplate, { key: row.key });
             if (existing) continue;
-            em.create(JarTemplate, { ...row, sortOrder, active: true } as never);
+            em.create(JarTemplate, { ...row, sortOrder, isActive: true } as never);
         }
         await em.flush();
     }

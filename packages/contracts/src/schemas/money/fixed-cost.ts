@@ -14,7 +14,7 @@ export const FixedCost = z.object({
     dueDay: z.int().min(1).max(31).nullable(),
     /** Direction: money out (a bill) or money in (a recurring credit). */
     direction: z.enum(FlowDirection),
-    active: z.boolean().default(true),
+    isActive: z.boolean().default(true),
     endsOn: IsoDate.nullable(),
     note: z.string().max(500).nullable(),
 });

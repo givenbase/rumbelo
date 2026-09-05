@@ -156,7 +156,7 @@ export class TransactionService {
                 jarId,
                 categoryId: categoryId ?? null,
                 priority: 100,
-                active: true,
+                isActive: true,
             });
             entity.appliedRuleId = rule.id;
         }

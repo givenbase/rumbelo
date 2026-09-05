@@ -56,11 +56,11 @@ export const SESSION_COLORS: Record<string, string> = {
 };
 
 export const mockSessions = [
-    { id: 's1', kind: 'STRENGTH', name: 'Upper body', meta: '45 min · yesterday', done: true },
-    { id: 's2', kind: 'RUNNING', name: '8 km intervals', meta: '52 min · 2 days ago', done: true },
-    { id: 's3', kind: 'STRENGTH', name: 'Lower body', meta: '40 min · 4 days ago', done: false },
-    { id: 's4', kind: 'MOBILITY', name: 'Back & stretch', meta: '20 min · 5 days ago', done: true },
-] satisfies { id: string; kind: string; name: string; meta: string; done: boolean }[];
+    { id: 's1', kind: 'STRENGTH', name: 'Upper body', meta: '45 min · yesterday', isDone: true },
+    { id: 's2', kind: 'RUNNING', name: '8 km intervals', meta: '52 min · 2 days ago', isDone: true },
+    { id: 's3', kind: 'STRENGTH', name: 'Lower body', meta: '40 min · 4 days ago', isDone: false },
+    { id: 's4', kind: 'MOBILITY', name: 'Back & stretch', meta: '20 min · 5 days ago', isDone: true },
+] satisfies { id: string; kind: string; name: string; meta: string; isDone: boolean }[];
 
 /** kg body-weight → protein/calorie targets. Design formulas: dc.html:3871, 3880. */
 export const mockFood = { weightKg: 80, protToday: 96, kcalToday: 1_850 } as const;

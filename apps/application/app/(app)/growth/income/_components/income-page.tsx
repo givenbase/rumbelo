@@ -67,11 +67,11 @@ export function IncomePageClient() {
     );
 
     const NET = live
-        ? (incomeQuery.data ?? []).filter(s => s.active).reduce((s, i) => s + i.amount, 0)
+        ? (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0)
         : 430_000;
     const GAP = TARGET - NET;
     const jars = jarsQuery.data ?? mockJars;
-    const sources = live ? (incomeQuery.data ?? []).filter(s => s.active) : [];
+    const sources = live ? (incomeQuery.data ?? []).filter(s => s.isActive) : [];
 
     return (
         <div className="grid animate-rise gap-8">

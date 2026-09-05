@@ -25,7 +25,7 @@ export class IncomeController {
                 amount: input.amount,
                 cadence: input.cadence,
                 expectedDay: input.expectedDay,
-                active: input.active,
+                isActive: input.isActive,
                 startedOn: input.startedOn,
             })
         );

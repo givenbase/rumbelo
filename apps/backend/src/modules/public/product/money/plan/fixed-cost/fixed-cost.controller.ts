@@ -27,7 +27,7 @@ export class FixedCostController {
                 cadence: input.cadence,
                 dueDay: input.dueDay,
                 direction: input.direction,
-                active: input.active,
+                isActive: input.isActive,
                 endsOn: input.endsOn,
                 note: input.note,
             })

@@ -147,7 +147,7 @@ export function GoalForm({
                 icon: null,
                 target,
                 monthlyContribution: monthly,
-                targetDate: null,
+                targetOn: null,
                 status: 'ACTIVE',
                 why,
             });

@@ -17,7 +17,7 @@ export class FixedCostPresetService {
         const rows = await this.em.find(
             FixedCostPreset,
             {
-                active: true,
+                isActive: true,
                 ...(filters?.jarKey ? { jarTemplate: { key: filters.jarKey } } : {}),
                 ...(filters?.categoryTemplateKey
                     ? { categoryTemplateKey: filters.categoryTemplateKey }

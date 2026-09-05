@@ -8,6 +8,6 @@ export const IncomeLever = z.object({
     label: z.string().min(1).max(160),
     note: z.string().max(500).nullable(),
     potentialMonthly: Money,
-    done: z.boolean(),
+    isDone: z.boolean(),
 });
 export type IncomeLever = z.infer<typeof IncomeLever>;

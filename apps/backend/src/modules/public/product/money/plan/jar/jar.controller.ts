@@ -66,14 +66,14 @@ export class JarController {
         );
     }
 
-    /** Edit a category's name, budget, or archived flag. */
+    /** Edit a category's name, budget, or isArchived flag. */
     @Implement(contract.money.jars.updateCategory)
     updateCategory() {
         return implement(contract.money.jars.updateCategory).handler(({ input }) =>
             this.jars.updateCategory(input.id, {
                 name: input.name,
                 budgeted: input.budgeted,
-                archived: input.archived,
+                isArchived: input.isArchived,
             })
         );
     }

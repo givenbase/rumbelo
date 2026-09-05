@@ -12,15 +12,12 @@ import { JarTemplate } from '../jar/jar.entity';
  *
  * @see JarTemplate — parent jar in the reference catalog
  * @see money.category — household-owned instances
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'category_template' }))
 @Unique({ properties: ['key'] })
 export class CategoryTemplate extends BaseEntity {
     // ? PROPERTIES
-
-    /** Parent jar in the reference catalog (not a household money.jar row). */
-    @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
-    jarTemplate!: JarTemplate;
 
     /** Stable key referenced by presets (e.g. HOUSING) — never rename in place. */
     @Property({ length: 64 })
@@ -36,5 +33,11 @@ export class CategoryTemplate extends BaseEntity {
 
     /** Soft-disable without breaking presets that still reference this key. */
     @Property({ default: true })
-    active = true;
+    isActive = true;
+
+    // ? RELATIONSHIPS
+
+    /** Parent jar in the reference catalog (not a household money.jar row). */
+    @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
+    jarTemplate!: JarTemplate;
 }

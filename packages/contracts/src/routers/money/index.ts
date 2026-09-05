@@ -111,7 +111,7 @@ export const contract = {
             .input(S.Rule.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
             .output(S.Rule),
         remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
-        /** Re-runs active rules over unsorted history — the "clean my inbox" button. */
+        /** Re-runs isActive rules over unsorted history — the "clean my inbox" button. */
         replay: oc.input(S.HouseholdScoped).output(z.object({ sorted: z.int() })),
     },
 

@@ -26,7 +26,7 @@ export class RuleController {
                 jarId: input.jarId,
                 categoryId: input.categoryId,
                 priority: input.priority,
-                active: input.active,
+                isActive: input.isActive,
             })
         );
     }
@@ -54,7 +54,7 @@ export class RuleController {
         });
     }
 
-    /** Re-run all active rules over the current inbox. */
+    /** Re-run all isActive rules over the current inbox. */
     @Implement(contract.money.rules.replay)
     replay() {
         return implement(contract.money.rules.replay).handler(() => this.rules.replay());

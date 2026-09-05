@@ -20,12 +20,12 @@ export default function TrainPage() {
     const router = useRouter();
     const [sessions, setSessions] = useState(mockSessions.map(s => ({ ...s })));
 
-    const done = sessions.filter(s => s.done).length;
+    const done = sessions.filter(s => s.isDone).length;
     const total = sessions.length;
     const color = (kind: string) => SESSION_COLORS[kind] ?? 'var(--color-fg-muted)';
 
     const toggle = (id: string) =>
-        setSessions(prev => prev.map(s => (s.id === id ? { ...s, done: !s.done } : s)));
+        setSessions(prev => prev.map(s => (s.id === id ? { ...s, isDone: !s.isDone } : s)));
 
     return (
         <div className="grid animate-rise gap-6">
@@ -93,11 +93,11 @@ export default function TrainPage() {
                                     onClick={() => toggle(ss.id)}
                                     className={cn(
                                         'rounded-full border px-2.75 py-1.5 font-mono text-xs font-medium tracking-widest whitespace-nowrap uppercase transition-colors',
-                                        ss.done
+                                        ss.isDone
                                             ? 'border-success/25 bg-success/10 text-success'
                                             : 'border-line-strong bg-transparent text-fg-muted hover:border-accent-hover hover:text-fg'
                                     )}>
-                                    {ss.done ? 'Done' : 'Check off'}
+                                    {ss.isDone ? 'Done' : 'Check off'}
                                 </button>
                             </div>
                             <span className="font-display text-xl leading-snug font-semibold text-fg">

@@ -27,7 +27,7 @@ export class Goal extends HouseholdEntity {
     monthlyContribution = 0;
 
     @Property({ type: 'date', nullable: true })
-    targetDate: string | null = null;
+    targetOn: string | null = null;
 
     @Enum(NativeEnum({ GoalStatus, domain: 'money', defaultValue: GoalStatus.ACTIVE }))
     status: GoalStatus = GoalStatus.ACTIVE;

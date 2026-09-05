@@ -711,7 +711,7 @@ export function JarsSettings() {
             subtitle: jar.subtitle,
             icon: jar.icon,
             percentage: jar.percentage,
-            spendable: jar.spendable,
+            isSpendable: jar.isSpendable,
             sortOrder: 0,
         })) as never,
         live
@@ -752,7 +752,7 @@ export function JarsSettings() {
         if (!live) {
             return mockJars.reduce((s, j) => s + j.allocated, 0);
         }
-        return (incomeQuery.data ?? []).filter(s => s.active).reduce((sum, s) => sum + s.amount, 0);
+        return (incomeQuery.data ?? []).filter(s => s.isActive).reduce((sum, s) => sum + s.amount, 0);
     }, [live, incomeQuery.data]);
 
     const saveSplit = useMutation({

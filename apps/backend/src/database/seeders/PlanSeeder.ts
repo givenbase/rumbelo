@@ -18,7 +18,7 @@ export class PlanSeeder extends Seeder {
                 ...row,
                 unlocks: [...row.unlocks],
                 sortOrder,
-                active: true,
+                isActive: true,
             } as never);
         }
         await em.flush();

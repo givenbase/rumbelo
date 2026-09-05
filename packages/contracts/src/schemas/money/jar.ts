@@ -21,7 +21,7 @@ export const Category = z.object({
     name: z.string().min(1).max(80),
     budgeted: Money,
     actual: Money,
-    archived: z.boolean().default(false),
+    isArchived: z.boolean().default(false),
 });
 export type Category = z.infer<typeof Category>;
 
@@ -35,7 +35,7 @@ export const Jar = z.object({
     /** Share of net income routed here on arrival. All jars must sum to 100. */
     percentage: z.number().min(0).max(100),
     /** Financial Freedom is never spendable — it may only be invested out. */
-    spendable: z.boolean().default(true),
+    isSpendable: z.boolean().default(true),
     sortOrder: z.int(),
 });
 export type Jar = z.infer<typeof Jar>;

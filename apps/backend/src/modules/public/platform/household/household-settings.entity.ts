@@ -32,10 +32,10 @@ export class HouseholdSettings {
     ritualReminderDay: number | null = 7;
 
     @Property({ default: false })
-    bankSyncEnabled = false;
+    isBankSyncEnabled = false;
 
     @Property({ default: true })
-    coachEnabled = true;
+    isCoachEnabled = true;
 
     /** The user's stated reason, surfaced on the dashboard as the "why" line. */
     @Property({ type: 'text', nullable: true })

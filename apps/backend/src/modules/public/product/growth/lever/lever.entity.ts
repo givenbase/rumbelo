@@ -16,5 +16,5 @@ export class IncomeLever extends HouseholdEntity {
     potentialMonthly = 0;
 
     @Property({ default: false })
-    done = false;
+    isDone = false;
 }

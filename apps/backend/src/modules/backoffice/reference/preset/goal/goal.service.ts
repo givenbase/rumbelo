@@ -13,7 +13,7 @@ export class GoalPresetService {
         return this.em.find(
             GoalPreset,
             {
-                active: true,
+                isActive: true,
                 ...(filters?.jarKey ? { jarTemplate: { key: filters.jarKey } } : {}),
             },
             { orderBy: { sortOrder: 'ASC' }, populate: ['jarTemplate'] }

@@ -27,7 +27,7 @@ export class FixedCostService {
         cadence?: string;
         dueDay?: number | null;
         direction?: 'IN' | 'OUT';
-        active?: boolean;
+        isActive?: boolean;
         endsOn?: string | null;
         note?: string | null;
     }) {
@@ -40,7 +40,7 @@ export class FixedCostService {
             cadence: (input.cadence as Cadence) ?? Cadence.MONTHLY,
             dueDay: input.dueDay ?? null,
             direction: (input.direction as FlowDirection) ?? FlowDirection.OUT,
-            active: input.active ?? true,
+            isActive: input.isActive ?? true,
             endsOn: input.endsOn ?? null,
             note: input.note ?? null,
         } as never);
@@ -101,7 +101,7 @@ export class FixedCostService {
             cadence: string;
             dueDay: number | null;
             direction: 'IN' | 'OUT';
-            active: boolean;
+            isActive: boolean;
             endsOn: string | null;
             note: string | null;
         }>
@@ -118,7 +118,7 @@ export class FixedCostService {
         if (patch.cadence !== undefined) entity.cadence = patch.cadence as Cadence;
         if (patch.dueDay !== undefined) entity.dueDay = patch.dueDay;
         if (patch.direction !== undefined) entity.direction = patch.direction as FlowDirection;
-        if (patch.active !== undefined) entity.active = patch.active;
+        if (patch.isActive !== undefined) entity.isActive = patch.isActive;
         if (patch.endsOn !== undefined) entity.endsOn = patch.endsOn;
         if (patch.note !== undefined) entity.note = patch.note;
         await this.em.flush();
@@ -147,7 +147,7 @@ export function toDto(fixedCost: FixedCost) {
         cadence: fixedCost.cadence,
         dueDay: fixedCost.dueDay,
         direction: fixedCost.direction,
-        active: fixedCost.active,
+        isActive: fixedCost.isActive,
         endsOn: fixedCost.endsOn,
         note: fixedCost.note,
     };

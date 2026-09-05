@@ -25,7 +25,7 @@ export class DemoHouseholdSeeder extends Seeder {
 
         const templates = await em.find(
             JarTemplate,
-            { active: true },
+            { isActive: true },
             { orderBy: { sortOrder: 'ASC' } }
         );
         if (templates.length === 0) {
@@ -40,7 +40,7 @@ export class DemoHouseholdSeeder extends Seeder {
                 subtitle: meta.subtitle,
                 icon: meta.icon,
                 percentage: meta.defaultPercentage,
-                spendable: meta.spendable,
+                isSpendable: meta.isSpendable,
                 sortOrder: meta.sortOrder,
             } as never);
         }

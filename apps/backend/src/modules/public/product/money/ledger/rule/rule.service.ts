@@ -28,7 +28,7 @@ export class RuleService {
         jarId: string;
         categoryId?: string | null;
         priority?: number;
-        active?: boolean;
+        isActive?: boolean;
     }) {
         const entity = this.em.create(Rule, {
             householdId: currentHouseholdId(),
@@ -38,7 +38,7 @@ export class RuleService {
             jar: this.em.getReference(Jar, input.jarId),
             category: input.categoryId ? this.em.getReference(Category, input.categoryId) : null,
             priority: input.priority ?? 100,
-            active: input.active ?? true,
+            isActive: input.isActive ?? true,
             hitCount: 0,
         } as never);
         await this.em.persist(entity).flush();
@@ -67,7 +67,7 @@ export class RuleService {
             jarId: string;
             categoryId: string | null;
             priority: number;
-            active: boolean;
+            isActive: boolean;
         }>
     ) {
         const entity = await this.repo.findOneOrFail({ id });
@@ -81,17 +81,17 @@ export class RuleService {
                 : null;
         }
         if (patch.priority !== undefined) entity.priority = patch.priority;
-        if (patch.active !== undefined) entity.active = patch.active;
+        if (patch.isActive !== undefined) entity.isActive = patch.isActive;
         await this.em.flush();
         return toDto(entity);
     }
 
     /**
-     * Re-runs active rules over inbox history — first match wins, priority ASC.
+     * Re-runs isActive rules over inbox history — first match wins, priority ASC.
      * Stamps appliedRuleId so the decision stays auditable.
      */
     async replay() {
-        const rules = await this.repo.find({ active: true }, { orderBy: { priority: 'ASC' } });
+        const rules = await this.repo.find({ isActive: true }, { orderBy: { priority: 'ASC' } });
         await this.em.populate(rules, ['jar', 'category']);
 
         const inbox = await this.em.find(
@@ -179,7 +179,7 @@ export function toDto(rule: Rule) {
         jarId: rule.jar.id,
         categoryId: rule.category?.id ?? null,
         priority: rule.priority,
-        active: rule.active,
+        isActive: rule.isActive,
         hitCount: rule.hitCount,
     };
 }

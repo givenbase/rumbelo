@@ -17,5 +17,5 @@ export class Category extends HouseholdEntity {
     budgeted = 0;
 
     @Property({ default: false })
-    archived = false;
+    isArchived = false;
 }

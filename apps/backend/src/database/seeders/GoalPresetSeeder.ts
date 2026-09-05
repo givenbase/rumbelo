@@ -17,7 +17,7 @@ export class GoalPresetSeeder extends Seeder {
                 existing.categoryTemplateKey = row.categoryTemplateKey ?? null;
                 existing.icon = row.icon ?? null;
                 existing.sortOrder = sortOrder;
-                existing.active = true;
+                existing.isActive = true;
                 continue;
             }
             em.create(GoalPreset, {
@@ -27,7 +27,7 @@ export class GoalPresetSeeder extends Seeder {
                 categoryTemplateKey: row.categoryTemplateKey ?? null,
                 icon: row.icon ?? null,
                 sortOrder,
-                active: true,
+                isActive: true,
             } as never);
         }
         await em.flush();

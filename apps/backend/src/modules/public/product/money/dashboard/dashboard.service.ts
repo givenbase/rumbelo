@@ -44,7 +44,7 @@ export class DashboardService {
         // What is safe to spend today without pushing any spendable jar over its line.
         const daysLeft = Math.max(1, daysInPeriod(period) - new Date().getUTCDate());
         const spendableRemaining = sum(
-            jars.filter(jar => jar.spendable).map(jar => Math.max(0, jar.remaining))
+            jars.filter(jar => jar.isSpendable).map(jar => Math.max(0, jar.remaining))
         );
 
         return {

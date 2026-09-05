@@ -19,7 +19,7 @@ import { Account } from '../account.entity';
  */
 @Entity(entityConfig({ schema: 'auth', domain: 'account', tableName: 'settings' }))
 export class AccountSettings extends BaseEntity {
-    // ? PROPERTIES
+    // ? ENUMS
 
     /** Preferred language (NL | EN). */
     @Enum(NativeEnum({ Locale, domain: 'auth', defaultValue: Locale.NL }))

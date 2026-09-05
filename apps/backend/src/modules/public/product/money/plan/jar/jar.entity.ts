@@ -38,7 +38,7 @@ export class Jar extends HouseholdEntity {
 
     /** Financial Freedom is never spent, only invested out. Enforced in JarService. */
     @Property({ default: true })
-    spendable = true;
+    isSpendable = true;
 
     @Property({ default: 0 })
     sortOrder = 0;

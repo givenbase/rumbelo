@@ -19,7 +19,7 @@ export class MerchantPresetSeeder extends Seeder {
                 existing.jarTemplate = jarTemplate;
                 existing.categoryTemplateKey = row.categoryTemplateKey;
                 existing.sortOrder = sortOrder;
-                existing.active = true;
+                existing.isActive = true;
                 continue;
             }
             em.create(MerchantPreset, {
@@ -31,7 +31,7 @@ export class MerchantPresetSeeder extends Seeder {
                 jarTemplate,
                 categoryTemplateKey: row.categoryTemplateKey,
                 sortOrder,
-                active: true,
+                isActive: true,
             } as never);
         }
         await em.flush();

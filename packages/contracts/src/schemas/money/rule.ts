@@ -18,7 +18,7 @@ export const Rule = z.object({
     jarId: Id,
     categoryId: Id.nullable(),
     priority: z.int(),
-    active: z.boolean().default(true),
+    isActive: z.boolean().default(true),
     /** How many transactions this rule has sorted — surfaces dead rules. */
     hitCount: z.int(),
 });

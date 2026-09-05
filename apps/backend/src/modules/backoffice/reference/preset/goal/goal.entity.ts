@@ -12,6 +12,7 @@ import { JarTemplate } from '../../template/jar/jar.entity';
  *
  * @see JarTemplate — default savings / education jar
  * @see money.goal — household-owned instances
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'goal_preset' }))
 @Unique({ properties: ['key'] })
@@ -25,10 +26,6 @@ export class GoalPreset extends BaseEntity {
     /** English name filled into the create form when picked. */
     @Property({ length: 120 })
     name!: string;
-
-    /** Default jar template; app resolves household jar by jarTemplate.key. */
-    @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
-    jarTemplate!: JarTemplate;
 
     /** Optional CategoryTemplate.key hint under that jar (goals may stay uncategorized). */
     @Property({ length: 64, nullable: true })
@@ -44,5 +41,11 @@ export class GoalPreset extends BaseEntity {
 
     /** Soft-disable without deleting historical seed identity. */
     @Property({ default: true })
-    active = true;
+    isActive = true;
+
+    // ? RELATIONSHIPS
+
+    /** Default jar template; app resolves household jar by jarTemplate.key. */
+    @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
+    jarTemplate!: JarTemplate;
 }

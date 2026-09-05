@@ -179,7 +179,7 @@ export function FixedCostForm({
                 cadence: 'MONTHLY',
                 dueDay,
                 direction: 'OUT',
-                active: true,
+                isActive: true,
                 endsOn: null,
                 note: null,
             });

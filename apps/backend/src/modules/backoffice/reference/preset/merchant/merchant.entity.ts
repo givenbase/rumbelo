@@ -13,6 +13,7 @@ import { JarTemplate } from '../../template/jar/jar.entity';
  * @see JarTemplate — default jar for sorted spend
  * @see CategoryTemplate.key — via categoryTemplateKey
  * @see money.rule / money.transaction — household consumers
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'merchant_preset' }))
 @Unique({ properties: ['key'] })
@@ -42,10 +43,6 @@ export class MerchantPreset extends BaseEntity {
     @Property({ length: 4, nullable: true })
     mcc: string | null = null;
 
-    /** Default jar template when this merchant is auto-sorted. */
-    @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
-    jarTemplate!: JarTemplate;
-
     /** CategoryTemplate.key for the household category under that jar. */
     @Property({ length: 64 })
     categoryTemplateKey!: string;
@@ -56,5 +53,11 @@ export class MerchantPreset extends BaseEntity {
 
     /** Soft-disable without deleting historical seed identity. */
     @Property({ default: true })
-    active = true;
+    isActive = true;
+
+    // ? RELATIONSHIPS
+
+    /** Default jar template when this merchant is auto-sorted. */
+    @ManyToOne(() => JarTemplate, { deleteRule: 'restrict' })
+    jarTemplate!: JarTemplate;
 }

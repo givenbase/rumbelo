@@ -13,7 +13,7 @@ export class CategoryTemplateService {
         return this.em.find(
             CategoryTemplate,
             {
-                active: true,
+                isActive: true,
                 ...(filters?.jarKey ? { jarTemplate: { key: filters.jarKey } } : {}),
             },
             { orderBy: { sortOrder: 'ASC' }, populate: ['jarTemplate'] }
@@ -23,7 +23,7 @@ export class CategoryTemplateService {
     async findByKey(key: string): Promise<CategoryTemplate | null> {
         return this.em.findOne(
             CategoryTemplate,
-            { key, active: true },
+            { key, isActive: true },
             { populate: ['jarTemplate'] }
         );
     }

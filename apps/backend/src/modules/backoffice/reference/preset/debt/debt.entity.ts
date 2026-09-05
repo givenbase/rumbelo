@@ -12,6 +12,7 @@ import { entityConfig } from '../../../../../common/database/entity-config.util'
  * Households copy into money.debt; no jar (debts are household-level).
  *
  * @see money.debt — household-owned instances
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'debt_preset' }))
 @Unique({ properties: ['key'] })
@@ -26,15 +27,17 @@ export class DebtPreset extends BaseEntity {
     @Property({ length: 120 })
     name!: string;
 
-    /** Maps onto money.debt.kind when the preset is selected. */
-    @Enum(NativeEnum({ DebtKind, domain: 'money' }))
-    kind!: DebtKind;
-
     /** Display / seed order within the catalog. */
     @Property({ default: 0 })
     sortOrder = 0;
 
     /** Soft-disable without deleting historical seed identity. */
     @Property({ default: true })
-    active = true;
+    isActive = true;
+
+    // ? ENUMS
+
+    /** Maps onto money.debt.kind when the preset is selected. */
+    @Enum(NativeEnum({ DebtKind, domain: 'money' }))
+    kind!: DebtKind;
 }

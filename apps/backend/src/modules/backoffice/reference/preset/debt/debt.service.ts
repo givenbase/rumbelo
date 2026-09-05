@@ -13,7 +13,7 @@ export class DebtPresetService {
         return this.em.find(
             DebtPreset,
             {
-                active: true,
+                isActive: true,
                 ...(filters?.kind ? { kind: filters.kind } : {}),
             },
             { orderBy: { sortOrder: 'ASC' } }

@@ -24,7 +24,7 @@ export class IncomeSource extends HouseholdEntity {
     expectedDay: number | null = null;
 
     @Property({ default: true })
-    active = true;
+    isActive = true;
 
     @Property({ type: 'date', nullable: true })
     startedOn: string | null = null;

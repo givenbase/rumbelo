@@ -12,12 +12,12 @@ export async function resolveCategoryId(opts: {
     householdId: string;
     jarId: string;
     categoryName: string;
-    existing: Array<{ id: string; name: string; archived?: boolean }>;
+    existing: Array<{ id: string; name: string; isArchived?: boolean }>;
 }): Promise<string | null> {
     const name = opts.categoryName.trim();
     if (!name) return null;
     const found = opts.existing.find(
-        c => !c.archived && c.name.toLowerCase() === name.toLowerCase()
+        c => !c.isArchived && c.name.toLowerCase() === name.toLowerCase()
     );
     if (found) return found.id;
     const created = await opts.client.money.jars.createCategory({

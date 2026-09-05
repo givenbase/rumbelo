@@ -10,7 +10,7 @@ export class DebtPresetSeeder extends Seeder {
         for (const [sortOrder, row] of DEBT_PRESET_SEED.entries()) {
             const existing = await em.findOne(DebtPreset, { key: row.key });
             if (existing) continue;
-            em.create(DebtPreset, { ...row, sortOrder, active: true } as never);
+            em.create(DebtPreset, { ...row, sortOrder, isActive: true } as never);
         }
         await em.flush();
     }

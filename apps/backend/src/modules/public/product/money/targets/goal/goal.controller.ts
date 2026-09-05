@@ -25,7 +25,7 @@ export class GoalController {
                 icon: input.icon,
                 target: input.target,
                 monthlyContribution: input.monthlyContribution,
-                targetDate: input.targetDate,
+                targetOn: input.targetOn,
                 status: input.status,
                 why: input.why,
             })

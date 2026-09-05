@@ -26,7 +26,7 @@ export class PeriodTurn extends HouseholdEntity {
     level = 1;
 
     @Property({ default: false })
-    closed = false;
+    isClosed = false;
 
     @Property({ type: 'timestamptz', nullable: true })
     closedAt: Date | null = null;

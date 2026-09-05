@@ -12,15 +12,12 @@ import { entityConfig } from '../../../common/database/entity-config.util';
  * We write these rows; households only *subscribe* (later) or read for gating.
  *
  * @see product/money/plan — household money split (jars), unrelated
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'backoffice', tableName: 'plan' }))
 @Unique({ properties: ['key'] })
 export class Plan extends BaseEntity {
     // ? PROPERTIES
-
-    /** Stable tier key — used in gating and billing mapping. */
-    @Enum(NativeEnum({ PlanKey, domain: 'backoffice' }))
-    key!: PlanKey;
 
     /** Product name shown in UI (Grip, Engine, Compound). */
     @Property({ length: 40 })
@@ -46,5 +43,11 @@ export class Plan extends BaseEntity {
 
     /** Soft-disable without breaking historical subscriptions that used this key. */
     @Property({ default: true })
-    active = true;
+    isActive = true;
+
+    // ? ENUMS
+
+    /** Stable tier key — used in gating and billing mapping. */
+    @Enum(NativeEnum({ PlanKey, domain: 'backoffice' }))
+    key!: PlanKey;
 }

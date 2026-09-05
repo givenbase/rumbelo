@@ -21,8 +21,8 @@ export class JarTemplateService {
             if (existing) continue;
             this.em.create(JarTemplate, {
                 sortOrder: row.sortOrder ?? sortOrder,
-                active: true,
-                spendable: row.spendable ?? true,
+                isActive: true,
+                isSpendable: row.isSpendable ?? true,
                 ...row,
             } as never);
         }
@@ -32,6 +32,6 @@ export class JarTemplateService {
 
     /** Active templates in display order — used by onboard to seed money.jar. */
     async listActive(): Promise<JarTemplate[]> {
-        return this.em.find(JarTemplate, { active: true }, { orderBy: { sortOrder: 'ASC' } });
+        return this.em.find(JarTemplate, { isActive: true }, { orderBy: { sortOrder: 'ASC' } });
     }
 }

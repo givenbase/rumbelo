@@ -10,7 +10,7 @@ export class IncomeSourcePresetSeeder extends Seeder {
         for (const [sortOrder, row] of INCOME_SOURCE_PRESET_SEED.entries()) {
             const existing = await em.findOne(IncomeSourcePreset, { key: row.key });
             if (existing) continue;
-            em.create(IncomeSourcePreset, { ...row, sortOrder, active: true } as never);
+            em.create(IncomeSourcePreset, { ...row, sortOrder, isActive: true } as never);
         }
         await em.flush();
     }

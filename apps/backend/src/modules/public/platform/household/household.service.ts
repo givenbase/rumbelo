@@ -187,7 +187,7 @@ export class HouseholdService {
                 subtitle: meta.subtitle,
                 icon: meta.icon,
                 percentage: Number(pct).toFixed(2),
-                spendable: meta.spendable,
+                isSpendable: meta.isSpendable,
                 sortOrder: meta.sortOrder,
             } as never);
         }
@@ -212,7 +212,7 @@ export class HouseholdService {
                 name: 'Netto inkomen',
                 kind: IncomeKind.SALARY,
                 amount: input.monthlyNetIncome,
-                active: true,
+                isActive: true,
             } as never);
         }
 
@@ -262,8 +262,8 @@ function toSettingsDto(row: HouseholdSettings) {
         periodStartDay: row.periodStartDay,
         ritualReminderAt: row.ritualReminderAt,
         ritualReminderDay: row.ritualReminderDay,
-        bankSyncEnabled: row.bankSyncEnabled,
-        coachEnabled: row.coachEnabled,
+        isBankSyncEnabled: row.isBankSyncEnabled,
+        isCoachEnabled: row.isCoachEnabled,
         why: row.why,
         payoffStrategy: row.payoffStrategy,
         incomeRhythm: row.incomeRhythm,

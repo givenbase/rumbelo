@@ -30,7 +30,7 @@ export class IncomeService {
         amount: number;
         cadence?: string;
         expectedDay?: number | null;
-        active?: boolean;
+        isActive?: boolean;
         startedOn?: string | null;
     }) {
         const source = this.em.create(IncomeSource, {
@@ -40,7 +40,7 @@ export class IncomeService {
             amount: input.amount,
             cadence: (input.cadence as Cadence) ?? Cadence.MONTHLY,
             expectedDay: input.expectedDay ?? null,
-            active: input.active ?? true,
+            isActive: input.isActive ?? true,
             startedOn: input.startedOn ?? null,
         } as never);
         await this.em.persist(source).flush();
@@ -68,7 +68,7 @@ export class IncomeService {
             amount: number;
             cadence: string;
             expectedDay: number | null;
-            active: boolean;
+            isActive: boolean;
             startedOn: string | null;
         }>
     ) {
@@ -78,7 +78,7 @@ export class IncomeService {
         if (patch.amount !== undefined) source.amount = patch.amount;
         if (patch.cadence !== undefined) source.cadence = patch.cadence as Cadence;
         if (patch.expectedDay !== undefined) source.expectedDay = patch.expectedDay;
-        if (patch.active !== undefined) source.active = patch.active;
+        if (patch.isActive !== undefined) source.isActive = patch.isActive;
         if (patch.startedOn !== undefined) source.startedOn = patch.startedOn;
         await this.em.flush();
         return toDto(source);
@@ -118,7 +118,7 @@ export function toDto(source: IncomeSource) {
         amount: Number(source.amount),
         cadence: source.cadence,
         expectedDay: source.expectedDay,
-        active: source.active,
+        isActive: source.isActive,
         startedOn: source.startedOn,
     };
 }

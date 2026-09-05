@@ -32,7 +32,7 @@ export class Rule extends HouseholdEntity {
     priority = 100;
 
     @Property({ default: true })
-    active = true;
+    isActive = true;
 
     /** Surfaces dead rules the user can prune. */
     @Property({ default: 0 })

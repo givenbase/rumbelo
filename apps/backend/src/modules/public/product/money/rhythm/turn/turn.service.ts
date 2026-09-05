@@ -47,7 +47,7 @@ export class TurnService {
             score,
             maxScore: turn?.maxScore ?? 100,
             daysLeft: Math.max(0, daysInPeriod(period) - new Date().getUTCDate()),
-            closed: turn?.closed ?? false,
+            isClosed: turn?.isClosed ?? false,
             level: level.index,
             levelLabel: level.label,
             events: events.map(event => ({
@@ -78,7 +78,7 @@ export class TurnService {
     /** Idempotent: closing an already-closed turn returns the existing recap. */
     async close(period: string) {
         let turn = await this.turns.findOne({ period });
-        if (turn?.closed) {
+        if (turn?.isClosed) {
             return this.buildRecap(period, turn);
         }
 
@@ -94,7 +94,7 @@ export class TurnService {
 
         turn.score = recap.score;
         turn.maxScore = 100;
-        turn.closed = true;
+        turn.isClosed = true;
         turn.closedAt = new Date();
         turn.level = levelFor(recap.score).index;
 
@@ -111,10 +111,10 @@ export class TurnService {
         const spent = sum(jarRows.map(jar => jar.spent));
         const leftOver = allocated - spent;
 
-        const spendable = jarRows.filter(jar => jar.spendable);
-        const held = spendable.filter(jar => !jar.overspent).length;
+        const isSpendable = jarRows.filter(jar => jar.isSpendable);
+        const held = isSpendable.filter(jar => !jar.overspent).length;
         const score =
-            turn?.score ?? (spendable.length ? Math.round((held / spendable.length) * 100) : 0);
+            turn?.score ?? (isSpendable.length ? Math.round((held / isSpendable.length) * 100) : 0);
 
         const best = jarRows.reduce((left, right) => (left.remaining >= right.remaining ? left : right), jarRows[0]!);
         const worst =

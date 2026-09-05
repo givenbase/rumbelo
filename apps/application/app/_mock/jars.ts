@@ -108,7 +108,7 @@ export const mockJars = JAR_META.map((j, i) => {
         percentage: j.pct,
         color: j.color,
         text: j.text,
-        spendable: j.key !== 'FINANCIAL_FREEDOM',
+        isSpendable: j.key !== 'FINANCIAL_FREEDOM',
         allocated,
         spent,
         remaining: allocated - spent,
@@ -120,7 +120,7 @@ export const mockJars = JAR_META.map((j, i) => {
             name: c.name,
             budgeted: c.budgeted,
             actual: c.actual,
-            archived: false,
+            isArchived: false,
         })),
     };
 });

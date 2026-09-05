@@ -24,7 +24,7 @@ export class LeverService {
             label: lever.label,
             note: lever.note,
             potentialMonthly: Number(lever.potentialMonthly),
-            done: lever.done,
+            isDone: lever.isDone,
         }));
     }
 }

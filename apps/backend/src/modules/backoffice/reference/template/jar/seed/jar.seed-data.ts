@@ -11,7 +11,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Must-pays',
         icon: '🏠',
         defaultPercentage: '55.00',
-        spendable: true,
+        isSpendable: true,
     },
     {
         key: JarKey.FINANCIAL_FREEDOM,
@@ -19,7 +19,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Never spend',
         icon: '🔒',
         defaultPercentage: '10.00',
-        spendable: false,
+        isSpendable: false,
     },
     {
         key: JarKey.LONG_TERM_SAVINGS,
@@ -27,7 +27,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Big things',
         icon: '🎯',
         defaultPercentage: '10.00',
-        spendable: true,
+        isSpendable: true,
     },
     {
         key: JarKey.EDUCATION,
@@ -35,7 +35,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Grow yourself',
         icon: '📚',
         defaultPercentage: '10.00',
-        spendable: true,
+        isSpendable: true,
     },
     {
         key: JarKey.PLAY,
@@ -43,7 +43,7 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Guilt-free',
         icon: '✨',
         defaultPercentage: '10.00',
-        spendable: true,
+        isSpendable: true,
     },
     {
         key: JarKey.GIVE,
@@ -51,6 +51,6 @@ export const JAR_TEMPLATE_SEED = [
         subtitle: 'Pass it on',
         icon: '🤲',
         defaultPercentage: '5.00',
-        spendable: true,
+        isSpendable: true,
     },
 ] as const;

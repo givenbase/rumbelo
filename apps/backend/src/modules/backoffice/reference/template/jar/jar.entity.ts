@@ -12,15 +12,12 @@ import { entityConfig } from '../../../../../common/database/entity-config.util'
  * We write these rows; households only copy them into money.jar on onboard.
  *
  * @see money.jar — household-owned instances
+ * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'backoffice', domain: 'reference', tableName: 'jar_template' }))
 @Unique({ properties: ['key'] })
 export class JarTemplate extends BaseEntity {
     // ? PROPERTIES
-
-    /** Stable key — copied onto household jars; never renamed in place. */
-    @Enum(NativeEnum({ JarKey, domain: 'money' }))
-    key!: JarKey;
 
     /** Display name shown at onboard (household may rename their copy later). */
     @Property({ length: 80 })
@@ -38,7 +35,7 @@ export class JarTemplate extends BaseEntity {
 
     /** Financial Freedom is never spendable — enforced when seeding household jars. */
     @Property({ default: true })
-    spendable = true;
+    isSpendable = true;
 
     /** Display / seed order within the catalog. */
     @Property({ default: 0 })
@@ -46,5 +43,11 @@ export class JarTemplate extends BaseEntity {
 
     /** Soft-disable without deleting historical household jars that used this key. */
     @Property({ default: true })
-    active = true;
+    isActive = true;
+
+    // ? ENUMS
+
+    /** Stable key — copied onto household jars; never renamed in place. */
+    @Enum(NativeEnum({ JarKey, domain: 'money' }))
+    key!: JarKey;
 }

@@ -115,7 +115,7 @@ export function IncomeForm({
                 kind: values.kind,
                 cadence: 'MONTHLY',
                 expectedDay: null,
-                active: true,
+                isActive: true,
                 startedOn: null,
             });
         },

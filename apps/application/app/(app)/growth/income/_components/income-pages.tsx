@@ -15,7 +15,7 @@ const mockIncomeRows = INCOME_SOURCES.map(s => ({
     name: s.label,
     amount: s.amount,
     kind: s.kind,
-    active: true,
+    isActive: true,
 }));
 
 export function IncomeCreatePage({ embedded = false }: { embedded?: boolean }) {

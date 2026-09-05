@@ -15,7 +15,7 @@ export const Goal = z.object({
     target: Money,
     saved: Money,
     monthlyContribution: Money,
-    targetDate: IsoDate.nullable(),
+    targetOn: IsoDate.nullable(),
     status: z.enum(GoalStatus),
     why: z.string().max(500).nullable(),
 });

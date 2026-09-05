@@ -13,7 +13,7 @@ export class IncomeSourcePresetService {
         return this.em.find(
             IncomeSourcePreset,
             {
-                active: true,
+                isActive: true,
                 ...(filters?.kind ? { kind: filters.kind } : {}),
             },
             { orderBy: { sortOrder: 'ASC' } }

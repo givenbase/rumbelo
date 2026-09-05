@@ -44,7 +44,7 @@ export class JarService {
             name: cat.name,
             budgeted: Number(cat.budgeted),
             actual: 0,
-            archived: false,
+            isArchived: false,
         };
     }
 
@@ -83,7 +83,7 @@ export class JarService {
                         name: category.name,
                         budgeted: Number(category.budgeted),
                         actual: 0,
-                        archived: category.archived,
+                        isArchived: category.isArchived,
                     })),
                 };
             })
@@ -95,7 +95,7 @@ export class JarService {
         const rows = await this.em
             .getConnection()
             .execute<{ amount: string; cadence: Cadence }[]>(
-                `SELECT amount::text, cadence FROM money_income_source WHERE household_id = ? AND active = true`,
+                `SELECT amount::text, cadence FROM money_income_source WHERE household_id = ? AND is_active = true`,
                 [currentHouseholdId()]
             );
         return Math.round(
@@ -139,7 +139,7 @@ export class JarService {
 
     async updateCategory(
         id: string,
-        patch: Partial<{ name: string; budgeted: number; archived: boolean }>
+        patch: Partial<{ name: string; budgeted: number; isArchived: boolean }>
     ) {
         const cat = await this.categories.findOneOrFail({ id });
         Object.assign(cat, patch);
@@ -150,7 +150,7 @@ export class JarService {
             name: cat.name,
             budgeted: Number(cat.budgeted),
             actual: 0,
-            archived: cat.archived,
+            isArchived: cat.isArchived,
         };
     }
 
@@ -190,7 +190,7 @@ function toJarDto(jar: Jar): JarDto {
         subtitle: jar.subtitle,
         icon: jar.icon,
         percentage: Number(jar.percentage),
-        spendable: jar.spendable,
+        isSpendable: jar.isSpendable,
         sortOrder: jar.sortOrder,
     };
 }
