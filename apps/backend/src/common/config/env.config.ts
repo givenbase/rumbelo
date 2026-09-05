@@ -101,8 +101,12 @@ function blankToUndefined(value: string | undefined): string | undefined {
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     // Soft alias: REDIS_URL → DATABASE_REDIS_URL (pre-rename local envs).
+    // Blank strings → undefined so zod defaults / required checks behave correctly
+    // when a dashboard var or .env line is present but empty.
     const normalized: NodeJS.ProcessEnv = {
         ...source,
+        NODE_ENV: blankToUndefined(source.NODE_ENV),
+        DATABASE_URL: blankToUndefined(source.DATABASE_URL),
         DATABASE_REDIS_URL: blankToUndefined(source.DATABASE_REDIS_URL ?? source.REDIS_URL),
         EMAIL_FROM: blankToUndefined(source.EMAIL_FROM),
         EMAIL_DEFAULT_FROM: blankToUndefined(source.EMAIL_DEFAULT_FROM),

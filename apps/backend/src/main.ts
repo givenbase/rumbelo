@@ -16,12 +16,22 @@ import { setupSwagger } from './common/config/setup-swagger.config';
 
 import 'reflect-metadata';
 
+/**
+ * Local-only: fill gaps from monorepo root `.env`.
+ * Never override process.env — Railway / CI inject real secrets; an empty or
+ * partial `.env` in the image must not wipe them (`override: true` did).
+ * Skip entirely on Railway (vars come from the service dashboard).
+ */
 function loadRootEnvFile() {
+    if (process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_ENVIRONMENT_ID) {
+        return;
+    }
+
     let dir = dirname(fileURLToPath(import.meta.url));
     for (let i = 0; i < 6; i++) {
         const candidate = resolve(dir, '.env');
         if (existsSync(candidate)) {
-            loadDotenv({ path: candidate, override: true });
+            loadDotenv({ path: candidate, override: false });
             return;
         }
         dir = resolve(dir, '..');
