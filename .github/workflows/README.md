@@ -56,6 +56,8 @@ On Railway, Application’s server-only `DOMAIN_BACK` is the private Nest URL fo
 | `api-smoke.yml` | `/health*` must not 5xx (strict ready after migrate) |
 | `e2e-smoke.yml` | Playwright `@smoke` against staging application |
 
+`db:push` / `db:seed` run via `tsx` scripts (not `@mikro-orm/cli`) so CI is not hit by the Node 22.22.3+ `yargonaut` / `require.cache` crash under `--import tsx/esm`. Workflows pin Node **22.22.2**.
+
 Manual runs: **Actions** → pick workflow → choose `staging` or `production`.
 
 Local smoke: `BACKEND_URL=https://… pnpm api:smoke`
