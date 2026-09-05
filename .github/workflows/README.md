@@ -33,6 +33,18 @@ Match `apps/backend/.env.example` and app `get-env.ts`:
 | `DATABASE_SSL` | var | optional (`true` on managed Postgres) |
 | `E2E_*_EMAIL` / `E2E_*_PASSWORD` | secret | optional e2e (defaults = seed demos) |
 
+### Sync from your machine (Galighticus pattern)
+
+```bash
+pnpm sync:github-secrets:init        # creates .env.github.*.{staging,production}
+# fill real values in those four files (gitignored)
+pnpm sync:github-secrets             # push both envs via gh CLI
+pnpm sync:github-secrets:staging     # staging only
+pnpm sync:github-secrets:production  # production only
+```
+
+Templates: `.env.github.secrets.example`, `.env.github.vars.example`. Script: `scripts/sync-github-secrets.js`.
+
 CI runners are outside Railway’s private mesh — never point smoke/e2e at `*.railway.internal`.
 On Railway, Application’s server-only `DOMAIN_BACK` is the private Nest URL for proxies.
 

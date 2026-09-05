@@ -47,6 +47,10 @@
         "db:seed": "pnpm --filter @rumbelo/backend run db:seed",
         "auth:migrate": "pnpm --filter @rumbelo/backend run auth:migrate",
         "api:smoke": "node ./scripts/api-smoke.mjs",
+        "sync:github-secrets": "node scripts/sync-github-secrets.js",
+        "sync:github-secrets:init": "node scripts/sync-github-secrets.js --init",
+        "sync:github-secrets:staging": "node scripts/sync-github-secrets.js --staging",
+        "sync:github-secrets:production": "node scripts/sync-github-secrets.js --production",
         "rename": "node scripts/rename-project.mjs",
         "prepare": "husky"
     },

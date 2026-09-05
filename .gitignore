@@ -12,6 +12,14 @@ node_modules
 .env.test.local
 .env.production.local
 
+# GitHub Environment sync (Galighticus pattern) — real values stay local
+.env.github.secrets.staging
+.env.github.secrets.production
+.env.github.vars.staging
+.env.github.vars.production
+!.env.github.secrets.example
+!.env.github.vars.example
+
 # Testing
 coverage
 
