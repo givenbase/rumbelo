@@ -10,7 +10,7 @@ export const metadata = { title: 'Learn' };
  */
 export default function LearnPage() {
     return (
-        <div className="grid animate-rise gap-8" style={{ maxWidth: 960 }}>
+        <div className="grid max-w-4xl animate-rise gap-8">
             {/* Page header */}
             <div>
                 <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">

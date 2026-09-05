@@ -35,7 +35,7 @@ export function HeroKluis({
                 {/* Hero figure */}
                 <div>
                     <Eyebrow>Money · Distributed this month</Eyebrow>
-                    <HeroNumber className="mt-2.5 text-5xl leading-none lg:text-6xl">
+                    <HeroNumber className="mt-2.5 text-4xl leading-none sm:text-5xl lg:text-6xl">
                         {total}
                     </HeroNumber>
                     <p className="mt-2 text-sm text-fg-muted">{incomeBreakdown}</p>

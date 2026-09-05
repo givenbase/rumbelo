@@ -63,8 +63,10 @@ export function LandingHero() {
                 }}
             />
 
-            {/* Floating labels */}
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+            {/* Floating labels — desktop only to keep the mobile hero clear */}
+            <div
+                className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block"
+                aria-hidden>
                 {FLOATERS.map((fl, i) => (
                     <span
                         key={i}
@@ -109,15 +111,15 @@ export function LandingHero() {
             </div>
 
             {/* Content */}
-            <div className="relative mx-auto flex max-w-6xl flex-wrap items-center gap-8 px-4 py-12 pb-10 lg:gap-16 lg:px-6 lg:py-24 lg:pb-16">
+            <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-8 px-4 py-12 pb-10 md:flex-row md:flex-wrap md:items-center lg:gap-16 lg:px-6 lg:py-24 lg:pb-16">
                 {/* Left column */}
                 <div
-                    className="min-w-0 flex-1 basis-96"
+                    className="min-w-0 flex-1 md:basis-96"
                     style={{ animation: 'rise 520ms var(--ease-out) both' }}>
                     <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
                         ✦ MONEY · GROWTH · ENERGY · SOUL
                     </span>
-                    <h1 className="my-4 mb-4 max-w-xs font-display text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+                    <h1 className="my-4 mb-4 max-w-md font-display text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:max-w-xs lg:text-6xl">
                         You earn fine. So where does it go?
                     </h1>
                     <p className="mb-7 max-w-prose text-base leading-relaxed text-fg-muted lg:text-lg">
@@ -125,16 +127,16 @@ export function LandingHero() {
                         you must pay, the ones that grow, and the one you are allowed to enjoy.
                         Every euro gets a job before it arrives.
                     </p>
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                         <a
                             href={appSignUpUrl()}
-                            className="rounded-full px-6 py-4 font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95"
+                            className="rounded-full px-6 py-4 text-center font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95"
                             style={{ background: 'var(--gradient-accent)' }}>
                             Start free — no card
                         </a>
                         <a
                             href="#how"
-                            className="rounded-full border border-line-strong px-6 py-4 font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
+                            className="rounded-full border border-line-strong px-6 py-4 text-center font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
                             See how it works
                         </a>
                     </div>
@@ -156,7 +158,7 @@ export function LandingHero() {
 
                 {/* Demo card */}
                 <div
-                    className="min-w-0 flex-1 basis-96 overflow-hidden rounded-2xl border border-line bg-surface"
+                    className="w-full min-w-0 flex-1 overflow-hidden rounded-2xl border border-line bg-surface md:basis-96"
                     style={{
                         boxShadow: 'var(--shadow-lg), inset 0 0 0 1px rgb(14 17 22 / 0.08)',
                         animation:

@@ -65,12 +65,7 @@ export function LandingHowItWorks() {
                                         </span>
                                     </span>
 
-                                    <div
-                                        className="grid gap-3"
-                                        style={{
-                                            gridTemplateColumns:
-                                                'repeat(auto-fit, minmax(clamp(220px,44%,460px),1fr))',
-                                        }}>
+                                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                                         <span className="grid min-w-0 gap-1">
                                             <span className="font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">
                                                 YOU DO

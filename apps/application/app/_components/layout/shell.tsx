@@ -169,7 +169,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             type="button"
                             onClick={toggleLocale}
                             title={locale === Locale.NL ? 'Switch to English' : 'Switch to Dutch'}
-                            className="hidden h-8 items-center rounded-full border border-line px-3 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent md:flex">
+                            className="flex h-8 items-center rounded-full border border-line px-2.5 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent sm:px-3">
                             {locale === Locale.NL ? 'NL' : 'EN'}
                         </button>
 
@@ -192,7 +192,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                     onClick={() => setMenuOpen(false)}
                                     className="fixed inset-0 z-30 cursor-default"
                                 />
-                                <div className="absolute top-11 right-0 z-40 w-72 animate-rise overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-xl">
+                                <div className="absolute top-11 right-0 z-40 w-[min(18rem,calc(100vw-2rem))] animate-rise overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-xl">
                                     {/* User row */}
                                     <div className="flex items-center gap-3 border-b border-line px-4.5 py-4">
                                         <div className="grid size-9.5 shrink-0 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent">
@@ -317,19 +317,24 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             </div>
 
                             {/* Mobile dropdown */}
-                            <div className="relative sm:hidden">
+                            <div className="relative min-w-0 sm:hidden">
                                 <button
                                     type="button"
                                     onClick={() => setSubOpen(v => !v)}
-                                    className="flex items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
-                                    {activeGroup.children.find(c => pathname === c.href)?.label ??
-                                        activeGroup.children[0].label}
-                                    <span className="text-xs opacity-70" aria-hidden>
+                                    className="flex max-w-[min(100%,14rem)] items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
+                                    <span className="truncate">
+                                        {activeGroup.children.find(
+                                            c =>
+                                                pathname === c.href ||
+                                                pathname.startsWith(c.href + '/')
+                                        )?.label ?? activeGroup.children[0].label}
+                                    </span>
+                                    <span className="shrink-0 text-xs opacity-70" aria-hidden>
                                         ▾
                                     </span>
                                 </button>
                                 {subOpen && (
-                                    <div className="absolute top-10 left-0 z-40 grid w-64 animate-rise gap-0.5 rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl">
+                                    <div className="absolute top-10 left-0 z-40 grid w-[min(16rem,calc(100vw-2rem))] animate-rise gap-0.5 rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl">
                                         {activeGroup.children.map(c => (
                                             <Link
                                                 key={c.href}
@@ -343,12 +348,12 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                 )}
                             </div>
 
-                            {/* Period selector + Settings link (desktop) */}
-                            <div className="ml-auto hidden items-center gap-2 sm:flex">
+                            {/* Period selector + Settings */}
+                            <div className="ml-auto flex shrink-0 items-center gap-2">
                                 <PeriodSelector />
                                 <Link
                                     href={settingsHrefForNavGroup(activeGroup?.key)}
-                                    className="flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:border-accent-hover hover:text-accent">
+                                    className="hidden items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:border-accent-hover hover:text-accent sm:flex">
                                     <span aria-hidden>◇</span>
                                     Settings
                                 </Link>

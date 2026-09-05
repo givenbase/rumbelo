@@ -86,7 +86,7 @@ export function GratitudePageClient() {
             <div className="flex flex-wrap gap-2.5">
                 <Input
                     ref={inputRef}
-                    className="min-w-65 flex-1"
+                    className="w-full min-w-0 flex-1 sm:min-w-65"
                     placeholder="What are you grateful for?"
                     value={text}
                     onChange={e => setText(e.target.value)}

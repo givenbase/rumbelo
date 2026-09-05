@@ -196,10 +196,10 @@ export function JarsPageClient() {
                             step={50}
                             value={simEuros}
                             onChange={e => setSimEuros(Number(e.target.value))}
-                            className="min-w-48 flex-1 accent-accent"
+                            className="min-w-0 flex-1 accent-accent"
                             aria-label="Simulate income"
                         />
-                        <span className="min-w-36 font-display text-3xl font-semibold tracking-tight text-accent">
+                        <span className="shrink-0 font-display text-2xl font-semibold tracking-tight text-accent sm:min-w-36 sm:text-3xl">
                             {formatMoney(simCents)}
                         </span>
                     </div>
@@ -313,7 +313,7 @@ export function JarsPageClient() {
                                 step={1}
                                 value={wantMonths}
                                 onChange={e => setWantMonths(Number(e.target.value))}
-                                className="min-w-40 flex-1 accent-accent"
+                                className="min-w-0 flex-1 accent-accent"
                                 aria-label="Target months"
                             />
                             <span className="font-mono text-sm font-medium whitespace-nowrap text-fg-secondary">

@@ -18,11 +18,7 @@ export function LandingPillars() {
                     session with your coach that holds it all together.
                 </p>
 
-                <div
-                    className="grid gap-3.5"
-                    style={{
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(230px,23%,320px),1fr))',
-                    }}>
+                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
                     {PILLARS.map(p => (
                         <div
                             key={p.name}

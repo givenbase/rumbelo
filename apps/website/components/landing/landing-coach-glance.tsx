@@ -3,9 +3,9 @@ import { COACH_GLANCE_POINTS } from '../../lib/landing-content';
 export function LandingCoachGlance() {
     return (
         <section className="mx-auto max-w-6xl px-4 py-10 lg:px-6 lg:py-16">
-            <div className="flex flex-wrap items-center gap-6 lg:gap-12">
+            <div className="flex flex-col items-stretch gap-6 md:flex-row md:flex-wrap md:items-center lg:gap-12">
                 {/* Text */}
-                <div className="min-w-0 flex-1 basis-72">
+                <div className="min-w-0 flex-1 md:basis-72">
                     <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
                         ✦ ONE GLANCE, EVERY MORNING
                     </span>
@@ -31,12 +31,12 @@ export function LandingCoachGlance() {
                 </div>
 
                 {/* Screenshot placeholder */}
-                <div className="min-w-0 flex-1 basis-96">
+                <div className="w-full min-w-0 flex-1 md:basis-96">
                     <div
-                        className="overflow-hidden rounded-2xl border border-line"
+                        className="w-full overflow-hidden rounded-2xl border border-line"
                         style={{ boxShadow: 'var(--shadow-lg)', aspectRatio: '16 / 10' }}>
-                        <div className="flex h-full items-center justify-center bg-bg-app">
-                            <span className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
+                        <div className="flex h-full items-center justify-center bg-bg-app px-4">
+                            <span className="text-center font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
                                 App screenshot · coming soon
                             </span>
                         </div>

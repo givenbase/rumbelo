@@ -149,7 +149,7 @@ export function WeekPageClient() {
                         min={8}
                         max={70}
                         defaultValue={STEERED_HOURS}
-                        className="min-w-50 flex-1 accent-accent"
+                        className="min-w-0 flex-1 accent-accent"
                         readOnly
                     />
                     <span className="font-display text-3xl font-semibold text-accent tabular-nums">

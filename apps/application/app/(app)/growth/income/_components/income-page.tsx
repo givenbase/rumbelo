@@ -83,14 +83,14 @@ export function IncomePageClient() {
                 </span>
             </ListToolbar>
 
-            <div className="flex flex-wrap items-start gap-5">
+            <div className="flex flex-col items-stretch gap-5 md:flex-row md:flex-wrap md:items-start">
                 <AccentCard
                     tint="var(--color-accent)"
-                    className="grid min-w-0 flex-1 basis-80 gap-5">
+                    className="grid w-full min-w-0 flex-1 gap-5 md:basis-80">
                     <div className="flex flex-wrap gap-6">
                         <div className="grid gap-1.5">
                             <Eyebrow>Now, per month</Eyebrow>
-                            <p className="font-display text-3xl leading-none font-semibold tracking-tight text-fg lg:text-4xl">
+                            <p className="font-display text-2xl leading-none font-semibold tracking-tight text-fg sm:text-3xl lg:text-4xl">
                                 {formatMoney(NET)}
                             </p>
                             <p className="font-mono text-xs text-fg-muted">
@@ -100,7 +100,7 @@ export function IncomePageClient() {
                         <div className="grid gap-1.5">
                             <Eyebrow>Target</Eyebrow>
                             <p
-                                className="font-display text-3xl leading-none font-semibold tracking-tight lg:text-4xl"
+                                className="font-display text-2xl leading-none font-semibold tracking-tight sm:text-3xl lg:text-4xl"
                                 style={{
                                     background: 'var(--gradient-accent)',
                                     WebkitBackgroundClip: 'text',
@@ -111,14 +111,14 @@ export function IncomePageClient() {
                         </div>
                         <div className="grid gap-1.5">
                             <Eyebrow>Gap</Eyebrow>
-                            <p className="font-display text-3xl leading-none font-semibold tracking-tight text-warning lg:text-4xl">
+                            <p className="font-display text-2xl leading-none font-semibold tracking-tight text-warning sm:text-3xl lg:text-4xl">
                                 {formatMoney(GAP)}
                             </p>
                         </div>
                     </div>
                 </AccentCard>
 
-                <Card className="grid min-w-0 flex-1 basis-72 content-start gap-4">
+                <Card className="grid w-full min-w-0 flex-1 content-start gap-4 md:basis-72">
                     <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
                         ✦ What that does to each jar
                     </span>

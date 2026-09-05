@@ -55,9 +55,9 @@ export function LandingSignupForm() {
                 }}>
                 <span className="block h-1" style={{ background: 'var(--gradient-accent)' }} />
 
-                <div className="flex flex-wrap gap-7 p-6 lg:gap-14 lg:p-10">
+                <div className="flex flex-col gap-7 p-5 sm:p-6 md:flex-row md:flex-wrap lg:gap-14 lg:p-10">
                     {/* Left: assurances */}
-                    <div className="min-w-0 flex-1 basis-80">
+                    <div className="min-w-0 flex-1 md:basis-80">
                         <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
                             ✦ Create your account
                         </span>
@@ -87,7 +87,7 @@ export function LandingSignupForm() {
                     </div>
 
                     {/* Right: form */}
-                    <div className="max-w-md min-w-0 flex-1 basis-80">
+                    <div className="w-full max-w-md min-w-0 flex-1 md:basis-80">
                         <button
                             type="button"
                             onClick={googleIn}

@@ -8,11 +8,7 @@ export function LandingFooter() {
         <footer className="border-t border-line bg-bg-app">
             {/* Trust cards row */}
             <div className="mx-auto max-w-6xl px-4 pt-8 lg:px-6">
-                <div
-                    className="grid gap-3.5 border-b border-line pb-8"
-                    style={{
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(200px,23%,300px),1fr))',
-                    }}>
+                <div className="grid grid-cols-1 gap-3.5 border-b border-line pb-8 sm:grid-cols-2 lg:grid-cols-4">
                     {TRUST_CARDS.map(t => (
                         <div key={t.head} className="flex min-w-0 items-start gap-3">
                             <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft">
@@ -56,9 +52,9 @@ export function LandingFooter() {
                 </div>
 
                 {/* Link columns */}
-                <div className="flex min-w-0 flex-1 flex-wrap justify-end gap-6 lg:gap-12">
+                <div className="flex min-w-0 flex-1 flex-wrap justify-start gap-6 sm:gap-8 lg:justify-end lg:gap-12">
                     {FOOT_COLS.map(col => (
-                        <div key={col.head} className="grid content-start gap-2.5">
+                        <div key={col.head} className="grid min-w-0 content-start gap-2.5">
                             <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
                                 {col.head}
                             </span>
@@ -77,7 +73,7 @@ export function LandingFooter() {
 
             {/* Bottom bar */}
             <div className="border-t border-line">
-                <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 p-4 lg:px-6">
+                <div className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between lg:px-6">
                     <span className="font-mono text-xs font-medium tracking-normal text-fg-faint">
                         © 2026 Rumbelo B.V. · KvK 00000000 · All rights reserved
                     </span>
@@ -87,7 +83,7 @@ export function LandingFooter() {
                                 key={b}
                                 className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5">
                                 <span className="size-1.5 shrink-0 rounded-full bg-success" />
-                                <span className="font-mono text-xs font-medium tracking-widest whitespace-nowrap text-fg-muted">
+                                <span className="font-mono text-xs font-medium tracking-wide text-fg-muted sm:tracking-widest">
                                     {b}
                                 </span>
                             </span>

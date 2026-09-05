@@ -1218,7 +1218,7 @@ export function GroeiSettings() {
                         step={3}
                         value={horizon}
                         onChange={e => setHorizon(Number(e.target.value))}
-                        className="min-w-55 flex-1 accent-(--color-accent)"
+                        className="min-w-0 flex-1 accent-(--color-accent)"
                         aria-label="Planning horizon in months"
                     />
                     <span className="font-display text-xl font-semibold tracking-tight whitespace-nowrap text-accent">
@@ -1317,7 +1317,7 @@ export function ZielSettings() {
                         step={1}
                         value={mindMin}
                         onChange={e => setMindMin(Number(e.target.value))}
-                        className="min-w-55 flex-1 accent-(--color-accent)"
+                        className="min-w-0 flex-1 accent-(--color-accent)"
                         aria-label="Daily stillness minutes"
                     />
                     <span className="font-display text-xl font-semibold tracking-tight whitespace-nowrap text-accent">
@@ -1762,7 +1762,7 @@ export function ExportSettings() {
                 <div className="grid gap-2 py-2.5">
                     <div className="flex flex-wrap gap-2.5">
                         <Button
-                            className="min-w-[190px] flex-1 rounded-full font-mono text-[10.5px] tracking-[0.13em] uppercase"
+                            className="min-w-0 flex-1 rounded-full font-mono text-[10.5px] tracking-[0.13em] uppercase sm:min-w-[190px]"
                             disabled={!live || busy !== null}
                             onClick={() => {
                                 showToast(
@@ -1774,7 +1774,7 @@ export function ExportSettings() {
                         </Button>
                         <Button
                             variant="secondary"
-                            className="min-w-[190px] flex-1 rounded-full font-mono text-[10.5px] tracking-[0.13em] uppercase"
+                            className="min-w-0 flex-1 rounded-full font-mono text-[10.5px] tracking-[0.13em] uppercase sm:min-w-[190px]"
                             disabled={!live || busy !== null}
                             onClick={() => {
                                 if (scope === 'all') void exportJson();

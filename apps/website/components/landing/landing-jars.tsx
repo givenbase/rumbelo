@@ -15,11 +15,7 @@ export function LandingJars() {
                 and what does not.
             </p>
 
-            <div
-                className="grid gap-3.5"
-                style={{
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(240px,30%,360px),1fr))',
-                }}>
+            <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
                 {JARS.map(j => (
                     <div
                         key={j.key}

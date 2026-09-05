@@ -24,7 +24,7 @@ export function QuickAddFab() {
             {quickOpen && (
                 <div
                     data-quick
-                    className="fixed right-4 bottom-36 z-45 grid w-full max-w-sm animate-rise gap-1 rounded-2xl border border-line-strong bg-surface p-3.5 shadow-xl md:right-6 md:bottom-28">
+                    className="fixed right-4 bottom-36 left-4 z-45 grid max-w-sm animate-rise gap-1 rounded-2xl border border-line-strong bg-surface p-3.5 shadow-xl md:right-6 md:bottom-28 md:left-auto md:w-full">
                     <p className="mb-1 font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">
                         Quick add
                     </p>
@@ -47,14 +47,15 @@ export function QuickAddFab() {
                     type="button"
                     data-fabbtn
                     onClick={toggleQuick}
-                    className="flex items-center gap-2.5 rounded-full border-0 bg-linear-to-br from-accent to-accent-hover px-4 py-3 text-on-accent shadow-glow transition hover:-translate-y-0.5 hover:brightness-105 active:scale-95">
+                    className="flex items-center gap-2.5 rounded-full border-0 bg-linear-to-br from-accent to-accent-hover px-3.5 py-3 text-on-accent shadow-glow transition hover:-translate-y-0.5 hover:brightness-105 active:scale-95 sm:px-4"
+                    aria-label={quickOpen ? 'Close quick add' : 'Quick add'}>
                     <span className="grid size-6.5 place-items-center rounded-lg bg-on-accent/20 text-lg leading-none">
                         {quickOpen ? '×' : '+'}
                     </span>
-                    <span className="text-sm font-semibold tracking-tight">
+                    <span className="hidden text-sm font-semibold tracking-tight sm:inline">
                         {quickOpen ? 'Close' : 'Quick add'}
                     </span>
-                    <span className="rounded-md bg-on-accent/15 px-1.75 py-1 font-mono text-xs font-medium tracking-wide">
+                    <span className="hidden rounded-md bg-on-accent/15 px-1.75 py-1 font-mono text-xs font-medium tracking-wide md:inline">
                         ⌘K
                     </span>
                 </button>

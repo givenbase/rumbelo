@@ -26,7 +26,7 @@ export function JarDrilldownTable({ jars }: { jars: JarDrilldownItem[] }) {
                             onToggle={() => setOpenId(open ? null : (jar.id ?? jar.name))}
                         />
                         {open && (
-                            <div className="mb-3 ml-11.5 animate-rise">
+                            <div className="mb-3 ml-0 animate-rise pl-0 sm:ml-11.5">
                                 <JarCategoryTable categories={jar.categories} />
                             </div>
                         )}

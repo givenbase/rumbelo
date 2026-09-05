@@ -53,7 +53,7 @@ export default function MindPage() {
             {/* ── Two-column cards ── */}
             <div className="flex flex-wrap items-start gap-4.5">
                 {/* Minutes + streak + mark */}
-                <div className="grid min-w-80 flex-1 gap-4 rounded-2xl border border-accent/35 bg-surface p-6 shadow-glow">
+                <div className="grid w-full min-w-0 flex-1 gap-4 rounded-2xl border border-accent/35 bg-surface p-5 shadow-glow sm:min-w-80 sm:p-6">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <Eyebrow>Minutes per day</Eyebrow>
                         <div className="flex items-baseline gap-2">
@@ -71,9 +71,9 @@ export default function MindPage() {
                             max={45}
                             value={minutes}
                             onChange={e => setMinutes(Number(e.target.value))}
-                            className="min-w-45 flex-1 accent-accent"
+                            className="min-w-0 flex-1 accent-accent"
                         />
-                        <span className="font-display text-4xl leading-none font-semibold tracking-tight whitespace-nowrap text-accent lg:text-5xl">
+                        <span className="font-display text-3xl leading-none font-semibold tracking-tight whitespace-nowrap text-accent sm:text-4xl lg:text-5xl">
                             {minutes} min
                         </span>
                     </div>
@@ -92,7 +92,7 @@ export default function MindPage() {
                 </div>
 
                 {/* Why it's here */}
-                <Card className="min-w-70 flex-1">
+                <Card className="w-full min-w-0 flex-1 sm:min-w-70">
                     <Eyebrow className="mb-3 text-accent">✦ Why this is in a money app</Eyebrow>
                     <p className="text-sm leading-relaxed text-fg-secondary">{MIND_TIE}</p>
                 </Card>

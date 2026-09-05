@@ -30,13 +30,13 @@ export function LandingPricing() {
                 </div>
 
                 {/* Billing toggle */}
-                <div className="flex shrink-0 gap-1 rounded-full border border-line bg-raised p-1">
+                <div className="flex w-full gap-1 rounded-full border border-line bg-raised p-1 sm:w-auto">
                     {(['month', 'year'] as const).map(k => (
                         <button
                             key={k}
                             type="button"
                             onClick={() => setBilling(k)}
-                            className="cursor-pointer rounded-full px-4 py-2 font-mono text-xs font-semibold tracking-widest whitespace-nowrap uppercase transition-colors"
+                            className="flex-1 cursor-pointer rounded-full px-3 py-2 font-mono text-xs font-semibold tracking-widest uppercase transition-colors sm:flex-none sm:px-4"
                             style={{
                                 background:
                                     billing === k ? 'var(--gradient-accent)' : 'transparent',
@@ -45,17 +45,20 @@ export function LandingPricing() {
                                         ? 'var(--color-on-accent)'
                                         : 'var(--color-fg-muted)',
                             }}>
-                            {k === 'month' ? 'Monthly' : 'Yearly · 2 months free'}
+                            {k === 'month' ? (
+                                'Monthly'
+                            ) : (
+                                <>
+                                    <span className="sm:hidden">Yearly</span>
+                                    <span className="hidden sm:inline">Yearly · 2 months free</span>
+                                </>
+                            )}
                         </button>
                     ))}
                 </div>
             </div>
 
-            <div
-                className="grid items-start gap-3.5"
-                style={{
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(250px,30%,360px),1fr))',
-                }}>
+            <div className="grid grid-cols-1 items-start gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
                 {PLANS.map(p => {
                     const rec = p.key === 'plus';
                     const price = p.m === 0 ? 0 : yearly ? p.y : p.m;

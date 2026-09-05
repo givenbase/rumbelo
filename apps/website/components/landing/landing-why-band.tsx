@@ -10,7 +10,15 @@ export function LandingWhyBand() {
                     thinking about it.
                 </p>
                 <span className="mt-4 block font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
-                    Built in Amsterdam · PSD2 read-only · Cancel anytime
+                    <span className="inline-block">Built in Amsterdam</span>
+                    <span className="mx-1.5 text-fg-faint/50" aria-hidden>
+                        ·
+                    </span>
+                    <span className="inline-block">PSD2 read-only</span>
+                    <span className="mx-1.5 text-fg-faint/50" aria-hidden>
+                        ·
+                    </span>
+                    <span className="inline-block">Cancel anytime</span>
                 </span>
             </div>
         </section>

@@ -136,19 +136,19 @@ export function CoachVerdict({
             </div>
 
             {/* Cross-portal recap strip */}
-            <div className="flex flex-wrap border-t border-line bg-bg-app">
+            <div className="grid grid-cols-2 border-t border-line bg-bg-app sm:flex sm:flex-wrap">
                 {recap.map(r => (
                     <Link
                         key={r.portal}
                         href={r.href}
-                        className="grid flex-1 gap-1 border-t-2 border-r border-line px-4 py-2.5 transition-colors last:border-r-0 hover:bg-raised"
+                        className="grid min-w-0 gap-1 border-t-2 border-r border-b border-line px-3 py-2.5 transition-colors last:border-r-0 hover:bg-raised sm:flex-1 sm:border-b-0 sm:px-4"
                         style={{ borderTopColor: r.tint }}>
                         <span
                             className="font-mono text-xs font-semibold tracking-widest uppercase"
                             style={{ color: r.tint }}>
                             {r.portal}
                         </span>
-                        <span className="flex items-baseline gap-1.5">
+                        <span className="flex min-w-0 flex-wrap items-baseline gap-1.5">
                             <span className="font-mono text-xs text-fg">{r.value}</span>
                             <span className="text-xs text-fg-faint">{r.what}</span>
                         </span>
@@ -156,7 +156,7 @@ export function CoachVerdict({
                 ))}
                 <Link
                     href="/ritual"
-                    className="ml-auto flex items-center border-l border-line px-4.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:text-accent">
+                    className="col-span-2 flex items-center justify-center border-t border-line px-4.5 py-2.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:text-accent sm:col-span-1 sm:ml-auto sm:border-t-0 sm:border-l">
                     Detail
                 </Link>
             </div>
