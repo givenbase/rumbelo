@@ -122,16 +122,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -180,6 +170,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -422,25 +422,9 @@
           "mappedType": "unknown",
           "nativeEnumName": "auth_theme"
         },
-        "account_id": {
-          "name": "account_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": true,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
         "money_character": {
           "name": "money_character",
-          "type": "auth_money_character",
+          "type": "money_character",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -458,7 +442,23 @@
             "UNKNOWN"
           ],
           "mappedType": "unknown",
-          "nativeEnumName": "auth_money_character"
+          "nativeEnumName": "money_character"
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
         }
       },
       "name": "account_settings",
@@ -510,16 +510,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -568,6 +558,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -817,28 +817,6 @@
           "enumItems": [],
           "mappedType": "date"
         },
-        "metric": {
-          "name": "metric",
-          "type": "energy_metric",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "SLEEP",
-            "TRAIN",
-            "FOOD",
-            "MIND"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "energy_metric"
-        },
         "value": {
           "name": "value",
           "type": "numeric(5,2)",
@@ -870,6 +848,28 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "string"
+        },
+        "metric": {
+          "name": "metric",
+          "type": "energy_metric",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [
+            "SLEEP",
+            "TRAIN",
+            "FOOD",
+            "MIND"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "energy_metric"
         }
       },
       "name": "energy_log",
@@ -930,16 +930,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -988,6 +978,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -1305,16 +1305,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -1363,6 +1353,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -1664,16 +1664,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -1722,6 +1712,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -2056,16 +2056,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -2114,6 +2104,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -2400,16 +2400,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -2458,6 +2448,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -2707,29 +2707,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "kind": {
-          "name": "kind",
-          "type": "money_account_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'CHECKING'",
-          "comment": null,
-          "enumItems": [
-            "CHECKING",
-            "SAVINGS",
-            "CREDIT",
-            "CASH",
-            "INVESTMENT"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_account_kind"
-        },
         "balance": {
           "name": "balance",
           "type": "int8",
@@ -2777,6 +2754,29 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "datetime"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "money_account_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'CHECKING'",
+          "comment": null,
+          "enumItems": [
+            "CHECKING",
+            "SAVINGS",
+            "CREDIT",
+            "CASH",
+            "INVESTMENT"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_account_kind"
         }
       },
       "name": "money_bank_account",
@@ -2812,16 +2812,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -2872,6 +2862,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -3089,22 +3089,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "jar_id": {
-          "name": "jar_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
         "name": {
           "name": "name",
           "type": "varchar(80)",
@@ -3152,6 +3136,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
+        },
+        "jar_id": {
+          "name": "jar_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
         }
       },
       "name": "money_category",
@@ -3203,16 +3203,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -3261,6 +3251,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -3493,30 +3493,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "string"
-        },
-        "kind": {
-          "name": "kind",
-          "type": "money_debt_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'LOAN'",
-          "comment": null,
-          "enumItems": [
-            "CREDIT_CARD",
-            "LOAN",
-            "STUDENT",
-            "MORTGAGE",
-            "FAMILY",
-            "OTHER"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_debt_kind"
         },
         "balance": {
           "name": "balance",
@@ -3629,6 +3605,30 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "date"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "money_debt_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'LOAN'",
+          "comment": null,
+          "enumItems": [
+            "CREDIT_CARD",
+            "LOAN",
+            "STUDENT",
+            "MORTGAGE",
+            "FAMILY",
+            "OTHER"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_debt_kind"
         }
       },
       "name": "money_debt",
@@ -3664,16 +3664,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -3724,6 +3714,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -3941,38 +3941,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "jar_id": {
-          "name": "jar_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
-        "category_id": {
-          "name": "category_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
         "name": {
           "name": "name",
           "type": "varchar(120)",
@@ -4005,29 +3973,6 @@
           "enumItems": [],
           "mappedType": "bigint"
         },
-        "cadence": {
-          "name": "cadence",
-          "type": "money_cadence",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'MONTHLY'",
-          "comment": null,
-          "enumItems": [
-            "WEEKLY",
-            "MONTHLY",
-            "QUARTERLY",
-            "YEARLY",
-            "ONCE"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_cadence"
-        },
         "due_day": {
           "name": "due_day",
           "type": "int4",
@@ -4044,25 +3989,21 @@
           "enumItems": [],
           "mappedType": "integer"
         },
-        "direction": {
-          "name": "direction",
-          "type": "money_flow_direction",
+        "note": {
+          "name": "note",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "unique": false,
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "'OUT'",
+          "default": null,
           "comment": null,
-          "enumItems": [
-            "IN",
-            "OUT"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_flow_direction"
+          "enumItems": [],
+          "mappedType": "text"
         },
         "is_active": {
           "name": "is_active",
@@ -4096,9 +4037,68 @@
           "enumItems": [],
           "mappedType": "date"
         },
-        "note": {
-          "name": "note",
-          "type": "text",
+        "cadence": {
+          "name": "cadence",
+          "type": "money_cadence",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'MONTHLY'",
+          "comment": null,
+          "enumItems": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_cadence"
+        },
+        "direction": {
+          "name": "direction",
+          "type": "money_flow_direction",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'OUT'",
+          "comment": null,
+          "enumItems": [
+            "IN",
+            "OUT"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_flow_direction"
+        },
+        "jar_id": {
+          "name": "jar_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -4110,7 +4110,7 @@
           "default": null,
           "comment": null,
           "enumItems": [],
-          "mappedType": "text"
+          "mappedType": "uuid"
         }
       },
       "name": "money_fixed_cost",
@@ -4175,16 +4175,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -4233,6 +4223,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -4450,22 +4450,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "jar_id": {
-          "name": "jar_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
         "name": {
           "name": "name",
           "type": "varchar(120)",
@@ -4481,6 +4465,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "string"
+        },
+        "why": {
+          "name": "why",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
         },
         "icon": {
           "name": "icon",
@@ -4584,9 +4584,9 @@
           "mappedType": "unknown",
           "nativeEnumName": "money_goal_status"
         },
-        "why": {
-          "name": "why",
-          "type": "text",
+        "jar_id": {
+          "name": "jar_id",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -4598,7 +4598,7 @@
           "default": null,
           "comment": null,
           "enumItems": [],
-          "mappedType": "text"
+          "mappedType": "uuid"
         }
       },
       "name": "money_goal",
@@ -4650,16 +4650,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -4708,6 +4698,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -4941,30 +4941,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "kind": {
-          "name": "kind",
-          "type": "money_income_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'SALARY'",
-          "comment": null,
-          "enumItems": [
-            "SALARY",
-            "FREELANCE",
-            "BENEFIT",
-            "RENTAL",
-            "DIVIDEND",
-            "OTHER"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_income_kind"
-        },
         "amount": {
           "name": "amount",
           "type": "int8",
@@ -4980,29 +4956,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "bigint"
-        },
-        "cadence": {
-          "name": "cadence",
-          "type": "money_cadence",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'MONTHLY'",
-          "comment": null,
-          "enumItems": [
-            "WEEKLY",
-            "MONTHLY",
-            "QUARTERLY",
-            "YEARLY",
-            "ONCE"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_cadence"
         },
         "expected_day": {
           "name": "expected_day",
@@ -5051,6 +5004,53 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "date"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "money_income_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'SALARY'",
+          "comment": null,
+          "enumItems": [
+            "SALARY",
+            "FREELANCE",
+            "BENEFIT",
+            "RENTAL",
+            "DIVIDEND",
+            "OTHER"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_income_kind"
+        },
+        "cadence": {
+          "name": "cadence",
+          "type": "money_cadence",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'MONTHLY'",
+          "comment": null,
+          "enumItems": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_cadence"
         }
       },
       "name": "money_income_source",
@@ -5086,16 +5086,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -5146,6 +5136,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -5363,30 +5363,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "key": {
-          "name": "key",
-          "type": "money_jar_key",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "NECESSITIES",
-            "FINANCIAL_FREEDOM",
-            "EDUCATION",
-            "LONG_TERM_SAVINGS",
-            "PLAY",
-            "GIVE"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_jar_key"
-        },
         "name": {
           "name": "name",
           "type": "varchar(80)",
@@ -5478,10 +5454,34 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "'{}'",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "json"
+        },
+        "key": {
+          "name": "key",
+          "type": "money_jar_key",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [
+            "NECESSITIES",
+            "FINANCIAL_FREEDOM",
+            "EDUCATION",
+            "LONG_TERM_SAVINGS",
+            "PLAY",
+            "GIVE"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_jar_key"
         }
       },
       "name": "money_jar",
@@ -5528,16 +5528,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -5588,6 +5578,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -5948,16 +5948,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -6006,6 +5996,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -6223,6 +6223,22 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "amount": {
+          "name": "amount",
+          "type": "int8",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "bigint"
+        },
         "ritual_id": {
           "name": "ritual_id",
           "type": "uuid",
@@ -6254,22 +6270,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "uuid"
-        },
-        "amount": {
-          "name": "amount",
-          "type": "int8",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 64,
-          "scale": 0,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "bigint"
         }
       },
       "name": "money_ritual_allocation",
@@ -6345,16 +6345,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -6403,6 +6393,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -6620,6 +6620,70 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "value": {
+          "name": "value",
+          "type": "varchar(200)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 200,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
+        "priority": {
+          "name": "priority",
+          "type": "int4",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "default": "100",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "hit_count": {
+          "name": "hit_count",
+          "type": "int4",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "default": "0",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "bool",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "true",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "boolean"
+        },
         "field": {
           "name": "field",
           "type": "money_rule_field",
@@ -6663,22 +6727,6 @@
           "mappedType": "unknown",
           "nativeEnumName": "money_rule_matcher"
         },
-        "value": {
-          "name": "value",
-          "type": "varchar(200)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 200,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "string"
-        },
         "jar_id": {
           "name": "jar_id",
           "type": "uuid",
@@ -6710,54 +6758,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "uuid"
-        },
-        "priority": {
-          "name": "priority",
-          "type": "int4",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 32,
-          "scale": 0,
-          "default": "100",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "integer"
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "bool",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "true",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "boolean"
-        },
-        "hit_count": {
-          "name": "hit_count",
-          "type": "int4",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 32,
-          "scale": 0,
-          "default": "0",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "integer"
         }
       },
       "name": "money_rule",
@@ -6822,16 +6822,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -6880,6 +6870,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -7097,86 +7097,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "account_id": {
-          "name": "account_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
-        "jar_id": {
-          "name": "jar_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
-        "category_id": {
-          "name": "category_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
-        "amount": {
-          "name": "amount",
-          "type": "int8",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 64,
-          "scale": 0,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "bigint"
-        },
-        "booked_on": {
-          "name": "booked_on",
-          "type": "date",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 0,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "date"
-        },
         "description": {
           "name": "description",
           "type": "varchar(280)",
@@ -7209,48 +7129,37 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "status": {
-          "name": "status",
-          "type": "money_transaction_status",
+        "amount": {
+          "name": "amount",
+          "type": "int8",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "unique": false,
           "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'INBOX'",
+          "precision": 64,
+          "scale": 0,
+          "default": null,
           "comment": null,
-          "enumItems": [
-            "INBOX",
-            "SORTED",
-            "IGNORED"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_transaction_status"
+          "enumItems": [],
+          "mappedType": "bigint"
         },
-        "source": {
-          "name": "source",
-          "type": "money_transaction_source",
+        "booked_on": {
+          "name": "booked_on",
+          "type": "date",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "unique": false,
-          "length": null,
+          "length": 0,
           "precision": null,
           "scale": null,
-          "default": "'MANUAL'",
+          "default": null,
           "comment": null,
-          "enumItems": [
-            "MANUAL",
-            "CSV",
-            "BANK",
-            "RECURRING"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_transaction_source"
+          "enumItems": [],
+          "mappedType": "date"
         },
         "applied_rule_id": {
           "name": "applied_rule_id",
@@ -7299,6 +7208,97 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
+        },
+        "status": {
+          "name": "status",
+          "type": "money_transaction_status",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'INBOX'",
+          "comment": null,
+          "enumItems": [
+            "INBOX",
+            "SORTED",
+            "IGNORED"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_transaction_status"
+        },
+        "source": {
+          "name": "source",
+          "type": "money_transaction_source",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'MANUAL'",
+          "comment": null,
+          "enumItems": [
+            "MANUAL",
+            "CSV",
+            "BANK",
+            "RECURRING"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_transaction_source"
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "jar_id": {
+          "name": "jar_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
         }
       },
       "name": "money_transaction",
@@ -7408,16 +7408,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -7466,6 +7456,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -7683,22 +7683,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "turn_id": {
-          "name": "turn_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
         "period": {
           "name": "period",
           "type": "varchar(7)",
@@ -7714,32 +7698,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "string"
-        },
-        "kind": {
-          "name": "kind",
-          "type": "money_turn_event_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_turn_event_kind"
         },
         "day": {
           "name": "day",
@@ -7788,6 +7746,48 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "integer"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "money_turn_event_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "RITUAL_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_turn_event_kind"
+        },
+        "turn_id": {
+          "name": "turn_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
         }
       },
       "name": "money_turn_event",
@@ -7850,16 +7850,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -7908,6 +7898,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -8141,28 +8141,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "stage": {
-          "name": "stage",
-          "type": "money_ritual_stage",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'LOOK'",
-          "comment": null,
-          "enumItems": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_ritual_stage"
-        },
         "surplus": {
           "name": "surplus",
           "type": "int8",
@@ -8210,6 +8188,28 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "datetime"
+        },
+        "stage": {
+          "name": "stage",
+          "type": "money_ritual_stage",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'LOOK'",
+          "comment": null,
+          "enumItems": [
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_ritual_stage"
         }
       },
       "name": "money_weekly_ritual",
@@ -8256,16 +8256,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -8316,6 +8306,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -8601,16 +8601,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -8659,6 +8649,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -8860,27 +8860,6 @@
           "enumItems": [],
           "mappedType": "datetime"
         },
-        "key": {
-          "name": "key",
-          "type": "backoffice_plan_key",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": true,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "BASIC",
-            "PLUS",
-            "MAX"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "backoffice_plan_key"
-        },
         "name": {
           "name": "name",
           "type": "varchar(40)",
@@ -8929,6 +8908,22 @@
           "enumItems": [],
           "mappedType": "integer"
         },
+        "capabilities": {
+          "name": "capabilities",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
         "is_active": {
           "name": "is_active",
           "type": "bool",
@@ -8945,21 +8940,26 @@
           "enumItems": [],
           "mappedType": "boolean"
         },
-        "capabilities": {
-          "name": "capabilities",
-          "type": "jsonb",
+        "key": {
+          "name": "key",
+          "type": "backoffice_plan_key",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "unique": false,
+          "unique": true,
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "'{}'",
+          "default": null,
           "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
+          "enumItems": [
+            "BASIC",
+            "PLUS",
+            "MAX"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "backoffice_plan_key"
         }
       },
       "name": "plan",
@@ -8995,16 +8995,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -9055,6 +9045,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -9288,29 +9288,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "kind": {
-          "name": "kind",
-          "type": "platform_coach_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'NUDGE'",
-          "comment": null,
-          "enumItems": [
-            "NUDGE",
-            "WIN",
-            "WARNING",
-            "INSIGHT",
-            "RITUAL"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "platform_coach_kind"
-        },
         "text": {
           "name": "text",
           "type": "text",
@@ -9374,6 +9351,29 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "datetime"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "platform_coach_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'NUDGE'",
+          "comment": null,
+          "enumItems": [
+            "NUDGE",
+            "WIN",
+            "WARNING",
+            "INSIGHT",
+            "RITUAL"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "platform_coach_kind"
         }
       },
       "name": "platform_coach_message",
@@ -9420,16 +9420,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -9480,6 +9470,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -9649,6 +9649,118 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "why": {
+          "name": "why",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "money_settings": {
+          "name": "money_settings",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
+        "ritual_settings": {
+          "name": "ritual_settings",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
+        "feature_settings": {
+          "name": "feature_settings",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
+        "answers": {
+          "name": "answers",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "kind": {
           "name": "kind",
           "type": "platform_household_kind",
@@ -9692,54 +9804,6 @@
           "mappedType": "unknown",
           "nativeEnumName": "platform_currency"
         },
-        "why": {
-          "name": "why",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 6,
-          "precision": null,
-          "scale": null,
-          "default": "now()",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 6,
-          "precision": null,
-          "scale": null,
-          "default": "now()",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "datetime"
-        },
         "plan_key": {
           "name": "plan_key",
           "type": "backoffice_plan_key",
@@ -9760,70 +9824,6 @@
           ],
           "mappedType": "unknown",
           "nativeEnumName": "backoffice_plan_key"
-        },
-        "money_settings": {
-          "name": "money_settings",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'{\"incomeRhythm\": \"STABLE\", \"payoffStrategy\": \"AVALANCHE\", \"periodStartDay\": 1}'",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
-        },
-        "ritual_settings": {
-          "name": "ritual_settings",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'{\"reminderAt\": \"19:00\", \"reminderDay\": 7}'",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
-        },
-        "feature_settings": {
-          "name": "feature_settings",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'{\"isCoachEnabled\": true, \"isBankSyncEnabled\": false}'",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
-        },
-        "answers": {
-          "name": "answers",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'{}'",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
         }
       },
       "name": "platform_household_settings",
@@ -9849,16 +9849,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -9909,6 +9899,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -10326,16 +10326,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -10384,6 +10374,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -10674,7 +10674,7 @@
             "key"
           ],
           "composite": false,
-          "constraint": false,
+          "constraint": true,
           "keyName": "reference_growth_income_posture_key_unique",
           "unique": true,
           "primary": false
@@ -10699,16 +10699,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -10759,6 +10749,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -11024,6 +11024,22 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "int4",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "default": "0",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
         "for_posture_keys": {
           "name": "for_posture_keys",
           "type": "jsonb",
@@ -11056,21 +11072,21 @@
           "enumItems": [],
           "mappedType": "json"
         },
-        "sort_order": {
-          "name": "sort_order",
-          "type": "int4",
+        "min_stage_key": {
+          "name": "min_stage_key",
+          "type": "varchar(64)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "unique": false,
-          "length": null,
-          "precision": 32,
-          "scale": 0,
-          "default": "0",
+          "length": 64,
+          "precision": null,
+          "scale": null,
+          "default": "'BUILDING'",
           "comment": null,
           "enumItems": [],
-          "mappedType": "integer"
+          "mappedType": "string"
         },
         "is_active": {
           "name": "is_active",
@@ -11087,22 +11103,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
-        },
-        "min_stage_key": {
-          "name": "min_stage_key",
-          "type": "varchar(64)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 64,
-          "precision": null,
-          "scale": null,
-          "default": "'BUILDING'",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "string"
         }
       },
       "name": "reference_growth_lever_preset",
@@ -11113,7 +11113,7 @@
             "key"
           ],
           "composite": false,
-          "constraint": false,
+          "constraint": true,
           "keyName": "reference_growth_lever_preset_key_unique",
           "unique": true,
           "primary": false
@@ -11138,16 +11138,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -11198,6 +11188,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -11520,7 +11520,7 @@
             "key"
           ],
           "composite": false,
-          "constraint": false,
+          "constraint": true,
           "keyName": "reference_growth_wealth_stage_key_unique",
           "unique": true,
           "primary": false
@@ -11545,16 +11545,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -11605,6 +11595,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -11936,16 +11936,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -11994,6 +11984,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -12227,30 +12227,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "kind": {
-          "name": "kind",
-          "type": "money_debt_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "CREDIT_CARD",
-            "LOAN",
-            "STUDENT",
-            "MORTGAGE",
-            "FAMILY",
-            "OTHER"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_debt_kind"
-        },
         "sort_order": {
           "name": "sort_order",
           "type": "int4",
@@ -12282,6 +12258,30 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "money_debt_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [
+            "CREDIT_CARD",
+            "LOAN",
+            "STUDENT",
+            "MORTGAGE",
+            "FAMILY",
+            "OTHER"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_debt_kind"
         }
       },
       "name": "reference_money_debt_preset",
@@ -12317,16 +12317,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -12377,6 +12367,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -12626,29 +12626,6 @@
           "enumItems": [],
           "mappedType": "string"
         },
-        "default_cadence": {
-          "name": "default_cadence",
-          "type": "money_cadence",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'MONTHLY'",
-          "comment": null,
-          "enumItems": [
-            "WEEKLY",
-            "MONTHLY",
-            "QUARTERLY",
-            "YEARLY",
-            "ONCE"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_cadence"
-        },
         "suggested_due_day": {
           "name": "suggested_due_day",
           "type": "int2",
@@ -12664,26 +12641,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "smallint"
-        },
-        "direction": {
-          "name": "direction",
-          "type": "money_flow_direction",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'OUT'",
-          "comment": null,
-          "enumItems": [
-            "IN",
-            "OUT"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_flow_direction"
         },
         "audience_tags": {
           "name": "audience_tags",
@@ -12732,6 +12689,49 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
+        },
+        "default_cadence": {
+          "name": "default_cadence",
+          "type": "money_cadence",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'MONTHLY'",
+          "comment": null,
+          "enumItems": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_cadence"
+        },
+        "direction": {
+          "name": "direction",
+          "type": "money_flow_direction",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'OUT'",
+          "comment": null,
+          "enumItems": [
+            "IN",
+            "OUT"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_flow_direction"
         },
         "jar_template_id": {
           "name": "jar_template_id",
@@ -12799,16 +12799,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -12857,6 +12847,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -13220,16 +13220,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -13278,6 +13268,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -13511,6 +13511,38 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "int4",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "default": "0",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "bool",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "true",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "boolean"
+        },
         "kind": {
           "name": "kind",
           "type": "money_income_kind",
@@ -13557,38 +13589,6 @@
           ],
           "mappedType": "unknown",
           "nativeEnumName": "money_cadence"
-        },
-        "sort_order": {
-          "name": "sort_order",
-          "type": "int4",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 32,
-          "scale": 0,
-          "default": "0",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "integer"
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "bool",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "true",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "boolean"
         }
       },
       "name": "reference_money_income_source_preset",
@@ -13624,16 +13624,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -13684,6 +13674,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -13885,30 +13885,6 @@
           "enumItems": [],
           "mappedType": "datetime"
         },
-        "key": {
-          "name": "key",
-          "type": "money_jar_key",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": true,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "NECESSITIES",
-            "FINANCIAL_FREEDOM",
-            "EDUCATION",
-            "LONG_TERM_SAVINGS",
-            "PLAY",
-            "GIVE"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_jar_key"
-        },
         "name": {
           "name": "name",
           "type": "varchar(80)",
@@ -13989,6 +13965,22 @@
           "enumItems": [],
           "mappedType": "integer"
         },
+        "capabilities": {
+          "name": "capabilities",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
         "is_active": {
           "name": "is_active",
           "type": "bool",
@@ -14005,21 +13997,29 @@
           "enumItems": [],
           "mappedType": "boolean"
         },
-        "capabilities": {
-          "name": "capabilities",
-          "type": "jsonb",
+        "key": {
+          "name": "key",
+          "type": "money_jar_key",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "unique": false,
+          "unique": true,
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "'{}'",
+          "default": null,
           "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
+          "enumItems": [
+            "NECESSITIES",
+            "FINANCIAL_FREEDOM",
+            "EDUCATION",
+            "LONG_TERM_SAVINGS",
+            "PLAY",
+            "GIVE"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_jar_key"
         }
       },
       "name": "reference_money_jar_template",
@@ -14055,16 +14055,6 @@
           "items": [
             "NL",
             "EN"
-          ]
-        },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
           ]
         },
         "auth_theme": {
@@ -14115,6 +14105,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -14364,6 +14364,38 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "aliases": {
+          "name": "aliases",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'[]'",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
+        },
+        "mcc": {
+          "name": "mcc",
+          "type": "varchar(4)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 4,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
         "category_template_key": {
           "name": "category_template_key",
           "type": "varchar(64)",
@@ -14411,38 +14443,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
-        },
-        "aliases": {
-          "name": "aliases",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": "'[]'",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "json"
-        },
-        "mcc": {
-          "name": "mcc",
-          "type": "varchar(4)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": 4,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "string"
         },
         "jar_template_id": {
           "name": "jar_template_id",
@@ -14510,16 +14510,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -14568,6 +14558,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -14915,16 +14915,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -14973,6 +14963,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -15285,16 +15285,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -15343,6 +15333,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -15648,16 +15648,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -15706,6 +15696,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -16023,16 +16023,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -16081,6 +16071,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -16356,16 +16356,6 @@
             "EN"
           ]
         },
-        "auth_money_character": {
-          "name": "auth_money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "auth_theme": {
           "name": "auth_theme",
           "schema": "public",
@@ -16414,6 +16404,16 @@
             "QUARTERLY",
             "YEARLY",
             "ONCE"
+          ]
+        },
+        "money_character": {
+          "name": "money_character",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
           ]
         },
         "money_debt_kind": {
@@ -16575,16 +16575,6 @@
         "EN"
       ]
     },
-    "auth_money_character": {
-      "name": "auth_money_character",
-      "schema": "public",
-      "items": [
-        "SPENDER",
-        "SAVER",
-        "BALANCED",
-        "UNKNOWN"
-      ]
-    },
     "auth_theme": {
       "name": "auth_theme",
       "schema": "public",
@@ -16633,6 +16623,16 @@
         "QUARTERLY",
         "YEARLY",
         "ONCE"
+      ]
+    },
+    "money_character": {
+      "name": "money_character",
+      "schema": "public",
+      "items": [
+        "SPENDER",
+        "SAVER",
+        "BALANCED",
+        "UNKNOWN"
       ]
     },
     "money_debt_kind": {
