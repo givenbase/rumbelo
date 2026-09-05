@@ -7,6 +7,7 @@
         "dev": "tsx watch src/main.ts",
         "build": "nest build",
         "start": "tsx src/main.ts",
+        "start:node": "node dist/src/main.js",
         "lint": "pnpm lint:entities",
         "lint:entities": "tsx scripts/lint/check-entity-style.ts",
         "check-types": "tsc --noEmit",

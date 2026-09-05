@@ -1,21 +1,39 @@
 {
     "name": "rumbelo",
+    "version": "0.1.0",
     "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/givenbase/rumbelo.git"
+    },
+    "packageManager": "pnpm@10.33.0",
+    "engines": {
+        "node": ">=22"
+    },
     "scripts": {
-        "dev": "turbo run dev",
-        "dev:app": "turbo run dev --filter=@rumbelo/application --filter=@rumbelo/backend",
-        "dev:web": "turbo run dev --filter=@rumbelo/website",
-        "build": "turbo run build",
+        "build": "turbo run build --output-logs=errors-only",
+        "build:application": "turbo run build --filter=@rumbelo/application",
+        "build:website": "turbo run build --filter=@rumbelo/website",
+        "build:backend": "turbo run build --filter=@rumbelo/backend",
+        "build:packages": "turbo run build --filter=./packages/*",
         "start": "turbo run start",
+        "start:application": "pnpm --filter @rumbelo/application start",
+        "start:website": "pnpm --filter @rumbelo/website start",
+        "start:backend": "pnpm --filter @rumbelo/backend start",
+        "start:backend:node": "pnpm --filter @rumbelo/backend start:node",
+        "dev": "turbo run dev",
+        "dev:app": "turbo run dev --filter=@rumbelo/application --filter=@rumbelo/backend --filter=./packages/*",
+        "dev:web": "turbo run dev --filter=@rumbelo/website --filter=@rumbelo/backend --filter=./packages/*",
+        "dev:back": "turbo run dev --filter=@rumbelo/backend --filter=./packages/*",
         "lint": "oxlint --fix . && oxfmt . && pnpm --filter @rumbelo/backend run lint:entities",
         "lint:check": "oxlint . && oxfmt --check . && pnpm --filter @rumbelo/backend run lint:entities",
         "format": "oxfmt .",
         "format:check": "oxfmt --check .",
+        "check-types": "turbo run check-types",
+        "test": "turbo run test",
         "test:e2e": "pnpm --filter @rumbelo/e2e test",
         "test:e2e:smoke": "pnpm --filter @rumbelo/e2e test:smoke",
         "test:e2e:plan": "pnpm --filter @rumbelo/e2e test:plan",
-        "check-types": "turbo run check-types",
-        "test": "turbo run test",
         "clean": "rm -rf .turbo apps/*/.turbo packages/*/.turbo node_modules apps/*/node_modules packages/*/node_modules apps/*/.next packages/*/dist apps/*/dist apps/backend/temp && pnpm store prune && pnpm install",
         "infra:up": "docker compose -f devops/docker-compose.dev.yml up -d",
         "infra:down": "docker compose -f devops/docker-compose.dev.yml down",
@@ -38,11 +56,6 @@
         "turbo": "^2.10.12",
         "typescript": "5.9.3"
     },
-    "packageManager": "pnpm@10.33.0",
-    "engines": {
-        "node": ">=22"
-    },
-    "version": "0.1.0",
     "pnpm": {
         "onlyBuiltDependencies": [
             "esbuild"

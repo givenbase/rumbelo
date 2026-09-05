@@ -4,10 +4,11 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "dev": "next dev --port 3000",
-        "build": "next build",
+        "dev": "next dev --turbopack --port 3000",
+        "build": "next build --webpack",
         "start": "next start",
-        "check-types": "next typegen && tsc --noEmit"
+        "check-types": "next typegen && tsc --pretty --noEmit",
+        "clean": "rm -rf .turbo .next node_modules dist"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.9.1",
