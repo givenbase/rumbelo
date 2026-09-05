@@ -204,19 +204,17 @@ aggregates.
 N+1); transactions and inbox; CSV import with SHA-256 dedupe so re-importing a
 statement cannot duplicate rows; Dutch decimal parsing (`EUR 1.234,56` breaks a
 naive parser); debt avalanche/snowball ordering; goal projections; energy rolling
-averages; household settings.
+averages; household settings with **Basic / Plus / Max** (`plan_key`); three
+demo personas seeded for live login and Playwright (`apps/e2e`).
 
-**Typed stubs, marked `TODO` — routes resolve and types check, nothing
-persists:** onboarding; income persistence; rule replay; turn close; ritual stage
-transitions; gratitude write.
+**Screens** use live oRPC queries via `useLiveQuery` / `useQuery` when a
+household is active. Surfaces without APIs yet show empty / “binnenkort”.
 
-**Screens** read `app/_mock/` (design fixtures), whose shapes match the contract exactly, so
-switching one to live data is a one-line change to
-`useQuery(api.<product>.<child>.<procedure>.queryOptions({ input }))`.
+**Typed stubs / incomplete:** full onboarding create-household flow; rule replay;
+turn close; ritual stage transitions; Stripe billing.
 
-**Not built:** i18n (copy is hardcoded Dutch); form mutations; the portal hub
-screen; quick-add sheet; period selector; transaction detail sheet; paywall
-state; the initial migration; seeders.
+**Not built:** i18n (copy is hardcoded); holdings / mind / chakra / detailed
+energy APIs; full CRUD e2e suite.
 
 ---
 
@@ -277,16 +275,11 @@ household scoping, DB schema, build pipeline.
 ## 9. Next steps, in priority order
 
 1. **Rebuild the screens from the real design** (§8).
-2. **Migrate + seed.** Run migrations (`auth` / `public` / `backoffice`) and
-   seed jar templates + plans + demo household. Nothing runs end-to-end until this exists.
-3. **Wire auth.** better-auth is configured but sign-in/sign-up are
-   presentational.
-4. **Implement onboarding.** It creates the household, seeds jars from the chosen
-   split, writes settings. Gateway to everything else.
-5. **i18n with `next-intl`,** before there is more hardcoded copy.
-6. **Replace mocks with live queries,** screen by screen.
-7. **Turn close and rule replay** — the two pieces of real domain logic still
-   open.
+2. **Stripe billing** for Basic/Plus/Max (gates already use `household_settings.plan_key`).
+3. **i18n with `next-intl`,** before there is more hardcoded copy.
+4. **Expand E2E** beyond smoke/plan gating (`apps/e2e`).
+5. **Turn close and rule replay** — remaining domain logic.
+6. **Holdings / mind / chakra / detailed energy APIs** — screens show empty states until then.
 
 ---
 
@@ -297,9 +290,23 @@ cp .env.example .env          # BETTER_AUTH_SECRET: openssl rand -base64 32
 # optional: apps/application/.env.example → .env.local (NEXT_PUBLIC_*)
 pnpm install
 pnpm infra:up                 # Postgres + Redis in Docker
-pnpm db:migrate               # once a migration exists
-pnpm auth:migrate             # better-auth tables
-pnpm dev                      # all three apps
+pnpm db:migrate
+pnpm auth:migrate             # better-auth tables (before seed users)
+pnpm db:seed                  # catalogs + Basic/Plus/Max demo accounts
+pnpm dev
+```
+
+Demo sign-in (password `RumbeloDemo1!` for all):
+
+| Plan key | Email |
+|----------|-------|
+| BASIC | basic@rumbelo.com |
+| PLUS | plus@rumbelo.com |
+| MAX | max@rumbelo.com |
+
+```bash
+pnpm test:e2e:smoke
+pnpm test:e2e:plan
 ```
 
 Env files use the Galighticus-style sectioned templates (root + `apps/*/`.env.example`).

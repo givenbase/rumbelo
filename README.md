@@ -110,6 +110,27 @@ Format: `.oxfmtrc.json`. Backend also runs `lint:entities` (MikroORM entity conv
 
 **Pre-commit:** Husky runs `pnpm lint` on every commit. Autofixes/format are re-staged into the commit; remaining errors abort it (`--no-verify` skips — don't).
 
+### Demo accounts + E2E
+
+After migrate + auth migrate + seed:
+
+| Plan | Email | Password |
+|------|-------|----------|
+| Basic | `basic@rumbelo.com` | `RumbeloDemo1!` |
+| Plus | `plus@rumbelo.com` | `RumbeloDemo1!` |
+| Max | `max@rumbelo.com` | `RumbeloDemo1!` |
+
+```bash
+pnpm infra:up && pnpm db:migrate && pnpm auth:migrate && pnpm db:seed
+pnpm dev
+# Sign in with a demo chip (dev) or the table above
+
+pnpm test:e2e:smoke   # Playwright — apps must be running + DB seeded
+pnpm test:e2e:plan
+```
+
+Basic may stay €0 or become a small paid tier later without renaming.
+
 Env templates follow the same documented style as Galighticus/Meltizo (sectioned
 banners + comments). Root `.env.example` is the source of truth for local API
 secrets; per-app examples under `apps/*/`.env.example` cover client-safe
@@ -127,7 +148,6 @@ node scripts/rename-project.mjs <new-name>
 
 Implemented against the database: jars and balances, transactions and the inbox,
 CSV import with idempotent dedupe, debt payoff ordering, goal projections, energy
-summaries, household settings. Everything else satisfies the contract with typed
-stubs marked `TODO` — routes resolve and the frontend type-checks end to end, but
-the handlers do not persist yet. Screens render from `app/_mock/`, whose shapes
-match the contract exactly, so switching a screen to live data is a one-line change.
+summaries, household settings with **Basic / Plus / Max** plan keys. Demo personas
+are seeded for live login. Application screens use live oRPC queries (no `_mock/`
+fixtures). Playwright lives in `apps/e2e`.
