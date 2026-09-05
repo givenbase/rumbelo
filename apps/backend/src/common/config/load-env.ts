@@ -32,6 +32,9 @@ export function loadEnvFiles(): string | undefined {
             try {
                 if (existsSync(envPath)) {
                     loadDotenv({ path: envPath });
+                    if (process.env.LOG_LEVEL === 'debug' || nodeEnv !== 'development') {
+                        console.log(`[env] NODE_ENV=${nodeEnv} → ${envPath}`);
+                    }
                     return envPath;
                 }
             } catch {

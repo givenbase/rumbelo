@@ -131,6 +131,24 @@ jobs:
                   echo "This workflow → GitHub DATABASE_URL → remote DB"
                   echo "::endgroup::"
 
+            - name: Guard — public DATABASE_URL
+              if: >-
+                  (github.event_name == 'workflow_call' && inputs.run_mode == 'full') ||
+                  github.event_name == 'workflow_dispatch' ||
+                  steps.paths.outputs.schema == 'true' ||
+                  steps.paths.outputs.auth == 'true'
+              env:
+                  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+              run: |
+                  if [ -z "$DATABASE_URL" ]; then
+                    echo "::error::DATABASE_URL secret is empty (GitHub Environment → ${{ needs.resolve.outputs.github_environment }} → Secrets)."
+                    exit 1
+                  fi
+                  if echo "$DATABASE_URL" | grep -qi 'railway\.internal'; then
+                    echo "::error::DATABASE_URL uses *.railway.internal — GitHub runners cannot reach Railway private DNS. Use the Postgres public TCP proxy URL (Railway → Postgres → Connect → Public Network), update .env.github.secrets.${{ needs.resolve.outputs.github_environment }}, then pnpm sync:github-secrets."
+                    exit 1
+                  fi
+
             - name: Run MikroORM migrations (db:push)
               if: >-
                   (github.event_name == 'workflow_call' && inputs.run_mode == 'full') ||

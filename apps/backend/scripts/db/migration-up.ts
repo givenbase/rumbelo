@@ -11,10 +11,28 @@ import { MikroORM } from '@mikro-orm/postgresql';
 
 import config from '../../mikro-orm.config';
 
+/** GitHub Actions / any host outside Railway cannot resolve private mesh DNS. */
+function assertPublicDatabaseUrl(url: string | undefined): void {
+    if (!url) {
+        throw new Error('DATABASE_URL is not set.');
+    }
+    if (/\.railway\.internal(?::|\/|$)/i.test(url)) {
+        throw new Error(
+            'DATABASE_URL points at *.railway.internal — that host only works inside Railway.\n' +
+                'For GitHub Actions, use the Postgres public TCP URL from Railway\n' +
+                '(Postgres service → Connect → Public Network / TCP Proxy), then:\n' +
+                '  update .env.github.secrets.{staging|production}\n' +
+                '  pnpm sync:github-secrets'
+        );
+    }
+}
+
 async function main() {
+    assertPublicDatabaseUrl(process.env.DATABASE_URL);
+
     const orm = await MikroORM.init(config);
     try {
-        const migrator = orm.getMigrator();
+        const migrator = orm.migrator;
         const pending = await migrator.getPendingMigrations();
         if (pending.length === 0) {
             console.log('No pending migrations.');

@@ -24,7 +24,7 @@ Match `apps/backend/.env.example` and app `get-env.ts`:
 
 | Key | Type | Used by |
 |-----|------|---------|
-| `DATABASE_URL` | secret | migrate |
+| `DATABASE_URL` | secret | migrate — **public** Railway Postgres TCP URL (not `*.railway.internal`) |
 | `BETTER_AUTH_SECRET` | secret | migrate / auth |
 | `DOMAIN_APP` | var | migrate, e2e (public HTTPS) |
 | `DOMAIN_WEB` | var | migrate (public HTTPS) |
@@ -32,6 +32,9 @@ Match `apps/backend/.env.example` and app `get-env.ts`:
 | `DOMAIN_BACK_PUBLIC` | var | api-smoke, e2e (public Nest HTTPS; preferred over `DOMAIN_BACK` for probes) |
 | `DATABASE_SSL` | var | optional (`true` on managed Postgres) |
 | `E2E_*_EMAIL` / `E2E_*_PASSWORD` | secret | optional e2e (defaults = seed demos) |
+
+CI runners are outside Railway’s private mesh — never point `DATABASE_URL`, smoke, or e2e at `*.railway.internal`.
+On Railway, Application’s server-only `DOMAIN_BACK` is the private Nest URL for proxies.
 
 ### Sync from your machine (Galighticus pattern)
 
@@ -44,9 +47,6 @@ pnpm sync:github-secrets:production  # production only
 ```
 
 Templates: `.env.github.secrets.example`, `.env.github.vars.example`. Script: `scripts/sync-github-secrets.js`.
-
-CI runners are outside Railway’s private mesh — never point smoke/e2e at `*.railway.internal`.
-On Railway, Application’s server-only `DOMAIN_BACK` is the private Nest URL for proxies.
 
 ## Workflows
 

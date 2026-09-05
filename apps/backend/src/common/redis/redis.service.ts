@@ -6,14 +6,14 @@ import { loadEnv } from '../config/env.config';
 /**
  * Thin ioredis wrapper (Galighticus pattern).
  *
- * Reads `DATABASE_REDIS_URL`. When unset or unreachable, stays disabled —
+ * Reads `DATABASE_REDIS_URL`. When unset, invalid, or unreachable, stays disabled —
  * callers check `isAvailable` and fall back in-memory if needed.
  */
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
     private readonly logger = new Logger(RedisService.name);
-    /** Set only when `DATABASE_REDIS_URL` is configured. */
-    client!: Redis;
+    /** Set only when a usable Redis URL is configured and the client is created. */
+    client?: Redis;
 
     get isAvailable(): boolean {
         return this.client?.status === 'ready';
@@ -25,6 +25,13 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         if (!url) {
             this.logger.warn(
                 'DATABASE_REDIS_URL not set — Redis disabled (in-memory fallback active)'
+            );
+            return;
+        }
+
+        if (!isRedisUrl(url)) {
+            this.logger.warn(
+                `DATABASE_REDIS_URL is not a redis:// or rediss:// URL (got "${redactRedisUrl(url)}") — Redis disabled`
             );
             return;
         }
@@ -60,5 +67,26 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         } catch {
             return false;
         }
+    }
+}
+
+function isRedisUrl(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'redis:' || parsed.protocol === 'rediss:';
+    } catch {
+        return false;
+    }
+}
+
+/** Log-safe: keep scheme/host, drop credentials. */
+function redactRedisUrl(url: string): string {
+    try {
+        const parsed = new URL(url);
+        parsed.password = '';
+        parsed.username = '';
+        return parsed.toString();
+    } catch {
+        return url.slice(0, 48);
     }
 }

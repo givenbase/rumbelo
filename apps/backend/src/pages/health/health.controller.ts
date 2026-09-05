@@ -14,7 +14,7 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { type FastifyReply } from 'fastify';
 
-import { type RedisService } from '../../common/redis';
+import { RedisService } from '../../common/redis';
 import { renderBrandPage } from '../shared/brand-shell';
 
 type ProbeStatus = 'connected' | 'disconnected' | 'error' | 'disabled';
@@ -31,7 +31,8 @@ type ProbeStatus = 'connected' | 'disconnected' | 'error' | 'disabled';
 export class HealthController {
     constructor(
         @Inject(EntityManager) private readonly em: EntityManager,
-        private readonly redis: RedisService
+        // Value import (not `import type`) — Nest needs the class at runtime for DI.
+        @Inject(RedisService) private readonly redis: RedisService
     ) {}
 
     @Get('health')
@@ -129,7 +130,7 @@ export class HealthController {
     }
 
     private async probeRedis(): Promise<ProbeStatus> {
-        if (!this.redis.client) return 'disabled';
+        if (!this.redis?.client) return 'disabled';
         if (await this.redis.ping()) return 'connected';
         return this.redis.isAvailable ? 'error' : 'disconnected';
     }

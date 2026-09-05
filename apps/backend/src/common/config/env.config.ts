@@ -14,7 +14,7 @@ const boolish = (fallback: boolean) =>
 
 const EnvSchema = z.object({
     // ── Runtime ──────────────────────────────────────────────────────────
-    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    NODE_ENV: z.enum(['development', 'test', 'staging', 'production']).default('development'),
     /** Local listen port. Railway injects PORT automatically. */
     PORT: z.coerce.number().default(3002),
     LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
