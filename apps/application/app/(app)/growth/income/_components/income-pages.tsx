@@ -40,13 +40,7 @@ export function IncomeUpdatePage({ id, embedded = false }: { id: string; embedde
             defaultValues={{
                 name: row.name,
                 amount: centsToEurosInput(row.amount),
-                kind: row.kind as
-                    | 'SALARY'
-                    | 'FREELANCE'
-                    | 'BENEFIT'
-                    | 'RENTAL'
-                    | 'DIVIDEND'
-                    | 'OTHER',
+                kind: row.kind,
             }}
         />
     );

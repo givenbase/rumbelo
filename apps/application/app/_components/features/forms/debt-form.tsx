@@ -18,6 +18,7 @@ import {
 } from '@rumbelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { DebtKind } from '@rumbelo/contracts';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';
@@ -53,7 +54,7 @@ const debtFormSchema = z.object({
             { message: 'Interest must be between 0 and 100' }
         ),
     minimumPayment: z.string().optional(),
-    kind: z.enum(['CREDIT_CARD', 'LOAN', 'STUDENT', 'MORTGAGE', 'FAMILY', 'OTHER']),
+    kind: z.enum(DebtKind),
 });
 
 export type DebtFormValues = z.infer<typeof debtFormSchema>;
@@ -99,7 +100,7 @@ export function DebtForm({
             balance: defaultValues?.balance ?? '',
             interestRate: defaultValues?.interestRate ?? '0',
             minimumPayment: defaultValues?.minimumPayment ?? '',
-            kind: defaultValues?.kind ?? 'LOAN',
+            kind: defaultValues?.kind ?? DebtKind.LOAN,
         },
         resolver: zodResolver(debtFormSchema),
     });

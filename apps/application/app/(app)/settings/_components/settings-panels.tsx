@@ -782,10 +782,11 @@ export function JarsSettings() {
         setDismissedTips({});
     }
 
-    const defaultAccountLabel =
-        accounts[0]?.name !== null
-            ? `${accounts[0].name}${accounts[0].iban ? ` · ${accounts[0].iban.slice(-4)}` : ''}`
-            : null;
+    const defaultAccountLabel = (() => {
+        const account = accounts[0];
+        if (!account) return null;
+        return `${account.name}${account.iban ? ` · ${account.iban.slice(-4)}` : ''}`;
+    })();
 
     return (
         <SettingsPanel>

@@ -114,7 +114,7 @@ export function JarsPageClient() {
                     ) : null
                 }>
                 {(['JARS', 'SIMULATOR'] as const).map(t => (
-                    <ListToolbarTab key={t} isActive={tab === t} onClick={() => setTab(t)}>
+                    <ListToolbarTab key={t} active={tab === t} onClick={() => setTab(t)}>
                         {t === 'JARS' ? 'Jars' : 'Simulator'}
                         {t === 'JARS' && (
                             <span

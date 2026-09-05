@@ -18,6 +18,7 @@ import {
 } from '@rumbelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Cadence, IncomeKind } from '@rumbelo/contracts';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';
@@ -40,7 +41,7 @@ const incomeFormSchema = z.object({
             },
             { message: 'Enter a valid amount' }
         ),
-    kind: z.enum(['SALARY', 'FREELANCE', 'BENEFIT', 'RENTAL', 'DIVIDEND', 'OTHER']),
+    kind: z.enum(IncomeKind),
 });
 
 export type IncomeFormValues = z.infer<typeof incomeFormSchema>;
@@ -84,7 +85,7 @@ export function IncomeForm({
         defaultValues: {
             name: defaultValues?.name ?? '',
             amount: defaultValues?.amount ?? '',
-            kind: defaultValues?.kind ?? 'SALARY',
+            kind: defaultValues?.kind ?? IncomeKind.SALARY,
         },
         resolver: zodResolver(incomeFormSchema),
     });
@@ -113,7 +114,7 @@ export function IncomeForm({
                 name,
                 amount: cents,
                 kind: values.kind,
-                cadence: 'MONTHLY',
+                cadence: Cadence.MONTHLY,
                 expectedDay: null,
                 isActive: true,
                 startedOn: null,

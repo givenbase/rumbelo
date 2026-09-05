@@ -142,7 +142,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     return {
         ...data,
         DOMAIN_BACK_PUBLIC: data.DOMAIN_BACK_PUBLIC ?? data.DOMAIN_BACK,
-        EMAIL_FROM:
-            data.EMAIL_FROM ?? data.EMAIL_DEFAULT_FROM ?? 'Rumbelo <info@rumbelo.app>',
+        EMAIL_FROM: data.EMAIL_FROM ?? data.EMAIL_DEFAULT_FROM ?? 'Rumbelo <info@rumbelo.app>',
     };
 }

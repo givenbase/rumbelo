@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { RitualStage } from '@rumbelo/contracts';
 import { Button, Eyebrow } from '@rumbelo/ui';
 import { cn, formatMoney } from '@rumbelo/utils';
 
@@ -16,21 +17,21 @@ interface WizardJar {
 
 const STEPS = [
     {
-        key: 'LOOK' as const,
+        key: RitualStage.LOOK,
         label: 'Look',
         sub: 'What happened this week?',
     },
     {
-        key: 'REDIRECT' as const,
+        key: RitualStage.REDIRECT,
         label: 'Direct',
         sub: 'Where does the surplus go?',
     },
     {
-        key: 'INTEND' as const,
+        key: RitualStage.INTEND,
         label: 'Intend',
         sub: 'What is your intention for next week?',
     },
-];
+] as const;
 
 /**
  * Three-step WEEKTELLING wizard (design: `ritual`).
@@ -49,9 +50,9 @@ export function RitualWizard({
 }: {
     jars: readonly WizardJar[];
     surplus: number;
-    initialStage?: 'LOOK' | 'REDIRECT' | 'INTEND' | 'DONE';
+    initialStage?: RitualStage;
     onStepComplete?: (
-        stage: 'LOOK' | 'REDIRECT' | 'INTEND' | 'DONE',
+        stage: RitualStage,
         payload?: {
             intention?: string;
             allocations?: { jarId: string; amount: number }[];
@@ -59,7 +60,9 @@ export function RitualWizard({
     ) => Promise<unknown>;
 }) {
     const stageIndex =
-        initialStage && initialStage !== 'DONE' ? STEPS.findIndex(s => s.key === initialStage) : 0;
+        initialStage && initialStage !== RitualStage.DONE
+            ? STEPS.findIndex(s => s.key === initialStage)
+            : 0;
     const [step, setStep] = useState(Math.max(0, stageIndex));
     const [intent, setIntent] = useState('');
     const [redirectJarId, setRedirectJarId] = useState<string | null>(null);
@@ -69,9 +72,9 @@ export function RitualWizard({
     async function goNext() {
         if (onStepComplete) {
             const payload =
-                current.key === 'REDIRECT' && redirectJarId && surplus > 0
+                current.key === RitualStage.REDIRECT && redirectJarId && surplus > 0
                     ? { allocations: [{ jarId: redirectJarId, amount: surplus }] }
-                    : current.key === 'INTEND'
+                    : current.key === RitualStage.INTEND
                       ? { intention: intent }
                       : undefined;
             await onStepComplete(current.key, payload);
@@ -81,7 +84,7 @@ export function RitualWizard({
 
     async function finish() {
         if (onStepComplete) {
-            await onStepComplete('DONE', { intention: intent || undefined });
+            await onStepComplete(RitualStage.DONE, { intention: intent || undefined });
         }
     }
 
@@ -131,7 +134,7 @@ export function RitualWizard({
             {/* Step content */}
             <div className="animate-rise rounded-2xl border border-line bg-surface p-6 shadow-md">
                 {/* ── Step 1: Look ─────────────────────────────────────────── */}
-                {current.key === 'LOOK' && (
+                {current.key === RitualStage.LOOK && (
                     <div className="grid gap-5">
                         <div>
                             <Eyebrow>✦ Look</Eyebrow>
@@ -167,7 +170,7 @@ export function RitualWizard({
                 )}
 
                 {/* ── Step 2: Direct ────────────────────────────────────────── */}
-                {current.key === 'REDIRECT' && (
+                {current.key === RitualStage.REDIRECT && (
                     <div className="grid gap-5">
                         <div>
                             <Eyebrow>✦ Direct</Eyebrow>
@@ -210,7 +213,7 @@ export function RitualWizard({
                 )}
 
                 {/* ── Step 3: Intend ───────────────────────────────────────── */}
-                {current.key === 'INTEND' && (
+                {current.key === RitualStage.INTEND && (
                     <div className="grid gap-5">
                         <div>
                             <Eyebrow>✦ Intend</Eyebrow>

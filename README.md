@@ -99,8 +99,10 @@ pnpm dev
 ESLint and Prettier are replaced by [Oxlint](https://oxc.rs/) + [Oxfmt](https://oxc.rs/docs/guide/usage/formatter):
 
 ```bash
-pnpm lint         # oxlint --fix + oxfmt + backend entity-style check
-pnpm lint:check   # CI-friendly check only (no writes)
+pnpm lint         # style (oxlint/oxfmt/entities) + TypeScript (`check-types`)
+pnpm lint:style   # style only (fast autofix; no tsc)
+pnpm lint:check   # CI-friendly check only (no writes) + types
+pnpm check-types  # TypeScript alone
 pnpm format       # oxfmt only
 ```
 
@@ -108,7 +110,7 @@ Config: root `.oxlintrc.json` (shared baseline) plus nested configs:
 `apps/backend`, `apps/application`, `apps/website`, `packages/ui`, `packages/hooks`.
 Format: `.oxfmtrc.json`. Backend also runs `lint:entities` (MikroORM entity conventions).
 
-**Pre-commit:** Husky runs `pnpm lint` on every commit. Autofixes/format are re-staged into the commit; remaining errors abort it (`--no-verify` skips — don't).
+**Pre-commit:** Husky runs `pnpm lint` on every commit (style + types). Autofixes/format are re-staged into the commit; remaining errors abort it (`--no-verify` skips — don't).
 
 ### Demo accounts + E2E
 

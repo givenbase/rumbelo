@@ -40,6 +40,7 @@ export function AuthAside() {
     }, [reduceMotion]);
 
     const quote = AUTH_QUOTES[quoteIndex] ?? AUTH_QUOTES[0];
+    if (!quote) return null;
 
     return (
         <aside className="relative hidden overflow-hidden lg:block">

@@ -42,13 +42,7 @@ export function DebtUpdatePage({ id, embedded = false }: { id: string; embedded?
                 balance: centsToEurosInput(row.balance),
                 interestRate: String(row.interestRate),
                 minimumPayment: centsToEurosInput(row.minimumPayment),
-                kind: row.kind as
-                    | 'CREDIT_CARD'
-                    | 'LOAN'
-                    | 'STUDENT'
-                    | 'MORTGAGE'
-                    | 'FAMILY'
-                    | 'OTHER',
+                kind: row.kind,
             }}
         />
     );

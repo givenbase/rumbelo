@@ -18,6 +18,7 @@ import {
 } from '@rumbelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { GoalStatus } from '@rumbelo/contracts';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';
@@ -148,7 +149,7 @@ export function GoalForm({
                 target,
                 monthlyContribution: monthly,
                 targetOn: null,
-                status: 'ACTIVE',
+                status: GoalStatus.ACTIVE,
                 why,
             });
         },

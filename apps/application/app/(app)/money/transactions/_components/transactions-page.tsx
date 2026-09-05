@@ -334,7 +334,7 @@ export function TransactionsPageClient() {
                                                 <p className="mt-1 font-mono text-xs tracking-normal text-fg-faint uppercase">
                                                     → {jar?.name ?? 'Jar'} · prio {rule.priority} ·{' '}
                                                     {rule.hitCount} hits
-                                                    {!rule.active ? ' · off' : ''}
+                                                    {!rule.isActive ? ' · off' : ''}
                                                 </p>
                                             </div>
                                             <Button

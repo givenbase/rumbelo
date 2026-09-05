@@ -214,7 +214,7 @@ export function TabPills({
                             : 'border-line text-fg-muted hover:border-line-strong hover:text-fg'
                     )}>
                     {tab.label}
-                    {tab.count !== null && tab.count > 0 && (
+                    {(tab.count ?? 0) > 0 && (
                         <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
                             {tab.count}
                         </span>

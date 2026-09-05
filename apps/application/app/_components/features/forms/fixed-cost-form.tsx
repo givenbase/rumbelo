@@ -18,6 +18,7 @@ import {
 } from '@rumbelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Cadence, FlowDirection } from '@rumbelo/contracts';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';
@@ -176,9 +177,9 @@ export function FixedCostForm({
                 categoryId,
                 name,
                 amount: cents,
-                cadence: 'MONTHLY',
+                cadence: Cadence.MONTHLY,
                 dueDay,
-                direction: 'OUT',
+                direction: FlowDirection.OUT,
                 isActive: true,
                 endsOn: null,
                 note: null,

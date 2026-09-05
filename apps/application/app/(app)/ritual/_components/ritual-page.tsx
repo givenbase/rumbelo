@@ -3,6 +3,7 @@
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { RitualStage } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Eyebrow } from '@rumbelo/ui';
 import { currentWeekKey, toPeriodKey } from '@rumbelo/utils';
@@ -29,7 +30,7 @@ export function RitualPageClient() {
             id: '',
             householdId: householdId ?? '',
             week,
-            stage: 'LOOK' as const,
+            stage: RitualStage.LOOK,
             surplus: 0,
             allocations: [],
             intention: null,
@@ -48,7 +49,7 @@ export function RitualPageClient() {
 
     const advance = useMutation({
         mutationFn: async (payload: {
-            stage: 'LOOK' | 'REDIRECT' | 'INTEND' | 'DONE';
+            stage: RitualStage;
             intention?: string;
             allocations?: { jarId: string; amount: number }[];
         }) => {
