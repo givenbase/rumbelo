@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-
-import { locales, type Locale } from '@rumbelo/i18n';
+import { getLocale, getMessages } from 'next-intl/server';
 
 import { Providers } from './providers';
 
@@ -14,6 +11,12 @@ import '../../globals.css';
  * Fonts come from the design: Bricolage Grotesque for display, Public Sans for
  * body, IBM Plex Mono for figures. next/font self-hosts them, so there is no
  * render-blocking request to Google and no layout shift.
+ *
+ * No `generateStaticParams` here: Next 16.3 fails SSG on `@modal/(...)` intercept
+ * routes under `[locale]` ("Could not resolve param value for segment: locale").
+ * The app is auth-gated and fine as dynamic.
+ *
+ * Locale comes from `next/root-params` via `i18n/request.ts` (not `setRequestLocale`).
  */
 const display = Bricolage_Grotesque({
     subsets: ['latin'],
@@ -46,23 +49,12 @@ export const viewport: Viewport = {
     ],
 };
 
-export function generateStaticParams() {
-    return locales.map(locale => ({ locale }));
-}
-
 type LocaleLayoutProps = Readonly<{
     children: React.ReactNode;
-    params: Promise<{ locale: string }>;
 }>;
 
-export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
-    const { locale } = await params;
-
-    if (!locales.includes(locale as Locale)) {
-        notFound();
-    }
-
-    setRequestLocale(locale);
+export default async function LocaleLayout({ children }: LocaleLayoutProps) {
+    const locale = await getLocale();
     const messages = await getMessages();
 
     return (
