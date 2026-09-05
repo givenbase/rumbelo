@@ -1,13 +1,17 @@
 # @rumbelo/website
 
-Marketing site. Next.js 16, Tailwind v4, statically rendered.
+Marketing site. Next.js 16, Tailwind v4.
+
+Public acquisition lives here: sign-up, email verify, forgot / reset password.
+Product CTAs after auth go to `NEXT_PUBLIC_DOMAIN_APP` (sign-in).
 
 Shares the same token block as the application so the brand reads identically
-across both. Product CTAs use `NEXT_PUBLIC_DOMAIN_APP` (see `.env.example`).
+across both.
 
 ```bash
 pnpm --filter @rumbelo/website dev   # :3001
 ```
 
-Railway: bake the three `NEXT_PUBLIC_DOMAIN_*` vars at build time. No private
-`DOMAIN_BACK` — this app never talks to Nest.
+Railway: bake the three `NEXT_PUBLIC_DOMAIN_*` vars at build time. Also set
+server-only `DOMAIN_BACK` (private Nest URL) so `/api/auth` can proxy Better Auth
+— same pattern as Application.

@@ -19,14 +19,14 @@ import {
     bindFormSubmit,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
+import { AUTH_SIGN_UP } from '@rumbelo/i18n';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { signUp } from '@/app/_lib/auth';
-import { AUTH_SIGN_UP } from '@rumbelo/i18n';
+import { signUp } from '@/lib/auth';
+import { appSignInUrl } from '@/lib/portal-urls';
 
-/** Matches Nest Better Auth `emailAndPassword.minPasswordLength`. */
 const MIN_PASSWORD_LENGTH = 12;
 
 const signUpFormSchema = z.object({
@@ -37,22 +37,14 @@ const signUpFormSchema = z.object({
         .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters`),
 });
 
-export type SignUpFormValues = z.infer<typeof signUpFormSchema>;
+type SignUpFormValues = z.infer<typeof signUpFormSchema>;
 
-/**
- * Sign-up — same contract as Meltizo/Galighticus auth forms:
- * useForm + zodResolver → Form + FormField → Better Auth signUp.email.
- */
 export function SignUpForm() {
     const router = useRouter();
     const [apiError, setApiError] = useState<unknown>(null);
 
     const form = useForm<SignUpFormValues>({
-        defaultValues: {
-            name: '',
-            email: '',
-            password: '',
-        },
+        defaultValues: { name: '', email: '', password: '' },
         mode: 'onTouched',
         resolver: zodResolver(signUpFormSchema),
     });
@@ -66,7 +58,7 @@ export function SignUpForm() {
             name: values.name,
             email: values.email,
             password: values.password,
-            callbackURL: '/',
+            callbackURL: '/verify?status=confirmed',
         });
 
         if (result.error) {
@@ -164,9 +156,9 @@ export function SignUpForm() {
 
             <p className="text-center text-sm text-fg-muted">
                 Already have an account?{' '}
-                <Link href="/sign-in" className="font-semibold text-accent hover:underline">
+                <a href={appSignInUrl()} className="font-semibold text-accent hover:underline">
                     Sign in
-                </Link>
+                </a>
             </p>
         </div>
     );

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { ASSURANCES } from '@/lib/landing-content';
-import { appSignInUrl, appSignUpUrl } from '@/lib/portal-urls';
+import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 
 import { LandingIcon } from './landing-icon';
 
@@ -33,12 +33,12 @@ export function LandingSignupForm() {
             else setNote('Please agree to the terms.');
             return;
         }
-        // Real auth lives on the application — hand off to sign-up.
-        window.location.href = appSignUpUrl();
+        // Hand off to the real sign-up form on this site.
+        window.location.href = webSignUpPath();
     };
 
     const googleIn = () => {
-        window.location.href = appSignUpUrl();
+        window.location.href = webSignUpPath();
     };
 
     const hasError = (key: FieldKey) => note && !noteOk && !String(vals[key]).trim();

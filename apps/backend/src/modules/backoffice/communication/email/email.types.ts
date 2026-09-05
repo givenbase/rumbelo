@@ -25,3 +25,11 @@ export type EmailVerificationEmailInput = {
     expiresInHours?: number;
     locale?: string;
 };
+
+export type PasswordResetEmailInput = {
+    to: string;
+    firstName: string;
+    resetUrl: string;
+    expiresInHours?: number;
+    locale?: string;
+};

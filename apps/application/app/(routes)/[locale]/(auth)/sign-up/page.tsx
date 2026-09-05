@@ -1,7 +1,23 @@
-import { SignUpForm } from '@/components/features/forms/sign-up-form';
+import { redirect } from 'next/navigation';
 
-export const metadata = { title: 'Register' };
+import { env } from '@/app/_utils/get-env';
 
-export default function SignUpPage() {
-    return <SignUpForm />;
+function webAuthUrl(path: string, search = ''): string {
+    const base = env.NEXT_PUBLIC_DOMAIN_WEB.replace(/\/$/, '');
+    return `${base}${path}${search}`;
+}
+
+/** Sign-up lives on the marketing site. */
+export default async function SignUpRedirectPage({
+    searchParams,
+}: {
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+    const params = await searchParams;
+    const qs = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+        if (typeof value === 'string') qs.set(key, value);
+    }
+    const search = qs.toString() ? `?${qs.toString()}` : '';
+    redirect(webAuthUrl('/sign-up', search));
 }

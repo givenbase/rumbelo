@@ -20,13 +20,16 @@ import { routing } from './i18n/routing';
 const AUTH_COOKIE_PREFIX = 'rumbelo';
 const intlMiddleware = createMiddleware(routing);
 
-function isAuthRoute(pathname: string): boolean {
+function isSignInRoute(pathname: string): boolean {
+    return pathname.startsWith('/sign-in');
+}
+
+/** Public redirects to DOMAIN_WEB + product sign-in. */
+function isPublicAuthRoute(pathname: string): boolean {
     return (
-        pathname.startsWith('/sign-in') ||
+        isSignInRoute(pathname) ||
         pathname.startsWith('/sign-up') ||
-        pathname.startsWith('/verify') ||
-        pathname.startsWith('/forgot-password') ||
-        pathname.startsWith('/reset-password')
+        pathname.startsWith('/verify')
     );
 }
 
@@ -44,7 +47,7 @@ export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     const isSystemRoute = pathname.startsWith('/api/') || pathname.startsWith('/_next/');
-    const isProtectedRoute = !isAuthRoute(pathname) && !isSystemRoute;
+    const isProtectedRoute = !isPublicAuthRoute(pathname) && !isSystemRoute;
 
     if (!hasSession && isProtectedRoute) {
         const signInUrl = new URL('/sign-in', request.url);
@@ -54,7 +57,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(signInUrl);
     }
 
-    if (hasSession && isAuthRoute(pathname) && !pathname.startsWith('/verify')) {
+    if (hasSession && isSignInRoute(pathname)) {
         const redirectTo = request.nextUrl.searchParams.get('redirectTo');
         const target =
             redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')

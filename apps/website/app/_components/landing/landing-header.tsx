@@ -4,7 +4,7 @@ import { useEffect, useId, useState } from 'react';
 
 import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { ThemeToggle } from '@rumbelo/ui';
-import { appSignUpUrl } from '@/lib/portal-urls';
+import { webSignUpPath } from '@/lib/portal-urls';
 
 const NAV_LINKS = [
     { href: '#pillars', label: 'The portals' },
@@ -71,7 +71,7 @@ export function LandingHeader() {
                     <ThemeToggle className="size-8 rounded-full bg-transparent text-sm text-fg-muted hover:border-accent hover:bg-transparent hover:text-accent" />
 
                     <a
-                        href={appSignUpUrl()}
+                        href={webSignUpPath()}
                         className="hidden rounded-full px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95 sm:inline-flex"
                         style={{ background: 'var(--gradient-accent)' }}>
                         Start free
@@ -121,7 +121,7 @@ export function LandingHeader() {
                         </a>
                     ))}
                     <a
-                        href={appSignUpUrl()}
+                        href={webSignUpPath()}
                         onClick={close}
                         className="mt-2 rounded-full px-5 py-3.5 text-center font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95 sm:hidden"
                         style={{ background: 'var(--gradient-accent)' }}>

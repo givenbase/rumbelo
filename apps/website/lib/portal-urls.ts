@@ -6,17 +6,35 @@ function joinOrigin(origin: string, path: string): string {
     return `${base}${suffix}`;
 }
 
-/** Product app origin (user-facing). */
+/** Product app origin. */
 export function appOrigin(): string {
     return env.NEXT_PUBLIC_DOMAIN_APP.replace(/\/$/, '');
 }
 
-export function appSignInUrl(): string {
-    return joinOrigin(env.NEXT_PUBLIC_DOMAIN_APP, '/sign-in');
+/** Marketing site origin. */
+export function webOrigin(): string {
+    return env.NEXT_PUBLIC_DOMAIN_WEB.replace(/\/$/, '');
 }
 
-export function appSignUpUrl(): string {
-    return joinOrigin(env.NEXT_PUBLIC_DOMAIN_APP, '/sign-up');
+/** Product sign-in. */
+export function appSignInUrl(query?: Record<string, string>): string {
+    const url = new URL('/sign-in', `${appOrigin()}/`);
+    if (query) {
+        for (const [key, value] of Object.entries(query)) {
+            url.searchParams.set(key, value);
+        }
+    }
+    return url.toString();
+}
+
+/** Local marketing sign-up (same origin). */
+export function webSignUpPath(): string {
+    return '/sign-up';
+}
+
+/** Post-verify / post-reset landing on the product. */
+export function appSignInAfterAuthUrl(): string {
+    return appSignInUrl({ verified: '1' });
 }
 
 export function portalDomains() {

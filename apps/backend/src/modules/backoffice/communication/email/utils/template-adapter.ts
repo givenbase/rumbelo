@@ -4,6 +4,7 @@ import { render } from '@react-email/render';
 import * as React from 'react';
 
 import AccountVerificationTemplate from '../templates/auth/account-verification';
+import PasswordResetTemplate from '../templates/auth/password-reset';
 import HouseholdInviteTemplate from '../templates/household/household-invite';
 
 const logger = new Logger('EmailTemplateAdapter');
@@ -11,6 +12,7 @@ const logger = new Logger('EmailTemplateAdapter');
 /** Email template ids — Galighticus `EmailTemplate` enum pattern. */
 export enum EmailTemplate {
     ACCOUNT_VERIFICATION = 'account-verification',
+    PASSWORD_RESET = 'password-reset',
     HOUSEHOLD_INVITE = 'household-invite',
 }
 
@@ -30,6 +32,13 @@ export async function renderTemplate(
                 ...data,
                 locale,
             } as React.ComponentProps<typeof AccountVerificationTemplate>);
+            break;
+
+        case EmailTemplate.PASSWORD_RESET:
+            element = React.createElement(PasswordResetTemplate, {
+                ...data,
+                locale,
+            } as React.ComponentProps<typeof PasswordResetTemplate>);
             break;
 
         case EmailTemplate.HOUSEHOLD_INVITE:

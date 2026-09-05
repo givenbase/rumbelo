@@ -1,10 +1,6 @@
 /**
- * Application Better Auth client.
- *
- * baseURL is the Next app origin — auth goes through same-origin `/api/auth`
- * which proxies to the Nest Better Auth handler (Galighticus pattern).
- *
- * @see https://www.better-auth.com/docs/integrations/next
+ * Application auth helpers — product sign-in + session only.
+ * Sign-up / verify / forgot-password live on DOMAIN_WEB.
  */
 
 import { createAuthClient } from 'better-auth/react';
@@ -27,7 +23,6 @@ const client = createAuthClient({
 });
 
 export const signIn = client.signIn;
-export const signUp = client.signUp;
 export const signOut = client.signOut;
 export const useSession = client.useSession;
 export const sendVerificationEmail = client.sendVerificationEmail;
@@ -61,4 +56,22 @@ export type Session = NonNullable<ReturnType<typeof useSession>['data']>;
 export function activeHouseholdId(session: Session | null | undefined): string | null {
     if (!session) return null;
     return session.session?.activeOrganizationId ?? null;
+}
+
+export function webOrigin(): string {
+    return env.NEXT_PUBLIC_DOMAIN_WEB.replace(/\/$/, '');
+}
+
+export function webSignUpUrl(): string {
+    return `${webOrigin()}/sign-up`;
+}
+
+export function webVerifyUrl(email?: string): string {
+    const url = new URL('/verify', `${webOrigin()}/`);
+    if (email) url.searchParams.set('email', email);
+    return url.toString();
+}
+
+export function webForgotPasswordUrl(): string {
+    return `${webOrigin()}/forgot-password`;
 }

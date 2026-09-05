@@ -26,3 +26,5 @@ export const AUTH_QUOTES: readonly BrandQuote[] = [
 export const AUTH_SIGN_IN = auth.sign_in;
 export const AUTH_SIGN_UP = auth.sign_up;
 export const AUTH_VERIFY = auth.verify;
+export const AUTH_FORGOT_PASSWORD = auth.forgot_password;
+export const AUTH_RESET_PASSWORD = auth.reset_password;

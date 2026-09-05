@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { PLANS } from '@/lib/landing-content';
-import { appSignUpUrl } from '@/lib/portal-urls';
+import { webSignUpPath } from '@/lib/portal-urls';
 
 function fmt(n: number) {
     return '€' + Number(n).toLocaleString('en-IE');
@@ -135,7 +135,7 @@ export function LandingPricing() {
                             </div>
 
                             <a
-                                href={appSignUpUrl()}
+                                href={webSignUpPath()}
                                 className="mx-6 mt-auto mb-6 cursor-pointer rounded-full border px-0 py-3.5 text-center font-mono text-xs font-semibold tracking-wide uppercase transition-all hover:brightness-105"
                                 style={{
                                     background: rec ? 'var(--gradient-accent)' : 'transparent',

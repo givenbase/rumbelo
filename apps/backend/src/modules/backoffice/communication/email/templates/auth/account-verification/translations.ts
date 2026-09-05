@@ -13,7 +13,7 @@ export const languageObject: EmailLanguageObject = {
         'email.auth.verification.body.expiration_note':
             'This link expires in {expiresInHours} hours.',
         'email.auth.verification.body.renewal_note':
-            'After that, you can request a new verification link from the app.',
+            'After that, you can request a new verification link from the website.',
         'email.auth.verification.body.safety_note':
             'If you did not create a Rumbelo account, you can safely ignore this message.',
     },
@@ -28,7 +28,7 @@ export const languageObject: EmailLanguageObject = {
         'email.auth.verification.body.expiration_note':
             'Deze link verloopt over {expiresInHours} uur.',
         'email.auth.verification.body.renewal_note':
-            'Daarna kun je in de app een nieuwe verificatielink aanvragen.',
+            'Daarna kun je op de website een nieuwe verificatielink aanvragen.',
         'email.auth.verification.body.safety_note':
             'Als je geen Rumbelo-account hebt aangemaakt, kun je deze e-mail negeren.',
     },

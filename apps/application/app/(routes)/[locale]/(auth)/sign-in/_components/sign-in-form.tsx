@@ -2,12 +2,18 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button, Field, Input } from '@rumbelo/ui';
 
-import { sendVerificationEmail, signIn } from '@/app/_lib/auth';
+import {
+    sendVerificationEmail,
+    signIn,
+    webForgotPasswordUrl,
+    webOrigin,
+    webSignUpUrl,
+    webVerifyUrl,
+} from '@/app/_lib/auth';
 import { AUTH_SIGN_IN } from '@rumbelo/i18n';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/app/_lib/demo-accounts';
 
@@ -84,7 +90,7 @@ export function SignInForm() {
         setResendPending(true);
         const result = await sendVerificationEmail({
             email: verification.email,
-            callbackURL: redirectTo,
+            callbackURL: `${webOrigin()}/verify?status=confirmed`,
         });
         setResendPending(false);
 
@@ -131,6 +137,13 @@ export function SignInForm() {
                                       String(cooldown)
                                   )
                                 : AUTH_SIGN_IN.verification.resend}
+                        </Button>
+                        <Button
+                            as="a"
+                            href={webVerifyUrl(verification.email)}
+                            size="sm"
+                            variant="secondary">
+                            {AUTH_SIGN_IN.verification.open_verify}
                         </Button>
                         <Button
                             type="button"
@@ -199,6 +212,13 @@ export function SignInForm() {
                     />
                 </Field>
                 {error ? <p className="text-sm text-danger">{error}</p> : null}
+                <div className="flex justify-end">
+                    <a
+                        href={webForgotPasswordUrl()}
+                        className="text-sm font-medium text-accent hover:underline">
+                        {AUTH_SIGN_IN.forgot_password}
+                    </a>
+                </div>
                 <Button type="submit" className="mt-1 w-full" disabled={pending}>
                     {pending ? 'Working…' : 'Sign in'}
                 </Button>
@@ -215,9 +235,9 @@ export function SignInForm() {
 
             <p className="text-center text-sm text-fg-muted">
                 No account yet?{' '}
-                <Link href="/sign-up" className="font-semibold text-accent hover:underline">
-                    Create an account
-                </Link>
+                <a href={webSignUpUrl()} className="font-semibold text-accent hover:underline">
+                    {AUTH_SIGN_IN.create_account}
+                </a>
             </p>
         </div>
     );

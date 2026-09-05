@@ -5,6 +5,7 @@ import type {
     EmailProvider,
     EmailVerificationEmailInput,
     HouseholdInviteEmailInput,
+    PasswordResetEmailInput,
     SendEmailInput,
 } from './email.types';
 import { EmailTemplate, renderTemplate } from './utils/template-adapter';
@@ -121,6 +122,22 @@ export class EmailService {
                 firstName: input.firstName,
                 verificationUrl: input.verificationUrl,
                 expiresInHours: input.expiresInHours ?? 48,
+            },
+            locale
+        );
+    }
+
+    /** Password reset — Better Auth `emailAndPassword.sendResetPassword`. */
+    async sendPasswordResetEmail(input: PasswordResetEmailInput): Promise<boolean> {
+        const locale = input.locale ?? 'en';
+        return this.sendTemplatedEmail(
+            input.to,
+            locale === 'nl' ? 'Wachtwoord resetten — Rumbelo' : 'Reset your password — Rumbelo',
+            EmailTemplate.PASSWORD_RESET,
+            {
+                firstName: input.firstName,
+                resetUrl: input.resetUrl,
+                expiresInHours: input.expiresInHours ?? 1,
             },
             locale
         );

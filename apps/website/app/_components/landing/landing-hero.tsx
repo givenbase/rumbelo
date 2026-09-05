@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { DEMO_INCOME_DEFAULT, FLOATERS, JARS, PROOF, TICKER } from '@/lib/landing-content';
-import { appSignUpUrl } from '@/lib/portal-urls';
+import { webSignUpPath } from '@/lib/portal-urls';
 
 function fmt(n: number) {
     return '€' + Number(n).toLocaleString('en-IE');
@@ -129,7 +129,7 @@ export function LandingHero() {
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                         <a
-                            href={appSignUpUrl()}
+                            href={webSignUpPath()}
                             className="rounded-full px-6 py-4 text-center font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95"
                             style={{ background: 'var(--gradient-accent)' }}>
                             Start free — no card

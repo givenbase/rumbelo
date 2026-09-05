@@ -42,14 +42,15 @@ Browser ──HTTPS──► Application (public)
 | `DATABASE_SSL` | Backend | `true` |
 | `DATABASE_SYNC` | Backend | `false` |
 | `DATABASE_REDIS_URL` | Backend | `${{Redis.REDIS_URL}}` or plugin URL (`redis://` / `rediss://`) |
-| `DOMAIN_BACK` | Backend + Application (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` |
+| `DOMAIN_BACK` | Backend + Application + Website (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` |
 | `DOMAIN_BACK_PUBLIC` | Backend | `https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}` |
 | `NEXT_PUBLIC_DOMAIN_APP` | Application + Website (build) | Application public HTTPS |
 | `NEXT_PUBLIC_DOMAIN_WEB` | Application + Website (build) | Website public HTTPS |
 | `NEXT_PUBLIC_DOMAIN_BACK` | Application + Website (build) | Backend **public** HTTPS (optional links; not used by proxies) |
 
 Private mesh uses **http + PORT** (no TLS). Public uses **https**. Browsers never call
-`.railway.internal` — only the Application Next server does via `DOMAIN_BACK`.
+`.railway.internal` — Application and Website Next servers reach Nest via `DOMAIN_BACK`
+for `/api/auth` (and Application also for `/api/backend`). Browsers never see the private URL.
 
 See `apps/backend/.env.example`, `apps/application/.env.example`, and
 `apps/website/.env.example`. Use `DATABASE_SSL=true` and `DATABASE_SYNC=false`
