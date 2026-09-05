@@ -1,20 +1,20 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
-  "rsc": true,
-  "tsx": true,
-  "tailwind": {
-    "config": "",
-    "css": "../../config/tailwind/globals.css",
-    "baseColor": "neutral",
-    "cssVariables": true
-  },
-  "iconLibrary": "lucide",
-  "aliases": {
-    "components": "@rumbelo/ui/src",
-    "utils": "@rumbelo/ui/lib/utils",
-    "hooks": "@rumbelo/ui/hooks",
-    "lib": "@rumbelo/ui/lib",
-    "ui": "@rumbelo/ui/src/forms"
-  }
+    "$schema": "https://ui.shadcn.com/schema.json",
+    "style": "new-york",
+    "rsc": true,
+    "tsx": true,
+    "tailwind": {
+        "config": "",
+        "css": "../../config/tailwind/globals.css",
+        "baseColor": "neutral",
+        "cssVariables": true
+    },
+    "iconLibrary": "lucide",
+    "aliases": {
+        "components": "@rumbelo/ui/src",
+        "utils": "@rumbelo/ui/lib/utils",
+        "hooks": "@rumbelo/ui/hooks",
+        "lib": "@rumbelo/ui/lib",
+        "ui": "@rumbelo/ui/src/forms"
+    }
 }

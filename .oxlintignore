@@ -1,0 +1,12 @@
+# Oxlint / Oxfmt ignore (also mirrored in .oxlintrc.json ignorePatterns / .oxfmtrc.json)
+node_modules
+dist
+.next
+out
+build
+coverage
+temp
+design
+pnpm-lock.yaml
+*.md
+apps/backend/src/database/migrations

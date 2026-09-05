@@ -1,0 +1,119 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["typescript", "oxc", "import", "unicorn", "promise", "vitest"],
+    "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+        "perf": "warn",
+        "style": "off",
+        "restriction": "off",
+        "pedantic": "off",
+        "nursery": "off"
+    },
+    "env": {
+        "builtin": true
+    },
+    "ignorePatterns": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/.next/**",
+        "**/out/**",
+        "**/build/**",
+        "**/coverage/**",
+        "**/temp/**",
+        "design/**",
+        "apps/backend/src/database/migrations/**",
+        "**/*.d.ts",
+        "pnpm-lock.yaml"
+    ],
+    "options": {
+        "typeAware": false
+    },
+    "rules": {
+        "prefer-const": "error",
+        "no-var": "error",
+        "no-debugger": "error",
+        "no-alert": "warn",
+        "eqeqeq": ["error", "always"],
+        "no-console": ["warn", { "allow": ["warn", "error"] }],
+        "no-await-in-loop": "warn",
+
+        "id-length": [
+            "warn",
+            {
+                "min": 2,
+                "exceptions": ["_", "i", "j", "k"],
+                "properties": "never",
+                "checkGeneric": false
+            }
+        ],
+
+        "typescript/no-explicit-any": "off",
+        "typescript/ban-ts-comment": "off",
+        "typescript/no-non-null-assertion": "off",
+        "typescript/no-extraneous-class": ["error", { "allowWithDecorator": true }],
+        "typescript/consistent-type-imports": [
+            "warn",
+            {
+                "prefer": "type-imports",
+                "fixStyle": "inline-type-imports",
+                "disallowTypeAnnotations": false
+            }
+        ],
+        "typescript/no-unused-vars": [
+            "error",
+            {
+                "vars": "all",
+                "varsIgnorePattern": "^_",
+                "args": "after-used",
+                "argsIgnorePattern": "^_"
+            }
+        ],
+
+        "import/no-cycle": "error",
+        "import/no-duplicates": "error",
+        "import/no-self-import": "error",
+        "import/no-unassigned-import": "off",
+        "import/no-named-as-default": "off",
+        "import/namespace": "warn",
+
+        "unicorn/filename-case": "off",
+        "unicorn/prefer-node-protocol": "warn",
+        "unicorn/no-useless-undefined": "off",
+        "unicorn/consistent-function-scoping": "off",
+        "unicorn/no-array-sort": "off",
+        "unicorn/no-array-reverse": "off",
+
+        "promise/no-return-wrap": "warn",
+        "promise/param-names": "error",
+        "promise/always-return": "off",
+
+        "vitest/no-disabled-tests": "warn",
+        "vitest/no-focused-tests": "error",
+
+        "oxc/no-map-spread": "off"
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.{test,spec}.{ts,tsx}",
+                "**/__tests__/**",
+                "**/*.test.ts",
+                "**/*.spec.ts"
+            ],
+            "rules": {
+                "no-console": "off",
+                "id-length": "off",
+                "import/no-cycle": "off"
+            }
+        },
+        {
+            "files": ["**/scripts/**", "**/*.config.{js,mjs,cjs,ts,mts}", "**/mikro-orm.config.ts"],
+            "rules": {
+                "no-console": "off",
+                "import/no-cycle": "off",
+                "id-length": "off"
+            }
+        }
+    ]
+}

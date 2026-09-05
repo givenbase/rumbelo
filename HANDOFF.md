@@ -113,7 +113,7 @@ apps/
 packages/
   contracts/     oRPC contracts + Zod schemas + typed client (dual CJS/ESM)
   ui/            shared React primitives
-  eslint-config/ typescript-config/
+  typescript-config/
 docs/            product, brand, research, engineering direction
 devops/          docker-compose (local), Railway notes
 design/          the Claude Design export — see §8

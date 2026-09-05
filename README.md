@@ -52,7 +52,7 @@ apps/
 packages/
   contracts/     oRPC contracts + Zod schemas + typed client (dual CJS/ESM)
   ui/            shared React primitives
-  eslint-config/ · typescript-config/
+  typescript-config/
 docs/            product, brand, research, engineering
 ```
 
@@ -93,6 +93,20 @@ pnpm db:migrate
 pnpm auth:migrate
 pnpm dev
 ```
+
+### Lint & format (Oxc)
+
+ESLint and Prettier are replaced by [Oxlint](https://oxc.rs/) + [Oxfmt](https://oxc.rs/docs/guide/usage/formatter):
+
+```bash
+pnpm lint         # oxlint --fix + oxfmt + backend entity-style check
+pnpm lint:check   # CI-friendly check only (no writes)
+pnpm format       # oxfmt only
+```
+
+Config: root `.oxlintrc.json` (shared baseline) plus nested configs:
+`apps/backend`, `apps/application`, `apps/website`, `packages/ui`, `packages/hooks`.
+Format: `.oxfmtrc.json`. Backend also runs `lint:entities` (MikroORM entity conventions).
 
 Env templates follow the same documented style as Galighticus/Meltizo (sectioned
 banners + comments). Root `.env.example` is the source of truth for local API

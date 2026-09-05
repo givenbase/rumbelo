@@ -38,7 +38,7 @@ rows.map(g => g.target)
 inbox.map(tx => tx.amount) // jargon shorthand — not clear enough
 ```
 
-Enforced by ESLint `id-length` (`@rumbelo/eslint-config`, min 2; only `_` excepted).
+Enforced by Oxlint `id-length` (min 2; only `_` excepted) via root `.oxlintrc.json`.
 Also avoid cryptic abbreviations that pass the rule (`tx`, `alloc`, `str`) — prefer the domain word: `transaction`, `allocation`, `alias`.
 `em` / `id` are fine.
 

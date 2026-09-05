@@ -1,0 +1,30 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "tabWidth": 4,
+    "printWidth": 100,
+    "arrowParens": "avoid",
+    "trailingComma": "es5",
+    "semi": true,
+    "useTabs": false,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "bracketSameLine": true,
+    "sortPackageJson": false,
+    "sortTailwindcss": {
+        "stylesheet": "./packages/config/tailwind/globals.css",
+        "functions": ["cn", "clsx", "cva"]
+    },
+    "ignorePatterns": [
+        "node_modules",
+        "dist",
+        ".next",
+        "out",
+        "build",
+        "coverage",
+        "temp",
+        "design",
+        "pnpm-lock.yaml",
+        "*.md",
+        "apps/backend/src/database/migrations"
+    ]
+}

@@ -1,44 +1,41 @@
 {
-  "name": "@rumbelo/application",
-  "version": "0.1.0",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --port 3000",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^5.9.1",
-    "@rumbelo/config": "workspace:*",
-    "@rumbelo/contracts": "workspace:*",
-    "@rumbelo/hooks": "workspace:*",
-    "@rumbelo/i18n": "workspace:*",
-    "@rumbelo/ui": "workspace:*",
-    "@rumbelo/utils": "workspace:*",
-    "@t3-oss/env-nextjs": "^0.13.11",
-    "@tanstack/react-query": "^5.90.12",
-    "better-auth": "^1.7.1",
-    "clsx": "^2.1.1",
-    "next": "16.3.2",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "react-hook-form": "^7.86.0",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.17",
-    "zod": "^4.4.3"
-  },
-  "devDependencies": {
-    "@rumbelo/eslint-config": "workspace:*",
-    "@rumbelo/typescript-config": "workspace:*",
-    "@tailwindcss/postcss": "^4.1.17",
-    "@types/node": "26.3.0",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5",
-    "eslint": "10.9.1",
-    "postcss": "^8.5.6",
-    "typescript": "5.9.3"
-  }
+    "name": "@rumbelo/application",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "dev": "next dev --port 3000",
+        "build": "next build",
+        "start": "next start",
+        "check-types": "next typegen && tsc --noEmit"
+    },
+    "dependencies": {
+        "@hookform/resolvers": "^5.9.1",
+        "@rumbelo/config": "workspace:*",
+        "@rumbelo/contracts": "workspace:*",
+        "@rumbelo/hooks": "workspace:*",
+        "@rumbelo/i18n": "workspace:*",
+        "@rumbelo/ui": "workspace:*",
+        "@rumbelo/utils": "workspace:*",
+        "@t3-oss/env-nextjs": "^0.13.11",
+        "@tanstack/react-query": "^5.90.12",
+        "better-auth": "^1.7.1",
+        "clsx": "^2.1.1",
+        "next": "16.3.2",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "react-hook-form": "^7.86.0",
+        "tailwind-merge": "^3.3.1",
+        "tailwindcss": "^4.1.17",
+        "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "@rumbelo/typescript-config": "workspace:*",
+        "@tailwindcss/postcss": "^4.1.17",
+        "@types/node": "26.3.0",
+        "@types/react": "19.2.18",
+        "@types/react-dom": "19.2.5",
+        "postcss": "^8.5.6",
+        "typescript": "5.9.3"
+    }
 }

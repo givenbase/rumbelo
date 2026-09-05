@@ -1,25 +1,19 @@
 {
-  "extends": "@rumbelo/typescript-config/nextjs.json",
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "strictNullChecks": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@/app/*": ["./app/*"],
-      "@/components/*": ["./app/_components/*"]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    "next.config.js",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": ["node_modules"]
+    "extends": "@rumbelo/typescript-config/nextjs.json",
+    "compilerOptions": {
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ],
+        "strictNullChecks": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./*"],
+            "@/app/*": ["./app/*"],
+            "@/components/*": ["./app/_components/*"]
+        }
+    },
+    "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.js", ".next/types/**/*.ts"],
+    "exclude": ["node_modules"]
 }

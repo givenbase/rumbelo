@@ -1,46 +1,48 @@
 {
-  "name": "rumbelo",
-  "private": true,
-  "scripts": {
-    "dev": "turbo run dev",
-    "dev:app": "turbo run dev --filter=@rumbelo/application --filter=@rumbelo/backend",
-    "dev:web": "turbo run dev --filter=@rumbelo/website",
-    "build": "turbo run build",
-    "start": "turbo run start",
-    "lint": "turbo run lint",
-    "check-types": "turbo run check-types",
-    "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clean": "rm -rf .turbo apps/*/.turbo packages/*/.turbo node_modules apps/*/node_modules packages/*/node_modules apps/*/.next packages/*/dist apps/*/dist apps/backend/temp && pnpm store prune && pnpm install",
-    "infra:up": "docker compose -f devops/docker-compose.dev.yml up -d",
-    "infra:down": "docker compose -f devops/docker-compose.dev.yml down",
-    "db:gen": "pnpm --filter @rumbelo/backend run db:gen",
-    "db:push": "pnpm --filter @rumbelo/backend run db:push",
-    "db:migrate": "pnpm --filter @rumbelo/backend run db:push",
-    "db:drop": "pnpm --filter @rumbelo/backend run db:drop",
-    "db:reset": "pnpm --filter @rumbelo/backend run db:reset",
-    "db:fresh": "pnpm --filter @rumbelo/backend run db:fresh",
-    "db:seed": "pnpm --filter @rumbelo/backend run db:seed",
-    "auth:migrate": "pnpm --filter @rumbelo/backend run auth:migrate",
-    "rename": "node scripts/rename-project.mjs"
-  },
-  "devDependencies": {
-    "prettier": "3.9.6",
-    "prettier-plugin-tailwindcss": "0.8.1",
-    "turbo": "^2.10.12",
-    "typescript": "5.9.3"
-  },
-  "packageManager": "pnpm@10.33.0",
-  "engines": {
-    "node": ">=22"
-  },
-  "version": "0.1.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ],
-    "overrides": {
-      "fastify": "5.11.3"
+    "name": "rumbelo",
+    "private": true,
+    "scripts": {
+        "dev": "turbo run dev",
+        "dev:app": "turbo run dev --filter=@rumbelo/application --filter=@rumbelo/backend",
+        "dev:web": "turbo run dev --filter=@rumbelo/website",
+        "build": "turbo run build",
+        "start": "turbo run start",
+        "lint": "oxlint --fix . && oxfmt . && pnpm --filter @rumbelo/backend run lint:entities",
+        "lint:check": "oxlint . && oxfmt --check . && pnpm --filter @rumbelo/backend run lint:entities",
+        "format": "oxfmt .",
+        "format:check": "oxfmt --check .",
+        "check-types": "turbo run check-types",
+        "test": "turbo run test",
+        "clean": "rm -rf .turbo apps/*/.turbo packages/*/.turbo node_modules apps/*/node_modules packages/*/node_modules apps/*/.next packages/*/dist apps/*/dist apps/backend/temp && pnpm store prune && pnpm install",
+        "infra:up": "docker compose -f devops/docker-compose.dev.yml up -d",
+        "infra:down": "docker compose -f devops/docker-compose.dev.yml down",
+        "db:gen": "pnpm --filter @rumbelo/backend run db:gen",
+        "db:push": "pnpm --filter @rumbelo/backend run db:push",
+        "db:migrate": "pnpm --filter @rumbelo/backend run db:push",
+        "db:drop": "pnpm --filter @rumbelo/backend run db:drop",
+        "db:reset": "pnpm --filter @rumbelo/backend run db:reset",
+        "db:fresh": "pnpm --filter @rumbelo/backend run db:fresh",
+        "db:seed": "pnpm --filter @rumbelo/backend run db:seed",
+        "auth:migrate": "pnpm --filter @rumbelo/backend run auth:migrate",
+        "rename": "node scripts/rename-project.mjs"
+    },
+    "devDependencies": {
+        "oxfmt": "^0.66.0",
+        "oxlint": "^1.81.0",
+        "turbo": "^2.10.12",
+        "typescript": "5.9.3"
+    },
+    "packageManager": "pnpm@10.33.0",
+    "engines": {
+        "node": ">=22"
+    },
+    "version": "0.1.0",
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "esbuild"
+        ],
+        "overrides": {
+            "fastify": "5.11.3"
+        }
     }
-  }
 }

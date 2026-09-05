@@ -1,27 +1,27 @@
 # Local Postgres + Redis only. The apps run on the host via `pnpm dev` so hot
 # reload stays fast; production runs on Railway, not on this file.
 services:
-  postgres:
-    image: postgres:17-alpine
-    container_name: rumbelo-postgres
-    environment:
-      POSTGRES_USER: rumbelo
-      POSTGRES_PASSWORD: rumbelo
-      POSTGRES_DB: rumbelo
-    ports: ['5432:5432']
-    volumes: ['rumbelo-pgdata:/var/lib/postgresql/data']
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U rumbelo']
-      interval: 5s
-      timeout: 5s
-      retries: 10
+    postgres:
+        image: postgres:17-alpine
+        container_name: rumbelo-postgres
+        environment:
+            POSTGRES_USER: rumbelo
+            POSTGRES_PASSWORD: rumbelo
+            POSTGRES_DB: rumbelo
+        ports: ['5432:5432']
+        volumes: ['rumbelo-pgdata:/var/lib/postgresql/data']
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U rumbelo']
+            interval: 5s
+            timeout: 5s
+            retries: 10
 
-  redis:
-    image: redis:7-alpine
-    container_name: rumbelo-redis
-    ports: ['6379:6379']
-    volumes: ['rumbelo-redisdata:/data']
+    redis:
+        image: redis:7-alpine
+        container_name: rumbelo-redis
+        ports: ['6379:6379']
+        volumes: ['rumbelo-redisdata:/data']
 
 volumes:
-  rumbelo-pgdata:
-  rumbelo-redisdata:
+    rumbelo-pgdata:
+    rumbelo-redisdata:

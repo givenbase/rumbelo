@@ -1,46 +1,45 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
-  "ui": "tui",
-  "globalDependencies": ["**/.env.*local", ".env"],
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"],
-      "env": [
-        "NODE_ENV",
-        "PORT",
-        "DATABASE_URL",
-        "DATABASE_SSL",
-        "REDIS_URL",
-        "BETTER_AUTH_SECRET",
-        "DOMAIN_APP",
-        "DOMAIN_WEB",
-        "DOMAIN_BACK",
-        "NEXT_PUBLIC_DOMAIN_APP",
-        "NEXT_PUBLIC_DOMAIN_WEB",
-        "NEXT_PUBLIC_DOMAIN_BACK",
-        "FEATURE_BANK_SYNC",
-        "ENABLE_BANKING_APP_ID",
-        "ENABLE_BANKING_PRIVATE_KEY",
-        "STRIPE_SECRET_KEY",
-        "STRIPE_WEBHOOK_SECRET",
-        "ANTHROPIC_API_KEY",
-        "SENTRY_DSN",
-        "ENABLE_SWAGGER",
-        "EMAIL_PROVIDER",
-        "EMAIL_FROM",
-        "RESEND_API_KEY"
-      ]
-    },
-    "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
-    "start": { "dependsOn": ["^build"], "cache": false, "persistent": true },
-    "lint": {
-      "dependsOn": ["^lint"],
-      "env": ["NODE_ENV", "SKIP_ENV_VALIDATION"]
-    },
-    "check-types": { "dependsOn": ["^build"] },
-    "test": { "dependsOn": ["^build"] },
-    "clean": { "cache": false }
-  }
+    "$schema": "https://turborepo.dev/schema.json",
+    "ui": "tui",
+    "globalDependencies": ["**/.env.*local", ".env"],
+    "tasks": {
+        "build": {
+            "dependsOn": ["^build"],
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"],
+            "env": [
+                "NODE_ENV",
+                "PORT",
+                "DATABASE_URL",
+                "DATABASE_SSL",
+                "REDIS_URL",
+                "BETTER_AUTH_SECRET",
+                "DOMAIN_APP",
+                "DOMAIN_WEB",
+                "DOMAIN_BACK",
+                "NEXT_PUBLIC_DOMAIN_APP",
+                "NEXT_PUBLIC_DOMAIN_WEB",
+                "NEXT_PUBLIC_DOMAIN_BACK",
+                "FEATURE_BANK_SYNC",
+                "ENABLE_BANKING_APP_ID",
+                "ENABLE_BANKING_PRIVATE_KEY",
+                "STRIPE_SECRET_KEY",
+                "STRIPE_WEBHOOK_SECRET",
+                "ANTHROPIC_API_KEY",
+                "SENTRY_DSN",
+                "ENABLE_SWAGGER",
+                "EMAIL_PROVIDER",
+                "EMAIL_FROM",
+                "RESEND_API_KEY"
+            ]
+        },
+        "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
+        "start": { "dependsOn": ["^build"], "cache": false, "persistent": true },
+        "lint": {
+            "cache": false
+        },
+        "check-types": { "dependsOn": ["^build"] },
+        "test": { "dependsOn": ["^build"] },
+        "clean": { "cache": false }
+    }
 }

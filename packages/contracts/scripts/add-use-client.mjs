@@ -6,8 +6,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
  * re-attach the directive after bundling.
  */
 for (const file of ['dist/react.js', 'dist/react.cjs']) {
-  const src = readFileSync(file, 'utf8');
-  if (/^['"]use client['"]/.test(src)) continue;
-  writeFileSync(file, `'use client';\n${src}`);
-  console.log(`add-use-client: patched ${file}`);
+    const src = readFileSync(file, 'utf8');
+    if (/^['"]use client['"]/.test(src)) continue;
+    writeFileSync(file, `'use client';\n${src}`);
+    console.log(`add-use-client: patched ${file}`);
 }

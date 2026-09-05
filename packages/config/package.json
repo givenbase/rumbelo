@@ -1,23 +1,23 @@
 {
-  "name": "@rumbelo/config",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "files": [
-    "tailwind/theme.css",
-    "tailwind/dark.css",
-    "tailwind/globals.css",
-    "tailwind/postcss.config.mjs"
-  ],
-  "exports": {
-    "./tailwind/globals.css": "./tailwind/globals.css",
-    "./tailwind/theme.css": "./tailwind/theme.css",
-    "./tailwind/dark.css": "./tailwind/dark.css",
-    "./tailwind/postcss.config.mjs": "./tailwind/postcss.config.mjs"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.17",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17"
-  }
+    "name": "@rumbelo/config",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "files": [
+        "tailwind/theme.css",
+        "tailwind/dark.css",
+        "tailwind/globals.css",
+        "tailwind/postcss.config.mjs"
+    ],
+    "exports": {
+        "./tailwind/globals.css": "./tailwind/globals.css",
+        "./tailwind/theme.css": "./tailwind/theme.css",
+        "./tailwind/dark.css": "./tailwind/dark.css",
+        "./tailwind/postcss.config.mjs": "./tailwind/postcss.config.mjs"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.17",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^4.1.17"
+    }
 }

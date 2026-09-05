@@ -1,24 +1,24 @@
 {
-  "extends": "@rumbelo/typescript-config/base.json",
-  "compilerOptions": {
-    "module": "ES2022",
-    "moduleResolution": "Bundler",
-    "lib": ["ES2023"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "useDefineForClassFields": false,
-    "allowSyntheticDefaultImports": true,
-    "declaration": false,
-    "declarationMap": false,
-    "outDir": "./dist",
-    "rootDir": ".",
-    "sourceMap": true,
-    "verbatimModuleSyntax": false
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  },
-  "include": ["src/**/*", "mikro-orm.config.ts"],
-  "exclude": ["node_modules", "dist"]
+    "extends": "@rumbelo/typescript-config/base.json",
+    "compilerOptions": {
+        "module": "ES2022",
+        "moduleResolution": "Bundler",
+        "lib": ["ES2023"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "useDefineForClassFields": false,
+        "allowSyntheticDefaultImports": true,
+        "declaration": false,
+        "declarationMap": false,
+        "outDir": "./dist",
+        "rootDir": ".",
+        "sourceMap": true,
+        "verbatimModuleSyntax": false
+    },
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    },
+    "include": ["src/**/*", "mikro-orm.config.ts"],
+    "exclude": ["node_modules", "dist"]
 }
