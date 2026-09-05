@@ -76,7 +76,7 @@ export function DebtsPageClient() {
 
     const planQuery = useLiveQuery(
         api.money.debts.plan.queryOptions({
-            input: { householdId: householdId!, strategy: 'AVALANCHE' },
+            input: { householdId: householdId! },
         }),
         null as never,
         live

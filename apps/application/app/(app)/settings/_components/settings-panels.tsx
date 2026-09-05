@@ -6,7 +6,18 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { DEFAULT_JAR_SPLIT, Locale, Theme, type JarKey } from '@rumbelo/contracts';
+import {
+    AccountKind,
+    Currency,
+    DEFAULT_JAR_SPLIT,
+    HouseholdRole,
+    IncomeRhythm,
+    Locale,
+    MoneyCharacter,
+    PayoffStrategy,
+    Theme,
+    type JarKey,
+} from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
     Badge,
@@ -41,9 +52,9 @@ import {
 const JAR_COLOR: Record<string, string> = Object.fromEntries(JAR_META.map(j => [j.key, j.color]));
 
 const CURRENCY_OPTIONS = [
-    { code: 'EUR', sampleLocale: 'nl-NL', persist: true as const },
-    { code: 'USD', sampleLocale: 'en-US', persist: true as const },
-    { code: 'GBP', sampleLocale: 'en-GB', persist: true as const },
+    { code: Currency.EUR, sampleLocale: 'nl-NL', persist: true as const },
+    { code: Currency.USD, sampleLocale: 'en-US', persist: true as const },
+    { code: Currency.GBP, sampleLocale: 'en-GB', persist: true as const },
     { code: 'CHF', sampleLocale: 'de-CH', persist: false as const },
 ];
 
@@ -165,7 +176,7 @@ export function AccountSettings() {
             return client.household.invite({
                 householdId,
                 email: inviteEmail.trim(),
-                role: 'MEMBER',
+                role: HouseholdRole.MEMBER,
             });
         },
         onSuccess: () => {
@@ -189,7 +200,7 @@ export function AccountSettings() {
     });
 
     const saveCurrency = useMutation({
-        mutationFn: async (next: 'EUR' | 'USD' | 'GBP') => {
+        mutationFn: async (next: Currency) => {
             if (!householdId) throw new Error('No household');
             return client.household.updateSettings({ householdId, currency: next });
         },
@@ -232,6 +243,29 @@ export function AccountSettings() {
         onError: () => showToast('Theme save failed', 'error'),
     });
 
+    const saveMoneyCharacter = useMutation({
+        mutationFn: async (next: MoneyCharacter) => {
+            return client.account.updateSettings({ moneyCharacter: next });
+        },
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: api.account.settings.key() });
+            showToast('Money style saved', 'success');
+        },
+        onError: () => showToast('Money style save failed', 'error'),
+    });
+
+    const saveIncomeRhythm = useMutation({
+        mutationFn: async (next: IncomeRhythm) => {
+            if (!householdId) throw new Error('No household');
+            return client.household.updateSettings({ householdId, incomeRhythm: next });
+        },
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            showToast('Income rhythm saved', 'success');
+        },
+        onError: () => showToast('Income rhythm save failed', 'error'),
+    });
+
     function pickLocale(next: Locale) {
         if (live) saveLocale.mutate(next);
         else if (locale !== next) toggleLocale();
@@ -243,7 +277,7 @@ export function AccountSettings() {
             return;
         }
         setCurrencyDraft(code);
-        if (live) saveCurrency.mutate(code as 'EUR' | 'USD' | 'GBP');
+        if (live) saveCurrency.mutate(code as Currency);
     }
 
     async function handleSignOut() {
@@ -421,6 +455,105 @@ export function AccountSettings() {
                 </SettingsRow>
             </SettingsInkCard>
 
+            <SettingsInkCard
+                eyebrow="How you handle money"
+                blurb="Personal style — partners can differ. Tips on the jar split use this. Debt payoff order lives under Debt settings for the whole board.">
+                <SettingsRow>
+                    <SettingsRowLabel
+                        title="I tend to…"
+                        sub="Descriptive, never a verdict"
+                    />
+                    <div className="flex flex-wrap justify-end gap-1.5">
+                        {(
+                            [
+                                {
+                                    key: MoneyCharacter.SPENDER,
+                                    label: 'Spender',
+                                    sub: 'Joy first',
+                                },
+                                {
+                                    key: MoneyCharacter.SAVER,
+                                    label: 'Saver',
+                                    sub: 'Future first',
+                                },
+                                {
+                                    key: MoneyCharacter.BALANCED,
+                                    label: 'Balanced',
+                                    sub: 'Both',
+                                },
+                                {
+                                    key: MoneyCharacter.UNKNOWN,
+                                    label: 'Not sure',
+                                    sub: 'Neutral tips',
+                                },
+                            ] as const
+                        ).map(option => {
+                            const on =
+                                (accountSettingsQuery.data?.moneyCharacter ??
+                                    MoneyCharacter.UNKNOWN) === option.key;
+                            return (
+                                <button
+                                    key={option.key}
+                                    type="button"
+                                    onClick={() => {
+                                        if (live) saveMoneyCharacter.mutate(option.key);
+                                    }}
+                                    className={cn(
+                                        'grid min-w-[4.5rem] gap-0.5 rounded-[10px] border px-3 py-2 text-left transition-colors',
+                                        on
+                                            ? 'border-accent bg-accent-soft'
+                                            : 'border-line hover:border-accent/50'
+                                    )}>
+                                    <span
+                                        className={cn(
+                                            'text-xs font-medium',
+                                            on ? 'text-accent' : 'text-fg'
+                                        )}>
+                                        {option.label}
+                                    </span>
+                                    <span className="font-mono text-[9px] text-fg-muted">
+                                        {option.sub}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </SettingsRow>
+                <SettingsRow last>
+                    <SettingsRowLabel
+                        title="Income month to month"
+                        sub="Shared board picture — stable or variable"
+                    />
+                    <div className="flex gap-1 rounded-full border border-line bg-raised p-0.5">
+                        {(
+                            [
+                                { key: IncomeRhythm.STABLE, label: 'Stable' },
+                                { key: IncomeRhythm.VARIABLE, label: 'Variable' },
+                            ] as const
+                        ).map(option => {
+                            const on =
+                                (settingsQuery.data?.incomeRhythm ?? IncomeRhythm.STABLE) ===
+                                option.key;
+                            return (
+                                <button
+                                    key={option.key}
+                                    type="button"
+                                    disabled={!live || !householdId}
+                                    onClick={() => saveIncomeRhythm.mutate(option.key)}
+                                    className={cn(
+                                        'rounded-full px-3.5 py-1.5 font-mono text-[10px] font-medium tracking-[0.12em] uppercase transition-colors',
+                                        on
+                                            ? 'bg-accent text-on-accent'
+                                            : 'text-fg-muted hover:text-fg'
+                                    )}>
+                                    {option.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </SettingsRow>
+            </SettingsInkCard>
+
             <SettingsInkCard eyebrow="Password" blurb="Change the password for this email account.">
                 <div className="grid gap-3 py-2.5">
                     <Field label="Current password" htmlFor="cur-pw">
@@ -566,17 +699,19 @@ export function JarsSettings() {
     const { showToast } = useAppShell();
     const live = isLiveData(householdId);
 
+    const accountSettingsQuery = useLiveQuery(api.account.settings.queryOptions(), null, live);
+
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
-        mockJars.map(j => ({
-            id: j.id,
+        mockJars.map(jar => ({
+            id: jar.id,
             householdId: 'mock',
-            key: j.key,
-            name: j.name,
-            subtitle: j.subtitle,
-            icon: j.icon,
-            percentage: j.percentage,
-            spendable: j.spendable,
+            key: jar.key,
+            name: jar.name,
+            subtitle: jar.subtitle,
+            icon: jar.icon,
+            percentage: jar.percentage,
+            spendable: jar.spendable,
             sortOrder: 0,
         })) as never,
         live
@@ -602,9 +737,11 @@ export function JarsSettings() {
     const balanced = Math.abs(total - 100) < 0.01;
 
     const coachTips = useMemo(() => {
-        const tips = evaluateSplitCoach(pctByJarKey(jars, pct), 'unknown');
-        return tips.filter(t => !dismissedTips[t.id]);
-    }, [jars, pct, dismissedTips]);
+        const character =
+            accountSettingsQuery.data?.moneyCharacter ?? MoneyCharacter.UNKNOWN;
+        const tips = evaluateSplitCoach(pctByJarKey(jars, pct), character);
+        return tips.filter(tip => !dismissedTips[tip.id]);
+    }, [jars, pct, dismissedTips, accountSettingsQuery.data?.moneyCharacter]);
 
     const incomeQuery = useLiveQuery(
         api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
@@ -806,45 +943,78 @@ export function JarsSettings() {
 }
 
 export function DebtSettings() {
-    const [strategy, setStrategy] = useState<'avalanche' | 'snowball'>('avalanche');
+    const api = useApi();
+    const client = useApiClient();
+    const queryClient = useQueryClient();
+    const { householdId } = useAuth();
+    const { showToast } = useAppShell();
+    const live = isLiveData(householdId);
+
+    const settingsQuery = useLiveQuery(
+        api.household.settings.queryOptions({ input: { householdId: householdId! } }),
+        null,
+        live
+    );
+
+    const strategy =
+        settingsQuery.data?.payoffStrategy ?? PayoffStrategy.AVALANCHE;
+
+    const saveStrategy = useMutation({
+        mutationFn: async (next: PayoffStrategy) => {
+            if (!householdId) throw new Error('No household');
+            return client.household.updateSettings({
+                householdId,
+                payoffStrategy: next,
+            });
+        },
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: api.money.debts.plan.key() });
+            showToast('Payoff method saved', 'success');
+        },
+        onError: () => showToast('Payoff method save failed', 'error'),
+    });
 
     return (
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="How you pay off debt"
-                blurb="Sets the order Rumbelo recommends on the Debt screen. Switch any time — nothing is lost."
+                blurb="Sets the order Rumbelo recommends on the Debt screen for this household. Switch any time — nothing is lost."
                 badge={
                     <SettingsPill tone="accent">
-                        {strategy === 'avalanche' ? 'Avalanche' : 'Snowball'}
+                        {strategy === PayoffStrategy.AVALANCHE ? 'Avalanche' : 'Snowball'}
                     </SettingsPill>
                 }>
                 {(
                     [
                         {
-                            key: 'avalanche' as const,
+                            key: PayoffStrategy.AVALANCHE,
                             name: 'Avalanche',
                             tag: 'Cheapest',
                             desc: 'Highest interest rate first. Costs least over the full payoff.',
                             metric: 'Interest saved · Freedom date sooner on expensive debt',
                         },
                         {
-                            key: 'snowball' as const,
+                            key: PayoffStrategy.SNOWBALL,
                             name: 'Snowball',
                             tag: 'Momentum',
                             desc: 'Smallest balance first. Clears debts faster for a quick win.',
                             metric: 'Wins sooner · Slightly more interest overall',
                         },
                     ] as const
-                ).map((st, i, arr) => {
-                    const on = strategy === st.key;
+                ).map((option, index, list) => {
+                    const on = strategy === option.key;
                     return (
                         <button
-                            key={st.key}
+                            key={option.key}
                             type="button"
-                            onClick={() => setStrategy(st.key)}
+                            disabled={!live || saveStrategy.isPending}
+                            onClick={() => {
+                                if (live) saveStrategy.mutate(option.key);
+                            }}
                             className={cn(
                                 'flex w-full items-start gap-2.5 py-2.5 text-left',
-                                i < arr.length - 1 && 'border-b border-line'
+                                index < list.length - 1 && 'border-b border-line'
                             )}>
                             <span
                                 className={cn(
@@ -860,23 +1030,22 @@ export function DebtSettings() {
                             </span>
                             <span className="grid min-w-0 flex-1 gap-0.5">
                                 <span className="flex flex-wrap items-baseline gap-2">
-                                    <span className="text-sm text-fg">{st.name}</span>
+                                    <span className="text-sm text-fg">{option.name}</span>
                                     <span className="font-mono text-[9px] tracking-[0.12em] text-accent uppercase">
-                                        {st.tag}
+                                        {option.tag}
                                     </span>
                                 </span>
                                 <span className="text-[11px] leading-snug text-pretty text-fg-muted">
-                                    {st.desc}
+                                    {option.desc}
                                 </span>
                                 <span className="font-mono text-[10px] text-fg-secondary">
-                                    {st.metric}
+                                    {option.metric}
                                 </span>
                             </span>
                         </button>
                     );
                 })}
             </SettingsInkCard>
-            <StubNotice what="Payoff preference persists with household settings when that API lands." />
         </SettingsPanel>
     );
 }
@@ -897,9 +1066,7 @@ export function BankSettings() {
 
     const [name, setName] = useState('');
     const [iban, setIban] = useState('');
-    const [kind, setKind] = useState<'CHECKING' | 'SAVINGS' | 'CREDIT' | 'CASH' | 'INVESTMENT'>(
-        'CHECKING'
-    );
+    const [kind, setKind] = useState<AccountKind>(AccountKind.CHECKING);
     const [adding, setAdding] = useState(false);
 
     const createAccount = useMutation({
@@ -916,7 +1083,7 @@ export function BankSettings() {
         onSuccess: () => {
             setName('');
             setIban('');
-            setKind('CHECKING');
+            setKind(AccountKind.CHECKING);
             setAdding(false);
             void queryClient.invalidateQueries({ queryKey: api.money.accounts.list.key() });
             showToast('Account added', 'success');
@@ -1008,13 +1175,13 @@ export function BankSettings() {
                             <Select
                                 id="acc-kind"
                                 value={kind}
-                                onChange={e => setKind(e.target.value as typeof kind)}
+                                onChange={e => setKind(e.target.value as AccountKind)}
                                 disabled={!live}>
-                                <option value="CHECKING">Checking</option>
-                                <option value="SAVINGS">Savings</option>
-                                <option value="CREDIT">Credit card</option>
-                                <option value="CASH">Cash</option>
-                                <option value="INVESTMENT">Investment</option>
+                                <option value={AccountKind.CHECKING}>Checking</option>
+                                <option value={AccountKind.SAVINGS}>Savings</option>
+                                <option value={AccountKind.CREDIT}>Credit card</option>
+                                <option value={AccountKind.CASH}>Cash</option>
+                                <option value={AccountKind.INVESTMENT}>Investment</option>
                             </Select>
                         </Field>
                         <div className="flex justify-end gap-2">

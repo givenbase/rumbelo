@@ -1,132 +1,138 @@
-import type { JarKey } from '@rumbelo/contracts';
+import { JarKey, MoneyCharacter } from '@rumbelo/contracts';
 
 import {
     DEFAULT_JAR_SPLIT,
     SPLIT_SOFT_CEILING,
     SPLIT_SOFT_FLOOR,
-    type MoneyCharacter,
     type SplitPctByKey,
     type SplitTip,
 } from './types';
 
 /**
- * Rule-based split coach (Phase A).
- * Pure — no I/O. Later phases pass `character` from inferred or declared style.
+ * Rule-based split coach (Phase A + B character hooks).
+ * Pure — no I/O. Pass declared moneyCharacter from account settings.
  */
 export function evaluateSplitCoach(
     pct: SplitPctByKey,
-    character: MoneyCharacter = 'unknown'
+    character: MoneyCharacter = MoneyCharacter.UNKNOWN
 ): SplitTip[] {
     const tips: SplitTip[] = [];
-    const play = pct.PLAY ?? DEFAULT_JAR_SPLIT.PLAY;
-    const give = pct.GIVE ?? DEFAULT_JAR_SPLIT.GIVE;
-    const edu = pct.EDUCATION ?? DEFAULT_JAR_SPLIT.EDUCATION;
-    const ff = pct.FINANCIAL_FREEDOM ?? DEFAULT_JAR_SPLIT.FINANCIAL_FREEDOM;
-    const lts = pct.LONG_TERM_SAVINGS ?? DEFAULT_JAR_SPLIT.LONG_TERM_SAVINGS;
-    const nec = pct.NECESSITIES ?? DEFAULT_JAR_SPLIT.NECESSITIES;
+    const play = pct[JarKey.PLAY] ?? DEFAULT_JAR_SPLIT[JarKey.PLAY];
+    const give = pct[JarKey.GIVE] ?? DEFAULT_JAR_SPLIT[JarKey.GIVE];
+    const edu = pct[JarKey.EDUCATION] ?? DEFAULT_JAR_SPLIT[JarKey.EDUCATION];
+    const ff = pct[JarKey.FINANCIAL_FREEDOM] ?? DEFAULT_JAR_SPLIT[JarKey.FINANCIAL_FREEDOM];
+    const lts = pct[JarKey.LONG_TERM_SAVINGS] ?? DEFAULT_JAR_SPLIT[JarKey.LONG_TERM_SAVINGS];
+    const nec = pct[JarKey.NECESSITIES] ?? DEFAULT_JAR_SPLIT[JarKey.NECESSITIES];
 
     const futureFirst = ff + lts;
     const futureDefault =
-        DEFAULT_JAR_SPLIT.FINANCIAL_FREEDOM + DEFAULT_JAR_SPLIT.LONG_TERM_SAVINGS;
+        DEFAULT_JAR_SPLIT[JarKey.FINANCIAL_FREEDOM] + DEFAULT_JAR_SPLIT[JarKey.LONG_TERM_SAVINGS];
 
-    if (play > SPLIT_SOFT_CEILING.PLAY) {
+    if (play > SPLIT_SOFT_CEILING[JarKey.PLAY]) {
         tips.push({
             id: 'play-above-default',
             severity: 'warn',
-            jars: ['PLAY', 'FINANCIAL_FREEDOM', 'LONG_TERM_SAVINGS'],
+            jars: [JarKey.PLAY, JarKey.FINANCIAL_FREEDOM, JarKey.LONG_TERM_SAVINGS],
             message:
-                character === 'saver'
+                character === MoneyCharacter.SAVER
                     ? 'Play above 10% can be healthy if you under-spend joy — just don’t fund it by cutting Financial Freedom.'
                     : 'Play above 10% usually comes from Financial Freedom or Long Term Savings. Those two buy your future; Play spends this month.',
         });
     }
 
-    if (give > SPLIT_SOFT_CEILING.GIVE) {
+    if (give > SPLIT_SOFT_CEILING[JarKey.GIVE]) {
         tips.push({
             id: 'give-above-default',
             severity: 'info',
-            jars: ['GIVE', 'FINANCIAL_FREEDOM'],
+            jars: [JarKey.GIVE, JarKey.FINANCIAL_FREEDOM],
             message:
                 'Give above 5% is generous — keep Financial Freedom at least at 10% so giving doesn’t replace paying yourself first.',
         });
     }
 
-    if (edu > SPLIT_SOFT_CEILING.EDUCATION) {
+    if (edu > SPLIT_SOFT_CEILING[JarKey.EDUCATION]) {
         tips.push({
             id: 'edu-above-soft',
             severity: 'info',
-            jars: ['EDUCATION', 'FINANCIAL_FREEDOM'],
+            jars: [JarKey.EDUCATION, JarKey.FINANCIAL_FREEDOM],
             message:
                 'Education raises earning power — still protect Financial Freedom at 10% so learning doesn’t crowd out investing.',
         });
     }
 
-    if (ff < SPLIT_SOFT_FLOOR.FINANCIAL_FREEDOM) {
+    if (ff < SPLIT_SOFT_FLOOR[JarKey.FINANCIAL_FREEDOM]) {
         tips.push({
             id: 'ff-below-default',
             severity: 'warn',
-            jars: ['FINANCIAL_FREEDOM'],
+            jars: [JarKey.FINANCIAL_FREEDOM],
             message:
                 'Financial Freedom under 10% means you’re paying everyone else first. Put yourself back in the split before raising Play or Give.',
         });
     }
 
-    if (lts < SPLIT_SOFT_FLOOR.LONG_TERM_SAVINGS) {
+    if (lts < SPLIT_SOFT_FLOOR[JarKey.LONG_TERM_SAVINGS]) {
         tips.push({
             id: 'lts-below-default',
             severity: 'warn',
-            jars: ['LONG_TERM_SAVINGS'],
+            jars: [JarKey.LONG_TERM_SAVINGS],
             message:
                 'Long Term Savings under 10% leaves no buffer for planned big things. Raise this before expanding Play.',
         });
     }
 
-    if (futureFirst < futureDefault && (play > DEFAULT_JAR_SPLIT.PLAY || give > DEFAULT_JAR_SPLIT.GIVE)) {
+    if (
+        futureFirst < futureDefault &&
+        (play > DEFAULT_JAR_SPLIT[JarKey.PLAY] || give > DEFAULT_JAR_SPLIT[JarKey.GIVE])
+    ) {
         tips.push({
             id: 'future-vs-fun',
             severity: 'warn',
-            jars: ['PLAY', 'GIVE', 'FINANCIAL_FREEDOM', 'LONG_TERM_SAVINGS'],
+            jars: [JarKey.PLAY, JarKey.GIVE, JarKey.FINANCIAL_FREEDOM, JarKey.LONG_TERM_SAVINGS],
             message:
                 'You’re funding today (Play / Give) while shrinking tomorrow (Freedom + Long Term). Prefer raising those two before fun.',
         });
     }
 
-    if (nec > SPLIT_SOFT_CEILING.NECESSITIES) {
+    if (nec > SPLIT_SOFT_CEILING[JarKey.NECESSITIES]) {
         tips.push({
             id: 'nec-high',
             severity: 'info',
-            jars: ['NECESSITIES'],
+            jars: [JarKey.NECESSITIES],
             message:
                 'Necessity above 60% squeezes every other jar. Cutting fixed costs usually helps more than cutting Freedom.',
         });
     }
 
-    if (nec < SPLIT_SOFT_FLOOR.NECESSITIES) {
+    if (nec < SPLIT_SOFT_FLOOR[JarKey.NECESSITIES]) {
         tips.push({
             id: 'nec-low',
             severity: 'warn',
-            jars: ['NECESSITIES'],
+            jars: [JarKey.NECESSITIES],
             message:
                 'Necessity under 45% is tight for most households — check rent, insurance and debt instalments still fit.',
         });
     }
 
-    // Character-specific nudges (Phase B — works once character ≠ unknown)
-    if (character === 'spender' && play >= DEFAULT_JAR_SPLIT.PLAY && ff <= DEFAULT_JAR_SPLIT.FINANCIAL_FREEDOM) {
+    // Character-specific nudges — works once character ≠ UNKNOWN
+    if (
+        character === MoneyCharacter.SPENDER &&
+        play >= DEFAULT_JAR_SPLIT[JarKey.PLAY] &&
+        ff <= DEFAULT_JAR_SPLIT[JarKey.FINANCIAL_FREEDOM]
+    ) {
         tips.push({
             id: 'spender-ff',
             severity: 'info',
-            jars: ['PLAY', 'FINANCIAL_FREEDOM'],
+            jars: [JarKey.PLAY, JarKey.FINANCIAL_FREEDOM],
             message:
                 'Your pattern leans spender — try +1–2% into Financial Freedom before adding more Play.',
         });
     }
 
-    if (character === 'saver' && play < 5 && ff + lts >= 25) {
+    if (character === MoneyCharacter.SAVER && play < 5 && ff + lts >= 25) {
         tips.push({
             id: 'saver-play',
             severity: 'info',
-            jars: ['PLAY'],
+            jars: [JarKey.PLAY],
             message:
                 'Your pattern leans saver — a little more Play can make the plan sustainable. Joy that is planned is not waste.',
         });
@@ -137,9 +143,9 @@ export function evaluateSplitCoach(
 
 function dedupeTips(tips: SplitTip[]): SplitTip[] {
     const seen = new Set<string>();
-    return tips.filter(t => {
-        if (seen.has(t.id)) return false;
-        seen.add(t.id);
+    return tips.filter(tip => {
+        if (seen.has(tip.id)) return false;
+        seen.add(tip.id);
         return true;
     });
 }

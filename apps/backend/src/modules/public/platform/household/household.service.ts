@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import { Currency, HouseholdRole, IncomeKind, OnboardingInput } from '@rumbelo/contracts';
+import { Currency, HouseholdRole, IncomeKind, IncomeRhythm, OnboardingInput, PayoffStrategy } from '@rumbelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, BadRequestException, Injectable } from '@nestjs/common';
@@ -197,9 +197,14 @@ export class HouseholdService {
             kind: input.kind,
             currency: input.currency,
             why: input.why,
+            incomeRhythm: input.incomeRhythm ?? IncomeRhythm.STABLE,
+            payoffStrategy: input.payoffStrategy ?? PayoffStrategy.AVALANCHE,
         } as never);
 
-        await this.accountSettings.upsertForUser(userId, { locale: input.locale as never });
+        await this.accountSettings.upsertForUser(userId, {
+            locale: input.locale as never,
+            moneyCharacter: input.moneyCharacter,
+        });
 
         if (input.monthlyNetIncome > 0) {
             this.em.create(IncomeSource, {
@@ -260,5 +265,7 @@ function toSettingsDto(row: HouseholdSettings) {
         bankSyncEnabled: row.bankSyncEnabled,
         coachEnabled: row.coachEnabled,
         why: row.why,
+        payoffStrategy: row.payoffStrategy,
+        incomeRhythm: row.incomeRhythm,
     };
 }

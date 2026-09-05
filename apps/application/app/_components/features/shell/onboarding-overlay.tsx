@@ -3,8 +3,9 @@
 import { useApiClient } from '@/app/_lib/api-hooks';
 import { useEffect, useState } from 'react';
 
+import { Currency, IncomeRhythm, Locale, MoneyCharacter } from '@rumbelo/contracts';
 import { Button, Field, Input } from '@rumbelo/ui';
-import { Locale } from '@rumbelo/contracts';
+import { cn } from '@rumbelo/utils';
 
 import { markOnboardingDone } from '@/app/_lib/onboarding-storage';
 import { JAR_META } from '@/app/_mock';
@@ -15,6 +16,10 @@ const STEPS = [
     { title: 'Welcome to Rumbelo', body: 'Stop wondering where it went. Six jars, one calm overview.' },
     { title: 'Your income', body: 'What is your net monthly income?' },
     { title: 'The six jars', body: 'Your income is split immediately — pay your future first.' },
+    {
+        title: 'How you handle money',
+        body: 'Soft labels only — so tips fit you. Partners can choose differently later.',
+    },
     { title: 'Your why', body: 'One sentence on your dashboard. The check when money gets tight.' },
 ];
 
@@ -37,6 +42,8 @@ export function OnboardingOverlay() {
     const [householdName, setHouseholdName] = useState('My household');
     const [monthlyIncome, setMonthlyIncome] = useState('4300');
     const [why, setWhy] = useState('');
+    const [moneyCharacter, setMoneyCharacter] = useState(MoneyCharacter.UNKNOWN);
+    const [incomeRhythm, setIncomeRhythm] = useState(IncomeRhythm.STABLE);
     const [pending, setPending] = useState(false);
 
     if (!session || householdId) return null;
@@ -49,11 +56,13 @@ export function OnboardingOverlay() {
         setPending(true);
         try {
             const euros = Math.round(parseFloat(monthlyIncome.replace(',', '.')) * 100);
-            const split = JAR_META.map(j => ({ key: j.key, percentage: j.pct }));
+            const split = JAR_META.map(jar => ({ key: jar.key, percentage: jar.pct }));
             const household = await client.household.onboard({
                 householdName,
-                currency: 'EUR',
+                currency: Currency.EUR,
                 locale: Locale.NL,
+                moneyCharacter,
+                incomeRhythm,
                 monthlyNetIncome: Number.isFinite(euros) ? euros : 0,
                 split,
                 why: why.trim() || null,
@@ -101,72 +110,132 @@ export function OnboardingOverlay() {
                                 id="income"
                                 inputMode="decimal"
                                 value={monthlyIncome}
-                                onChange={e => setMonthlyIncome(e.target.value)}
+                                onChange={event => setMonthlyIncome(event.target.value)}
                             />
                         </Field>
+                        <div className="mt-3">
+                            <Field label="Household name" htmlFor="hh-name">
+                                <Input
+                                    id="hh-name"
+                                    value={householdName}
+                                    onChange={event => setHouseholdName(event.target.value)}
+                                />
+                            </Field>
+                        </div>
                     </div>
                 )}
 
                 {onboardingStep === 2 && (
                     <ul className="mt-4 grid gap-2">
-                        {JAR_META.map(j => (
+                        {JAR_META.map(jar => (
                             <li
-                                key={j.key}
-                                className="flex items-center justify-between rounded-xl border border-line bg-raised px-3 py-2 text-sm">
-                                <span>
-                                    {j.icon} {j.name}
+                                key={jar.key}
+                                className="flex items-center justify-between rounded-xl border border-line bg-raised px-3 py-2">
+                                <span className="text-sm text-fg">
+                                    {jar.icon} {jar.name}
                                 </span>
-                                <span className="font-mono text-fg-muted">{j.pct}%</span>
+                                <span className="font-mono text-xs text-fg-muted">{jar.pct}%</span>
                             </li>
                         ))}
                     </ul>
                 )}
 
                 {onboardingStep === 3 && (
-                    <div className="mt-4 grid gap-3">
-                        <Field label="Household name" htmlFor="household">
+                    <div className="mt-4 grid gap-4">
+                        <div>
+                            <p className="mb-2 font-mono text-[10px] tracking-[0.12em] text-fg-muted uppercase">
+                                I tend to…
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {(
+                                    [
+                                        { key: MoneyCharacter.SPENDER, label: 'Spender' },
+                                        { key: MoneyCharacter.SAVER, label: 'Saver' },
+                                        { key: MoneyCharacter.BALANCED, label: 'Balanced' },
+                                        { key: MoneyCharacter.UNKNOWN, label: 'Not sure' },
+                                    ] as const
+                                ).map(option => (
+                                    <button
+                                        key={option.key}
+                                        type="button"
+                                        onClick={() => setMoneyCharacter(option.key)}
+                                        className={cn(
+                                            'rounded-full border px-3 py-1.5 text-xs transition-colors',
+                                            moneyCharacter === option.key
+                                                ? 'border-accent bg-accent-soft text-accent'
+                                                : 'border-line text-fg-muted hover:text-fg'
+                                        )}>
+                                        {option.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <p className="mb-2 font-mono text-[10px] tracking-[0.12em] text-fg-muted uppercase">
+                                Income month to month
+                            </p>
+                            <div className="flex gap-1.5">
+                                {(
+                                    [
+                                        { key: IncomeRhythm.STABLE, label: 'Stable' },
+                                        { key: IncomeRhythm.VARIABLE, label: 'Variable' },
+                                    ] as const
+                                ).map(option => (
+                                    <button
+                                        key={option.key}
+                                        type="button"
+                                        onClick={() => setIncomeRhythm(option.key)}
+                                        className={cn(
+                                            'rounded-full border px-3 py-1.5 text-xs transition-colors',
+                                            incomeRhythm === option.key
+                                                ? 'border-accent bg-accent-soft text-accent'
+                                                : 'border-line text-fg-muted hover:text-fg'
+                                        )}>
+                                        {option.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {onboardingStep === 4 && (
+                    <div className="mt-4">
+                        <Field label="Why are you here?" htmlFor="why">
                             <Input
-                                id="household"
-                                value={householdName}
-                                onChange={e => setHouseholdName(e.target.value)}
-                            />
-                        </Field>
-                        <Field label="Your why" htmlFor="why">
-                            <textarea
                                 id="why"
-                                rows={3}
                                 value={why}
-                                onChange={e => setWhy(e.target.value)}
-                                className="w-full rounded-xl border border-line bg-raised px-3 py-2 text-sm"
-                                placeholder="Why are you doing this?"
+                                onChange={event => setWhy(event.target.value)}
+                                placeholder="e.g. Stop guessing where the money went"
                             />
                         </Field>
                     </div>
                 )}
 
                 <div className="mt-6 flex items-center justify-between gap-3">
-                    <div className="flex gap-1.5">
-                        {STEPS.map((_, i) => (
+                    <div className="flex gap-1">
+                        {STEPS.map((_, index) => (
                             <span
-                                key={i}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${
-                                    i === onboardingStep ? 'w-5 bg-accent' : 'w-1.5 bg-sunken'
-                                }`}
+                                key={STEPS[index]!.title}
+                                className={cn(
+                                    'h-1.5 rounded-full transition-all',
+                                    index === onboardingStep ? 'w-5 bg-accent' : 'w-1.5 bg-sunken'
+                                )}
                             />
                         ))}
                     </div>
                     <div className="flex gap-2">
                         {onboardingStep > 0 && (
                             <Button
-                                variant="ghost"
+                                variant="secondary"
                                 size="sm"
                                 onClick={() => setOnboardingStep(onboardingStep - 1)}>
                                 Back
                             </Button>
                         )}
                         {isLast ? (
-                            <Button size="sm" onClick={() => void finish()} disabled={pending}>
-                                {pending ? 'Working…' : 'Done'}
+                            <Button size="sm" disabled={pending} onClick={() => void finish()}>
+                                {pending ? 'Creating…' : 'Start'}
                             </Button>
                         ) : (
                             <Button size="sm" onClick={() => setOnboardingStep(onboardingStep + 1)}>

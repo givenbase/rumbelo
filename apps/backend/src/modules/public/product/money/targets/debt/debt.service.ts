@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { DebtKind, PayoffStrategy } from '@rumbelo/contracts';
+import { HouseholdSettings } from '../../../../platform/household/household-settings.entity';
 
 import { Debt } from './debt.entity';
 
@@ -59,11 +60,20 @@ export class DebtService {
      * smallest balance first and is easier to sustain. We surface both because the
      * cheaper plan is worthless if the user abandons it.
      */
-    async plan(strategy: PayoffStrategy) {
+    async plan(strategy?: PayoffStrategy | null) {
+        const resolved =
+            strategy ??
+            (
+                await this.em.findOne(HouseholdSettings, {
+                    householdId: currentHouseholdId(),
+                })
+            )?.payoffStrategy ??
+            PayoffStrategy.AVALANCHE;
+
         const debts = await this.repo.find({ closedOn: null });
         if (debts.length === 0) {
             return {
-                strategy,
+                strategy: resolved,
                 totalBalance: 0,
                 totalInterestProjected: 0,
                 debtFreeOn: null,
@@ -72,10 +82,10 @@ export class DebtService {
             };
         }
 
-        const ordered = [...debts].sort((a, b) =>
-            strategy === PayoffStrategy.AVALANCHE
-                ? Number(b.interestRate) - Number(a.interestRate)
-                : Number(a.balance) - Number(b.balance)
+        const ordered = [...debts].sort((left, right) =>
+            resolved === PayoffStrategy.AVALANCHE
+                ? Number(right.interestRate) - Number(left.interestRate)
+                : Number(left.balance) - Number(right.balance)
         );
 
         const totalBalance = debts.reduce((total, debt) => total + Number(debt.balance), 0);
@@ -89,7 +99,7 @@ export class DebtService {
         const months = monthlyPool > 0 ? Math.ceil(totalBalance / monthlyPool) : null;
 
         return {
-            strategy,
+            strategy: resolved,
             totalBalance,
             totalInterestProjected: 0,
             debtFreeOn: months === null ? null : addMonths(months),

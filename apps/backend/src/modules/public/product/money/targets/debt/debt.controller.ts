@@ -4,7 +4,6 @@ import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
 import { ControllerSwagger } from '../../../../../../common/decorators/controller-swagger.decorators';
-import { PayoffStrategy } from '@rumbelo/contracts';
 import { DebtService } from './debt.service';
 
 /** Transport only. Handler order is always CRUD. */
@@ -48,7 +47,7 @@ export class DebtController {
     @Implement(contract.money.debts.plan)
     plan() {
         return implement(contract.money.debts.plan).handler(({ input }) =>
-            this.debts.plan(input.strategy as PayoffStrategy)
+            this.debts.plan(input.strategy ?? null)
         );
     }
 

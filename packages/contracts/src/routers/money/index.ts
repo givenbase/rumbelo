@@ -135,7 +135,7 @@ export const contract = {
         plan: oc
             .input(
                 S.HouseholdScoped.extend({
-                    strategy: z.enum(PayoffStrategy).default(PayoffStrategy.AVALANCHE),
+                    strategy: z.enum(PayoffStrategy).nullish(),
                 })
             )
             .output(S.DebtPlan),

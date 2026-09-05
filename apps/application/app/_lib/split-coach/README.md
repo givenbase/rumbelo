@@ -14,40 +14,27 @@ Override is always allowed — tips are coaching, not rules.
 
 **Where:** Settings → Jars (`JarsSettings`), live while sliders move.
 
-**What:** Rule-based tips from current percentages vs soft floors/ceilings:
-
-| Signal | Soft threshold | Intent |
-| --- | --- | --- |
-| Play high | > 10% | Prefer not funding from FF / LTS |
-| Give high | > 5% | Keep FF ≥ 10% |
-| Education high | > 12% | Don’t crowd out FF |
-| FF low | < 10% | Pay yourself first |
-| LTS low | < 10% | Protect planned big costs |
-| Future vs fun | FF+LTS below default while Play/Give above | Explicit trade-off |
-| Necessities | > 60% or < 45% | Squeeze / under-budget risk |
+**What:** Rule-based tips from current percentages vs soft floors/ceilings.
 
 **Code:** `evaluate.ts`, `types.ts`. UI dismisses tips per session; Save still works.
 
-### B — Money character (next)
+### B — Money character (shipped)
 
-Infer a soft **spender / saver / balanced** label from behaviour (not a quiz alone):
+Person-scoped `MoneyCharacter` on `account_settings` (`SPENDER` | `SAVER` | `BALANCED` | `UNKNOWN`):
 
-- Spend rate on Play vs allocation
-- How often FF is raided or underfunded
-- Debt payoff vs surplus investing
-- Optional self-declare on onboarding (“I tend to…”)
+- Self-declare on onboarding (“I tend to…”) and Settings → Account
+- Passed into `evaluateSplitCoach` for the **current user**
+- Household board also stores `incomeRhythm` (STABLE | VARIABLE) and `payoffStrategy` (AVALANCHE | SNOWBALL) — shared decisions, not personality
 
-Pass `character` into `evaluateSplitCoach` so tips personalise (hooks already exist for `spender` / `saver`).
+Character is descriptive, never judgmental — “leans spender”, never “bad with money”.
 
-Store as household preference + optional inferred override with low confidence until enough periods exist.
+### B2 — Infer from behaviour (later)
+
+Optional inferred override with low confidence until enough periods exist (spend rate on Play, FF underfunded, etc.).
 
 ### C — Weekly coach card (later)
 
-One card on Home / Jars:
-
-- One tip, one CTA (“Raise Freedom 1%”, “Open Play”)
-- Based on last period behaviour + current split
-- Never nag more than once per week per tip id
+One card on Home / Jars — one tip, one CTA, at most once per week per tip id.
 
 ## Product principles
 
@@ -55,7 +42,7 @@ One card on Home / Jars:
 2. **Soft** — warn / info only; no hard validation on save.
 3. **Priority language** — Freedom and Long Term before Play/Give when there’s a conflict.
 4. **English, short** — one thought per tip.
-5. **Character is descriptive, not judgmental** — “leans spender”, never “bad with money”.
+5. **Person vs board** — personality on the person; debt order and income rhythm on the household.
 
 ## API surface
 
@@ -64,7 +51,7 @@ evaluateSplitCoach(pctByKey, character?: MoneyCharacter): SplitTip[]
 pctByJarKey(jars, pctById): SplitPctByKey
 ```
 
-Wire character from prefs once Phase B lands; until then pass `'unknown'`.
+`MoneyCharacter` lives in `@rumbelo/contracts`.
 
 ## Out of scope (for now)
 

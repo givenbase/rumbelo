@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import type { AccountSettings as AccountSettingsDto } from '@rumbelo/contracts';
 
-import { Locale, Theme } from '@rumbelo/contracts';
+import { Locale, MoneyCharacter, Theme } from '@rumbelo/contracts';
 import { currentUserId } from '../../../../common/household/household.context';
 import { Account } from '../account.entity';
 import { AccountSettings } from './account-settings.entity';
@@ -11,6 +11,7 @@ import { AccountSettings } from './account-settings.entity';
 export type AccountSettingsPatch = {
     locale?: Locale;
     theme?: Theme;
+    moneyCharacter?: MoneyCharacter;
 };
 
 /**
@@ -52,7 +53,15 @@ export class AccountSettingsService {
         defaults: AccountSettingsPatch = {}
     ): Promise<AccountSettings> {
         const existing = await this.findEntityByUserId(userId);
-        if (existing) return existing;
+        if (existing) {
+            if (defaults.locale !== undefined) existing.locale = defaults.locale;
+            if (defaults.theme !== undefined) existing.theme = defaults.theme;
+            if (defaults.moneyCharacter !== undefined) {
+                existing.moneyCharacter = defaults.moneyCharacter;
+            }
+            await this.em.flush();
+            return existing;
+        }
         return this.createForUser(userId, defaults);
     }
 
@@ -85,6 +94,7 @@ export class AccountSettingsService {
         const row = await this.upsertForUser(currentUserId());
         if (patch.locale !== undefined) row.locale = patch.locale;
         if (patch.theme !== undefined) row.theme = patch.theme;
+        if (patch.moneyCharacter !== undefined) row.moneyCharacter = patch.moneyCharacter;
         await this.em.flush();
         this.logger.debug(`Updated account settings ${row.id}`);
         return toDto(row);
@@ -131,6 +141,7 @@ export class AccountSettingsService {
             account,
             locale: defaults.locale ?? Locale.NL,
             theme: defaults.theme ?? Theme.SYSTEM,
+            moneyCharacter: defaults.moneyCharacter ?? MoneyCharacter.UNKNOWN,
         } as never);
         await this.em.persist(settings).flush();
         return settings;
@@ -142,5 +153,6 @@ function toDto(row: AccountSettings): AccountSettingsDto {
         accountId: row.account.id,
         locale: row.locale,
         theme: row.theme,
+        moneyCharacter: row.moneyCharacter,
     };
 }

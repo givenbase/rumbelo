@@ -4,11 +4,14 @@ import {
     Currency,
     HouseholdKind,
     HouseholdRole,
+    IncomeRhythm,
     Locale,
+    MoneyCharacter,
+    PayoffStrategy,
 } from '../../enums';
 import { HouseholdId, Id, UserId } from '../common';
 
-export { HouseholdKind, HouseholdRole } from '../../enums';
+export { HouseholdKind, HouseholdRole, IncomeRhythm, MoneyCharacter } from '../../enums';
 
 /**
  * Household is the isolation boundary. Every financial row carries householdId and
@@ -38,8 +41,8 @@ export const HouseholdMember = z.object({
 });
 
 /**
- * Money-board prefs for the household. Language and appearance live on
- * AccountSettings — they can differ per person in the same household.
+ * Money-board prefs for the household. Language, appearance, and money character
+ * live on AccountSettings — they can differ per person in the same household.
  */
 export const HouseholdSettings = z.object({
     householdId: HouseholdId,
@@ -56,16 +59,26 @@ export const HouseholdSettings = z.object({
     coachEnabled: z.boolean(),
     /** Surfaced on the dashboard as the "why" line. */
     why: z.string().max(500).nullable().optional(),
+    /** Avalanche / snowball — one order for the shared debt list. */
+    payoffStrategy: z.enum(PayoffStrategy),
+    /** Stable vs variable household income picture. */
+    incomeRhythm: z.enum(IncomeRhythm),
 });
 export type HouseholdSettings = z.infer<typeof HouseholdSettings>;
 
-/** Onboarding writes income + split + fixed costs in one transaction. */
+/** Onboarding writes income + split + prefs in one transaction. */
 export const OnboardingInput = z.object({
     householdName: z.string().min(1).max(120),
     kind: z.enum(HouseholdKind).default(HouseholdKind.SOLO),
     currency: z.enum(Currency).default(Currency.EUR),
     /** Creator's language — stored on their AccountSettings, not the board. */
     locale: z.enum(Locale).default(Locale.NL),
+    /** Creator's money style — person-scoped AccountSettings. */
+    moneyCharacter: z.enum(MoneyCharacter).default(MoneyCharacter.UNKNOWN),
+    /** Board income volatility. */
+    incomeRhythm: z.enum(IncomeRhythm).default(IncomeRhythm.STABLE),
+    /** Board debt payoff default (optional at onboard). */
+    payoffStrategy: z.enum(PayoffStrategy).default(PayoffStrategy.AVALANCHE),
     monthlyNetIncome: z.int().min(0),
     split: z.array(z.object({ key: z.string(), percentage: z.number().min(0).max(100) })),
     why: z.string().max(500).nullable().default(null),

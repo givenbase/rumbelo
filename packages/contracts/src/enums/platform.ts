@@ -20,3 +20,20 @@ export enum CoachKind {
     INSIGHT = 'INSIGHT',
     RITUAL = 'RITUAL',
 }
+
+/**
+ * Soft self-declared money style — person-scoped.
+ * Descriptive, never judgmental (“leans spender”).
+ */
+export enum MoneyCharacter {
+    SPENDER = 'SPENDER',
+    SAVER = 'SAVER',
+    BALANCED = 'BALANCED',
+    UNKNOWN = 'UNKNOWN',
+}
+
+/** Board-level income volatility — shared cash-flow picture. */
+export enum IncomeRhythm {
+    STABLE = 'STABLE',
+    VARIABLE = 'VARIABLE',
+}

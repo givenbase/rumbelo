@@ -82,3 +82,17 @@ Facing every amount can mean facing shortfall, shame, or the gap between ambitio
 ## One-line takeaway
 
 **Rumbelo solves the missing picture: for people who are successful, people who want change, and people who want success but don’t yet know the exact next move — so intention leads, and life doesn’t decide first.**
+
+---
+
+## Product implication — money profile
+
+Research above maps to prefs that keep coaching soft and personal:
+
+| Insight | Pref | Scope |
+|---|---|---|
+| Volatility makes “fixed month” advice feel fake | `incomeRhythm` STABLE \| VARIABLE | Household board |
+| Scarcity / ambition → different default tips | `moneyCharacter` SPENDER \| SAVER \| BALANCED \| UNKNOWN | **Person** (partners can differ) |
+| Debt payoff is a shared list | `payoffStrategy` AVALANCHE \| SNOWBALL | Household board |
+
+Never shame: character is descriptive (“leans spender”), not a verdict.

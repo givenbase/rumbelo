@@ -1,13 +1,13 @@
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
-import { Currency, HouseholdKind } from '@rumbelo/contracts';
+import { Currency, HouseholdKind, IncomeRhythm, PayoffStrategy } from '@rumbelo/contracts';
 
-import { NativeEnum } from '../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../common/database/entity-config.util';
+import { NativeEnum } from '../../../../common/database/native-enum.util';
 
 /**
- * Money-board prefs for a household. Language and appearance live on
- * auth.account_settings (person-scoped). Currency stays here — the board has
- * one accounting currency for every member.
+ * Money-board prefs for a household. Language, appearance, and money character
+ * live on auth.account_settings (person-scoped). Currency and board money style
+ * stay here — one accounting currency and one debt order for every member.
  */
 @Entity(entityConfig({ schema: 'public', domain: 'platform', tableName: 'household_settings' }))
 export class HouseholdSettings {
@@ -40,6 +40,26 @@ export class HouseholdSettings {
     /** The user's stated reason, surfaced on the dashboard as the "why" line. */
     @Property({ type: 'text', nullable: true })
     why: string | null = null;
+
+    /** Avalanche / snowball — one order for the shared debt list. */
+    @Enum(
+        NativeEnum({
+            PayoffStrategy,
+            domain: 'money',
+            defaultValue: PayoffStrategy.AVALANCHE,
+        })
+    )
+    payoffStrategy: PayoffStrategy = PayoffStrategy.AVALANCHE;
+
+    /** Stable vs variable household income picture. */
+    @Enum(
+        NativeEnum({
+            IncomeRhythm,
+            domain: 'platform',
+            defaultValue: IncomeRhythm.STABLE,
+        })
+    )
+    incomeRhythm: IncomeRhythm = IncomeRhythm.STABLE;
 
     @Property({ type: 'timestamptz', defaultRaw: 'now()' })
     createdAt: Date = new Date();

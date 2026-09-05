@@ -4,9 +4,9 @@ export {
 } from './evaluate';
 export {
     DEFAULT_JAR_SPLIT,
+    MoneyCharacter,
     SPLIT_SOFT_CEILING,
     SPLIT_SOFT_FLOOR,
-    type MoneyCharacter,
     type SplitPctByKey,
     type SplitTip,
     type SplitTipSeverity,
