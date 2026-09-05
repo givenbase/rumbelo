@@ -7,26 +7,13 @@
  *   pnpm db:create-schemas
  *   tsx scripts/db/create-schemas.ts
  */
-import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-import { config as loadDotenv } from 'dotenv';
 import { Pool } from 'pg';
+
+import { loadEnvFiles } from '../../src/common/config/load-env';
 
 const SCHEMAS = ['auth', 'backoffice', 'public'] as const;
 
-function findRootEnv(): string {
-    let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 8; i++) {
-        const candidate = resolve(dir, '.env');
-        if (existsSync(candidate)) return candidate;
-        dir = resolve(dir, '..');
-    }
-    return resolve(dirname(fileURLToPath(import.meta.url)), '../../../.env');
-}
-
-loadDotenv({ path: findRootEnv() });
+loadEnvFiles();
 
 async function main(): Promise<void> {
     const connectionString = process.env.DATABASE_URL;

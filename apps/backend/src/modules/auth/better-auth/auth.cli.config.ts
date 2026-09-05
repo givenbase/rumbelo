@@ -1,22 +1,8 @@
-import { config as loadDotenv } from 'dotenv';
-import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { loadEnv } from '../../../common/config/env.config';
+import { loadEnvFiles } from '../../../common/config/load-env';
 import { createAuth } from './auth.config';
 
-function findRootEnv(): string {
-    let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 8; i++) {
-        const candidate = resolve(dir, '.env');
-        if (existsSync(candidate)) return candidate;
-        dir = resolve(dir, '..');
-    }
-    return resolve(dirname(fileURLToPath(import.meta.url)), '../../../../.env');
-}
-
-loadDotenv({ path: findRootEnv() });
+loadEnvFiles();
 
 /** Used by `@better-auth/cli migrate` only — not imported by Nest bootstrap. */
 export default createAuth(loadEnv());

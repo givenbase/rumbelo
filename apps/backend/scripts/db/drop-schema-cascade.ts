@@ -9,13 +9,9 @@
  *
  * Non-interactive / scripted: pass --yes or DB_DROP_CONFIRM=yes
  */
-import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-import { config as loadDotenv } from 'dotenv';
 import { Pool } from 'pg';
 
+import { loadEnvFiles } from '../../src/common/config/load-env';
 import { confirmDestructiveDrop } from './confirm-destructive';
 
 const APP_SCHEMAS = ['auth', 'backoffice'] as const;
@@ -23,17 +19,7 @@ const APP_SCHEMAS = ['auth', 'backoffice'] as const;
 /** Pre-plane schemas — tables now live in `public`. Always drop on reset. */
 const LEGACY_SCHEMAS = ['money', 'energy', 'growth', 'soul', 'platform'] as const;
 
-function findRootEnv(): string {
-    let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 8; i++) {
-        const candidate = resolve(dir, '.env');
-        if (existsSync(candidate)) return candidate;
-        dir = resolve(dir, '..');
-    }
-    return resolve(dirname(fileURLToPath(import.meta.url)), '../../../.env');
-}
-
-loadDotenv({ path: findRootEnv() });
+loadEnvFiles();
 
 async function main(): Promise<void> {
     const connectionString = process.env.DATABASE_URL;

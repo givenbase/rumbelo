@@ -2,22 +2,11 @@ import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SeedManager } from '@mikro-orm/seeder';
-import { config as loadEnv } from 'dotenv';
-import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-/** MikroORM CLI runs outside Nest — walk up to monorepo root `.env`. */
-function findRootEnv(): string {
-    let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 6; i++) {
-        const candidate = resolve(dir, '.env');
-        if (existsSync(candidate)) return candidate;
-        dir = resolve(dir, '..');
-    }
-    return resolve(dirname(fileURLToPath(import.meta.url)), '../../.env');
-}
-loadEnv({ path: findRootEnv() });
+import { loadEnvFiles } from './src/common/config/load-env';
+
+/** MikroORM CLI runs outside Nest — same load path as runtime (no override). */
+loadEnvFiles();
 
 const isProd = process.env.NODE_ENV === 'production';
 

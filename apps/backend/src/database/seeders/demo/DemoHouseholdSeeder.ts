@@ -1,7 +1,4 @@
 import { randomUUID } from 'node:crypto';
-import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import type { EntityManager } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
@@ -20,9 +17,9 @@ import {
     TransactionStatus,
     EnergyMetric,
 } from '@rumbelo/contracts';
-import { config as loadDotenv } from 'dotenv';
 
 import { loadEnv } from '../../../common/config/env.config';
+import { loadEnvFiles } from '../../../common/config/load-env';
 import { createAuth } from '../../../modules/auth/better-auth/auth.config';
 import { AuthMember } from '../../../modules/auth/better-auth/member/auth-member.entity';
 import { AuthOrganization } from '../../../modules/auth/better-auth/organization/auth-organization.entity';
@@ -42,17 +39,7 @@ import { Goal } from '../../../modules/public/product/money/targets/goal/goal.en
 import { Gratitude } from '../../../modules/public/product/soul/gratitude/gratitude.entity';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD, type DemoAccount } from './demo-accounts';
 
-function findRootEnv(): string {
-    let dir = dirname(fileURLToPath(import.meta.url));
-    for (let i = 0; i < 10; i++) {
-        const candidate = resolve(dir, '.env');
-        if (existsSync(candidate)) return candidate;
-        dir = resolve(dir, '..');
-    }
-    return resolve(process.cwd(), '.env');
-}
-
-loadDotenv({ path: findRootEnv() });
+loadEnvFiles();
 
 /**
  * Seeds three plan personas (Basic / Plus / Max) with better-auth users,
