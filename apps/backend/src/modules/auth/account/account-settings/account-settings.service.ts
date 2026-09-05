@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import type { AccountSettings as AccountSettingsDto } from '@rumbelo/contracts';
 
-import { Locale, Theme } from '../../../../common/database/enums';
+import { Locale, Theme } from '@rumbelo/contracts';
 import { currentUserId } from '../../../../common/household/household.context';
 import { Account } from '../account.entity';
 import { AccountSettings } from './account-settings.entity';
@@ -100,7 +100,7 @@ export class AccountSettingsService {
     async delete(id: string): Promise<{ ok: true }> {
         const row = await this.em.findOne(AccountSettings, { id });
         if (!row) throw new NotFoundException(`Account settings ${id} not found`);
-        await this.em.removeAndFlush(row);
+        await this.em.remove(row).flush();
         return { ok: true };
     }
 
@@ -129,10 +129,10 @@ export class AccountSettingsService {
 
         const settings = this.em.create(AccountSettings, {
             account,
-            locale: defaults.locale ?? Locale.nl,
-            theme: defaults.theme ?? Theme.system,
+            locale: defaults.locale ?? Locale.NL,
+            theme: defaults.theme ?? Theme.SYSTEM,
         } as never);
-        await this.em.persistAndFlush(settings);
+        await this.em.persist(settings).flush();
         return settings;
     }
 }

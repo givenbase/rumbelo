@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Cadence, FlowDirection } from '../../../../../../common/database/enums';
+import { Cadence, FlowDirection } from '@rumbelo/contracts';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from '../jar/category.entity';
@@ -44,7 +44,7 @@ export class FixedCostService {
             endsOn: input.endsOn ?? null,
             note: input.note ?? null,
         } as never);
-        await this.em.persistAndFlush(entity);
+        await this.em.persist(entity).flush();
         return toDto(entity);
     }
 
@@ -131,7 +131,7 @@ export class FixedCostService {
 
     async remove(id: string) {
         const entity = await this.repo.findOneOrFail({ id });
-        await this.em.removeAndFlush(entity);
+        await this.em.remove(entity).flush();
         return { ok: true as const };
     }
 }

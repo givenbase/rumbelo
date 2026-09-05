@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import { OnboardingInput } from '@rumbelo/contracts';
+import { Currency, HouseholdRole, IncomeKind, OnboardingInput } from '@rumbelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, BadRequestException, Injectable } from '@nestjs/common';
@@ -8,14 +8,13 @@ import { AuthService } from '@thallesp/nestjs-better-auth';
 
 import type { Auth } from '../../../auth/better-auth/auth.config';
 
-import { Currency } from '../../../../common/database/enums';
 import { currentUserId, currentAuthHeaders } from '../../../../common/household/household.context';
 import { AccountSettingsService } from '../../../auth/account/account-settings/account-settings.service';
 import { AuthMember } from '../../../auth/better-auth/member/auth-member.entity';
 import { AuthOrganization } from '../../../auth/better-auth/organization/auth-organization.entity';
 import { EmailService } from '../../../backoffice/communication/email';
-import { JarTemplateService } from '../../../backoffice/reference/jar-template/jar-template.service';
-import { IncomeKind, IncomeSource } from '../../product/money/plan/income/income-source.entity';
+import { JarTemplateService } from '../../../backoffice/reference/template/jar/jar.service';
+import { IncomeSource } from '../../product/money/plan/income/income-source.entity';
 import { Jar } from '../../product/money/plan/jar/jar.entity';
 import { HouseholdSettings } from './household-settings.entity';
 
@@ -38,7 +37,7 @@ export class HouseholdService {
         return this.onboardInternal(input, headers);
     }
 
-    async invite(householdId: string, email: string, role: 'OWNER' | 'MEMBER' | 'VIEWER') {
+    async invite(householdId: string, email: string, role: HouseholdRole) {
         const headers = currentAuthHeaders();
         const result = await this.authService.api.createInvitation({
             body: {
@@ -104,7 +103,7 @@ export class HouseholdService {
         let row = await this.em.findOne(HouseholdSettings, { householdId });
         if (!row) {
             row = this.em.create(HouseholdSettings, { householdId } as never);
-            await this.em.persistAndFlush(row);
+            await this.em.persist(row).flush();
         }
         return toSettingsDto(row);
     }
@@ -132,7 +131,7 @@ export class HouseholdService {
         const row = await this.em.findOne(HouseholdSettings, { householdId });
         if (!row) {
             const created = this.em.create(HouseholdSettings, { householdId, ...patch } as never);
-            await this.em.persistAndFlush(created);
+            await this.em.persist(created).flush();
             return toSettingsDto(created);
         }
         Object.assign(row, patch);
@@ -237,16 +236,16 @@ function slugify(name: string) {
     );
 }
 
-function mapRole(raw: string): 'OWNER' | 'MEMBER' | 'VIEWER' {
+function mapRole(raw: string): HouseholdRole {
     switch (raw.toLowerCase()) {
         case 'owner':
         case 'admin':
-            return 'OWNER';
+            return HouseholdRole.OWNER;
         case 'member':
-            return 'MEMBER';
+            return HouseholdRole.MEMBER;
         case 'viewer':
         default:
-            return 'VIEWER';
+            return HouseholdRole.VIEWER;
     }
 }
 

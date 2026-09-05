@@ -1,0 +1,31 @@
+import { EntityManager } from '@mikro-orm/postgresql';
+import { Inject, Injectable } from '@nestjs/common';
+
+import type { JarKey } from '@rumbelo/contracts';
+
+import { FixedCostPreset } from './fixed-cost.entity';
+
+@Injectable()
+export class FixedCostPresetService {
+    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
+
+    async listActive(filters?: {
+        jarKey?: JarKey;
+        categoryTemplateKey?: string;
+        audienceTag?: string;
+    }): Promise<FixedCostPreset[]> {
+        const rows = await this.em.find(
+            FixedCostPreset,
+            {
+                active: true,
+                ...(filters?.jarKey ? { jarTemplate: { key: filters.jarKey } } : {}),
+                ...(filters?.categoryTemplateKey
+                    ? { categoryTemplateKey: filters.categoryTemplateKey }
+                    : {}),
+            },
+            { orderBy: { sortOrder: 'ASC' }, populate: ['jarTemplate'] }
+        );
+        if (!filters?.audienceTag) return rows;
+        return rows.filter(r => r.audienceTags.includes(filters.audienceTag!));
+    }
+}

@@ -1,27 +1,20 @@
 import { z } from 'zod';
-import { Id, Money, PeriodKey, HouseholdId } from '../common';
+
+import { TurnEventKind } from '../../enums';
+import { HouseholdId, Id, Money, PeriodKey } from '../common';
+
+export { TurnEventKind } from '../../enums';
 
 /**
  * The Monopoly layer. One period (month) is one "turn"; it accrues a score from
  * observable behaviour, closes on rollover, and is never re-openable — the log is
  * the user's honest history, not a leaderboard to be gamed.
  */
-export const TurnEventKind = z.enum([
-    'JAR_HELD', // finished a period inside a jar's line
-    'JAR_OVERSPENT',
-    'INBOX_CLEARED',
-    'RITUAL_DONE',
-    'GOAL_REACHED',
-    'DEBT_CLEARED',
-    'INCOME_LOGGED',
-    'STREAK_KEPT',
-]);
-
 export const TurnEvent = z.object({
     id: Id,
     householdId: HouseholdId,
     period: PeriodKey,
-    kind: TurnEventKind,
+    kind: z.enum(TurnEventKind),
     day: z.int().min(1).max(31),
     text: z.string().max(240),
     points: z.int(),

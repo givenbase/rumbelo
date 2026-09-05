@@ -2,8 +2,10 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useLiveQuery } from '@rumbelo/hooks';
 import {
     FormControl,
     FormField,
@@ -24,6 +26,7 @@ import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
+import { PresetNameField } from './preset-name-field';
 
 const euros = z
     .string()
@@ -77,6 +80,18 @@ export function DebtForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
+
+    const presetsQuery = useLiveQuery(
+        api.money.catalogs.debtPresets.list.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        [],
+        live && mode === 'create'
+    );
+    const presetOptions = useMemo(
+        () => (presetsQuery.data ?? []).map(p => ({ key: p.key, name: p.name, kind: p.kind })),
+        [presetsQuery.data]
+    );
 
     const form = useForm<DebtFormValues>({
         defaultValues: {
@@ -197,7 +212,20 @@ export function DebtForm({
                     <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g. credit card" {...field} />
+                            {mode === 'create' ? (
+                                <PresetNameField
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="e.g. credit card"
+                                    options={presetOptions}
+                                    onSelect={opt => {
+                                        const full = presetOptions.find(p => p.key === opt.key);
+                                        if (full) form.setValue('kind', full.kind);
+                                    }}
+                                />
+                            ) : (
+                                <Input placeholder="e.g. credit card" {...field} />
+                            )}
                         </FormControl>
                         <FormMessage />
                     </FormItem>

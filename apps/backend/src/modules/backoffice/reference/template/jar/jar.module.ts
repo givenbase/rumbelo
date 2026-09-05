@@ -1,12 +1,10 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 
-import { JarTemplate } from './jar-template.entity';
-import { JarTemplateService } from './jar-template.service';
+import { JarTemplate } from './jar.entity';
+import { JarTemplateService } from './jar.service';
 
 /**
- * Jar Template Module
- *
  * Backoffice-owned jar catalog. Exported so platform onboard can seed household jars.
  */
 @Module({

@@ -1,8 +1,9 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
+import { JarKey } from '@rumbelo/contracts';
 
-import { BaseEntity } from '../../../../common/database/base.entity';
-import { entityConfig } from '../../../../common/database/entity-config.util';
-import { JarKey } from '../../../public/product/money/plan/jar/jar.entity';
+import { BaseEntity } from '../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../common/database/native-enum.util';
+import { entityConfig } from '../../../../../common/database/entity-config.util';
 
 /**
  * Jar Template Entity
@@ -18,7 +19,7 @@ export class JarTemplate extends BaseEntity {
     // ? PROPERTIES
 
     /** Stable key — copied onto household jars; never renamed in place. */
-    @Enum(() => JarKey)
+    @Enum(NativeEnum({ JarKey, domain: 'money' }))
     key!: JarKey;
 
     /** Display name shown at onboard (household may rename their copy later). */
@@ -39,6 +40,7 @@ export class JarTemplate extends BaseEntity {
     @Property({ default: true })
     spendable = true;
 
+    /** Display / seed order within the catalog. */
     @Property({ default: 0 })
     sortOrder = 0;
 

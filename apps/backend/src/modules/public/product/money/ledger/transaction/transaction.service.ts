@@ -9,7 +9,9 @@ import { Jar } from '../../plan/jar/jar.entity';
 import { BankAccount } from '../account/bank-account.entity';
 import { RuleService } from '../rule/rule.service';
 import { parseStatementCsv } from './csv/csv-parser';
-import { Transaction, TransactionSource, TransactionStatus } from './transaction.entity';
+import { TransactionSource, TransactionStatus } from '@rumbelo/contracts';
+
+import { Transaction } from './transaction.entity';
 
 @Injectable()
 export class TransactionService {
@@ -55,7 +57,7 @@ export class TransactionService {
                 input.description
             ),
         } as never);
-        await this.em.persistAndFlush(entity);
+        await this.em.persist(entity).flush();
         return toDto(entity);
     }
 
@@ -190,7 +192,7 @@ export class TransactionService {
 
     async remove(id: string) {
         const entity = await this.transactions.findOneOrFail({ id });
-        await this.em.removeAndFlush(entity);
+        await this.em.remove(entity).flush();
     }
 }
 

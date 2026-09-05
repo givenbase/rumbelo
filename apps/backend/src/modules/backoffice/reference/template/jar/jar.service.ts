@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { JarTemplate } from './jar-template.entity';
+import { JarTemplate } from './jar.entity';
 
 /**
  * Jar Template Service
@@ -13,10 +13,6 @@ export class JarTemplateService {
     private readonly logger = new Logger(JarTemplateService.name);
 
     constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
-
-    // ====================================================================
-    // ? CREATE Operations
-    // ====================================================================
 
     /** Idempotent seed / staff upsert of catalog rows. */
     async ensureDefaults(rows: Array<Partial<JarTemplate> & { key: JarTemplate['key'] }>) {
@@ -33,10 +29,6 @@ export class JarTemplateService {
         await this.em.flush();
         this.logger.log(`Ensured ${rows.length} jar templates`);
     }
-
-    // ====================================================================
-    // ? READ Operations
-    // ====================================================================
 
     /** Active templates in display order — used by onboard to seed money.jar. */
     async listActive(): Promise<JarTemplate[]> {

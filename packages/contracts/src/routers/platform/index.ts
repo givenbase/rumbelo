@@ -1,5 +1,7 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
+
+import { HouseholdRole } from '../../enums';
 import * as S from '../../schemas/index';
 
 /** Platform-level: account prefs, the household itself, and cross-product advisory. */
@@ -31,7 +33,11 @@ export const contract = {
         onboard: oc.input(S.OnboardingInput).output(S.Household),
         invite: oc
             .input(
-                z.object({ householdId: S.HouseholdId, email: z.email(), role: S.HouseholdRole })
+                z.object({
+                    householdId: S.HouseholdId,
+                    email: z.email(),
+                    role: z.enum(HouseholdRole),
+                })
             )
             .output(z.object({ invitationId: z.string() })),
     },

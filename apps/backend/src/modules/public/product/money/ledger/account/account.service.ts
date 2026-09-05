@@ -3,7 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
-import { AccountKind, BankAccount } from './bank-account.entity';
+import { AccountKind } from '@rumbelo/contracts';
+
+import { BankAccount } from './bank-account.entity';
 
 @Injectable()
 export class AccountService {
@@ -24,7 +26,7 @@ export class AccountService {
             kind: input.kind as AccountKind,
             balance: input.balance,
         } as never);
-        await this.em.persistAndFlush(account);
+        await this.em.persist(account).flush();
         return toDto(account);
     }
 

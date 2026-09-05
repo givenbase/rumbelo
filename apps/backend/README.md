@@ -24,6 +24,30 @@ pnpm --filter @rumbelo/backend dev   # :3002
 
 Migrations only; `schema:update` is never run against a database holding money.
 
+## Conventions (do not regress)
+
+### MikroORM persistence — no `*AndFlush`
+
+MikroORM 6 deprecates `em.persistAndFlush` / `em.removeAndFlush`. Always chain:
+
+```ts
+// ✅
+await this.em.persist(entity).flush();
+await this.em.remove(entity).flush();
+
+// ❌ deprecated
+await this.em.persistAndFlush(entity);
+await this.em.removeAndFlush(entity);
+```
+
+For already-managed entities (loaded or previously persisted), mutate then `await this.em.flush()`.
+
+### Enums — contracts + `NativeEnum` + Zod 4
+
+- **Define once** in `packages/contracts/src/enums/` (ALL_CAPS keys and values). Never `export enum` inside a backend entity.
+- **Zod:** `z.enum(DebtKind)` — not deprecated `z.nativeEnum(...)`.
+- **MikroORM:** `@Enum(NativeEnum({ DebtKind, domain: 'money', defaultValue: DebtKind.LOAN }))` from `common/database/native-enum.util.ts`. Types live in Postgres schema `public` as `public.{domain}_{snake}` (e.g. `public.money_debt_kind`).
+
 ## Households: the isolation model
 
 A **household** is one shared money unit — one board of jars, one ritual, one

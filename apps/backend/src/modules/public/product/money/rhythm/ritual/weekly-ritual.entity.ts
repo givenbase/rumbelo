@@ -1,16 +1,11 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
+import { RitualStage } from '@rumbelo/contracts';
 
 import type { RitualAllocation } from './ritual-allocation.entity';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
-
-export enum RitualStage {
-    LOOK = 'LOOK',
-    REDIRECT = 'REDIRECT',
-    INTEND = 'INTEND',
-    DONE = 'DONE',
-}
 
 /**
  * The ten-minute weekly ritual: look, redirect, set intention. Three steps on
@@ -23,7 +18,7 @@ export class WeeklyRitual extends HouseholdEntity {
     @Property({ length: 8 })
     week!: string;
 
-    @Enum(() => RitualStage)
+    @Enum(NativeEnum({ RitualStage, domain: 'money', defaultValue: RitualStage.LOOK }))
     stage: RitualStage = RitualStage.LOOK;
 
     @Property({ type: 'bigint', default: 0 })

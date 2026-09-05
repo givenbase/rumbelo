@@ -1,4 +1,5 @@
 // Product barrel — keeps cross-product imports explicit.
+export * from './catalog';
 export * from './dashboard';
 export * from './debt';
 export * from './fixed-cost';

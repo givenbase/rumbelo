@@ -1,5 +1,7 @@
 import { z } from 'zod';
-import { Id, Locale, Theme } from '../common';
+
+import { Locale, Theme } from '../../enums';
+import { Id } from '../common';
 
 /**
  * Person UI prefs. Currency is NOT here — the household board has one accounting
@@ -7,7 +9,7 @@ import { Id, Locale, Theme } from '../common';
  */
 export const AccountSettings = z.object({
     accountId: Id,
-    locale: Locale,
-    theme: Theme,
+    locale: z.enum(Locale),
+    theme: z.enum(Theme),
 });
 export type AccountSettings = z.infer<typeof AccountSettings>;

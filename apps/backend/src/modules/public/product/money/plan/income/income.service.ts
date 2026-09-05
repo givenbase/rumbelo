@@ -1,12 +1,13 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Cadence } from '../../../../../../common/database/enums';
+import { Cadence, IncomeKind } from '@rumbelo/contracts';
+
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { splitByPercentage } from '../../../../../../common/utils/money.util';
 import { JarService } from '../jar/jar.service';
-import { IncomeKind, IncomeSource } from './income-source.entity';
+import { IncomeSource } from './income-source.entity';
 
 @Injectable()
 export class IncomeService {
@@ -42,7 +43,7 @@ export class IncomeService {
             active: input.active ?? true,
             startedOn: input.startedOn ?? null,
         } as never);
-        await this.em.persistAndFlush(source);
+        await this.em.persist(source).flush();
         return toDto(source);
     }
 
@@ -103,7 +104,7 @@ export class IncomeService {
 
     async remove(id: string) {
         const source = await this.sources.findOneOrFail({ id });
-        await this.em.removeAndFlush(source);
+        await this.em.remove(source).flush();
         return { ok: true as const };
     }
 }

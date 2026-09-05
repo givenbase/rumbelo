@@ -1,16 +1,15 @@
 import { z } from 'zod';
-import { Id, IsoDate, Money, HouseholdId } from '../common';
 
-export const DebtKind = z.enum(['CREDIT_CARD', 'LOAN', 'STUDENT', 'MORTGAGE', 'FAMILY', 'OTHER']);
+import { DebtKind, PayoffStrategy } from '../../enums';
+import { HouseholdId, Id, IsoDate, Money } from '../common';
 
-/** Avalanche = highest rate first (cheapest). Snowball = smallest balance first (most motivating). */
-export const PayoffStrategy = z.enum(['AVALANCHE', 'SNOWBALL']);
+export { DebtKind, PayoffStrategy } from '../../enums';
 
 export const Debt = z.object({
     id: Id,
     householdId: HouseholdId,
     name: z.string().min(1).max(120),
-    kind: DebtKind,
+    kind: z.enum(DebtKind),
     balance: Money,
     originalBalance: Money,
     /** Annual percentage rate, e.g. 12.9 */
@@ -23,7 +22,7 @@ export const Debt = z.object({
 export type Debt = z.infer<typeof Debt>;
 
 export const DebtPlan = z.object({
-    strategy: PayoffStrategy,
+    strategy: z.enum(PayoffStrategy),
     totalBalance: Money,
     totalInterestProjected: Money,
     debtFreeOn: IsoDate.nullable(),

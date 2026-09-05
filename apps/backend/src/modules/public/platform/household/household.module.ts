@@ -3,7 +3,7 @@ import { AuthModule as BetterAuthModule } from '@thallesp/nestjs-better-auth';
 
 import { AccountSettingsModule } from '../../../auth/account/account-settings/account-settings.module';
 import { EmailModule } from '../../../backoffice/communication/email';
-import { JarTemplateModule } from '../../../backoffice/reference/jar-template/jar-template.module';
+import { JarTemplateModule } from '../../../backoffice/reference/template/jar/jar.module';
 import { HouseholdController } from './household.controller';
 import { HouseholdService } from './household.service';
 

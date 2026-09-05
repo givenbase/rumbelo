@@ -1,15 +1,10 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { GoalStatus } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 import { Jar } from '../../plan/jar/jar.entity';
-
-export enum GoalStatus {
-    ACTIVE = 'ACTIVE',
-    REACHED = 'REACHED',
-    PAUSED = 'PAUSED',
-    ARCHIVED = 'ARCHIVED',
-}
 
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'goal' }))
 export class Goal extends HouseholdEntity {
@@ -34,7 +29,7 @@ export class Goal extends HouseholdEntity {
     @Property({ type: 'date', nullable: true })
     targetDate: string | null = null;
 
-    @Enum(() => GoalStatus)
+    @Enum(NativeEnum({ GoalStatus, domain: 'money', defaultValue: GoalStatus.ACTIVE }))
     status: GoalStatus = GoalStatus.ACTIVE;
 
     @Property({ type: 'text', nullable: true })

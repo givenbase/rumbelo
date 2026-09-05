@@ -1,8 +1,8 @@
-import { JarKey } from '../../../../public/product/money/plan/jar/jar.entity';
+import { JarKey } from '@rumbelo/contracts';
 
 /**
  * Canonical jar catalog seed data — Rumbelo-owned defaults.
- * Loaded into backoffice.jar_template by JarTemplateSeeder.
+ * Loaded into backoffice.reference_jar_template by JarTemplateSeeder.
  */
 export const JAR_TEMPLATE_SEED = [
     {

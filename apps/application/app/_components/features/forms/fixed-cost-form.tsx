@@ -2,7 +2,7 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
@@ -27,6 +27,9 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 
+import { resolveCategoryId, useCategoryTemplates } from './catalog-helpers';
+import { PresetNameField } from './preset-name-field';
+
 const euros = z
     .string()
     .min(1, 'Amount is required')
@@ -42,6 +45,7 @@ const fixedCostFormSchema = z.object({
     name: z.string().min(1, 'Name is required').max(120),
     amount: euros,
     jarId: z.string().min(1, 'Choose a jar'),
+    categoryId: z.string().nullable().optional(),
     dueDay: z.string().optional(),
 });
 
@@ -69,6 +73,7 @@ export function FixedCostForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
+    const pendingCategoryName = useRef<string | null>(null);
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
@@ -77,11 +82,46 @@ export function FixedCostForm({
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
+    const balancesQuery = useLiveQuery(
+        api.money.jars.balances.queryOptions({ input: { householdId: householdId! } }),
+        [],
+        live
+    );
+
+    const presetsQuery = useLiveQuery(
+        api.money.catalogs.fixedCostPresets.list.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        [],
+        live && mode === 'create'
+    );
+    const categoriesQuery = useCategoryTemplates(live && mode === 'create');
+
+    const categoryNameByKey = useMemo(() => {
+        const map = new Map<string, string>();
+        for (const c of categoriesQuery.data ?? []) map.set(c.key, c.name);
+        return map;
+    }, [categoriesQuery.data]);
+
+    const presetOptions = useMemo(
+        () =>
+            (presetsQuery.data ?? []).map(p => ({
+                key: p.key,
+                name: p.name,
+                group: categoryNameByKey.get(p.categoryTemplateKey) ?? p.categoryTemplateKey,
+                jarKey: p.jarKey,
+                categoryTemplateKey: p.categoryTemplateKey,
+                suggestedDueDay: p.suggestedDueDay,
+            })),
+        [presetsQuery.data, categoryNameByKey]
+    );
+
     const form = useForm<FixedCostFormValues>({
         defaultValues: {
             name: defaultValues?.name ?? '',
             amount: defaultValues?.amount ?? '',
             jarId: defaultValues?.jarId ?? '',
+            categoryId: defaultValues?.categoryId ?? null,
             dueDay: defaultValues?.dueDay ?? '',
         },
         resolver: zodResolver(fixedCostFormSchema),
@@ -105,6 +145,20 @@ export function FixedCostForm({
             const due = values.dueDay?.trim() ? Number(values.dueDay) : null;
             const dueDay = due != null && due >= 1 && due <= 31 ? due : null;
             const name = values.name.trim();
+
+            let categoryId = values.categoryId ?? null;
+            if (pendingCategoryName.current) {
+                const jarBalance = (balancesQuery.data ?? []).find(j => j.id === values.jarId);
+                categoryId = await resolveCategoryId({
+                    client,
+                    householdId,
+                    jarId: values.jarId,
+                    categoryName: pendingCategoryName.current,
+                    existing: jarBalance?.categories ?? [],
+                });
+                pendingCategoryName.current = null;
+            }
+
             if (mode === 'edit' && entityId) {
                 return client.money.fixedCosts.update({
                     id: entityId,
@@ -112,13 +166,14 @@ export function FixedCostForm({
                     name,
                     amount: cents,
                     jarId: values.jarId,
+                    categoryId,
                     dueDay,
                 });
             }
             return client.money.fixedCosts.create({
                 householdId,
                 jarId: values.jarId,
-                categoryId: null,
+                categoryId,
                 name,
                 amount: cents,
                 cadence: 'MONTHLY',
@@ -132,6 +187,7 @@ export function FixedCostForm({
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.list.key() });
             void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.byJar.key() });
+            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
             showToast(mode === 'edit' ? 'Fixed cost updated' : 'Fixed cost saved', 'success');
             dismiss();
         },
@@ -207,7 +263,28 @@ export function FixedCostForm({
                     <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g. rent" {...field} />
+                            {mode === 'create' ? (
+                                <PresetNameField
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="e.g. rent"
+                                    options={presetOptions}
+                                    onSelect={opt => {
+                                        const full = presetOptions.find(p => p.key === opt.key);
+                                        if (!full) return;
+                                        const jar = jars.find(j => j.key === full.jarKey);
+                                        if (jar) form.setValue('jarId', jar.id);
+                                        if (full.suggestedDueDay != null) {
+                                            form.setValue('dueDay', String(full.suggestedDueDay));
+                                        }
+                                        pendingCategoryName.current =
+                                            categoryNameByKey.get(full.categoryTemplateKey) ?? null;
+                                        form.setValue('categoryId', null);
+                                    }}
+                                />
+                            ) : (
+                                <Input placeholder="e.g. rent" {...field} />
+                            )}
                         </FormControl>
                         <FormMessage />
                     </FormItem>

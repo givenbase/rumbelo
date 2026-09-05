@@ -32,6 +32,8 @@ Audience groups: `auth/` (identity), `public/` (platform + product → Postgres 
 - Short JSDoc on every property and relation
 - Explicit MikroORM `type` / `Enum` / relation options — never bare `@Property()` on `string | null` unions when Reflect metadata is involved
 - Household money rows extend `HouseholdEntity` and go through `HouseholdScopedRepository`
+- Enums from `@rumbelo/contracts` only — `@Enum(NativeEnum({ DebtKind, domain: 'money', … }))`, never local `export enum`
+- Persistence: `await em.persist(e).flush()` / `await em.remove(e).flush()` — never deprecated `persistAndFlush` / `removeAndFlush`
 
 ## CRUD order — non-negotiable
 

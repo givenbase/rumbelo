@@ -1,14 +1,15 @@
 import { z } from 'zod';
-import { Id, IsoDate, Money, PeriodKey, Pagination, HouseholdId } from '../common';
+
+import { AccountKind, TransactionSource, TransactionStatus } from '../../enums';
+import { HouseholdId, Id, IsoDate, Money, Pagination, PeriodKey } from '../common';
+
+export { AccountKind, TransactionSource, TransactionStatus } from '../../enums';
 
 /**
  * INBOX  — arrived, not yet given a jar. The only state that demands user attention.
  * SORTED — has a jar (and usually a category).
  * IGNORED— deliberately excluded from budget maths (internal transfers, corrections).
  */
-export const TransactionStatus = z.enum(['INBOX', 'SORTED', 'IGNORED']);
-export const TransactionSource = z.enum(['MANUAL', 'CSV', 'BANK', 'RECURRING']);
-
 export const Transaction = z.object({
     id: Id,
     householdId: HouseholdId,
@@ -20,8 +21,8 @@ export const Transaction = z.object({
     bookedOn: IsoDate,
     description: z.string().max(280),
     counterparty: z.string().max(160).nullable(),
-    status: TransactionStatus,
-    source: TransactionSource,
+    status: z.enum(TransactionStatus),
+    source: z.enum(TransactionSource),
     /** Set when a rule auto-sorted this, so the user can see and undo the automation. */
     appliedRuleId: Id.nullable(),
     note: z.string().max(500).nullable(),
@@ -32,7 +33,7 @@ export type Transaction = z.infer<typeof Transaction>;
 export const ListTransactions = Pagination.extend({
     householdId: HouseholdId,
     period: PeriodKey.nullish(),
-    status: TransactionStatus.nullish(),
+    status: z.enum(TransactionStatus).nullish(),
     jarId: Id.nullish(),
     search: z.string().max(120).nullish(),
 });
@@ -63,7 +64,7 @@ export const Account = z.object({
     householdId: HouseholdId,
     name: z.string().min(1).max(120),
     iban: z.string().max(34).nullable(),
-    kind: z.enum(['CHECKING', 'SAVINGS', 'CREDIT', 'CASH', 'INVESTMENT']),
+    kind: z.enum(AccountKind),
     balance: Money,
     /** Null for manual accounts; set when linked through the bank-sync port. */
     connectionId: Id.nullable(),
@@ -79,9 +80,8 @@ export const ImportCsv = z.object({
     dryRun: z.boolean().default(true),
 });
 
-export const ImportPreview = z.object({
-    detected: z.int(),
-    duplicates: z.int(),
-    willImport: z.int(),
-    sample: z.array(Transaction),
+export const ImportCsvResult = z.object({
+    imported: z.int(),
+    skipped: z.int(),
+    errors: z.array(z.string()),
 });

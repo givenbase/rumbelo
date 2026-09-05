@@ -1,15 +1,9 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
+import { AccountKind } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
-
-export enum AccountKind {
-    CHECKING = 'CHECKING',
-    SAVINGS = 'SAVINGS',
-    CREDIT = 'CREDIT',
-    CASH = 'CASH',
-    INVESTMENT = 'INVESTMENT',
-}
 
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'bank_account' }))
 export class BankAccount extends HouseholdEntity {
@@ -19,7 +13,7 @@ export class BankAccount extends HouseholdEntity {
     @Property({ length: 34, nullable: true })
     iban: string | null = null;
 
-    @Enum(() => AccountKind)
+    @Enum(NativeEnum({ AccountKind, domain: 'money', defaultValue: AccountKind.CHECKING }))
     kind: AccountKind = AccountKind.CHECKING;
 
     @Property({ type: 'bigint', default: 0 })

@@ -26,6 +26,7 @@ import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
+import { PresetNameField } from './preset-name-field';
 
 const euros = z
     .string()
@@ -77,6 +78,23 @@ export function GoalForm({
         live
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
+
+    const presetsQuery = useLiveQuery(
+        api.money.catalogs.goalPresets.list.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        [],
+        live && mode === 'create'
+    );
+    const presetOptions = useMemo(
+        () =>
+            (presetsQuery.data ?? []).map(p => ({
+                key: p.key,
+                name: p.name,
+                jarKey: p.jarKey,
+            })),
+        [presetsQuery.data]
+    );
 
     const form = useForm<GoalFormValues>({
         defaultValues: {
@@ -204,7 +222,22 @@ export function GoalForm({
                     <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g. emergency fund" {...field} />
+                            {mode === 'create' ? (
+                                <PresetNameField
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="e.g. emergency fund"
+                                    options={presetOptions}
+                                    onSelect={opt => {
+                                        const full = presetOptions.find(p => p.key === opt.key);
+                                        if (!full) return;
+                                        const jar = jars.find(j => j.key === full.jarKey);
+                                        if (jar) form.setValue('jarId', jar.id);
+                                    }}
+                                />
+                            ) : (
+                                <Input placeholder="e.g. emergency fund" {...field} />
+                            )}
                         </FormControl>
                         <FormMessage />
                     </FormItem>

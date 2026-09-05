@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
 import { ControllerSwagger } from '../../../../../../common/decorators/controller-swagger.decorators';
-import { PayoffStrategy } from './debt.entity';
+import { PayoffStrategy } from '@rumbelo/contracts';
 import { DebtService } from './debt.service';
 
 /** Transport only. Handler order is always CRUD. */

@@ -1,22 +1,24 @@
+import { PlanKey } from '@rumbelo/contracts';
+
 /**
  * Plan-gating model — mirrors design `PLANS` block.
  *
  * Three tiers in ascending order:
- *   grip  → Grip (starter, free)
- *   ritme → Engine (unlock debt / week / goals screens)
- *   groei → Compound (unlock income / board / learn / chakra screens)
+ *   GRIP  → Grip (starter, free)
+ *   RITME → Engine (unlock debt / week / goals screens)
+ *   GROEI → Compound (unlock income / board / learn / chakra screens)
  */
 
-export type PlanKey = 'grip' | 'ritme' | 'groei';
+export { PlanKey };
 
 /** @deprecated alias — prefer PlanKey */
 export type PlanId = PlanKey;
 
-/** Numeric rank so `grip < ritme < groei` comparisons stay one expression. */
+/** Numeric rank so `GRIP < RITME < GROEI` comparisons stay one expression. */
 export const PLAN_RANK: Record<PlanKey, number> = {
-    grip: 0,
-    ritme: 1,
-    groei: 2,
+    [PlanKey.GRIP]: 0,
+    [PlanKey.RITME]: 1,
+    [PlanKey.GROEI]: 2,
 };
 
 /**
@@ -25,24 +27,24 @@ export const PLAN_RANK: Record<PlanKey, number> = {
  * Absence → screen is accessible on every plan.
  */
 export const SCREEN_MIN: Record<string, PlanKey> = {
-    debt: 'ritme',
-    week: 'ritme',
-    goals: 'ritme',
-    income: 'groei',
-    board: 'groei',
-    learn: 'groei',
-    chakra: 'groei',
+    debt: PlanKey.RITME,
+    week: PlanKey.RITME,
+    goals: PlanKey.RITME,
+    income: PlanKey.GROEI,
+    board: PlanKey.GROEI,
+    learn: PlanKey.GROEI,
+    chakra: PlanKey.GROEI,
 };
 
 /** Human-readable plan labels (product names). */
 export const PLAN_LABELS: Record<PlanKey, string> = {
-    grip: 'Grip',
-    ritme: 'Engine',
-    groei: 'Compound',
+    [PlanKey.GRIP]: 'Grip',
+    [PlanKey.RITME]: 'Engine',
+    [PlanKey.GROEI]: 'Compound',
 };
 
 /** Active plan when billing is not wired — preview env can raise this via the shell. */
-export const MOCK_PLAN: PlanKey = 'grip';
+export const MOCK_PLAN: PlanKey = PlanKey.GRIP;
 
 /** Returns true when `plan` is insufficient to access the given screenKey. */
 export function isScreenLocked(screenKey: string | null, plan: PlanKey = MOCK_PLAN): boolean {

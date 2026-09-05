@@ -5,8 +5,10 @@ import { HouseholdScopedRepository } from '../../../../../../common/household/ho
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from '../../plan/jar/category.entity';
 import { Jar } from '../../plan/jar/jar.entity';
-import { Transaction, TransactionStatus } from '../transaction/transaction.entity';
-import { Rule, RuleField, RuleMatcher } from './rule.entity';
+import { RuleField, RuleMatcher, TransactionStatus } from '@rumbelo/contracts';
+
+import { Transaction } from '../transaction/transaction.entity';
+import { Rule } from './rule.entity';
 
 @Injectable()
 export class RuleService {
@@ -39,7 +41,7 @@ export class RuleService {
             active: input.active ?? true,
             hitCount: 0,
         } as never);
-        await this.em.persistAndFlush(entity);
+        await this.em.persist(entity).flush();
         return toDto(entity);
     }
 
@@ -123,7 +125,7 @@ export class RuleService {
 
     async remove(id: string) {
         const entity = await this.repo.findOneOrFail({ id });
-        await this.em.removeAndFlush(entity);
+        await this.em.remove(entity).flush();
         return { ok: true as const };
     }
 

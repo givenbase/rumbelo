@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { DEFAULT_JAR_SPLIT, type JarKey } from '@rumbelo/contracts';
+import { DEFAULT_JAR_SPLIT, Locale, Theme, type JarKey } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
     Badge,
@@ -23,7 +23,7 @@ import { cn, formatMoney, formatPercent } from '@rumbelo/utils';
 
 import { changePassword, signOut, updateOrganization, updateUser } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
-import { PLAN_LABELS, type PlanKey } from '@/app/_lib/plan';
+import { PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
 import { isLiveData } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META, mockJars } from '@/app/_mock';
@@ -177,7 +177,7 @@ export function AccountSettings() {
     });
 
     const saveLocale = useMutation({
-        mutationFn: async (next: 'nl' | 'en') => {
+        mutationFn: async (next: Locale) => {
             return client.account.updateSettings({ locale: next });
         },
         onSuccess: (_data, next) => {
@@ -219,10 +219,11 @@ export function AccountSettings() {
     });
 
     const saveTheme = useMutation({
-        mutationFn: async (next: 'light' | 'dark') => {
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('rumbelo-theme', next);
-            setDark(next === 'dark');
+        mutationFn: async (next: Theme) => {
+            const css = next === Theme.DARK ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', css);
+            localStorage.setItem('rumbelo-theme', css);
+            setDark(next === Theme.DARK);
             return client.account.updateSettings({ theme: next });
         },
         onSuccess: () => {
@@ -231,7 +232,7 @@ export function AccountSettings() {
         onError: () => showToast('Theme save failed', 'error'),
     });
 
-    function pickLocale(next: 'en' | 'nl') {
+    function pickLocale(next: Locale) {
         if (live) saveLocale.mutate(next);
         else if (locale !== next) toggleLocale();
     }
@@ -258,7 +259,7 @@ export function AccountSettings() {
 
     const displayName = user?.name?.trim() || 'Guest';
     const displayEmail = user?.email ?? '';
-    const activeLang = (accountSettingsQuery.data?.locale ?? locale) as 'en' | 'nl';
+    const activeLang = (accountSettingsQuery.data?.locale ?? locale) as Locale;
 
     return (
         <SettingsPanel>
@@ -346,7 +347,7 @@ export function AccountSettings() {
                 <SettingsRow>
                     <SettingsRowLabel title="Language" sub="Applies to every screen" />
                     <div className="flex gap-1 rounded-full border border-line bg-raised p-0.5">
-                        {(['en', 'nl'] as const).map(code => {
+                        {([Locale.EN, Locale.NL] as const).map(code => {
                             const on = activeLang === code;
                             return (
                                 <button
@@ -509,7 +510,9 @@ export function AccountSettings() {
                         checked={dark}
                         label="Dark mode"
                         hint="Saved locally and in household settings."
-                        onCheckedChange={next => saveTheme.mutate(next ? 'dark' : 'light')}
+                        onCheckedChange={next =>
+                            saveTheme.mutate(next ? Theme.DARK : Theme.LIGHT)
+                        }
                     />
                 </div>
                 <SettingsRow last>
@@ -1255,7 +1258,7 @@ export function SysteemSettings() {
 export function PlanSettings() {
     const { showToast } = useAppShell();
     const [billing, setBilling] = useState<'month' | 'year'>('month');
-    const [plan, setPlan] = useState<PlanKey>('grip');
+    const [plan, setPlan] = useState<PlanKey>(PlanKey.GRIP);
 
     const cards: {
         key: PlanKey;
@@ -1266,7 +1269,7 @@ export function PlanSettings() {
         feats: string;
     }[] = [
         {
-            key: 'grip',
+            key: PlanKey.GRIP,
             priceM: 0,
             priceY: 0,
             tag: 'Free forever',
@@ -1274,7 +1277,7 @@ export function PlanSettings() {
             feats: 'MONEY · the six jars · Add expenses · Safe to spend · SOUL · The coach',
         },
         {
-            key: 'ritme',
+            key: PlanKey.RITME,
             priceM: 9,
             priceY: 90,
             tag: 'Most chosen',
@@ -1282,7 +1285,7 @@ export function PlanSettings() {
             feats: 'Everything in Grip · Bank connect · Debt plan · ENERGY · Unlimited history',
         },
         {
-            key: 'groei',
+            key: PlanKey.GROEI,
             priceM: 19,
             priceY: 190,
             tag: 'All four portals',

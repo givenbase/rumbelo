@@ -1,18 +1,11 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
+import { JarKey } from '@rumbelo/contracts';
 
 import type { Category } from './category.entity';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
-
-export enum JarKey {
-    NECESSITIES = 'NECESSITIES',
-    FINANCIAL_FREEDOM = 'FINANCIAL_FREEDOM',
-    EDUCATION = 'EDUCATION',
-    LONG_TERM_SAVINGS = 'LONG_TERM_SAVINGS',
-    PLAY = 'PLAY',
-    GIVE = 'GIVE',
-}
 
 /**
  * Jar Entity
@@ -27,7 +20,7 @@ export enum JarKey {
 export class Jar extends HouseholdEntity {
     // ? PROPERTIES
 
-    @Enum(() => JarKey)
+    @Enum(NativeEnum({ JarKey, domain: 'money' }))
     key!: JarKey;
 
     @Property({ length: 80 })

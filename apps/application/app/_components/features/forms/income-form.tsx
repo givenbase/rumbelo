@@ -2,8 +2,10 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useLiveQuery } from '@rumbelo/hooks';
 import {
     FormControl,
     FormField,
@@ -24,6 +26,7 @@ import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
+import { PresetNameField } from './preset-name-field';
 
 const incomeFormSchema = z.object({
     name: z.string().min(1, 'Name is required').max(120),
@@ -64,6 +67,18 @@ export function IncomeForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
+
+    const presetsQuery = useLiveQuery(
+        api.money.catalogs.incomeSourcePresets.list.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        [],
+        live && mode === 'create'
+    );
+    const presetOptions = useMemo(
+        () => (presetsQuery.data ?? []).map(p => ({ key: p.key, name: p.name, kind: p.kind })),
+        [presetsQuery.data]
+    );
 
     const form = useForm<IncomeFormValues>({
         defaultValues: {
@@ -177,7 +192,20 @@ export function IncomeForm({
                     <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g. salary" {...field} />
+                            {mode === 'create' ? (
+                                <PresetNameField
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="e.g. salary"
+                                    options={presetOptions}
+                                    onSelect={opt => {
+                                        const full = presetOptions.find(p => p.key === opt.key);
+                                        if (full) form.setValue('kind', full.kind);
+                                    }}
+                                />
+                            ) : (
+                                <Input placeholder="e.g. salary" {...field} />
+                            )}
                         </FormControl>
                         <FormMessage />
                     </FormItem>

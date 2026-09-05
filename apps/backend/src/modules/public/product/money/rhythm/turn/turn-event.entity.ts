@@ -1,19 +1,10 @@
 import { Entity, Enum, Index, ManyToOne, Property } from '@mikro-orm/core';
+import { TurnEventKind } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 import { PeriodTurn } from './period-turn.entity';
-
-export enum TurnEventKind {
-    JAR_HELD = 'JAR_HELD',
-    JAR_OVERSPENT = 'JAR_OVERSPENT',
-    INBOX_CLEARED = 'INBOX_CLEARED',
-    RITUAL_DONE = 'RITUAL_DONE',
-    GOAL_REACHED = 'GOAL_REACHED',
-    DEBT_CLEARED = 'DEBT_CLEARED',
-    INCOME_LOGGED = 'INCOME_LOGGED',
-    STREAK_KEPT = 'STREAK_KEPT',
-}
 
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'turn_event' }))
 @Index({ properties: ['householdId', 'period'] })
@@ -24,7 +15,7 @@ export class TurnEvent extends HouseholdEntity {
     @Property({ length: 7 })
     period!: string;
 
-    @Enum(() => TurnEventKind)
+    @Enum(NativeEnum({ TurnEventKind, domain: 'money' }))
     kind!: TurnEventKind;
 
     @Property()

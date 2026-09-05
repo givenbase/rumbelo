@@ -23,7 +23,7 @@ const c = createClient({ url: 'http://localhost:3000/api/backend' });
 await c.household.onboard({
     householdName: 'Test',
     currency: 'EUR',
-    locale: 'nl',
+    locale: 'NL',
     monthlyNetIncome: 100,
     split: [{ key: 'NECESSITIES', percentage: 100 }],
     why: null,

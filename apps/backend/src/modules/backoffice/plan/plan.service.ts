@@ -1,7 +1,9 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { Plan, PlanKey } from './plan.entity';
+import { PlanKey } from '@rumbelo/contracts';
+
+import { Plan } from './plan.entity';
 
 /**
  * Plan Service

@@ -1,8 +1,9 @@
 import { Entity, Enum, OneToOne } from '@mikro-orm/core';
+import { Locale, Theme } from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../common/database/entity-config.util';
-import { Locale, Theme } from '../../../../common/database/enums';
 import { Account } from '../account.entity';
 
 /**
@@ -12,7 +13,7 @@ import { Account } from '../account.entity';
  *
  * Currency stays on platform.household_settings: the board has one accounting
  * currency shared by every member. Theme and locale can differ per person in
- * the same household (partner in EN/dark, you in NL/light).
+ * the same household (partner in EN/DARK, you in NL/LIGHT).
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
@@ -20,17 +21,13 @@ import { Account } from '../account.entity';
 export class AccountSettings extends BaseEntity {
     // ? PROPERTIES
 
-    /**
-     * Preferred language / formatting locale (nl | en).
-     */
-    @Enum(() => Locale)
-    locale: Locale = Locale.nl;
+    /** Preferred language (NL | EN). */
+    @Enum(NativeEnum({ Locale, domain: 'auth', defaultValue: Locale.NL }))
+    locale: Locale = Locale.NL;
 
-    /**
-     * UI appearance preference (light | dark | system).
-     */
-    @Enum(() => Theme)
-    theme: Theme = Theme.system;
+    /** UI appearance preference (LIGHT | DARK | SYSTEM). */
+    @Enum(NativeEnum({ Theme, domain: 'auth', defaultValue: Theme.SYSTEM }))
+    theme: Theme = Theme.SYSTEM;
 
     // ? RELATIONSHIPS
 

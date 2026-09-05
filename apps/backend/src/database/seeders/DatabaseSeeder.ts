@@ -2,19 +2,31 @@ import type { EntityManager } from '@mikro-orm/postgresql';
 
 import { Seeder } from '@mikro-orm/seeder';
 
+import { CategoryTemplateSeeder } from './CategoryTemplateSeeder';
+import { DebtPresetSeeder } from './DebtPresetSeeder';
 import { DemoHouseholdSeeder } from './DemoHouseholdSeeder';
+import { FixedCostPresetSeeder } from './FixedCostPresetSeeder';
+import { GoalPresetSeeder } from './GoalPresetSeeder';
+import { IncomeSourcePresetSeeder } from './IncomeSourcePresetSeeder';
 import { JarTemplateSeeder } from './JarTemplateSeeder';
+import { MerchantPresetSeeder } from './MerchantPresetSeeder';
 import { PlanSeeder } from './PlanSeeder';
 
 /**
- * Root seeder — runs catalog seeders first, then demo data.
- *
- *   JarTemplateSeeder     jar catalog (we own)
- *   PlanSeeder            product tiers (we own)
- *   DemoHouseholdSeeder   sample household jars (copies jar catalog)
+ * Root seeder — catalog templates/presets first, then plans, then demo data.
  */
 export class DatabaseSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
-        return this.call(em, [JarTemplateSeeder, PlanSeeder, DemoHouseholdSeeder]);
+        return this.call(em, [
+            JarTemplateSeeder,
+            CategoryTemplateSeeder,
+            FixedCostPresetSeeder,
+            DebtPresetSeeder,
+            IncomeSourcePresetSeeder,
+            GoalPresetSeeder,
+            MerchantPresetSeeder,
+            PlanSeeder,
+            DemoHouseholdSeeder,
+        ]);
     }
 }

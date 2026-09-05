@@ -1,6 +1,8 @@
 import { Entity, Enum, Index, ManyToOne, Property } from '@mikro-orm/core';
+import { TransactionSource, TransactionStatus } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 import { Category } from '../../plan/jar/category.entity';
 import { Jar } from '../../plan/jar/jar.entity';
@@ -11,18 +13,6 @@ import { BankAccount } from '../account/bank-account.entity';
  * SORTED  — has a jar, and usually a category.
  * IGNORED — deliberately outside budget maths (internal transfers, corrections).
  */
-export enum TransactionStatus {
-    INBOX = 'INBOX',
-    SORTED = 'SORTED',
-    IGNORED = 'IGNORED',
-}
-export enum TransactionSource {
-    MANUAL = 'MANUAL',
-    CSV = 'CSV',
-    BANK = 'BANK',
-    RECURRING = 'RECURRING',
-}
-
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'transaction' }))
 // The dashboard reads by period and the inbox reads by status; cover both.
 @Index({ properties: ['householdId', 'bookedOn'] })
@@ -50,10 +40,10 @@ export class Transaction extends HouseholdEntity {
     @Property({ length: 160, nullable: true })
     counterparty: string | null = null;
 
-    @Enum(() => TransactionStatus)
+    @Enum(NativeEnum({ TransactionStatus, domain: 'money', defaultValue: TransactionStatus.INBOX }))
     status: TransactionStatus = TransactionStatus.INBOX;
 
-    @Enum(() => TransactionSource)
+    @Enum(NativeEnum({ TransactionSource, domain: 'money', defaultValue: TransactionSource.MANUAL }))
     source: TransactionSource = TransactionSource.MANUAL;
 
     /** Set when a rule auto-sorted this, keeping the automation visible and undoable. */

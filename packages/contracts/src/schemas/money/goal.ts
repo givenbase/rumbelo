@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { Id, IsoDate, Money, HouseholdId } from '../common';
 
-export const GoalStatus = z.enum(['ACTIVE', 'REACHED', 'PAUSED', 'ARCHIVED']);
+import { GoalStatus, JarKey } from '../../enums';
+import { HouseholdId, Id, IsoDate, Money } from '../common';
+
+export { GoalStatus } from '../../enums';
 
 export const Goal = z.object({
     id: Id,
@@ -14,7 +16,7 @@ export const Goal = z.object({
     saved: Money,
     monthlyContribution: Money,
     targetDate: IsoDate.nullable(),
-    status: GoalStatus,
+    status: z.enum(GoalStatus),
     why: z.string().max(500).nullable(),
 });
 export type Goal = z.infer<typeof Goal>;

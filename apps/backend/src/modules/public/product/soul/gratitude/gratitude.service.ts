@@ -23,7 +23,7 @@ export class GratitudeService {
             week: input.week,
             text: input.text,
         } as never);
-        await this.em.persistAndFlush(row);
+        await this.em.persist(row).flush();
         return {
             id: row.id,
             householdId: row.householdId,

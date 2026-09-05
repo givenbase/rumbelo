@@ -154,6 +154,23 @@ create() {
 - **Money is integer minor units.** Never a float, never arithmetic on a
   decimal string. Splitting goes through `common/utils/money.util.ts`.
 
+### Persistence (MikroORM 6)
+
+Never use deprecated `persistAndFlush` / `removeAndFlush`:
+
+```ts
+await this.em.persist(entity).flush();
+await this.em.remove(entity).flush();
+```
+
+Managed entities: mutate properties, then `await this.em.flush()`.
+
+### Enums
+
+- Source of truth: `@rumbelo/contracts` (`packages/contracts/src/enums/`) — ALL_CAPS.
+- Entities: `@Enum(NativeEnum({ SomeEnum, domain: 'money' | 'auth' | … }))` — never local `export enum`.
+- Contracts Zod: `z.enum(SomeEnum)` (Zod 4 — not `z.nativeEnum`).
+
 ### Auth vs account
 
 - `auth/better-auth/` — better-auth owns writes; we map read entities + config

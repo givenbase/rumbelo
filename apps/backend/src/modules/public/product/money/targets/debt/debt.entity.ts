@@ -1,29 +1,16 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
+import { DebtKind } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
-
-export enum DebtKind {
-    CREDIT_CARD = 'CREDIT_CARD',
-    LOAN = 'LOAN',
-    STUDENT = 'STUDENT',
-    MORTGAGE = 'MORTGAGE',
-    FAMILY = 'FAMILY',
-    OTHER = 'OTHER',
-}
-
-/** Avalanche = highest rate first (cheapest). Snowball = smallest balance first. */
-export enum PayoffStrategy {
-    AVALANCHE = 'AVALANCHE',
-    SNOWBALL = 'SNOWBALL',
-}
 
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'debt' }))
 export class Debt extends HouseholdEntity {
     @Property({ length: 120 })
     name!: string;
 
-    @Enum(() => DebtKind)
+    @Enum(NativeEnum({ DebtKind, domain: 'money', defaultValue: DebtKind.LOAN }))
     kind: DebtKind = DebtKind.LOAN;
 
     @Property({ type: 'bigint' })

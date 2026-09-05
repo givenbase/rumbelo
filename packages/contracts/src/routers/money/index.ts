@@ -1,5 +1,14 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
+
+import {
+    DebtKind,
+    FlowDirection,
+    IncomeKind,
+    JarKey,
+    PayoffStrategy,
+    RitualStage,
+} from '../../enums';
 import * as S from '../../schemas/index';
 
 const ok = z.object({ ok: z.literal(true) });
@@ -56,7 +65,7 @@ export const contract = {
 
     fixedCosts: {
         list: oc
-            .input(S.HouseholdScoped.extend({ direction: z.enum(['IN', 'OUT']).nullish() }))
+            .input(S.HouseholdScoped.extend({ direction: z.enum(FlowDirection).nullish() }))
             .output(z.array(S.FixedCost)),
         byJar: oc.input(S.HouseholdScoped).output(z.array(S.FixedCostsByJar)),
         create: oc.input(S.FixedCost.omit({ id: true })).output(S.FixedCost),
@@ -124,7 +133,11 @@ export const contract = {
             .output(S.Debt),
         remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
         plan: oc
-            .input(S.HouseholdScoped.extend({ strategy: S.PayoffStrategy.default('AVALANCHE') }))
+            .input(
+                S.HouseholdScoped.extend({
+                    strategy: z.enum(PayoffStrategy).default(PayoffStrategy.AVALANCHE),
+                })
+            )
             .output(S.DebtPlan),
     },
 
@@ -147,7 +160,7 @@ export const contract = {
                 z.object({
                     householdId: S.HouseholdId,
                     week: S.WeekKey,
-                    stage: S.RitualStage,
+                    stage: z.enum(RitualStage),
                     allocations: z.array(S.SurplusAllocation).nullish(),
                     intention: z.string().max(280).nullish(),
                 })
@@ -160,5 +173,51 @@ export const contract = {
         get: oc
             .input(S.HouseholdScoped.extend({ period: S.PeriodKey.nullish() }))
             .output(S.Dashboard),
+    },
+
+    /** Backoffice reference catalogs — read-only suggestions for create forms. */
+    catalogs: {
+        categoryTemplates: {
+            list: oc
+                .input(S.HouseholdScoped.extend({ jarKey: z.enum(JarKey).nullish() }))
+                .output(z.array(S.CategoryTemplate)),
+        },
+        fixedCostPresets: {
+            list: oc
+                .input(
+                    S.HouseholdScoped.extend({
+                        jarKey: z.enum(JarKey).nullish(),
+                        categoryTemplateKey: z.string().max(64).nullish(),
+                        audienceTag: z.string().max(32).nullish(),
+                    })
+                )
+                .output(z.array(S.FixedCostPreset)),
+        },
+        debtPresets: {
+            list: oc
+                .input(S.HouseholdScoped.extend({ kind: z.enum(DebtKind).nullish() }))
+                .output(z.array(S.DebtPreset)),
+        },
+        incomeSourcePresets: {
+            list: oc
+                .input(S.HouseholdScoped.extend({ kind: z.enum(IncomeKind).nullish() }))
+                .output(z.array(S.IncomeSourcePreset)),
+        },
+        goalPresets: {
+            list: oc
+                .input(S.HouseholdScoped.extend({ jarKey: z.enum(JarKey).nullish() }))
+                .output(z.array(S.GoalPreset)),
+        },
+        merchantPresets: {
+            list: oc
+                .input(
+                    S.HouseholdScoped.extend({
+                        jarKey: z.enum(JarKey).nullish(),
+                        categoryTemplateKey: z.string().max(64).nullish(),
+                        mcc: z.string().length(4).nullish(),
+                    })
+                )
+                .output(z.array(S.MerchantPreset)),
+        },
     },
 };

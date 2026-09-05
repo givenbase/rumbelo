@@ -1,21 +1,11 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { RuleField, RuleMatcher } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 import { Category } from '../../plan/jar/category.entity';
 import { Jar } from '../../plan/jar/jar.entity';
-
-export enum RuleField {
-    DESCRIPTION = 'DESCRIPTION',
-    COUNTERPARTY = 'COUNTERPARTY',
-    AMOUNT = 'AMOUNT',
-}
-export enum RuleMatcher {
-    CONTAINS = 'CONTAINS',
-    EQUALS = 'EQUALS',
-    STARTS_WITH = 'STARTS_WITH',
-    REGEX = 'REGEX',
-}
 
 /**
  * Auto-sort engine. Rules run in priority order over incoming transactions;
@@ -23,10 +13,10 @@ export enum RuleMatcher {
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'rule' }))
 export class Rule extends HouseholdEntity {
-    @Enum(() => RuleField)
+    @Enum(NativeEnum({ RuleField, domain: 'money', defaultValue: RuleField.DESCRIPTION }))
     field: RuleField = RuleField.DESCRIPTION;
 
-    @Enum(() => RuleMatcher)
+    @Enum(NativeEnum({ RuleMatcher, domain: 'money', defaultValue: RuleMatcher.CONTAINS }))
     matcher: RuleMatcher = RuleMatcher.CONTAINS;
 
     @Property({ length: 200 })

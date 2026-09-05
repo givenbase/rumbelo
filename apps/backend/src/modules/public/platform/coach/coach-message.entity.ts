@@ -1,15 +1,9 @@
 import { Entity, Enum, Index, Property } from '@mikro-orm/core';
+import { CoachKind } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../common/database/entity-config.util';
-
-export enum CoachKind {
-    NUDGE = 'NUDGE',
-    WIN = 'WIN',
-    WARNING = 'WARNING',
-    INSIGHT = 'INSIGHT',
-    RITUAL = 'RITUAL',
-}
 
 /**
  * The Coach never scolds — "informatie, nooit schaamte". Every message carries
@@ -21,7 +15,7 @@ export class CoachMessage extends HouseholdEntity {
     @Property({ length: 7 })
     period!: string;
 
-    @Enum(() => CoachKind)
+    @Enum(NativeEnum({ CoachKind, domain: 'platform', defaultValue: CoachKind.NUDGE }))
     kind: CoachKind = CoachKind.NUDGE;
 
     @Property({ type: 'text' })

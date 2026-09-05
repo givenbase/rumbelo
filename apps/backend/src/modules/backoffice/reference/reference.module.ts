@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import { JarTemplateModule } from './jar-template';
+import { PresetModule } from './preset';
+import { TemplateModule } from './template';
 
 /**
- * Backoffice reference catalogs — countries, jar templates, question banks, …
- * We write; the app and households only read (or copy on onboard).
+ * Backoffice reference catalogs — templates (jar, category) and presets
+ * (fixed-cost, debt, income, goal, merchant). We write; households only read/copy.
  */
 @Module({
-    imports: [JarTemplateModule],
-    exports: [JarTemplateModule],
+    imports: [TemplateModule, PresetModule],
+    exports: [TemplateModule, PresetModule],
 })
 export class ReferenceModule {}

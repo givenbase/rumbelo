@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import type { Jar as ContractJar } from '@rumbelo/contracts';
 
-import { CADENCE_TO_MONTHLY, Cadence } from '../../../../../../common/database/enums';
+import { CADENCE_TO_MONTHLY, Cadence } from '@rumbelo/contracts';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from './category.entity';
@@ -37,7 +37,7 @@ export class JarService {
             name,
             budgeted,
         } as never);
-        await this.em.persistAndFlush(cat);
+        await this.em.persist(cat).flush();
         return {
             id: cat.id,
             jarId: jar.id,
@@ -160,7 +160,7 @@ export class JarService {
 
     async deleteCategory(id: string) {
         const cat = await this.categories.findOneOrFail({ id });
-        await this.em.removeAndFlush(cat);
+        await this.em.remove(cat).flush();
     }
 
     // Private

@@ -6,7 +6,9 @@ import {
     currentHouseholdId,
     currentUserId,
 } from '../../../../../common/household/household.context';
-import { EnergyLog, EnergyMetric } from './energy-log.entity';
+import { EnergyMetric, EnergyTrend } from '@rumbelo/contracts';
+
+import { EnergyLog } from './energy-log.entity';
 
 @Injectable()
 export class LogService {
@@ -98,10 +100,10 @@ export class LogService {
                 average28d: Number(a28.toFixed(2)),
                 trend:
                     a7 > a28 + 2
-                        ? ('UP' as const)
+                        ? EnergyTrend.UP
                         : a7 < a28 - 2
-                          ? ('DOWN' as const)
-                          : ('FLAT' as const),
+                          ? EnergyTrend.DOWN
+                          : EnergyTrend.FLAT,
                 spendCorrelation: null,
             };
         });

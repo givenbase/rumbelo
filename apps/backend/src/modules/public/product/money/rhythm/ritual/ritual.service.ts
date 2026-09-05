@@ -1,3 +1,4 @@
+import { RitualStage } from '@rumbelo/contracts';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -29,7 +30,7 @@ export class RitualService {
                 householdId: currentHouseholdId(),
                 week,
             } as never);
-            await this.em.persistAndFlush(ritual);
+            await this.em.persist(ritual).flush();
         }
         return this.toDto(ritual);
     }
@@ -45,7 +46,7 @@ export class RitualService {
 
     async advance(input: {
         week: string;
-        stage: 'LOOK' | 'REDIRECT' | 'INTEND' | 'DONE';
+        stage: RitualStage;
         allocations?: { jarId: string; amount: number }[];
         intention?: string;
     }) {
@@ -55,12 +56,12 @@ export class RitualService {
                 householdId: currentHouseholdId(),
                 week: input.week,
             } as never);
-            await this.em.persistAndFlush(ritual);
+            await this.em.persist(ritual).flush();
         }
 
-        ritual.stage = input.stage as never;
+        ritual.stage = input.stage;
         if (input.intention !== undefined) ritual.intention = input.intention;
-        if (input.stage === 'DONE') ritual.completedAt = new Date();
+        if (input.stage === RitualStage.DONE) ritual.completedAt = new Date();
         if (input.allocations?.length) {
             ritual.surplus = input.allocations.reduce((sum, a) => sum + a.amount, 0);
             await this.em.nativeDelete(RitualAllocation, { ritual: ritual.id });

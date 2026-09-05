@@ -1,14 +1,9 @@
 import { Entity, Enum, Index, Property, Unique } from '@mikro-orm/core';
+import { EnergyMetric } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../common/database/entity-config.util';
-
-export enum EnergyMetric {
-    SLEEP = 'SLEEP',
-    TRAIN = 'TRAIN',
-    FOOD = 'FOOD',
-    MIND = 'MIND',
-}
 
 /**
  * "Energie draagt geld." Tracked because the product claims these are the floor
@@ -26,7 +21,7 @@ export class EnergyLog extends HouseholdEntity {
     @Property({ type: 'date', fieldName: 'logged_on' })
     loggedOn!: string;
 
-    @Enum(() => EnergyMetric)
+    @Enum(NativeEnum({ EnergyMetric, domain: 'energy' }))
     metric!: EnergyMetric;
 
     /** Normalised 0..100 so metrics share one axis. */

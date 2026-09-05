@@ -1,4 +1,4 @@
-import { PlanKey } from '../plan.entity';
+import { PlanKey } from '@rumbelo/contracts';
 
 /**
  * Canonical product-tier seed — Rumbelo-owned defaults.

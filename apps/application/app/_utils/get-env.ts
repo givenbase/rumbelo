@@ -22,7 +22,7 @@ export const env = createEnv({
 
         NEXT_PUBLIC_PREVIEW_MODE: z.enum(['true', 'false']).optional(),
         NEXT_PUBLIC_PREVIEW_PLAN: z
-            .enum(['grip', 'ritme', 'groei', 'all', 'max', 'full'])
+            .enum(['GRIP', 'RITME', 'GROEI', 'ALL', 'MAX', 'FULL'])
             .optional(),
 
         NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),

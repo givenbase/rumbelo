@@ -11,6 +11,7 @@ import {
 } from 'react';
 
 import type { PlanKey } from '@/app/_lib/plan';
+import { Locale } from '@rumbelo/contracts';
 
 import { markOnboardingDone, resetOnboarding } from '@/app/_lib/onboarding-storage';
 import { MOCK_PLAN } from '@/app/_lib/plan';
@@ -43,7 +44,7 @@ interface AppShellCtx {
     setPlan: (plan: PlanKey) => void;
     period: Period;
     setPeriod: (period: Period) => void;
-    locale: 'nl' | 'en';
+    locale: Locale;
     toggleLocale: () => void;
 }
 
@@ -58,7 +59,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingStep, setOnboardingStep] = useState(0);
     const [plan, setPlan] = useState<PlanKey>(resolvePreviewPlan(MOCK_PLAN));
-    const [locale, setLocale] = useState<'nl' | 'en'>('en');
+    const [locale, setLocale] = useState<Locale>(Locale.EN);
 
     const now = new Date();
     const [period, setPeriod] = useState<Period>({
@@ -92,7 +93,10 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
         setOnboardingOpen(true);
     }, []);
 
-    const toggleLocale = useCallback(() => setLocale(l => (l === 'nl' ? 'en' : 'nl')), []);
+    const toggleLocale = useCallback(
+        () => setLocale(l => (l === Locale.NL ? Locale.EN : Locale.NL)),
+        []
+    );
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {

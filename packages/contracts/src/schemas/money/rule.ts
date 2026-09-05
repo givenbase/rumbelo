@@ -1,8 +1,9 @@
 import { z } from 'zod';
-import { Id, HouseholdId } from '../common';
 
-export const RuleMatcher = z.enum(['CONTAINS', 'EQUALS', 'STARTS_WITH', 'REGEX']);
-export const RuleField = z.enum(['DESCRIPTION', 'COUNTERPARTY', 'AMOUNT']);
+import { RuleField, RuleMatcher } from '../../enums';
+import { HouseholdId, Id } from '../common';
+
+export { RuleField, RuleMatcher } from '../../enums';
 
 /**
  * The auto-sort engine. Rules run in priority order on every incoming transaction;
@@ -11,8 +12,8 @@ export const RuleField = z.enum(['DESCRIPTION', 'COUNTERPARTY', 'AMOUNT']);
 export const Rule = z.object({
     id: Id,
     householdId: HouseholdId,
-    field: RuleField,
-    matcher: RuleMatcher,
+    field: z.enum(RuleField),
+    matcher: z.enum(RuleMatcher),
     value: z.string().min(1).max(200),
     jarId: Id,
     categoryId: Id.nullable(),

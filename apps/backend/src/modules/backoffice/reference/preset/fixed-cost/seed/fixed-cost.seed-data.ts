@@ -1,0 +1,126 @@
+import { JarKey } from '@rumbelo/contracts';
+
+type Seed = {
+    key: string;
+    name: string;
+    jarKey: JarKey;
+    categoryTemplateKey: string;
+    audienceTags: string[];
+};
+
+const N = JarKey.NECESSITIES;
+const E = JarKey.EDUCATION;
+const P = JarKey.PLAY;
+const G = JarKey.GIVE;
+
+/** Full household fixed-cost catalog (English). Sort = array order. */
+export const FIXED_COST_PRESET_SEED: readonly Seed[] = [
+    // Housing
+    { key: 'RENT', name: 'Rent', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['RENTER', 'COMMON'] },
+    { key: 'STUDENT_HOUSING', name: 'Student housing', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['STUDENT', 'RENTER'] },
+    { key: 'ROOM_RENT', name: 'Room rent', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['STUDENT', 'SINGLE', 'RENTER'] },
+    { key: 'MORTGAGE', name: 'Mortgage', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['HOMEOWNER', 'COUPLE', 'FAMILY'] },
+    { key: 'HOA_FEES', name: 'HOA / condo fees', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['HOMEOWNER'] },
+    { key: 'GROUND_LEASE', name: 'Ground lease', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['HOMEOWNER'] },
+    { key: 'STORAGE_UNIT', name: 'Storage unit', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['COMMON'] },
+    { key: 'SECOND_HOME', name: 'Second home costs', jarKey: N, categoryTemplateKey: 'HOUSING', audienceTags: ['HOMEOWNER'] },
+    // Utilities
+    { key: 'ENERGY', name: 'Energy (electricity & gas)', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['COMMON'] },
+    { key: 'ELECTRICITY', name: 'Electricity', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['COMMON'] },
+    { key: 'GAS', name: 'Gas', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['COMMON'] },
+    { key: 'DISTRICT_HEATING', name: 'District heating', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['COMMON'] },
+    { key: 'WATER', name: 'Water', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['COMMON'] },
+    { key: 'SEWER', name: 'Sewer / wastewater', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['HOMEOWNER'] },
+    { key: 'WASTE_COLLECTION', name: 'Waste collection', jarKey: N, categoryTemplateKey: 'UTILITIES', audienceTags: ['COMMON'] },
+    // Insurance
+    { key: 'HEALTH_INSURANCE', name: 'Health insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COMMON'] },
+    { key: 'HEALTH_INSURANCE_SUPPLEMENT', name: 'Health insurance (supplement)', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COMMON', 'ELDERLY'] },
+    { key: 'DENTAL_INSURANCE', name: 'Dental insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COMMON', 'FAMILY'] },
+    { key: 'LIABILITY_INSURANCE', name: 'Personal liability insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COMMON'] },
+    { key: 'HOME_CONTENTS', name: 'Home contents insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['RENTER', 'HOMEOWNER'] },
+    { key: 'BUILDING_INSURANCE', name: 'Building insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['HOMEOWNER'] },
+    { key: 'LIFE_INSURANCE', name: 'Life insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COUPLE', 'FAMILY'] },
+    { key: 'DISABILITY_INSURANCE', name: 'Disability / income protection', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['SINGLE', 'COUPLE', 'FAMILY'] },
+    { key: 'CAR_INSURANCE', name: 'Car insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['CAR_OWNER'] },
+    { key: 'TRAVEL_INSURANCE', name: 'Travel insurance (annual)', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COMMON'] },
+    { key: 'PET_INSURANCE', name: 'Pet insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['PET_OWNER'] },
+    { key: 'LEGAL_INSURANCE', name: 'Legal expenses insurance', jarKey: N, categoryTemplateKey: 'INSURANCE', audienceTags: ['COMMON'] },
+    // Transport
+    { key: 'TRANSIT_PASS', name: 'Transit pass', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['STUDENT', 'COMMON'] },
+    { key: 'STUDENT_TRANSIT', name: 'Student transit pass', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['STUDENT'] },
+    { key: 'BIKE_LEASE', name: 'Bike lease', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['STUDENT', 'SINGLE', 'COMMON'] },
+    { key: 'CAR_LEASE', name: 'Car lease', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER'] },
+    { key: 'CAR_LOAN_PAYMENT', name: 'Car loan payment', jarKey: N, categoryTemplateKey: 'DEBT_PAYMENTS', audienceTags: ['CAR_OWNER'] },
+    { key: 'PARKING_PERMIT', name: 'Parking permit', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER', 'FAMILY'] },
+    { key: 'PARKING_SUBSCRIPTION', name: 'Parking subscription', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER'] },
+    { key: 'ROAD_TAX', name: 'Vehicle road tax', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER'] },
+    { key: 'FUEL_CARD', name: 'Fuel card / commute', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER'] },
+    { key: 'TOLL_SUBSCRIPTION', name: 'Toll / road pricing', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER'] },
+    { key: 'EV_CHARGING', name: 'EV home charging plan', jarKey: N, categoryTemplateKey: 'TRANSPORT', audienceTags: ['CAR_OWNER'] },
+    // Subscriptions
+    { key: 'INTERNET', name: 'Internet', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['COMMON'] },
+    { key: 'MOBILE_PHONE', name: 'Mobile phone', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['COMMON'] },
+    { key: 'MOBILE_PHONE_PARTNER', name: 'Partner mobile phone', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['COUPLE', 'FAMILY'] },
+    { key: 'LANDLINE', name: 'Landline', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['ELDERLY'] },
+    { key: 'CLOUD_STORAGE', name: 'Cloud storage', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['COMMON'] },
+    { key: 'SOFTWARE_SUITE', name: 'Software suite (Office / Adobe)', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['STUDENT', 'COMMON'] },
+    { key: 'NEWS_SUBSCRIPTION', name: 'News / newspaper', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['COMMON', 'ELDERLY'] },
+    { key: 'VPN', name: 'VPN', jarKey: N, categoryTemplateKey: 'SUBSCRIPTIONS', audienceTags: ['COMMON'] },
+    { key: 'MEAL_KIT', name: 'Meal kit subscription', jarKey: N, categoryTemplateKey: 'GROCERIES', audienceTags: ['SINGLE', 'COUPLE', 'FAMILY'] },
+    // Streaming → PLAY/MEDIA
+    { key: 'STREAMING_VIDEO', name: 'Streaming video', jarKey: P, categoryTemplateKey: 'MEDIA', audienceTags: ['COMMON'] },
+    { key: 'STREAMING_MUSIC', name: 'Streaming music', jarKey: P, categoryTemplateKey: 'MEDIA', audienceTags: ['COMMON'] },
+    { key: 'STREAMING_BUNDLE', name: 'Streaming bundle', jarKey: P, categoryTemplateKey: 'MEDIA', audienceTags: ['FAMILY'] },
+    { key: 'GAMING_SUBSCRIPTION', name: 'Gaming subscription', jarKey: P, categoryTemplateKey: 'MEDIA', audienceTags: ['SINGLE', 'FAMILY'] },
+    // Taxes
+    { key: 'MUNICIPAL_TAX', name: 'Municipal tax', jarKey: N, categoryTemplateKey: 'TAXES', audienceTags: ['COMMON'] },
+    { key: 'PROPERTY_TAX', name: 'Property tax', jarKey: N, categoryTemplateKey: 'TAXES', audienceTags: ['HOMEOWNER'] },
+    { key: 'WATER_BOARD_TAX', name: 'Water board tax', jarKey: N, categoryTemplateKey: 'TAXES', audienceTags: ['COMMON'] },
+    { key: 'WASTE_TAX', name: 'Waste tax', jarKey: N, categoryTemplateKey: 'TAXES', audienceTags: ['COMMON'] },
+    { key: 'TV_LICENSE', name: 'Media / TV license fee', jarKey: N, categoryTemplateKey: 'TAXES', audienceTags: ['COMMON'] },
+    // Family
+    { key: 'CHILDCARE', name: 'Childcare / daycare', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'AFTER_SCHOOL_CARE', name: 'After-school care', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'BABYSITTER_RETAINER', name: 'Babysitter retainer', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'SCHOOL_FEES', name: 'School fees', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'SCHOOL_LUNCH', name: 'School lunch plan', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'CHILD_SUPPORT', name: 'Child support (outgoing)', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'ALIMONY', name: 'Alimony (outgoing)', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    { key: 'CLEANING_SERVICE', name: 'Cleaning service', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['COUPLE', 'FAMILY', 'ELDERLY'] },
+    { key: 'LAUNDRY_SERVICE', name: 'Laundry service', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['SINGLE', 'ELDERLY'] },
+    { key: 'NANNY', name: 'Nanny', jarKey: N, categoryTemplateKey: 'FAMILY', audienceTags: ['FAMILY'] },
+    // Care
+    { key: 'HOME_CARE', name: 'Home care', jarKey: N, categoryTemplateKey: 'CARE', audienceTags: ['ELDERLY'] },
+    { key: 'MEDICAL_ALARM', name: 'Medical alarm', jarKey: N, categoryTemplateKey: 'CARE', audienceTags: ['ELDERLY'] },
+    { key: 'CARE_CONTRIBUTION', name: 'Care contribution / co-pay', jarKey: N, categoryTemplateKey: 'CARE', audienceTags: ['ELDERLY'] },
+    { key: 'MEDICATION_PLAN', name: 'Medication plan', jarKey: N, categoryTemplateKey: 'CARE', audienceTags: ['ELDERLY'] },
+    { key: 'PHYSIO_MEMBERSHIP', name: 'Physiotherapy membership', jarKey: N, categoryTemplateKey: 'CARE', audienceTags: ['ELDERLY', 'COMMON'] },
+    { key: 'MENTAL_HEALTH', name: 'Mental health subscription', jarKey: N, categoryTemplateKey: 'CARE', audienceTags: ['COMMON', 'STUDENT'] },
+    // Pets
+    { key: 'PET_FOOD_PLAN', name: 'Pet food plan', jarKey: N, categoryTemplateKey: 'PETS', audienceTags: ['PET_OWNER'] },
+    { key: 'VET_PLAN', name: 'Vet care plan', jarKey: N, categoryTemplateKey: 'PETS', audienceTags: ['PET_OWNER'] },
+    { key: 'PET_DAYCARE', name: 'Pet daycare', jarKey: N, categoryTemplateKey: 'PETS', audienceTags: ['PET_OWNER'] },
+    // Banking
+    { key: 'BANK_FEE', name: 'Bank account fee', jarKey: N, categoryTemplateKey: 'BANKING', audienceTags: ['COMMON'] },
+    { key: 'CREDIT_CARD_FEE', name: 'Credit card annual fee', jarKey: N, categoryTemplateKey: 'BANKING', audienceTags: ['COMMON'] },
+    { key: 'INVESTMENT_PLATFORM_FEE', name: 'Investment platform fee', jarKey: N, categoryTemplateKey: 'BANKING', audienceTags: ['COMMON'] },
+    // Debt payments
+    { key: 'STUDENT_LOAN_PAYMENT', name: 'Student loan payment', jarKey: N, categoryTemplateKey: 'DEBT_PAYMENTS', audienceTags: ['STUDENT'] },
+    { key: 'PERSONAL_LOAN_PAYMENT', name: 'Personal loan payment', jarKey: N, categoryTemplateKey: 'DEBT_PAYMENTS', audienceTags: ['COMMON'] },
+    { key: 'CREDIT_CARD_PAYMENT', name: 'Credit card payment', jarKey: N, categoryTemplateKey: 'DEBT_PAYMENTS', audienceTags: ['COMMON'] },
+    { key: 'MORTGAGE_EXTRA', name: 'Extra mortgage payment', jarKey: N, categoryTemplateKey: 'DEBT_PAYMENTS', audienceTags: ['HOMEOWNER'] },
+    // Education
+    { key: 'TUITION', name: 'Tuition', jarKey: E, categoryTemplateKey: 'TUITION', audienceTags: ['STUDENT'] },
+    { key: 'STUDENT_UNION', name: 'Student union / association', jarKey: E, categoryTemplateKey: 'TUITION', audienceTags: ['STUDENT'] },
+    { key: 'ONLINE_COURSE', name: 'Online course membership', jarKey: E, categoryTemplateKey: 'COURSES', audienceTags: ['STUDENT', 'COMMON'] },
+    { key: 'COACHING', name: 'Coach / mentor retainer', jarKey: E, categoryTemplateKey: 'MENTORS', audienceTags: ['COMMON'] },
+    // Play
+    { key: 'GYM', name: 'Gym', jarKey: P, categoryTemplateKey: 'SPORT', audienceTags: ['COMMON'] },
+    { key: 'SPORTS_CLUB', name: 'Sports club', jarKey: P, categoryTemplateKey: 'SPORT', audienceTags: ['FAMILY', 'COMMON'] },
+    { key: 'HOBBY_MEMBERSHIP', name: 'Hobby membership', jarKey: P, categoryTemplateKey: 'HOBBIES', audienceTags: ['COMMON'] },
+    { key: 'DATING_APP', name: 'Dating app', jarKey: P, categoryTemplateKey: 'MEDIA', audienceTags: ['SINGLE'] },
+    // Give
+    { key: 'CHARITY', name: 'Charity donation', jarKey: G, categoryTemplateKey: 'DONATIONS', audienceTags: ['COMMON'] },
+    { key: 'CHURCH_TITHE', name: 'Faith community giving', jarKey: G, categoryTemplateKey: 'DONATIONS', audienceTags: ['COMMON'] },
+    { key: 'SPONSORSHIP', name: 'Child / project sponsorship', jarKey: G, categoryTemplateKey: 'DONATIONS', audienceTags: ['FAMILY', 'COUPLE'] },
+];

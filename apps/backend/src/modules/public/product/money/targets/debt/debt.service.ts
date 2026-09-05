@@ -3,7 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
-import { Debt, DebtKind, PayoffStrategy } from './debt.entity';
+import { DebtKind, PayoffStrategy } from '@rumbelo/contracts';
+
+import { Debt } from './debt.entity';
 
 @Injectable()
 export class DebtService {
@@ -39,7 +41,7 @@ export class DebtService {
             dueDay: input.dueDay ?? null,
             closedOn: input.closedOn ?? null,
         } as never);
-        await this.em.persistAndFlush(entity);
+        await this.em.persist(entity).flush();
         return toDto(entity);
     }
 
@@ -136,7 +138,7 @@ export class DebtService {
 
     async remove(id: string) {
         const entity = await this.repo.findOneOrFail({ id });
-        await this.em.removeAndFlush(entity);
+        await this.em.remove(entity).flush();
         return { ok: true as const };
     }
 }

@@ -1,28 +1,18 @@
 import { z } from 'zod';
-import { Id, Money, PeriodKey, HouseholdId } from '../common';
 
-/**
- * The six jars. Keys are stable and used as enum values in the database —
- * the display name is user-editable, the key is not.
- */
-export const JarKey = z.enum([
-    'NECESSITIES',
-    'FINANCIAL_FREEDOM',
-    'EDUCATION',
-    'LONG_TERM_SAVINGS',
-    'PLAY',
-    'GIVE',
-]);
-export type JarKey = z.infer<typeof JarKey>;
+import { JarKey } from '../../enums';
+import { HouseholdId, Id, Money, PeriodKey } from '../common';
+
+export { JarKey } from '../../enums';
 
 /** T. Harv Eker's canonical split — the onboarding default, fully user-overridable. */
 export const DEFAULT_JAR_SPLIT: Record<JarKey, number> = {
-    NECESSITIES: 55,
-    FINANCIAL_FREEDOM: 10,
-    LONG_TERM_SAVINGS: 10,
-    EDUCATION: 10,
-    PLAY: 10,
-    GIVE: 5,
+    [JarKey.NECESSITIES]: 55,
+    [JarKey.FINANCIAL_FREEDOM]: 10,
+    [JarKey.LONG_TERM_SAVINGS]: 10,
+    [JarKey.EDUCATION]: 10,
+    [JarKey.PLAY]: 10,
+    [JarKey.GIVE]: 5,
 };
 
 export const Category = z.object({
@@ -38,7 +28,7 @@ export type Category = z.infer<typeof Category>;
 export const Jar = z.object({
     id: Id,
     householdId: HouseholdId,
-    key: JarKey,
+    key: z.enum(JarKey),
     name: z.string().min(1).max(80),
     subtitle: z.string().max(160).nullable(),
     icon: z.string().max(8).nullable(),

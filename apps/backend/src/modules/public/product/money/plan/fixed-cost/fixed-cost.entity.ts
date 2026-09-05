@@ -1,8 +1,9 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { Cadence, FlowDirection } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
-import { Cadence, FlowDirection } from '../../../../../../common/database/enums';
 import { Category } from '../jar/category.entity';
 import { Jar } from '../jar/jar.entity';
 
@@ -21,13 +22,13 @@ export class FixedCost extends HouseholdEntity {
     @Property({ type: 'bigint' })
     amount!: number;
 
-    @Enum(() => Cadence)
+    @Enum(NativeEnum({ Cadence, domain: 'money', defaultValue: Cadence.MONTHLY }))
     cadence: Cadence = Cadence.MONTHLY;
 
     @Property({ nullable: true })
     dueDay: number | null = null;
 
-    @Enum(() => FlowDirection)
+    @Enum(NativeEnum({ FlowDirection, domain: 'money', defaultValue: FlowDirection.OUT }))
     direction: FlowDirection = FlowDirection.OUT;
 
     @Property({ default: true })

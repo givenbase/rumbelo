@@ -1,19 +1,8 @@
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
+import { Currency, HouseholdKind } from '@rumbelo/contracts';
 
+import { NativeEnum } from '../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../common/database/entity-config.util';
-import { Currency } from '../../../../common/database/enums';
-
-/**
- * Nature of the group sharing the board — family, partners, friends or solo.
- * Drives copy and module defaults only; permissions are the member's role and
- * query scoping is householdId. Never a second tenancy axis.
- */
-export enum HouseholdKind {
-    family = 'family',
-    partners = 'partners',
-    friends = 'friends',
-    solo = 'solo',
-}
 
 /**
  * Money-board prefs for a household. Language and appearance live on
@@ -25,10 +14,10 @@ export class HouseholdSettings {
     @PrimaryKey({ type: 'varchar', length: 64 })
     householdId!: string;
 
-    @Enum(() => HouseholdKind)
-    kind: HouseholdKind = HouseholdKind.solo;
+    @Enum(NativeEnum({ HouseholdKind, domain: 'platform', defaultValue: HouseholdKind.SOLO }))
+    kind: HouseholdKind = HouseholdKind.SOLO;
 
-    @Enum(() => Currency)
+    @Enum(NativeEnum({ Currency, domain: 'platform', defaultValue: Currency.EUR }))
     currency: Currency = Currency.EUR;
 
     /** Budget rollover day. 1 for most people, 25 for salary-day budgeters. */

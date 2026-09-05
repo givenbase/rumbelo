@@ -2,7 +2,7 @@ import type { EntityManager } from '@mikro-orm/postgresql';
 
 import { Seeder } from '@mikro-orm/seeder';
 
-import { JarTemplate } from '../../modules/backoffice/reference/jar-template/jar-template.entity';
+import { JarTemplate } from '../../modules/backoffice/reference/template/jar/jar.entity';
 import { HouseholdSettings } from '../../modules/public/platform/household/household-settings.entity';
 import { Jar } from '../../modules/public/product/money/plan/jar/jar.entity';
 

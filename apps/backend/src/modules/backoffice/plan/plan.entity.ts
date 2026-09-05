@@ -1,17 +1,9 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
+import { PlanKey } from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../common/database/base.entity';
+import { NativeEnum } from '../../../common/database/native-enum.util';
 import { entityConfig } from '../../../common/database/entity-config.util';
-
-/**
- * Product tier keys — match frontend `PlanKey` (`grip` | `ritme` | `groei`).
- * Not the same as `product/money/plan` (jars / income).
- */
-export enum PlanKey {
-    GRIP = 'grip',
-    RITME = 'ritme',
-    GROEI = 'groei',
-}
 
 /**
  * Plan Entity
@@ -27,7 +19,7 @@ export class Plan extends BaseEntity {
     // ? PROPERTIES
 
     /** Stable tier key — used in gating and billing mapping. */
-    @Enum(() => PlanKey)
+    @Enum(NativeEnum({ PlanKey, domain: 'backoffice' }))
     key!: PlanKey;
 
     /** Product name shown in UI (Grip, Engine, Compound). */

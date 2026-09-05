@@ -4,6 +4,7 @@ import { useApiClient } from '@/app/_lib/api-hooks';
 import { useEffect, useState } from 'react';
 
 import { Button, Field, Input } from '@rumbelo/ui';
+import { Locale } from '@rumbelo/contracts';
 
 import { markOnboardingDone } from '@/app/_lib/onboarding-storage';
 import { JAR_META } from '@/app/_mock';
@@ -52,7 +53,7 @@ export function OnboardingOverlay() {
             const household = await client.household.onboard({
                 householdName,
                 currency: 'EUR',
-                locale: 'nl',
+                locale: Locale.NL,
                 monthlyNetIncome: Number.isFinite(euros) ? euros : 0,
                 split,
                 why: why.trim() || null,

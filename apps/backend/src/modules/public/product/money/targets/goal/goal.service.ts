@@ -4,7 +4,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Jar } from '../../plan/jar/jar.entity';
-import { Goal, GoalStatus } from './goal.entity';
+import { GoalStatus } from '@rumbelo/contracts';
+
+import { Goal } from './goal.entity';
 
 @Injectable()
 export class GoalService {
@@ -39,7 +41,7 @@ export class GoalService {
             status: (input.status as GoalStatus) ?? GoalStatus.ACTIVE,
             why: input.why ?? null,
         } as never);
-        await this.em.persistAndFlush(entity);
+        await this.em.persist(entity).flush();
         return toDto(entity);
     }
 
@@ -127,7 +129,7 @@ export class GoalService {
 
     async remove(id: string) {
         const entity = await this.repo.findOneOrFail({ id });
-        await this.em.removeAndFlush(entity);
+        await this.em.remove(entity).flush();
         return { ok: true as const };
     }
 }

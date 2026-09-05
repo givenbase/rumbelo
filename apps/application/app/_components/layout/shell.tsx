@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@rumbelo/utils';
+import { Locale } from '@rumbelo/contracts';
 
 import { signOut } from '@/app/_lib/auth';
 import { BOTTOM_TABS, NAV_GROUPS, TOP_PILL_LABELS } from '@/app/_lib/nav';
@@ -166,9 +167,9 @@ function AppShellInner({ children }: { children: ReactNode }) {
                         <button
                             type="button"
                             onClick={toggleLocale}
-                            title={locale === 'nl' ? 'Switch to English' : 'Switch to Dutch'}
+                            title={locale === Locale.NL ? 'Switch to English' : 'Switch to Dutch'}
                             className="hidden h-8 items-center rounded-full border border-line px-3 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent md:flex">
-                            {locale === 'nl' ? 'NL' : 'EN'}
+                            {locale === Locale.NL ? 'NL' : 'EN'}
                         </button>
 
                         <ThemeToggle />
