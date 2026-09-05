@@ -110,6 +110,11 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
+            # Entity discovery loads @rumbelo/contracts via package "import" → dist/.
+            # dist/ is gitignored, so CI must build it before MikroORM / auth migrate.
+            - name: Build workspace packages
+              run: pnpm --filter @rumbelo/contracts build
+
             - name: Show target environment
               env:
                   GITHUB_ENV_NAME: ${{ needs.resolve.outputs.github_environment }}
