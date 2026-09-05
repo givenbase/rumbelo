@@ -302,6 +302,11 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
     metadata: 8,
     settings: 8,
     additionalSettings: 8,
+    moneySettings: 8,
+    ritualSettings: 8,
+    featureSettings: 8,
+    answers: 8,
+    capabilities: 8,
 
     url: 9,
     imageUrl: 9,
@@ -339,6 +344,7 @@ export const SAME_PRIORITY_ORDER: readonly (readonly string[])[] = [
     ['budgeted', 'actual', 'target'],
     ['amount', 'balance', 'rate', 'percentage'],
     ['isBankSyncEnabled', 'isCoachEnabled'],
+    ['moneySettings', 'ritualSettings', 'featureSettings', 'answers'],
     ['periodStartDay', 'ritualReminderDay', 'ritualReminderAt'],
 ];
 

@@ -67,7 +67,7 @@ export class DebtService {
                 await this.em.findOne(HouseholdSettings, {
                     householdId: currentHouseholdId(),
                 })
-            )?.payoffStrategy ??
+            )?.moneySettings?.payoffStrategy ??
             PayoffStrategy.AVALANCHE;
 
         const debts = await this.repo.find({ closedOn: null });

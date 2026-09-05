@@ -16,6 +16,8 @@ import {
     MoneyCharacter,
     PayoffStrategy,
     Theme,
+    canAddHouseholdMember,
+    canInviteOnPlan,
     type JarKey,
 } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
@@ -34,7 +36,7 @@ import { cn, formatMoney, formatPercent } from '@rumbelo/utils';
 
 import { changePassword, signOut, updateOrganization, updateUser } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
-import { PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
+import { LOCK_COPY, memberLimitLabel, PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
 import { isLiveData } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
@@ -102,7 +104,7 @@ export function AccountSettings() {
     const queryClient = useQueryClient();
     const router = useRouter();
     const { session, householdId, refreshSession } = useAuth();
-    const { showToast, locale, toggleLocale } = useAppShell();
+    const { showToast, locale, toggleLocale, plan } = useAppShell();
     const live = isLiveData(householdId);
 
     const user = session?.user;
@@ -129,6 +131,12 @@ export function AccountSettings() {
         null,
         live
     );
+
+    const activePlan = settingsQuery.data?.planKey ?? plan;
+    const memberCount = membersQuery.data?.length ?? 0;
+    const invitesAllowed = canInviteOnPlan(activePlan);
+    const seatOpen = canAddHouseholdMember(activePlan, memberCount);
+    const inviteCopy = LOCK_COPY.invite!;
 
     const currency = settingsQuery.data?.currency ?? householdQuery.data?.currency ?? 'EUR';
     const [currencyDraft, setCurrencyDraft] = useState<string | null>(null);
@@ -584,7 +592,7 @@ export function AccountSettings() {
 
             <SettingsInkCard
                 eyebrow="Household"
-                blurb="Members share jars, rules, and transaction history.">
+                blurb={`${memberLimitLabel(activePlan)}. Members share jars, rules, and transaction history.`}>
                 <div className="grid gap-3 py-2.5">
                     {live && (membersQuery.data?.length ?? 0) > 0 ? (
                         <ul className="divide-y divide-line rounded-lg border border-line">
@@ -605,24 +613,40 @@ export function AccountSettings() {
                     ) : (
                         <StubNotice what="Members appear here once you have a household." />
                     )}
-                    <Field label="Invite (email)" htmlFor="invite-email">
-                        <Input
-                            id="invite-email"
-                            type="email"
-                            value={inviteEmail}
-                            onChange={e => setInviteEmail(e.target.value)}
-                            placeholder="partner@example.com"
-                            disabled={!live}
-                        />
-                    </Field>
-                    <div className="flex justify-end">
-                        <Button
-                            variant="secondary"
-                            disabled={!live || invite.isPending || !inviteEmail.includes('@')}
-                            onClick={() => invite.mutate()}>
-                            {invite.isPending ? 'Working…' : 'Invite'}
-                        </Button>
-                    </div>
+                    {!invitesAllowed ? (
+                        <p className="text-sm text-fg-muted">
+                            {inviteCopy.line}{' '}
+                            <span className="font-medium text-fg">{inviteCopy.cta}</span>
+                        </p>
+                    ) : !seatOpen ? (
+                        <p className="text-sm text-fg-muted">
+                            Seat limit reached ({memberLimitLabel(activePlan)}). Upgrade to Max for
+                            unlimited members.
+                        </p>
+                    ) : (
+                        <>
+                            <Field label="Invite (email)" htmlFor="invite-email">
+                                <Input
+                                    id="invite-email"
+                                    type="email"
+                                    value={inviteEmail}
+                                    onChange={e => setInviteEmail(e.target.value)}
+                                    placeholder="partner@example.com"
+                                    disabled={!live}
+                                />
+                            </Field>
+                            <div className="flex justify-end">
+                                <Button
+                                    variant="secondary"
+                                    disabled={
+                                        !live || invite.isPending || !inviteEmail.includes('@')
+                                    }
+                                    onClick={() => invite.mutate()}>
+                                    {invite.isPending ? 'Working…' : 'Invite'}
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </SettingsInkCard>
 
@@ -1433,24 +1457,24 @@ export function PlanSettings() {
             priceM: 0,
             priceY: 0,
             tag: 'From €0',
-            line: 'The six jars and the practice underneath. No bank needed — enough to start today.',
-            feats: 'MONEY · the six jars · Add expenses · Safe to spend · SOUL · The coach',
+            line: 'Solo board — the six jars and the practice underneath. No bank needed.',
+            feats: `${memberLimitLabel(PlanKey.BASIC)} · Solo only · MONEY jars · Coach`,
         },
         {
             key: PlanKey.PLUS,
             priceM: 9,
             priceY: 90,
             tag: 'Most chosen',
-            line: 'The part that runs without you — plus Energy. Banks tied to jars, transactions sorted on arrival.',
-            feats: 'Everything in Basic · Bank connect · Debt plan · ENERGY · Unlimited history',
+            line: 'Share the board with family or friends — debt, energy week, and goals.',
+            feats: `${memberLimitLabel(PlanKey.PLUS)} · Any household kind · Debt · ENERGY · Goals`,
         },
         {
             key: PlanKey.MAX,
             priceM: 19,
             priceY: 190,
             tag: 'All four portals',
-            line: 'Where the money starts making money. Goals, income curve, learning, and net worth.',
-            feats: 'Everything in Plus · GROWTH · Income · Learning · Net worth · Devices later',
+            line: 'Unlimited household, income curve, learning, and net worth.',
+            feats: `${memberLimitLabel(PlanKey.MAX)} · GROWTH · Income · Learning · Net worth`,
         },
     ];
 

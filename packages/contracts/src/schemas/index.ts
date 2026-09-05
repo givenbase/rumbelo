@@ -3,6 +3,7 @@
  * application's navigation. Shared primitives live in common.ts.
  */
 export * from './common';
+export * from './backoffice/index';
 export * from './platform/index';
 export * from './money/index';
 export * from './growth/index';

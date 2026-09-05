@@ -1,40 +1,24 @@
 import { PlanKey } from '@rumbelo/contracts';
+import {
+    PLAN_CAPABILITIES,
+    PLAN_RANK,
+    capabilitiesFor,
+    isScreenLocked as isScreenLockedByCaps,
+    minPlanForScreen,
+} from '@rumbelo/contracts';
 
 /**
- * Plan-gating model.
+ * Plan-gating model — delegates to contracts PLAN_CAPABILITIES.
  *
- * Three tiers in ascending order:
- *   BASIC → Basic (entry; €0 today, may become a small paid tier later)
- *   PLUS  → Plus (debt / week / goals)
- *   MAX   → Max (income / board / learn / chakra)
+ *   BASIC → solo only, 1 member, base screens
+ *   PLUS  → up to 5 members, any household kind, debt / week / goals
+ *   MAX   → unlimited members, full screen set
  */
 
-export { PlanKey };
+export { PlanKey, PLAN_CAPABILITIES, PLAN_RANK, capabilitiesFor, minPlanForScreen };
 
 /** @deprecated alias — prefer PlanKey */
 export type PlanId = PlanKey;
-
-/** Numeric rank so `BASIC < PLUS < MAX` comparisons stay one expression. */
-export const PLAN_RANK: Record<PlanKey, number> = {
-    [PlanKey.BASIC]: 0,
-    [PlanKey.PLUS]: 1,
-    [PlanKey.MAX]: 2,
-};
-
-/**
- * Minimum plan required to open a screen.
- * Key = the `screenKey` field on nav children.
- * Absence → screen is accessible on every plan.
- */
-export const SCREEN_MIN: Record<string, PlanKey> = {
-    debt: PlanKey.PLUS,
-    week: PlanKey.PLUS,
-    goals: PlanKey.PLUS,
-    income: PlanKey.MAX,
-    board: PlanKey.MAX,
-    learn: PlanKey.MAX,
-    chakra: PlanKey.MAX,
-};
 
 /** Human-readable plan labels (product names). */
 export const PLAN_LABELS: Record<PlanKey, string> = {
@@ -46,12 +30,20 @@ export const PLAN_LABELS: Record<PlanKey, string> = {
 /** Fallback when household settings have not loaded yet. */
 export const DEFAULT_PLAN: PlanKey = PlanKey.BASIC;
 
+/**
+ * Minimum plan required to open a screen (derived from capabilities).
+ * Absence → screen is accessible on every plan.
+ */
+export const SCREEN_MIN: Record<string, PlanKey> = Object.fromEntries(
+    [...new Set(Object.values(PLAN_CAPABILITIES).flatMap(c => c.screens))].map(screen => [
+        screen,
+        minPlanForScreen(screen)!,
+    ])
+) as Record<string, PlanKey>;
+
 /** Returns true when `plan` is insufficient to access the given screenKey. */
 export function isScreenLocked(screenKey: string | null, plan: PlanKey = DEFAULT_PLAN): boolean {
-    if (!screenKey) return false;
-    const min = SCREEN_MIN[screenKey];
-    if (!min) return false;
-    return PLAN_RANK[plan] < PLAN_RANK[min];
+    return isScreenLockedByCaps(screenKey, plan);
 }
 
 export const LOCK_COPY: Record<
@@ -101,8 +93,15 @@ export const LOCK_COPY: Record<
         cta: 'Upgrade to Max',
     },
     chakra: {
-        title: 'Centres belong in Plus',
-        line: 'The seven centres and where energy gets stuck — in Plus.',
+        title: 'Centres belong in Max',
+        line: 'The seven centres and where energy gets stuck — in Max.',
+        planName: 'Max',
+        price: '€19 / month',
+        cta: 'Upgrade to Max',
+    },
+    invite: {
+        title: 'Shared households belong in Plus',
+        line: 'Basic is for one person. Invite a partner, family, or friend on Plus (up to 5) or Max (unlimited).',
         planName: 'Plus',
         price: '€9 / month',
         cta: 'Upgrade to Plus',
@@ -115,3 +114,10 @@ export const LOCK_COPY: Record<
         cta: 'View plans',
     },
 };
+
+export function memberLimitLabel(plan: PlanKey): string {
+    const max = capabilitiesFor(plan).maxMembers;
+    if (max === null) return 'Unlimited members';
+    if (max === 1) return '1 member (solo)';
+    return `Up to ${max} members`;
+}

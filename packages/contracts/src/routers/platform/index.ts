@@ -25,9 +25,7 @@ export const contract = {
         current: oc.input(z.object({ householdId: S.HouseholdId })).output(S.Household),
         members: oc.input(S.HouseholdScoped).output(z.array(S.HouseholdMember)),
         settings: oc.input(S.HouseholdScoped).output(S.HouseholdSettings),
-        updateSettings: oc
-            .input(S.HouseholdSettings.partial().extend({ householdId: S.HouseholdId }))
-            .output(S.HouseholdSettings),
+        updateSettings: oc.input(S.HouseholdSettingsPatch).output(S.HouseholdSettings),
         onboard: oc.input(S.OnboardingInput).output(S.Household),
         invite: oc
             .input(

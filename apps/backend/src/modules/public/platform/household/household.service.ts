@@ -2,11 +2,20 @@ import type { z } from 'zod';
 
 import {
     Currency,
+    HouseholdKind,
     HouseholdRole,
     IncomeKind,
     IncomeRhythm,
+    PlanKey,
+    type HouseholdSettings as HouseholdSettingsDto,
+    type HouseholdSettingsPatch,
     type OnboardingInput,
     PayoffStrategy,
+    canAddHouseholdMember,
+    canInviteOnPlan,
+    canUseHouseholdKind,
+    capabilitiesFor,
+    householdFitsPlan,
 } from '@rumbelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
@@ -17,13 +26,19 @@ import type { Auth } from '../../../auth/better-auth/auth.config';
 
 import { currentUserId, currentAuthHeaders } from '../../../../common/household/household.context';
 import { AccountSettingsService } from '../../../auth/account/account-settings/account-settings.service';
+import { AuthInvitation } from '../../../auth/better-auth/invitation/auth-invitation.entity';
 import { AuthMember } from '../../../auth/better-auth/member/auth-member.entity';
 import { AuthOrganization } from '../../../auth/better-auth/organization/auth-organization.entity';
 import { EmailService } from '../../../backoffice/communication/email';
 import { JarTemplateService } from '../../../backoffice/reference/template/jar/jar.service';
 import { IncomeSource } from '../../product/money/plan/income/income-source.entity';
 import { Jar } from '../../product/money/plan/jar/jar.entity';
-import { HouseholdSettings } from './household-settings.entity';
+import {
+    DEFAULT_FEATURE_SETTINGS,
+    DEFAULT_MONEY_SETTINGS,
+    DEFAULT_RITUAL_SETTINGS,
+    HouseholdSettings,
+} from './household-settings.entity';
 
 @Injectable()
 export class HouseholdService {
@@ -45,6 +60,24 @@ export class HouseholdService {
     }
 
     async invite(householdId: string, email: string, role: HouseholdRole) {
+        const settings = await this.settings(householdId);
+        const planKey = settings.planKey;
+        if (!canInviteOnPlan(planKey)) {
+            throw new BadRequestException(
+                'Basic is solo-only — upgrade to Plus to invite household members'
+            );
+        }
+
+        const occupied = await this.occupiedSeats(householdId);
+        if (!canAddHouseholdMember(planKey, occupied)) {
+            const max = capabilitiesFor(planKey).maxMembers;
+            throw new BadRequestException(
+                max === null
+                    ? 'Cannot invite another member right now'
+                    : `This plan allows up to ${max} household members (including you)`
+            );
+        }
+
         const headers = currentAuthHeaders();
         const result = await this.authService.api.createInvitation({
             body: {
@@ -125,7 +158,7 @@ export class HouseholdService {
             name: org.name,
             slug: org.slug,
             currency: settings.currency,
-            periodStartDay: settings.periodStartDay,
+            periodStartDay: settings.money.periodStartDay,
             createdAt: new Date(org.createdAt).toISOString(),
         };
     }
@@ -134,14 +167,51 @@ export class HouseholdService {
     // ? UPDATE Operations
     // ====================================================================
 
-    async updateSettings(householdId: string, patch: Partial<HouseholdSettings>) {
-        const row = await this.em.findOne(HouseholdSettings, { householdId });
+    async updateSettings(householdId: string, patch: Omit<HouseholdSettingsPatch, 'householdId'>) {
+        let row = await this.em.findOne(HouseholdSettings, { householdId });
         if (!row) {
-            const created = this.em.create(HouseholdSettings, { householdId, ...patch } as never);
-            await this.em.persist(created).flush();
-            return toSettingsDto(created);
+            row = this.em.create(HouseholdSettings, { householdId } as never);
+            this.em.persist(row);
         }
-        Object.assign(row, patch);
+
+        const nextPlan = patch.planKey ?? row.planKey;
+        const nextKind = patch.kind ?? row.kind;
+
+        if (patch.kind !== undefined && !canUseHouseholdKind(nextPlan, patch.kind)) {
+            throw new BadRequestException(
+                `${nextPlan} does not allow household kind ${patch.kind}`
+            );
+        }
+
+        if (patch.planKey !== undefined) {
+            const memberCount = await this.em.count(AuthMember, { organization: householdId });
+            if (!householdFitsPlan(patch.planKey, { memberCount, kind: nextKind })) {
+                const caps = capabilitiesFor(patch.planKey);
+                throw new BadRequestException(
+                    caps.maxMembers !== null && memberCount > caps.maxMembers
+                        ? `Cannot switch to ${patch.planKey}: household has ${memberCount} members (max ${caps.maxMembers})`
+                        : `Cannot switch to ${patch.planKey}: household kind ${nextKind} is not allowed`
+                );
+            }
+        }
+
+        if (patch.why !== undefined) row.why = patch.why;
+        if (patch.kind !== undefined) row.kind = patch.kind;
+        if (patch.currency !== undefined) row.currency = patch.currency;
+        if (patch.planKey !== undefined) row.planKey = patch.planKey;
+        if (patch.money) {
+            row.moneySettings = { ...row.moneySettings, ...patch.money };
+        }
+        if (patch.ritual) {
+            row.ritualSettings = { ...row.ritualSettings, ...patch.ritual };
+        }
+        if (patch.features) {
+            row.featureSettings = { ...row.featureSettings, ...patch.features };
+        }
+        if (patch.answers) {
+            row.answers = { ...row.answers, ...patch.answers };
+        }
+
         await this.em.flush();
         return toSettingsDto(row);
     }
@@ -150,8 +220,21 @@ export class HouseholdService {
     // Private helpers
     // ====================================================================
 
+    /** Members + pending invites occupy seats against plan.maxMembers. */
+    private async occupiedSeats(householdId: string): Promise<number> {
+        const members = await this.em.count(AuthMember, { organization: householdId });
+        const pending = await this.em.count(AuthInvitation, {
+            organization: householdId,
+            status: 'pending',
+        });
+        return members + pending;
+    }
+
     private async onboardInternal(input: z.infer<typeof OnboardingInput>, headers: Headers) {
         const userId = currentUserId();
+        const planKey = PlanKey.BASIC;
+        const kind = canUseHouseholdKind(planKey, input.kind) ? input.kind : HouseholdKind.SOLO;
+
         const splitTotal = input.split.reduce(
             (sum: number, share: { percentage: number }) => sum + share.percentage,
             0
@@ -201,11 +284,18 @@ export class HouseholdService {
 
         this.em.create(HouseholdSettings, {
             householdId: org.id,
-            kind: input.kind,
+            kind,
+            planKey,
             currency: input.currency,
             why: input.why,
-            incomeRhythm: input.incomeRhythm ?? IncomeRhythm.STABLE,
-            payoffStrategy: input.payoffStrategy ?? PayoffStrategy.AVALANCHE,
+            moneySettings: {
+                ...DEFAULT_MONEY_SETTINGS,
+                incomeRhythm: input.incomeRhythm ?? IncomeRhythm.STABLE,
+                payoffStrategy: input.payoffStrategy ?? PayoffStrategy.AVALANCHE,
+            },
+            ritualSettings: { ...DEFAULT_RITUAL_SETTINGS },
+            featureSettings: { ...DEFAULT_FEATURE_SETTINGS },
+            answers: {},
         } as never);
 
         await this.accountSettings.upsertForUser(userId, {
@@ -261,19 +351,25 @@ function mapRole(raw: string): HouseholdRole {
     }
 }
 
-function toSettingsDto(row: HouseholdSettings) {
+function toSettingsDto(row: HouseholdSettings): HouseholdSettingsDto {
     return {
         householdId: row.householdId,
+        why: row.why,
         kind: row.kind,
         currency: row.currency,
         planKey: row.planKey,
-        periodStartDay: row.periodStartDay,
-        ritualReminderAt: row.ritualReminderAt,
-        ritualReminderDay: row.ritualReminderDay,
-        isBankSyncEnabled: row.isBankSyncEnabled,
-        isCoachEnabled: row.isCoachEnabled,
-        why: row.why,
-        payoffStrategy: row.payoffStrategy,
-        incomeRhythm: row.incomeRhythm,
+        money: {
+            ...DEFAULT_MONEY_SETTINGS,
+            ...row.moneySettings,
+        },
+        ritual: {
+            ...DEFAULT_RITUAL_SETTINGS,
+            ...row.ritualSettings,
+        },
+        features: {
+            ...DEFAULT_FEATURE_SETTINGS,
+            ...row.featureSettings,
+        },
+        answers: row.answers ?? {},
     };
 }

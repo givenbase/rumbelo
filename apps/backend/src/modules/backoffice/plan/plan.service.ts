@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { type PlanKey } from '@rumbelo/contracts';
+import { type PlanKey, PLAN_CAPABILITIES } from '@rumbelo/contracts';
 
 import { Plan } from './plan.entity';
 
@@ -9,6 +9,7 @@ import { Plan } from './plan.entity';
  * Plan Service
  *
  * Catalog of product tiers we publish. Households never write these rows.
+ * Runtime gating uses PLAN_CAPABILITIES from contracts; this service serves the catalog.
  */
 @Injectable()
 export class PlanService {
@@ -29,7 +30,7 @@ export class PlanService {
                 sortOrder: row.sortOrder ?? sortOrder,
                 isActive: true,
                 priceMonthly: row.priceMonthly ?? '0.00',
-                unlocks: row.unlocks ?? [],
+                capabilities: row.capabilities ?? PLAN_CAPABILITIES[row.key],
                 ...row,
             } as never);
         }
@@ -41,7 +42,7 @@ export class PlanService {
     // ? READ Operations
     // ====================================================================
 
-    /** Active tiers in rank / display order. */
+    /** Active tiers in sortOrder / display order. */
     async listActive(): Promise<Plan[]> {
         return this.em.find(Plan, { isActive: true }, { orderBy: { sortOrder: 'ASC' } });
     }

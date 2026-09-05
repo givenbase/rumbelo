@@ -41,33 +41,80 @@ export const HouseholdMember = z.object({
     image: z.url().nullable(),
 });
 
+/** Shared money-board prefs (period, income picture, debt order). */
+export const HouseholdMoneySettings = z.object({
+    /** Budget rollover day. 1 for most, 25 for salary-day budgeters. */
+    periodStartDay: z.int().min(1).max(28),
+    /** Stable vs variable household income picture. */
+    incomeRhythm: z.enum(IncomeRhythm),
+    /** Avalanche / snowball — one order for the shared debt list. */
+    payoffStrategy: z.enum(PayoffStrategy),
+});
+export type HouseholdMoneySettings = z.infer<typeof HouseholdMoneySettings>;
+
+/** Weekly ritual reminder — null day/at disables the nudge. */
+export const HouseholdRitualSettings = z.object({
+    /** ISO weekday, 1 = Monday. */
+    reminderDay: z.int().min(1).max(7).nullable(),
+    /** Local time HH:mm. */
+    reminderAt: z
+        .string()
+        .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+        .nullable(),
+});
+export type HouseholdRitualSettings = z.infer<typeof HouseholdRitualSettings>;
+
+/** Product feature toggles for the board. */
+export const HouseholdFeatureSettings = z.object({
+    isBankSyncEnabled: z.boolean(),
+    isCoachEnabled: z.boolean(),
+});
+export type HouseholdFeatureSettings = z.infer<typeof HouseholdFeatureSettings>;
+
+/**
+ * Extensible household Q&A (onboarding / coach prompts).
+ * Keys are stable question ids; values are primitives.
+ */
+export const HouseholdAnswers = z.record(
+    z.string(),
+    z.union([z.string(), z.number(), z.boolean(), z.null()])
+);
+export type HouseholdAnswers = z.infer<typeof HouseholdAnswers>;
+
 /**
  * Money-board prefs for the household. Language, appearance, and money character
  * live on AccountSettings — they can differ per person in the same household.
+ *
+ * Grouped: general identity → product → money / ritual / features bags → answers.
  */
 export const HouseholdSettings = z.object({
     householdId: HouseholdId,
+    /** Surfaced on the dashboard as the "why" line. */
+    why: z.string().max(500).nullable().optional(),
     kind: z.enum(HouseholdKind),
     currency: z.enum(Currency),
     /** Product tier for the board — Basic / Plus / Max. */
     planKey: z.enum(PlanKey),
-    periodStartDay: z.int().min(1).max(28),
-    /** Weekly ritual reminder, local time HH:mm, null disables it. */
-    ritualReminderAt: z
-        .string()
-        .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
-        .nullable(),
-    ritualReminderDay: z.int().min(1).max(7).nullable(),
-    isBankSyncEnabled: z.boolean(),
-    isCoachEnabled: z.boolean(),
-    /** Surfaced on the dashboard as the "why" line. */
-    why: z.string().max(500).nullable().optional(),
-    /** Avalanche / snowball — one order for the shared debt list. */
-    payoffStrategy: z.enum(PayoffStrategy),
-    /** Stable vs variable household income picture. */
-    incomeRhythm: z.enum(IncomeRhythm),
+    money: HouseholdMoneySettings,
+    ritual: HouseholdRitualSettings,
+    features: HouseholdFeatureSettings,
+    answers: HouseholdAnswers,
 });
 export type HouseholdSettings = z.infer<typeof HouseholdSettings>;
+
+/** Partial nested patch for updateSettings (deep-merge on the server). */
+export const HouseholdSettingsPatch = z.object({
+    householdId: HouseholdId,
+    why: z.string().max(500).nullable().optional(),
+    kind: z.enum(HouseholdKind).optional(),
+    currency: z.enum(Currency).optional(),
+    planKey: z.enum(PlanKey).optional(),
+    money: HouseholdMoneySettings.partial().optional(),
+    ritual: HouseholdRitualSettings.partial().optional(),
+    features: HouseholdFeatureSettings.partial().optional(),
+    answers: HouseholdAnswers.optional(),
+});
+export type HouseholdSettingsPatch = z.infer<typeof HouseholdSettingsPatch>;
 
 /** Onboarding writes income + split + prefs in one transaction. */
 export const OnboardingInput = z.object({

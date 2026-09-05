@@ -99,7 +99,7 @@ export class DemoHouseholdSeeder extends Seeder {
             user = await em.findOneOrFail(AuthUser, { id: userId });
         }
 
-        let rumbeloAccount = await em.findOne(Account, { user: user.id }, { populate: ['settings'] });
+        let rumbeloAccount = await em.findOne(Account, { user }, { populate: ['settings'] });
         if (!rumbeloAccount) {
             rumbeloAccount = em.create(Account, { user } as never);
             em.persist(rumbeloAccount);
@@ -142,14 +142,22 @@ export class DemoHouseholdSeeder extends Seeder {
                 householdId,
                 why: demo.why,
                 planKey: demo.planKey,
-                incomeRhythm:
-                    demo.persona === 'basic' ? IncomeRhythm.STABLE : IncomeRhythm.VARIABLE,
-                payoffStrategy: PayoffStrategy.AVALANCHE,
+                moneySettings: {
+                    periodStartDay: 1,
+                    incomeRhythm:
+                        demo.persona === 'basic' ? IncomeRhythm.STABLE : IncomeRhythm.VARIABLE,
+                    payoffStrategy: PayoffStrategy.AVALANCHE,
+                },
             } as never);
             em.persist(settings);
         } else {
             settings.planKey = demo.planKey;
             settings.why = demo.why;
+            settings.moneySettings = {
+                ...settings.moneySettings,
+                incomeRhythm:
+                    demo.persona === 'basic' ? IncomeRhythm.STABLE : IncomeRhythm.VARIABLE,
+            };
         }
 
         const jarCount = await em.count(Jar, { householdId });

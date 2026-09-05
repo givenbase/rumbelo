@@ -1,8 +1,11 @@
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey, PLAN_CAPABILITIES } from '@rumbelo/contracts';
 
 /**
  * Canonical product-tier seed — Rumbelo-owned defaults.
  * Loaded into backoffice.plan by PlanSeeder.
+ *
+ * Capabilities (members, kinds, screens) live in PLAN_CAPABILITIES —
+ * this seed mirrors them into the catalog row. Order is sortOrder only.
  *
  * Basic may stay €0 or become a small paid tier later without renaming.
  */
@@ -10,22 +13,19 @@ export const PLAN_SEED = [
     {
         key: PlanKey.BASIC,
         name: 'Basic',
-        rank: 0,
         priceMonthly: '0.00',
-        unlocks: [] as string[],
+        capabilities: PLAN_CAPABILITIES[PlanKey.BASIC],
     },
     {
         key: PlanKey.PLUS,
         name: 'Plus',
-        rank: 1,
         priceMonthly: '9.00',
-        unlocks: ['debt', 'week', 'goals'],
+        capabilities: PLAN_CAPABILITIES[PlanKey.PLUS],
     },
     {
         key: PlanKey.MAX,
         name: 'Max',
-        rank: 2,
         priceMonthly: '19.00',
-        unlocks: ['income', 'board', 'learn', 'chakra'],
+        capabilities: PLAN_CAPABILITIES[PlanKey.MAX],
     },
 ] as const;

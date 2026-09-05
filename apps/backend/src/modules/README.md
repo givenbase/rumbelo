@@ -16,7 +16,7 @@ with its `*.entity.ts`, service, controller and module as flat siblings.
 | Control | Module | Examples |
 |---|---|---|
 | **Household / user writes** | `public/product/*`, `public/platform/household`, `auth/account` | jars, txs, board settings, theme, language, which plan the household is *on* |
-| **We write** | `backoffice/*` | Grip/Engine/Compound **plan** catalog, countries, question bank, FAQ, coach tip **templates** (+ billing later if Stripe needs it) |
+| **We write** | `backoffice/*` | Basic/Plus/Max **plan** catalog, countries, question bank, FAQ, coach tip **templates** (+ billing later if Stripe needs it) |
 | **Library writes** | `auth/better-auth/` | sessions, members, provider credentials |
 
 `public/platform/` is shared app runtime (household + coach) — **not** company catalogs. If Rumbelo authors it, it lives under `backoffice/`.
