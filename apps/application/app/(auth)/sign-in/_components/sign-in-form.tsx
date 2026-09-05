@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, Field, Input } from '@rumbelo/ui';
 
 import { signIn } from '@/app/_lib/auth';
-import { AUTH_SIGN_IN } from '@/app/_lib/brand-quotes';
+import { AUTH_SIGN_IN } from '@rumbelo/i18n';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/app/_lib/demo-accounts';
 
 function safeRedirectPath(value: string | null): string {

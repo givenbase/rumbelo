@@ -1,3 +1,4 @@
+import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { FOOT_COLS, TRUST_BADGES, TRUST_CARDS } from '@/lib/landing-content';
 
 import { LandingIcon } from './landing-icon';
@@ -38,8 +39,8 @@ export function LandingFooter() {
                         <span className="font-display text-lg font-bold tracking-tight">
                             Rumbelo
                         </span>
-                        <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
-                            MONEY WITH INTENTION
+                        <span className="font-mono text-xs font-medium tracking-wide text-fg-faint">
+                            {BRAND_TAGLINE}
                         </span>
                     </div>
                     <span className="text-sm leading-relaxed text-fg-faint">

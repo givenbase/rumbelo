@@ -283,6 +283,9 @@ importers:
       '@rumbelo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@rumbelo/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@rumbelo/ui':
         specifier: workspace:*
         version: link:../../packages/ui

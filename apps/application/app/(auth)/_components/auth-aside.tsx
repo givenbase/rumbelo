@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { AUTH_QUOTES } from '@/app/_lib/brand-quotes';
+import { AUTH_QUOTES } from '@rumbelo/i18n';
 
 const ROTATE_MS = 7000;
 

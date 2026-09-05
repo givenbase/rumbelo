@@ -24,7 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { signUp } from '@/app/_lib/auth';
-import { AUTH_SIGN_UP } from '@/app/_lib/brand-quotes';
+import { AUTH_SIGN_UP } from '@rumbelo/i18n';
 
 /** Matches Nest Better Auth `emailAndPassword.minPasswordLength`. */
 const MIN_PASSWORD_LENGTH = 12;

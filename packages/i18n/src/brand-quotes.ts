@@ -1,6 +1,6 @@
 /**
- * Brand quote bank for product UI (auth, marketing chrome).
- * Source of truth for meaning: docs/brand/quotes.md
+ * Brand quote bank for product + marketing UI.
+ * Meaning / approval: docs/brand/quotes.md — keep this file in sync.
  * Currency-agnostic — never lock lines to euro/dollar symbols.
  *
  * AUTH_QUOTES must stay distinct from each other — one clear angle per panel,

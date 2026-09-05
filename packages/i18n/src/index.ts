@@ -1,6 +1,14 @@
 import { messages, type MessageLocale } from './messages.js';
 
 export { messages, type MessageLocale };
+export {
+    AUTH_QUOTES,
+    AUTH_SIGN_IN,
+    AUTH_SIGN_UP,
+    BRAND_CORE,
+    BRAND_TAGLINE,
+    type BrandQuote,
+} from './brand-quotes.js';
 
 export type AppLocale = MessageLocale;
 export const DEFAULT_LOCALE: AppLocale = 'en';

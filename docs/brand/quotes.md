@@ -201,7 +201,7 @@ Do **not** lead with these on the website:
 5. Pull **extensions** when a page needs more beats — stay in-lane.
 6. New lines: add here first, then use in UI/copy.
 
-**In product UI:** auth screens read from `apps/application/app/_lib/brand-quotes.ts` (tagline under logo, sign-in/up subtitles, rotating aside quotes). Keep that file in sync with this doc.
+**In product UI:** import from `@rumbelo/i18n` (`BRAND_TAGLINE`, `AUTH_QUOTES`, …). Source: `packages/i18n/src/brand-quotes.ts`. Keep that file in sync with this doc.
 
 **Auth aside rule:** the four rotating panels must be **different jobs**, not four riffs on “where it went”:
 

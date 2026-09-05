@@ -13,6 +13,7 @@
     "dependencies": {
         "@rumbelo/config": "workspace:*",
         "@rumbelo/contracts": "workspace:*",
+        "@rumbelo/i18n": "workspace:*",
         "@rumbelo/ui": "workspace:*",
         "@t3-oss/env-nextjs": "^0.13.11",
         "clsx": "^2.1.1",

@@ -1,3 +1,4 @@
+import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { appSignUpUrl } from '@/lib/portal-urls';
 
 import { LandingThemeToggle } from './landing-theme-toggle';
@@ -10,8 +11,8 @@ export function LandingHeader() {
             <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 lg:gap-5 lg:px-6">
                 <div className="flex min-w-0 items-baseline gap-2">
                     <span className="font-display text-xl font-bold tracking-tight">Rumbelo</span>
-                    <span className="font-mono text-xs font-medium tracking-widest whitespace-nowrap text-fg-faint uppercase">
-                        MONEY WITH INTENTION
+                    <span className="font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint">
+                        {BRAND_TAGLINE}
                     </span>
                 </div>
 

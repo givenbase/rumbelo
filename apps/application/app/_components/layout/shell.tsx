@@ -5,6 +5,7 @@ import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
+import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { cn } from '@rumbelo/utils';
 import { Locale } from '@rumbelo/contracts';
 
@@ -131,8 +132,8 @@ function AppShellInner({ children }: { children: ReactNode }) {
                         <span className="font-display text-lg font-semibold tracking-tight text-fg">
                             Rumbelo
                         </span>
-                        <span className="hidden font-mono text-xs font-medium tracking-widest text-fg-faint uppercase xl:inline">
-                            MONEY WITH INTENTION
+                        <span className="hidden font-mono text-xs font-medium tracking-wide text-fg-faint xl:inline">
+                            {BRAND_TAGLINE}
                         </span>
                     </Link>
 

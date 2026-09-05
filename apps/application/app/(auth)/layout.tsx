@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { BRAND_TAGLINE } from '@/app/_lib/brand-quotes';
+import { BRAND_TAGLINE } from '@rumbelo/i18n';
 
 import { AuthAside } from './_components/auth-aside';
 
