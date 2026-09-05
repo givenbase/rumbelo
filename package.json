@@ -27,6 +27,7 @@
         "db:fresh": "pnpm --filter @rumbelo/backend run db:fresh",
         "db:seed": "pnpm --filter @rumbelo/backend run db:seed",
         "auth:migrate": "pnpm --filter @rumbelo/backend run auth:migrate",
+        "api:smoke": "node ./scripts/api-smoke.mjs",
         "rename": "node scripts/rename-project.mjs",
         "prepare": "husky"
     },

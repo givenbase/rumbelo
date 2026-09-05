@@ -1,0 +1,178 @@
+name: 🩺 Rumbelo CI - API Smoke
+
+# Fast HTTP gate: health endpoints must not return 5xx / not-ready (when strict).
+# No Playwright — only DOMAIN_BACK (or BACKEND_URL).
+#
+# Triggers:
+#   - push          — backend / contracts / smoke script changes
+#   - workflow_dispatch — manual staging/production
+#   - workflow_call — after db-migrate (standalone)
+#
+# Required vars (GitHub Environment staging | production):
+#   DOMAIN_BACK
+
+concurrency:
+  group: api-smoke-${{ github.ref }}-${{ inputs.deploy_environment || github.event.inputs.deploy_environment || 'auto' }}
+  cancel-in-progress: true
+
+on:
+  workflow_call:
+    inputs:
+      deploy_environment:
+        description: 'GitHub environment (staging | production). Empty = infer from branch.'
+        required: false
+        type: string
+        default: ''
+      strict_ready:
+        description: 'Fail when /health/ready is not ready'
+        required: false
+        type: boolean
+        default: true
+  workflow_dispatch:
+    inputs:
+      deploy_environment:
+        description: 'GitHub environment to smoke'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      strict_ready:
+        description: 'Fail when /health/ready is not ready'
+        required: false
+        type: boolean
+        default: true
+  push:
+    branches: [main, dev]
+    paths:
+      - 'apps/backend/**'
+      - 'packages/contracts/**'
+      - 'scripts/api-smoke.mjs'
+      - '.github/workflows/api-smoke.yml'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      github_environment: ${{ steps.env.outputs.github_environment }}
+      node_env: ${{ steps.env.outputs.node_env }}
+      run_smoke: ${{ steps.set.outputs.run_smoke }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ./.github/actions/resolve-deploy-environment
+        id: env
+        with:
+          deploy_environment: ${{ inputs.deploy_environment || github.event.inputs.deploy_environment }}
+
+      - name: Decide whether to smoke on this push
+        id: gate
+        if: github.event_name == 'push'
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            migrate_owned:
+              - 'apps/backend/src/database/migrations/**'
+              - 'apps/backend/src/**/*.entity.ts'
+              - 'apps/backend/src/modules/auth/better-auth/**'
+              - '.github/workflows/db-migrate.yml'
+              - '.github/actions/resolve-deploy-environment/**'
+            backend_code:
+              - 'apps/backend/**'
+              - 'packages/contracts/**'
+              - 'scripts/api-smoke.mjs'
+              - '.github/workflows/api-smoke.yml'
+
+      - name: Set run_smoke output
+        id: set
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "push" ]; then
+            echo "run_smoke=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          MIGRATE='${{ steps.gate.outputs.migrate_owned }}'
+          CODE='${{ steps.gate.outputs.backend_code }}'
+          if [ "$CODE" = "true" ] && [ "$MIGRATE" != "true" ]; then
+            echo "run_smoke=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_smoke=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping direct API smoke on push — migrate-owned change (db-migrate will smoke after migrate) or no backend_code match."
+          fi
+
+  api-smoke:
+    name: API smoke (no 5xx)
+    needs: resolve
+    if: needs.resolve.outputs.run_smoke == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ needs.resolve.outputs.github_environment }}
+
+    steps:
+      - name: Guard — DOMAIN_BACK configured
+        if: ${{ vars.DOMAIN_BACK == '' }}
+        run: |
+          echo "::error::DOMAIN_BACK must be set (GitHub Environment → ${{ needs.resolve.outputs.github_environment }} → Variables)."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Show smoke target
+        env:
+          GITHUB_ENV_NAME: ${{ needs.resolve.outputs.github_environment }}
+          BACKEND_URL: ${{ vars.DOMAIN_BACK }}
+        run: |
+          echo "::group::API smoke target"
+          echo "GitHub environment: $GITHUB_ENV_NAME"
+          echo "BACKEND_URL:        $BACKEND_URL"
+          echo "Event:              ${{ github.event_name }}"
+          echo "::endgroup::"
+
+      - name: Wait until backend is ready
+        env:
+          BACKEND_URL: ${{ vars.DOMAIN_BACK }}
+        run: |
+          BACKEND_URL="${BACKEND_URL%/}"
+          for i in $(seq 1 36); do
+            code=$(curl -sS -o /tmp/ready.json -w '%{http_code}' --max-time 10 \
+              -H 'Accept: application/json' \
+              "$BACKEND_URL/health/ready" || echo 000)
+            status=$(python3 -c "import json,sys; print(json.load(open('/tmp/ready.json')).get('status',''))" 2>/dev/null || true)
+            if [ "$code" = "200" ] && [ "$status" = "ready" ]; then
+              echo "Backend ready (attempt $i)"
+              exit 0
+            fi
+            echo "Waiting for ready (attempt $i/36): HTTP $code status=$status"
+            sleep 5
+          done
+          echo "::error::Backend not ready at $BACKEND_URL/health/ready after 3m"
+          cat /tmp/ready.json 2>/dev/null || true
+          exit 1
+
+      - name: Run API smoke
+        env:
+          BACKEND_URL: ${{ vars.DOMAIN_BACK }}
+        run: |
+          STRICT='${{ inputs.strict_ready }}'
+          if [ "$STRICT" = "false" ]; then
+            pnpm api:smoke
+          else
+            pnpm api:smoke -- --strict-ready
+          fi

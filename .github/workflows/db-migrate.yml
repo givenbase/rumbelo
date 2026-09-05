@@ -1,0 +1,179 @@
+name: 🗄️ Rumbelo CI - Database Migrations
+
+# ============================================================================
+# Standalone + reusable workflow for remote database migrations.
+#
+# GitHub Environments (Settings → Environments): staging | production ONLY
+#   staging / production → inject DATABASE_URL etc. from that environment
+#   Backend NODE_ENV is always `production` for deployed runs (see resolve action)
+#   development → local only (.env) — not a GitHub environment
+#
+# Triggers:
+#   - workflow_call — reserved for future deploy workflows
+#   - workflow_dispatch — manual staging/production run
+#   - push — auto-run when migration/entity/auth files change (branch → env)
+#
+# Required secrets (per GitHub environment staging | production):
+#   DATABASE_URL, BETTER_AUTH_SECRET
+# Required vars (Better Auth / CORS — match apps/backend/.env.example):
+#   DOMAIN_APP, DOMAIN_WEB, DOMAIN_BACK
+# Optional vars: DATABASE_SSL
+# ============================================================================
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.deploy_environment || github.event.inputs.deploy_environment || 'auto' }}
+  cancel-in-progress: true
+
+on:
+  workflow_call:
+    inputs:
+      deploy_environment:
+        description: 'GitHub environment (staging | production). Empty = infer from branch.'
+        required: false
+        type: string
+        default: ''
+      run_mode:
+        description: 'full = always run db:push + auth:migrate; auto = path-filter on push'
+        required: false
+        type: string
+        default: full
+  workflow_dispatch:
+    inputs:
+      deploy_environment:
+        description: 'GitHub environment to migrate'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+  push:
+    branches: [main, dev]
+    paths:
+      - 'apps/backend/src/database/migrations/**'
+      - 'apps/backend/src/**/*.entity.ts'
+      - 'apps/backend/src/modules/auth/better-auth/**'
+      - '.github/workflows/db-migrate.yml'
+      - '.github/actions/resolve-deploy-environment/**'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      github_environment: ${{ steps.env.outputs.github_environment }}
+      node_env: ${{ steps.env.outputs.node_env }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/resolve-deploy-environment
+        id: env
+        with:
+          deploy_environment: ${{ inputs.deploy_environment || github.event.inputs.deploy_environment }}
+
+  migrate:
+    needs: resolve
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: ${{ needs.resolve.outputs.github_environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Detect change kind (schema vs auth)
+        id: paths
+        if: github.event_name == 'push'
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            schema:
+              - 'apps/backend/src/database/migrations/**'
+              - 'apps/backend/src/**/*.entity.ts'
+              - '.github/workflows/db-migrate.yml'
+              - '.github/actions/resolve-deploy-environment/**'
+            auth:
+              - 'apps/backend/src/modules/auth/better-auth/**'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Show target environment
+        env:
+          GITHUB_ENV_NAME: ${{ needs.resolve.outputs.github_environment }}
+          NODE_ENV: ${{ needs.resolve.outputs.node_env }}
+          RUN_MODE: ${{ inputs.run_mode || 'auto' }}
+          TRIGGER: ${{ github.event_name }}
+        run: |
+          echo "::group::Migration target"
+          echo "Trigger:             $TRIGGER"
+          echo "Run mode:            $RUN_MODE"
+          echo "GitHub environment:  $GITHUB_ENV_NAME"
+          echo "Backend NODE_ENV:    $NODE_ENV"
+          echo "Local pnpm db:push → your .env → local DB"
+          echo "This workflow → GitHub DATABASE_URL → remote DB"
+          echo "::endgroup::"
+
+      - name: Run MikroORM migrations (db:push)
+        if: >-
+          (github.event_name == 'workflow_call' && inputs.run_mode == 'full') ||
+          github.event_name == 'workflow_dispatch' ||
+          steps.paths.outputs.schema == 'true'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          NODE_ENV: ${{ needs.resolve.outputs.node_env }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_SSL: ${{ vars.DATABASE_SSL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          DOMAIN_APP: ${{ vars.DOMAIN_APP }}
+          DOMAIN_WEB: ${{ vars.DOMAIN_WEB }}
+          DOMAIN_BACK: ${{ vars.DOMAIN_BACK }}
+        run: pnpm db:push
+
+      - name: Run Better Auth migrations (auth:migrate)
+        if: >-
+          (github.event_name == 'workflow_call' && inputs.run_mode == 'full') ||
+          github.event_name == 'workflow_dispatch' ||
+          steps.paths.outputs.auth == 'true' ||
+          steps.paths.outputs.schema == 'true'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          NODE_ENV: ${{ needs.resolve.outputs.node_env }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_SSL: ${{ vars.DATABASE_SSL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          DOMAIN_APP: ${{ vars.DOMAIN_APP }}
+          DOMAIN_WEB: ${{ vars.DOMAIN_WEB }}
+          DOMAIN_BACK: ${{ vars.DOMAIN_BACK }}
+        run: pnpm auth:migrate
+
+      - name: Migration summary
+        if: success()
+        run: |
+          echo "::group::Migration completed"
+          echo "GitHub env: ${{ needs.resolve.outputs.github_environment }}"
+          echo "NODE_ENV:   ${{ needs.resolve.outputs.node_env }}"
+          echo "db:push + auth:migrate — ✅"
+          echo "::endgroup::"
+
+  # After standalone migrate (push / manual), verify live API against the new schema.
+  api-smoke:
+    needs: [resolve, migrate]
+    if: >-
+      success() &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    uses: ./.github/workflows/api-smoke.yml
+    with:
+      deploy_environment: ${{ needs.resolve.outputs.github_environment }}
+      strict_ready: true
+    secrets: inherit
