@@ -7,7 +7,6 @@ import { Currency, IncomeRhythm, Locale, MoneyCharacter } from '@rumbelo/contrac
 import { Button, Field, Input } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
-import { markOnboardingDone } from '@/app/_lib/onboarding-storage';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -77,7 +76,6 @@ export function OnboardingOverlay() {
             });
             await setActiveHousehold(household.id);
             await refreshSession();
-            markOnboardingDone();
             closeOnboarding(true);
             showToast('Household created', 'success');
         } catch (error) {

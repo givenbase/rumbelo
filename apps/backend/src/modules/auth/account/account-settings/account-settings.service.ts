@@ -65,6 +65,29 @@ export class AccountSettingsService {
         return this.createForUser(userId, defaults);
     }
 
+    /**
+     * Mark personal onboarding complete (idempotent). Used by household.onboard
+     * for the creator; invitees can get a lighter personal pass later.
+     */
+    async markOnboarded(userId: string): Promise<AccountSettings> {
+        const row = await this.upsertForUser(userId);
+        if (!row.onboardedAt) {
+            row.onboardedAt = new Date();
+            await this.em.flush();
+        }
+        return row;
+    }
+
+    /**
+     * Clear personal onboarded flag (dev / reset flow).
+     */
+    async clearOnboarded(userId: string): Promise<AccountSettings> {
+        const row = await this.upsertForUser(userId);
+        row.onboardedAt = null;
+        await this.em.flush();
+        return row;
+    }
+
     // ====================================================================
     // ? READ Operations
     // ====================================================================
@@ -154,5 +177,6 @@ function toDto(row: AccountSettings): AccountSettingsDto {
         locale: row.locale,
         theme: row.theme,
         moneyCharacter: row.moneyCharacter,
+        onboardedAt: row.onboardedAt ? row.onboardedAt.toISOString() : null,
     };
 }

@@ -30,6 +30,7 @@ export const signIn = client.signIn;
 export const signUp = client.signUp;
 export const signOut = client.signOut;
 export const useSession = client.useSession;
+export const sendVerificationEmail = client.sendVerificationEmail;
 
 export async function updateUser(data: { name?: string; image?: string | null }) {
     return client.updateUser(data);

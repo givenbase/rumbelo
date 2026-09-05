@@ -1,3 +1,9 @@
 export { EmailModule } from './email.module';
 export { EmailService } from './email.service';
-export type { EmailProvider, HouseholdInviteEmailInput, SendEmailInput } from './email.types';
+export type {
+    EmailProvider,
+    EmailVerificationEmailInput,
+    HouseholdInviteEmailInput,
+    SendEmailInput,
+} from './email.types';
+export { EmailTemplate, renderTemplate } from './utils/template-adapter';

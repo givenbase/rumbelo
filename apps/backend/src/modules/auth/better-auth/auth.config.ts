@@ -3,8 +3,18 @@ import { organization, twoFactor } from 'better-auth/plugins';
 import { Pool } from 'pg';
 
 import type { Env } from '../../../common/config/env.config';
+import { EmailService } from '../../backoffice/communication/email';
 
 import { householdAccessControl, householdRoles } from './access-control.config';
+
+/** Better Auth verification links expire after this many hours (product copy). */
+const EMAIL_VERIFICATION_EXPIRES_HOURS = 48;
+
+function authUserFirstName(user: { name?: string | null; email: string }): string {
+    const fromName = user.name?.trim().split(/\s+/)[0];
+    if (fromName) return fromName;
+    return user.email.split('@')[0] || 'there';
+}
 
 /**
  * better-auth owns and writes its tables (user, session, provider, verification,
@@ -34,6 +44,9 @@ export function createAuth(env: Env) {
         options: '-c search_path=auth',
     });
 
+    const emailService = new EmailService();
+    const requireEmailVerification = env.EMAIL_VERIFICATION_ENABLED;
+
     return betterAuth({
         database: pool,
         secret: env.BETTER_AUTH_SECRET,
@@ -44,7 +57,40 @@ export function createAuth(env: Env) {
         emailAndPassword: {
             enabled: true,
             minPasswordLength: 12,
-            requireEmailVerification: env.EMAIL_VERIFICATION_ENABLED,
+            requireEmailVerification,
+        },
+
+        // Docs: https://www.better-auth.com/docs/concepts/email
+        // Required when requireEmailVerification / sendOnSignUp / client sendVerificationEmail.
+        // Do NOT sendOnSignIn — every failed unverified login would spam verify emails.
+        // Always send on sign-up so `/verify` is honest; hard-block only when flag is on.
+        emailVerification: {
+            sendOnSignUp: true,
+            sendOnSignIn: false,
+            autoSignInAfterVerification: true,
+            sendVerificationEmail: async ({ user, url }) => {
+                const sent = await emailService.sendEmailVerificationEmail({
+                    to: user.email,
+                    firstName: authUserFirstName(user),
+                    verificationUrl: url,
+                    expiresInHours: EMAIL_VERIFICATION_EXPIRES_HOURS,
+                });
+                if (!sent) {
+                    console.error('[Better Auth] Failed to send email verification email');
+                }
+            },
+        },
+
+        rateLimit: {
+            enabled: true,
+            window: 60,
+            max: 100,
+            customRules: {
+                '/sign-in/email': { window: 60, max: 5 },
+                '/send-verification-email': { window: 300, max: 2 },
+                '/request-password-reset': { window: 300, max: 2 },
+                '/forget-password': { window: 300, max: 2 },
+            },
         },
 
         user: {

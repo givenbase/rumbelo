@@ -86,6 +86,7 @@ export type HouseholdAnswers = z.infer<typeof HouseholdAnswers>;
  * live on AccountSettings — they can differ per person in the same household.
  *
  * Grouped: general identity → product → money / ritual / features bags → answers.
+ * `onboardedAt` is set when `household.onboard` finishes (board + jars seeded).
  */
 export const HouseholdSettings = z.object({
     householdId: HouseholdId,
@@ -99,6 +100,8 @@ export const HouseholdSettings = z.object({
     ritual: HouseholdRitualSettings,
     features: HouseholdFeatureSettings,
     answers: HouseholdAnswers,
+    /** When household board setup completed; null = incomplete. */
+    onboardedAt: z.iso.datetime().nullable(),
 });
 export type HouseholdSettings = z.infer<typeof HouseholdSettings>;
 

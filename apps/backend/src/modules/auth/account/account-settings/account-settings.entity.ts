@@ -1,4 +1,4 @@
-import { Entity, Enum, OneToOne } from '@mikro-orm/core';
+import { Entity, Enum, OneToOne, Property } from '@mikro-orm/core';
 import { Locale, MoneyCharacter, Theme } from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../../common/database/base.entity';
@@ -37,6 +37,13 @@ export class AccountSettings extends BaseEntity {
         })
     )
     moneyCharacter: MoneyCharacter = MoneyCharacter.UNKNOWN;
+
+    /**
+     * When personal onboarding finished. Null = still new at person level.
+     * Separate from Better Auth `email_verified`.
+     */
+    @Property({ type: 'timestamptz', nullable: true })
+    onboardedAt: Date | null = null;
 
     // ? RELATIONSHIPS
     /**

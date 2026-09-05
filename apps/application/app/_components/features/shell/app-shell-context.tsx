@@ -14,7 +14,6 @@ import { Locale, type PlanKey } from '@rumbelo/contracts';
 import { useQuery } from '@tanstack/react-query';
 
 import { useApi } from '@/app/_lib/api-hooks';
-import { markOnboardingDone, resetOnboarding } from '@/app/_lib/onboarding-storage';
 import { DEFAULT_PLAN } from '@/app/_lib/plan';
 import { resolvePreviewPlan } from '@/app/_lib/preview';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -103,14 +102,13 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
         setOnboardingOpen(true);
     }, []);
 
-    const closeOnboarding = useCallback((completed = false) => {
+    const closeOnboarding = useCallback((_completed = false) => {
         setOnboardingOpen(false);
         setOnboardingStep(0);
-        if (completed) markOnboardingDone();
+        // Durable flag is account/household settings.onboardedAt (set by API).
     }, []);
 
     const resetOnboardingFlow = useCallback(() => {
-        resetOnboarding();
         setOnboardingStep(0);
         setOnboardingOpen(true);
     }, []);

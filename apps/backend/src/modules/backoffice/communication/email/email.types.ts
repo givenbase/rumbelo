@@ -15,4 +15,13 @@ export type HouseholdInviteEmailInput = {
     inviteUrl: string;
     inviterName?: string;
     role?: string;
+    locale?: string;
+};
+
+export type EmailVerificationEmailInput = {
+    to: string;
+    firstName: string;
+    verificationUrl: string;
+    expiresInHours?: number;
+    locale?: string;
 };

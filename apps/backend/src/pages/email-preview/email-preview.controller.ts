@@ -5,9 +5,12 @@ import { type FastifyReply } from 'fastify';
 
 import { loadEnv } from '../../common/config/env.config';
 import { isSwaggerEnabled } from '../../common/config/setup-swagger.config';
-import { renderHouseholdInviteEmail } from '../../modules/backoffice/communication/email/templates/household-invite';
+import {
+    EmailTemplate,
+    renderTemplate,
+} from '../../modules/backoffice/communication/email/utils/template-adapter';
 
-const TEMPLATES = ['household-invite'] as const;
+const TEMPLATES = [EmailTemplate.HOUSEHOLD_INVITE, EmailTemplate.ACCOUNT_VERIFICATION] as const;
 type TemplateId = (typeof TEMPLATES)[number];
 
 /**
@@ -30,7 +33,10 @@ export class EmailPreviewController {
     }
 
     @Get(':template')
-    preview(@Param('template') template: string, @Res() reply: FastifyReply): void {
+    async preview(
+        @Param('template') template: string,
+        @Res() reply: FastifyReply
+    ): Promise<void> {
         if (!this.assertEnabled(reply)) return;
 
         if (!TEMPLATES.includes(template as TemplateId)) {
@@ -40,7 +46,8 @@ export class EmailPreviewController {
             });
         }
 
-        void reply.type('text/html').send(this.render(template as TemplateId));
+        const html = await this.render(template as TemplateId);
+        void reply.type('text/html').send(html);
     }
 
     /** @returns false when the request was already redirected */
@@ -53,18 +60,29 @@ export class EmailPreviewController {
         return true;
     }
 
-    private render(template: TemplateId): string {
+    private async render(template: TemplateId): Promise<string> {
         switch (template) {
-            case 'household-invite': {
-                const { html } = renderHouseholdInviteEmail({
-                    to: 'demo@rumbelo.app',
-                    householdName: 'Huishouden van Anna',
-                    inviteUrl: 'https://app.rumbelo.local/invite/demo-id',
-                    inviterName: 'Anna',
-                    role: 'MEMBER',
-                });
-                return html;
-            }
+            case EmailTemplate.HOUSEHOLD_INVITE:
+                return renderTemplate(
+                    EmailTemplate.HOUSEHOLD_INVITE,
+                    {
+                        householdName: 'Huishouden van Anna',
+                        inviteUrl: 'https://app.rumbelo.local/invite/demo-id',
+                        inviterName: 'Anna',
+                        role: 'MEMBER',
+                    },
+                    'nl'
+                );
+            case EmailTemplate.ACCOUNT_VERIFICATION:
+                return renderTemplate(
+                    EmailTemplate.ACCOUNT_VERIFICATION,
+                    {
+                        firstName: 'Anna',
+                        verificationUrl: 'https://app.rumbelo.local/api/auth/verify-email?token=demo',
+                        expiresInHours: 48,
+                    },
+                    'en'
+                );
         }
     }
 }

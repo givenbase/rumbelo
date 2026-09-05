@@ -78,10 +78,8 @@ jobs:
                   filters: |
                       migrate_owned:
                         - 'apps/backend/src/database/migrations/**'
-                        - 'apps/backend/src/**/*.entity.ts'
                         - 'apps/backend/src/modules/auth/better-auth/**'
                         - '.github/workflows/db-migrate.yml'
-                        - '.github/actions/resolve-deploy-environment/**'
                       backend_code:
                         - 'apps/backend/**'
                         - 'packages/contracts/**'

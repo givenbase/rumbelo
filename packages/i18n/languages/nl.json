@@ -89,7 +89,15 @@
         "auth": {
             "sign_in": {
                 "title": "Welkom terug",
-                "subtitle": "Stop met gissen waar het bleef."
+                "subtitle": "Stop met gissen waar het bleef.",
+                "verification": {
+                    "title": "Verify your email",
+                    "required": "Confirm {email} before signing in. Check your inbox for the link.",
+                    "sent": "Verification email sent to {email}.",
+                    "resend": "Resend email",
+                    "resend_in": "Resend in {seconds}s",
+                    "dismiss": "Dismiss"
+                }
             },
             "sign_up": {
                 "title": "Stop met gissen waar het bleef.",
@@ -105,6 +113,26 @@
                 "login_failure": "Inloggen mislukt",
                 "logout_success": "Uitgelogd",
                 "logout_failure": "Uitloggen mislukt"
+            },
+            "check_email": {
+                "title": "Check your email",
+                "subtitle": "We sent a verification link to {email}. Confirm it so we can recover your account if you lose access.",
+                "subtitle_no_email": "We sent a verification link to your inbox. Confirm it so we can recover your account if you lose access.",
+                "resend": "Resend email",
+                "resend_in": "Resend in {seconds}s",
+                "sent": "Sent again.",
+                "continue": "Continue to app",
+                "back_to_sign_in": "Back to sign in"
+            },
+            "verify": {
+                "title": "Almost there",
+                "subtitle": "We sent a verification link to {email}. Confirm it so we can recover your account if you lose access.",
+                "subtitle_no_target": "Confirm the verification we sent so we can recover your account if you lose access.",
+                "resend": "Resend email",
+                "resend_in": "Resend in {seconds}s",
+                "sent": "Sent again.",
+                "continue": "Continue to app",
+                "back_to_sign_in": "Back to sign in"
             }
         },
         "brand": {

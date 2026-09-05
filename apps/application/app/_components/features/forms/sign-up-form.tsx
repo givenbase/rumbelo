@@ -75,7 +75,7 @@ export function SignUpForm() {
             return;
         }
 
-        router.push('/');
+        router.push(`/verify?email=${encodeURIComponent(values.email)}`);
         router.refresh();
     }
 

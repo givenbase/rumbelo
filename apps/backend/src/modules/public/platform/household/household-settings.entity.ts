@@ -76,6 +76,12 @@ export class HouseholdSettings {
     @Property({ type: 'json' })
     answers: HouseholdAnswers = {};
 
+    /**
+     * When board setup finished (`household.onboard`). Null = incomplete household.
+     */
+    @Property({ type: 'timestamptz', nullable: true })
+    onboardedAt: Date | null = null;
+
     @Property({ type: 'timestamptz', defaultRaw: 'now()' })
     createdAt: Date = new Date();
 

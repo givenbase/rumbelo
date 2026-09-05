@@ -10,8 +10,9 @@ name: 🗄️ Rumbelo CI - Database Migrations
 #
 # Triggers:
 #   - workflow_call — reserved for future deploy workflows
-#   - workflow_dispatch — manual staging/production run
-#   - push — auto-run when migration/entity/auth files change (branch → env)
+#   - workflow_dispatch — manual staging/production run (anytime)
+#   - push — only when migration files or Better Auth schema land (branch → env)
+#     Entity edits alone do not run this — generate a migration first.
 #
 # Required secrets (per GitHub environment staging | production):
 #   DATABASE_URL, BETTER_AUTH_SECRET
@@ -52,11 +53,10 @@ on:
     push:
         branches: [main, dev]
         paths:
+            # Pending work lives in committed Migration*.ts — not bare entity edits.
             - 'apps/backend/src/database/migrations/**'
-            - 'apps/backend/src/**/*.entity.ts'
             - 'apps/backend/src/modules/auth/better-auth/**'
             - '.github/workflows/db-migrate.yml'
-            - '.github/actions/resolve-deploy-environment/**'
 
 env:
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
@@ -84,7 +84,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v5
 
-            - name: Detect change kind (schema vs auth)
+            - name: Detect change kind (migrations vs auth)
               id: paths
               if: github.event_name == 'push'
               uses: dorny/paths-filter@v4
@@ -92,9 +92,7 @@ jobs:
                   filters: |
                       schema:
                         - 'apps/backend/src/database/migrations/**'
-                        - 'apps/backend/src/**/*.entity.ts'
                         - '.github/workflows/db-migrate.yml'
-                        - '.github/actions/resolve-deploy-environment/**'
                       auth:
                         - 'apps/backend/src/modules/auth/better-auth/**'
 

@@ -9,13 +9,13 @@ export const contract = {
     account: {
         /** CREATE */
         createSettings: oc
-            .input(S.AccountSettings.partial().omit({ accountId: true }))
+            .input(S.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))
             .output(S.AccountSettings),
         /** READ — current authenticated user's settings */
         settings: oc.output(S.AccountSettings),
         /** UPDATE */
         updateSettings: oc
-            .input(S.AccountSettings.partial().omit({ accountId: true }))
+            .input(S.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))
             .output(S.AccountSettings),
         /** DELETE */
         deleteSettings: oc.input(z.object({ id: S.Id })).output(z.object({ ok: z.literal(true) })),

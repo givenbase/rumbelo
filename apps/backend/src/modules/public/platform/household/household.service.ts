@@ -298,12 +298,14 @@ export class HouseholdService {
             ritualSettings: { ...DEFAULT_RITUAL_SETTINGS },
             featureSettings: { ...DEFAULT_FEATURE_SETTINGS },
             answers: {},
+            onboardedAt: new Date(),
         } as never);
 
         await this.accountSettings.upsertForUser(userId, {
             locale: input.locale as never,
             moneyCharacter: input.moneyCharacter,
         });
+        await this.accountSettings.markOnboarded(userId);
 
         if (input.monthlyNetIncome > 0) {
             this.em.create(IncomeSource, {
@@ -373,5 +375,6 @@ function toSettingsDto(row: HouseholdSettings): HouseholdSettingsDto {
             ...row.featureSettings,
         },
         answers: row.answers ?? {},
+        onboardedAt: row.onboardedAt ? row.onboardedAt.toISOString() : null,
     };
 }

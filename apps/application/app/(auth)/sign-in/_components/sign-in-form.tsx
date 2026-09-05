@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button, Field, Input } from '@rumbelo/ui';
 
-import { signIn } from '@/app/_lib/auth';
+import { sendVerificationEmail, signIn } from '@/app/_lib/auth';
 import { AUTH_SIGN_IN } from '@rumbelo/i18n';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/app/_lib/demo-accounts';
 
@@ -16,7 +16,12 @@ function safeRedirectPath(value: string | null): string {
     return '/';
 }
 
+function withEmail(template: string, email: string): string {
+    return template.replaceAll('{email}', email);
+}
+
 const isDev = process.env.NODE_ENV !== 'production';
+const RESEND_COOLDOWN_SEC = 60;
 
 export function SignInForm() {
     const router = useRouter();
@@ -26,9 +31,16 @@ export function SignInForm() {
     const [pending, setPending] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [verification, setVerification] = useState<{
+        email: string;
+        sent: boolean;
+    } | null>(null);
+    const [resendPending, setResendPending] = useState(false);
+    const [cooldown, setCooldown] = useState(0);
 
     async function submitCredentials(nextEmail: string, nextPassword: string) {
         setError(null);
+        setVerification(null);
         setPending(true);
         const result = await signIn.email({
             email: nextEmail,
@@ -38,6 +50,17 @@ export function SignInForm() {
         setPending(false);
 
         if (result.error) {
+            const code =
+                typeof result.error === 'object' && result.error && 'code' in result.error
+                    ? String((result.error as { code?: unknown }).code ?? '')
+                    : '';
+
+            if (code === 'EMAIL_NOT_VERIFIED' || code === 'EMAIL_VERIFICATION_REQUIRED') {
+                setVerification({ email: nextEmail, sent: false });
+                setPassword('');
+                return;
+            }
+
             setError(result.error.message ?? 'Sign in failed');
             return;
         }
@@ -50,6 +73,34 @@ export function SignInForm() {
         await submitCredentials(email, password);
     }
 
+    async function onResendVerification() {
+        if (!verification?.email || resendPending || cooldown > 0) return;
+        setResendPending(true);
+        const result = await sendVerificationEmail({
+            email: verification.email,
+            callbackURL: redirectTo,
+        });
+        setResendPending(false);
+
+        if (result.error) {
+            setError(result.error.message ?? 'Could not resend');
+            return;
+        }
+
+        setVerification(prev => (prev ? { ...prev, sent: true } : prev));
+        setCooldown(RESEND_COOLDOWN_SEC);
+        const started = Date.now();
+        const tick = window.setInterval(() => {
+            const left = RESEND_COOLDOWN_SEC - Math.floor((Date.now() - started) / 1000);
+            if (left <= 0) {
+                window.clearInterval(tick);
+                setCooldown(0);
+                return;
+            }
+            setCooldown(left);
+        }, 250);
+    }
+
     return (
         <div className="grid gap-6">
             <div>
@@ -58,6 +109,43 @@ export function SignInForm() {
                 </h1>
                 <p className="mt-1 text-sm text-fg-muted">{AUTH_SIGN_IN.subtitle}</p>
             </div>
+
+            {verification ? (
+                <div
+                    className="grid gap-3 rounded-xl border border-warning/30 bg-warning/10 p-4"
+                    role="status">
+                    <p className="font-display text-sm font-semibold text-fg">
+                        {AUTH_SIGN_IN.verification.title}
+                    </p>
+                    <p className="text-sm text-fg-secondary">
+                        {verification.sent
+                            ? withEmail(AUTH_SIGN_IN.verification.sent, verification.email)
+                            : withEmail(AUTH_SIGN_IN.verification.required, verification.email)}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            disabled={resendPending || cooldown > 0}
+                            onClick={() => void onResendVerification()}>
+                            {cooldown > 0
+                                ? AUTH_SIGN_IN.verification.resend_in.replaceAll(
+                                      '{seconds}',
+                                      String(cooldown)
+                                  )
+                                : AUTH_SIGN_IN.verification.resend}
+                        </Button>
+                        <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setVerification(null)}>
+                            {AUTH_SIGN_IN.verification.dismiss}
+                        </Button>
+                    </div>
+                </div>
+            ) : null}
 
             {isDev ? (
                 <div className="grid gap-2 rounded-xl border border-line bg-raised/40 p-3">

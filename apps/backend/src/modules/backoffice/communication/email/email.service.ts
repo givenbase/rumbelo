@@ -1,13 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Resend } from 'resend';
 
-import type { EmailProvider, HouseholdInviteEmailInput, SendEmailInput } from './email.types';
+import type {
+    EmailProvider,
+    EmailVerificationEmailInput,
+    HouseholdInviteEmailInput,
+    SendEmailInput,
+} from './email.types';
+import { EmailTemplate, renderTemplate } from './utils/template-adapter';
 
 import { loadEnv } from '../../../../common/config/env.config';
-import { renderHouseholdInviteEmail } from './templates/household-invite';
 
 /**
  * Outbound email — Rumbelo writes (backoffice). Households never send.
+ *
+ * Templates are React Email components (Galighticus pattern) rendered via
+ * `@react-email/render` — never hand-rolled HTML strings.
  *
  * Providers:
  *   memory  — log only (default; safe for local)
@@ -41,10 +49,6 @@ export class EmailService {
         );
     }
 
-    // ====================================================================
-    // ? CREATE Operations (send)
-    // ====================================================================
-
     async send(input: SendEmailInput): Promise<boolean> {
         const to = Array.isArray(input.to) ? input.to : [input.to];
         const from = input.from ?? this.defaultFrom;
@@ -77,15 +81,49 @@ export class EmailService {
         return true;
     }
 
+    /** Render React Email template + send (Galighticus `sendTemplatedEmail`). */
+    private async sendTemplatedEmail(
+        to: string,
+        subject: string,
+        template: EmailTemplate,
+        data: Record<string, unknown>,
+        locale = 'en'
+    ): Promise<boolean> {
+        const html = await renderTemplate(template, data, locale);
+        return this.send({ to, subject, html });
+    }
+
     /** Household invite — called after better-auth createInvitation. */
     async sendHouseholdInvite(input: HouseholdInviteEmailInput): Promise<boolean> {
-        const rendered = renderHouseholdInviteEmail(input);
-        return this.send({
-            to: input.to,
-            subject: rendered.subject,
-            html: rendered.html,
-            text: rendered.text,
-        });
+        const locale = input.locale ?? 'en';
+        return this.sendTemplatedEmail(
+            input.to,
+            locale === 'nl' ? 'Huishouden uitnodiging — Rumbelo' : 'Household invite — Rumbelo',
+            EmailTemplate.HOUSEHOLD_INVITE,
+            {
+                householdName: input.householdName,
+                inviteUrl: input.inviteUrl,
+                inviterName: input.inviterName,
+                role: input.role,
+            },
+            locale
+        );
+    }
+
+    /** Account email verification — Better Auth `emailVerification.sendVerificationEmail`. */
+    async sendEmailVerificationEmail(input: EmailVerificationEmailInput): Promise<boolean> {
+        const locale = input.locale ?? 'en';
+        return this.sendTemplatedEmail(
+            input.to,
+            locale === 'nl' ? 'Verifieer je e-mail — Rumbelo' : 'Verify your email — Rumbelo',
+            EmailTemplate.ACCOUNT_VERIFICATION,
+            {
+                firstName: input.firstName,
+                verificationUrl: input.verificationUrl,
+                expiresInHours: input.expiresInHours ?? 48,
+            },
+            locale
+        );
     }
 
     /** Accept URL for an invitation id (application route). */
