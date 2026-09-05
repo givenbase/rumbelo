@@ -20,28 +20,15 @@ import {
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 import { AUTH_RESET_PASSWORD } from '@rumbelo/i18n';
+import {
+    AUTH_MIN_PASSWORD_LENGTH,
+    ResetPasswordForm as ResetPasswordFormSchema,
+} from '@rumbelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
 import { resetPassword } from '@/lib/auth';
 import { appSignInUrl } from '@/lib/portal-urls';
-
-const MIN_PASSWORD_LENGTH = 12;
-
-const schema = z
-    .object({
-        password: z
-            .string()
-            .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters`),
-        confirm: z.string(),
-    })
-    .refine(data => data.password === data.confirm, {
-        message: 'Passwords do not match',
-        path: ['confirm'],
-    });
-
-type FormValues = z.infer<typeof schema>;
 
 export function ResetPasswordForm() {
     const searchParams = useSearchParams();
@@ -51,15 +38,15 @@ export function ResetPasswordForm() {
     const [apiError, setApiError] = useState<unknown>(null);
     const [done, setDone] = useState(false);
 
-    const form = useForm<FormValues>({
+    const form = useForm<ResetPasswordFormSchema>({
         defaultValues: { password: '', confirm: '' },
         mode: 'onTouched',
-        resolver: zodResolver(schema),
+        resolver: zodResolver(ResetPasswordFormSchema),
     });
 
     const onError = createFormInvalidHandler();
 
-    async function onSubmit(values: FormValues) {
+    async function onSubmit(values: ResetPasswordFormSchema) {
         if (!token) {
             setApiError('This reset link is invalid or incomplete.');
             return;
@@ -121,7 +108,7 @@ export function ResetPasswordForm() {
                                         <Input
                                             type="password"
                                             autoComplete="new-password"
-                                            placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+                                            placeholder={`At least ${AUTH_MIN_PASSWORD_LENGTH} characters`}
                                             disabled={busy}
                                             {...field}
                                         />

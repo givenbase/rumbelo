@@ -19,32 +19,26 @@ import {
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 import { AUTH_FORGOT_PASSWORD } from '@rumbelo/i18n';
+import { ForgotPasswordForm as ForgotPasswordFormSchema } from '@rumbelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
 import { requestPasswordReset } from '@/lib/auth';
 import { appSignInUrl, webOrigin } from '@/lib/portal-urls';
-
-const schema = z.object({
-    email: z.email('Enter a valid email'),
-});
-
-type FormValues = z.infer<typeof schema>;
 
 export function ForgotPasswordForm() {
     const [apiError, setApiError] = useState<unknown>(null);
     const [sent, setSent] = useState(false);
 
-    const form = useForm<FormValues>({
+    const form = useForm<ForgotPasswordFormSchema>({
         defaultValues: { email: '' },
         mode: 'onTouched',
-        resolver: zodResolver(schema),
+        resolver: zodResolver(ForgotPasswordFormSchema),
     });
 
     const onError = createFormInvalidHandler();
 
-    async function onSubmit(values: FormValues) {
+    async function onSubmit(values: ForgotPasswordFormSchema) {
         setApiError(null);
         const result = await requestPasswordReset({
             email: values.email,

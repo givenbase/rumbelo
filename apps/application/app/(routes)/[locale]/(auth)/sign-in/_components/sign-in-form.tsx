@@ -1,10 +1,27 @@
 'use client';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Button, Field, Input } from '@rumbelo/ui';
+import {
+    Button,
+    Form,
+    FormControl,
+    FormErrorBox,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    Input,
+    bindFormSubmit,
+    createFormInvalidHandler,
+} from '@rumbelo/ui';
+import { AUTH_SIGN_IN } from '@rumbelo/i18n';
+import { SignInForm as SignInFormSchema } from '@rumbelo/contracts';
+
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
     sendVerificationEmail,
@@ -14,7 +31,6 @@ import {
     webSignUpUrl,
     webVerifyUrl,
 } from '@/app/_lib/auth';
-import { AUTH_SIGN_IN } from '@rumbelo/i18n';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/app/_lib/demo-accounts';
 
 function safeRedirectPath(value: string | null): string {
@@ -33,10 +49,7 @@ export function SignInForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectTo = safeRedirectPath(searchParams.get('redirectTo'));
-    const [error, setError] = useState<string | null>(null);
-    const [pending, setPending] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [apiError, setApiError] = useState<unknown>(null);
     const [verification, setVerification] = useState<{
         email: string;
         sent: boolean;
@@ -44,22 +57,29 @@ export function SignInForm() {
     const [resendPending, setResendPending] = useState(false);
     const [cooldown, setCooldown] = useState(0);
 
+    const form = useForm<SignInFormSchema>({
+        defaultValues: { email: '', password: '' },
+        mode: 'onTouched',
+        resolver: zodResolver(SignInFormSchema),
+    });
+
+    const onInvalid = createFormInvalidHandler();
+
     useEffect(() => {
         if (cooldown <= 0) return;
         const id = window.setTimeout(() => setCooldown(left => left - 1), 1000);
         return () => window.clearTimeout(id);
     }, [cooldown]);
 
-    async function submitCredentials(nextEmail: string, nextPassword: string) {
-        setError(null);
+    async function submitCredentials(values: SignInFormSchema) {
+        setApiError(null);
         setVerification(null);
-        setPending(true);
+
         const result = await signIn.email({
-            email: nextEmail,
-            password: nextPassword,
+            email: values.email,
+            password: values.password,
             callbackURL: redirectTo,
         });
-        setPending(false);
 
         if (result.error) {
             const code =
@@ -68,26 +88,23 @@ export function SignInForm() {
                     : '';
 
             if (code === 'EMAIL_NOT_VERIFIED' || code === 'EMAIL_VERIFICATION_REQUIRED') {
-                setVerification({ email: nextEmail, sent: false });
-                setPassword('');
+                setVerification({ email: values.email, sent: false });
+                form.setValue('password', '');
                 return;
             }
 
-            setError(result.error.message ?? 'Sign in failed');
+            setApiError(result.error.message ?? 'Sign in failed');
             return;
         }
+
         router.push(redirectTo);
         router.refresh();
-    }
-
-    async function onSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        await submitCredentials(email, password);
     }
 
     async function onResendVerification() {
         if (!verification?.email || resendPending || cooldown > 0) return;
         setResendPending(true);
+        setApiError(null);
         const result = await sendVerificationEmail({
             email: verification.email,
             callbackURL: `${webOrigin()}/verify?status=confirmed`,
@@ -95,13 +112,15 @@ export function SignInForm() {
         setResendPending(false);
 
         if (result.error) {
-            setError(result.error.message ?? 'Could not resend');
+            setApiError(result.error.message ?? 'Could not resend');
             return;
         }
 
         setVerification(prev => (prev ? { ...prev, sent: true } : prev));
         setCooldown(RESEND_COOLDOWN_SEC);
     }
+
+    const busy = form.formState.isSubmitting;
 
     return (
         <div className="grid gap-6">
@@ -168,12 +187,18 @@ export function SignInForm() {
                                 type="button"
                                 variant="secondary"
                                 size="sm"
-                                disabled={pending}
+                                disabled={busy}
                                 className="rounded-full font-mono text-[10px] tracking-wide uppercase"
                                 onClick={() => {
-                                    setEmail(account.email);
-                                    setPassword(DEMO_PASSWORD);
-                                    void submitCredentials(account.email, DEMO_PASSWORD);
+                                    form.setValue('email', account.email, {
+                                        shouldValidate: true,
+                                        shouldDirty: true,
+                                    });
+                                    form.setValue('password', DEMO_PASSWORD, {
+                                        shouldValidate: true,
+                                        shouldDirty: true,
+                                    });
+                                    void form.handleSubmit(submitCredentials, onInvalid)();
                                 }}>
                                 {account.label}
                             </Button>
@@ -185,44 +210,66 @@ export function SignInForm() {
                 </div>
             ) : null}
 
-            <form className="grid gap-4" onSubmit={onSubmit}>
-                <Field label="Email" htmlFor="email">
-                    <Input
-                        id="email"
+            <Form {...form}>
+                <form
+                    className="grid gap-4"
+                    method="post"
+                    onSubmit={bindFormSubmit(form, submitCredentials, onInvalid)}>
+                    <FormErrorBox apiError={apiError} form={form} />
+
+                    <FormField
+                        control={form.control}
                         name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="you@example.com"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="email"
+                                        autoComplete="email"
+                                        placeholder="you@example.com"
+                                        disabled={busy}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                </Field>
-                <Field label="Password" htmlFor="password">
-                    <Input
-                        id="password"
+
+                    <FormField
+                        control={form.control}
                         name="password"
-                        type="password"
-                        autoComplete="current-password"
-                        required
-                        minLength={12}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        placeholder="••••••••••••"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="password"
+                                        autoComplete="current-password"
+                                        placeholder="••••••••••••"
+                                        disabled={busy}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                </Field>
-                {error ? <p className="text-sm text-danger">{error}</p> : null}
-                <div className="flex justify-end">
-                    <a
-                        href={webForgotPasswordUrl()}
-                        className="text-sm font-medium text-accent hover:underline">
-                        {AUTH_SIGN_IN.forgot_password}
-                    </a>
-                </div>
-                <Button type="submit" className="mt-1 w-full" disabled={pending}>
-                    {pending ? 'Working…' : 'Sign in'}
-                </Button>
-            </form>
+
+                    <div className="flex justify-end">
+                        <a
+                            href={webForgotPasswordUrl()}
+                            className="text-sm font-medium text-accent hover:underline">
+                            {AUTH_SIGN_IN.forgot_password}
+                        </a>
+                    </div>
+
+                    <Button type="submit" className="mt-1 w-full" disabled={busy}>
+                        {busy ? 'Working…' : 'Sign in'}
+                    </Button>
+                </form>
+            </Form>
 
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">

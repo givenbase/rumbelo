@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
     Button,
@@ -19,39 +18,32 @@ import {
     bindFormSubmit,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
+import { AUTH_MIN_PASSWORD_LENGTH, SignUpForm as SignUpFormSchema } from '@rumbelo/contracts';
 import { AUTH_SIGN_UP } from '@rumbelo/i18n';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
 import { signUp } from '@/lib/auth';
 import { appSignInUrl } from '@/lib/portal-urls';
 
-const MIN_PASSWORD_LENGTH = 12;
-
-const signUpFormSchema = z.object({
-    name: z.string().trim().min(1, 'Name is required').max(80),
-    email: z.email('Enter a valid email'),
-    password: z
-        .string()
-        .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters`),
-});
-
-type SignUpFormValues = z.infer<typeof signUpFormSchema>;
-
 export function SignUpForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [apiError, setApiError] = useState<unknown>(null);
 
-    const form = useForm<SignUpFormValues>({
-        defaultValues: { name: '', email: '', password: '' },
+    const form = useForm<SignUpFormSchema>({
+        defaultValues: {
+            name: searchParams.get('name')?.trim() ?? '',
+            email: searchParams.get('email')?.trim() ?? '',
+            password: '',
+        },
         mode: 'onTouched',
-        resolver: zodResolver(signUpFormSchema),
+        resolver: zodResolver(SignUpFormSchema),
     });
 
     const onError = createFormInvalidHandler();
 
-    async function onSubmit(values: SignUpFormValues) {
+    async function onSubmit(values: SignUpFormSchema) {
         setApiError(null);
 
         const result = await signUp.email({
@@ -138,7 +130,7 @@ export function SignUpForm() {
                                     <Input
                                         type="password"
                                         autoComplete="new-password"
-                                        placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+                                        placeholder={`At least ${AUTH_MIN_PASSWORD_LENGTH} characters`}
                                         disabled={busy}
                                         {...field}
                                     />
