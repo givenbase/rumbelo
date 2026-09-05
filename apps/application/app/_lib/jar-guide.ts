@@ -1,5 +1,5 @@
 /**
- * Design copy for jar cards — English default (Kluis Finance App.dc.html JAR_DEFS / JAR_USE).
+ * Static copy for jar cards — English default (Kluis Finance App.dc.html JAR_DEFS / JAR_USE).
  * Keys match contract jar keys (NECESSITIES, …).
  */
 

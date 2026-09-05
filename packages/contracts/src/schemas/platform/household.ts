@@ -8,6 +8,7 @@ import {
     Locale,
     MoneyCharacter,
     PayoffStrategy,
+    PlanKey,
 } from '../../enums';
 import { HouseholdId, Id, UserId } from '../common';
 
@@ -48,6 +49,8 @@ export const HouseholdSettings = z.object({
     householdId: HouseholdId,
     kind: z.enum(HouseholdKind),
     currency: z.enum(Currency),
+    /** Product tier for the board — Basic / Plus / Max. */
+    planKey: z.enum(PlanKey),
     periodStartDay: z.int().min(1).max(28),
     /** Weekly ritual reminder, local time HH:mm, null disables it. */
     ritualReminderAt: z

@@ -13,7 +13,6 @@ import { formatMoney, formatPeriod, toPeriodKey, describePeriodTravel } from '@r
 import type { CoachMessage, CoachRecapItem } from '@/components/features/home/coach-verdict';
 
 import { isLiveData } from '@/app/_lib/preview';
-import { mockDashboard, mockEnergy, mockJars, mockTurn } from '@/app/_mock';
 import { CoachVerdict } from '@/components/features/home/coach-verdict';
 import { HeroKluis } from '@/components/features/home/hero-kluis';
 import { PortalWidget } from '@/components/features/home/portal-widget';
@@ -69,11 +68,33 @@ export function HomeDashboardClient() {
     const periodKey = toPeriodKey(period.year, period.month);
     const live = isLiveData(householdId);
 
+    const emptyDashboard = {
+        period: periodKey,
+        allocatedTotal: 0,
+        incomeTotal: 0,
+        spentTotal: 0,
+        avgLeftOver: 0,
+        safePerDay: 0,
+        playLeft: 0,
+        inboxCount: 0,
+        why: null as string | null,
+    };
+
+    const emptyTurn = {
+        period: periodKey,
+        score: 0,
+        maxScore: 100,
+        daysLeft: 0,
+        level: 1,
+        levelLabel: 'Beginner',
+        events: [] as Array<{ day: number; text: string; points: number; kind: string }>,
+    };
+
     const dashboardQuery = useLiveQuery(
         api.money.dashboard.get.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
-        mockDashboard as never,
+        emptyDashboard as never,
         live
     );
 
@@ -89,11 +110,10 @@ export function HomeDashboardClient() {
         onError: () => showToast('Close failed', 'error'),
     });
 
-    const mock = mockDashboard;
     const liveData = dashboardQuery.data;
-    const d = live ? { ...mock, ...liveData } : (liveData ?? mock);
-    const jars = live ? (liveData?.jars?.length ? liveData.jars : []) : mockJars;
-    const turn = liveData?.turn ?? mockTurn;
+    const d = liveData ?? emptyDashboard;
+    const jars = liveData?.jars?.length ? liveData.jars : [];
+    const turn = liveData?.turn ?? emptyTurn;
     const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'en-US');
     const coach: CoachMessage[] =
         live && liveData?.coach?.length
@@ -106,7 +126,6 @@ export function HomeDashboardClient() {
               }))
             : [];
 
-    const sleepScore = mockEnergy.find(e => e.metric === 'SLEEP')?.value ?? 0;
     const travel = describePeriodTravel(period);
 
     return (
@@ -144,7 +163,7 @@ export function HomeDashboardClient() {
             />
 
             <HeroKluis
-                total={formatMoney(d.allocatedTotal ?? mockDashboard.allocatedTotal)}
+                total={formatMoney(d.allocatedTotal ?? 0)}
                 incomeBreakdown={`Distributed across ${jars.length} jar${jars.length === 1 ? '' : 's'}`}
                 stats={[
                     {
@@ -180,8 +199,8 @@ export function HomeDashboardClient() {
                     title="Energy"
                     href="/energy"
                     stats={[
-                        { label: 'TRAINED THIS WEEK', value: '3h' },
-                        { label: 'SLEEP SCORE', value: String(sleepScore) },
+                        { label: 'TRAINED THIS WEEK', value: '—' },
+                        { label: 'SLEEP SCORE', value: '—' },
                     ]}
                     tagline="A tired mind spends; a rested mind directs."
                 />
@@ -191,7 +210,7 @@ export function HomeDashboardClient() {
                     title="Soul"
                     href="/soul"
                     stats={[
-                        { label: 'STILLNESS TODAY', value: '10 min' },
+                        { label: 'STILLNESS TODAY', value: '—' },
                         { label: 'WHY', value: d.why ? '✓' : '—' },
                     ]}
                     tagline="A calm mind directs money. A restless one spends it."
@@ -200,7 +219,7 @@ export function HomeDashboardClient() {
 
             <TurnLog score={turn.score} daysLeft={turn.daysLeft} events={turn.events} />
 
-            {live && liveData?.turn && !liveData.turn.closed && (
+            {live && liveData?.turn && !liveData.turn.isClosed && (
                 <div className="flex justify-end">
                     <button
                         type="button"

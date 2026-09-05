@@ -8,7 +8,7 @@ import { entityConfig } from '../../../common/database/entity-config.util';
 /**
  * Plan Entity
  *
- * Rumbelo-owned product tiers (Grip / Engine / Compound).
+ * Rumbelo-owned product tiers (Basic / Plus / Max).
  * We write these rows; households only *subscribe* (later) or read for gating.
  *
  * @see product/money/plan — household money split (jars), unrelated
@@ -18,7 +18,7 @@ import { entityConfig } from '../../../common/database/entity-config.util';
 @Unique({ properties: ['key'] })
 export class Plan extends BaseEntity {
     // ? PROPERTIES
-    /** Product name shown in UI (Grip, Engine, Compound). */
+    /** Product name shown in UI (Basic, Plus, Max). */
     @Property({ length: 40 })
     name!: string;
 

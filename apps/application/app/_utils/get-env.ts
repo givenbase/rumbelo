@@ -1,5 +1,5 @@
 import { createEnv } from '@t3-oss/env-nextjs';
-
+import { PlanKey } from '@rumbelo/contracts';
 import { z } from 'zod';
 
 const isProdBuild = process.env.NODE_ENV === 'production' && !process.env.SKIP_ENV_VALIDATION;
@@ -21,7 +21,7 @@ export const env = createEnv({
 
         NEXT_PUBLIC_PREVIEW_MODE: z.enum(['true', 'false']).optional(),
         NEXT_PUBLIC_PREVIEW_PLAN: z
-            .enum(['GRIP', 'RITME', 'GROEI', 'ALL', 'MAX', 'FULL'])
+            .union([z.enum(PlanKey), z.enum(['ALL', 'FULL'])])
             .optional(),
 
         NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),

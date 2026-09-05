@@ -266,6 +266,7 @@ function toSettingsDto(row: HouseholdSettings) {
         householdId: row.householdId,
         kind: row.kind,
         currency: row.currency,
+        planKey: row.planKey,
         periodStartDay: row.periodStartDay,
         ritualReminderAt: row.ritualReminderAt,
         ritualReminderDay: row.ritualReminderDay,

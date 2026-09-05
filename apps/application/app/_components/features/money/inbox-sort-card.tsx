@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { Button } from '@rumbelo/ui';
 import { cn, formatMoney } from '@rumbelo/utils';
 
-import { JAR_META } from '@/app/_mock';
+import { JAR_META } from '@/app/_lib/jar-meta';
 
 interface InboxTransaction {
     readonly id: string;

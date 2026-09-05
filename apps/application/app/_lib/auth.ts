@@ -47,6 +47,10 @@ export async function setActiveOrganization(organizationId: string) {
     await client.organization.setActive({ organizationId });
 }
 
+export async function listOrganizations() {
+    return client.organization.list();
+}
+
 export async function updateOrganization(organizationId: string, data: { name?: string }) {
     await client.organization.update({ organizationId, data });
 }

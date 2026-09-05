@@ -23,7 +23,7 @@ export function LandingPricing() {
                         Free where it counts. Paid where it saves you work.
                     </h2>
                     <p className="max-w-prose text-base text-fg-muted">
-                        Start on Grip and stay there as long as you like. Nothing you enter is ever
+                        Start on Basic and stay there as long as you like. Nothing you enter is ever
                         locked away.
                     </p>
                 </div>
@@ -56,7 +56,7 @@ export function LandingPricing() {
                     gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(250px,30%,360px),1fr))',
                 }}>
                 {PLANS.map(p => {
-                    const rec = p.key === 'ritme';
+                    const rec = p.key === 'plus';
                     const price = p.m === 0 ? 0 : yearly ? p.y : p.m;
                     const per = p.m === 0 ? '' : yearly ? '/year' : '/month';
                     const sub =

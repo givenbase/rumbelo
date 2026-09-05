@@ -6,17 +6,8 @@ import { useLiveQuery } from '@rumbelo/hooks';
 
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
-import { INCOME_SOURCES } from '@/app/_mock';
 import { IncomeForm } from '@/components/features/forms/income-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
-
-const mockIncomeRows = INCOME_SOURCES.map(s => ({
-    id: s.id,
-    name: s.label,
-    amount: s.amount,
-    kind: s.kind,
-    isActive: true,
-}));
 
 export function IncomeCreatePage({ embedded = false }: { embedded?: boolean }) {
     return <IncomeForm mode="create" embedded={embedded} />;
@@ -29,10 +20,10 @@ export function IncomeUpdatePage({ id, embedded = false }: { id: string; embedde
 
     const query = useLiveQuery(
         api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
-        mockIncomeRows as never,
+        [] as never,
         live
     );
-    const row = (query.data ?? mockIncomeRows).find(s => s.id === id);
+    const row = (query.data ?? []).find(s => s.id === id);
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;

@@ -11,7 +11,6 @@ import { cn, formatMoney } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { mockDebts } from '@/app/_mock';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
@@ -70,7 +69,7 @@ export function DebtsPageClient() {
 
     const debtsQuery = useLiveQuery(
         api.money.debts.list.queryOptions({ input: { householdId: householdId! } }),
-        mockDebts as never,
+        [] as never,
         live
     );
 
@@ -82,7 +81,7 @@ export function DebtsPageClient() {
         live
     );
 
-    const debts = (debtsQuery.data ?? mockDebts) as ReadonlyArray<{
+    const debts = (debtsQuery.data ?? []) as ReadonlyArray<{
         id: string;
         name: string;
         kind: string;

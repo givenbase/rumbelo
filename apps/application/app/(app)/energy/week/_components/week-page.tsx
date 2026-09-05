@@ -7,11 +7,12 @@ import { Card, Eyebrow, Section } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
 import { isLiveData } from '@/app/_lib/preview';
-import { mockEnergy, JAR_META, SLEEP_HOURS } from '@/app/_mock';
+import { DEFAULT_SLEEP_HOURS } from '@/app/_lib/energy-constants';
+import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
 const STEERED_HOURS = 40;
-const SLEEP_WEEK = SLEEP_HOURS * 7;
+const SLEEP_WEEK = DEFAULT_SLEEP_HOURS * 7;
 const REST_HOURS = 168 - SLEEP_WEEK - STEERED_HOURS;
 
 const WEEK_WHOLE = [
@@ -65,13 +66,7 @@ export function WeekPageClient() {
 
     const summaryQuery = useLiveQuery(
         api.energy.logs.summary.queryOptions({ input: { householdId: householdId! } }),
-        mockEnergy.map(e => ({
-            metric: e.metric,
-            average7d: e.value,
-            average28d: e.value,
-            trend: e.trend,
-            spendCorrelation: null,
-        })) as never,
+        [] as never,
         live
     );
 

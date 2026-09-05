@@ -9,7 +9,6 @@ import { Button, Eyebrow, Input, Section } from '@rumbelo/ui';
 import { currentWeekKey } from '@rumbelo/utils';
 
 import { isLiveData } from '@/app/_lib/preview';
-import { mockGratitude } from '@/app/_mock';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { PageContent } from '@/components/layout/page-content';
 
@@ -28,7 +27,7 @@ export function GratitudePageClient() {
         api.soul.gratitude.list.queryOptions({
             input: { householdId: householdId!, week: weekKey },
         }),
-        mockGratitude as never,
+        [] as never,
         live
     );
 
@@ -46,7 +45,7 @@ export function GratitudePageClient() {
         },
     });
 
-    const entries = (listQuery.data ?? mockGratitude) as ReadonlyArray<{
+    const entries = (listQuery.data ?? []) as ReadonlyArray<{
         id: string;
         text: string;
         day?: string;

@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
-import { mockMind } from '@/app/_mock';
-
 const MIND_TIE =
     'A restless mind does not steer money — it spends it and calls that a decision. Stillness ' +
     'is not meditative, it is strategic: the only practice here that costs nothing and protects ' +
@@ -40,7 +38,8 @@ const PRACTICES = [
 ] as const;
 
 export default function MindPage() {
-    const [minutes, setMinutes] = useState<number>(mockMind.minutesPerDay);
+    const [minutes, setMinutes] = useState<number>(10);
+    const [streak] = useState(0);
     const [markedToday, setMarkedToday] = useState(false);
 
     return (
@@ -60,7 +59,7 @@ export default function MindPage() {
                         <div className="flex items-baseline gap-2">
                             <Eyebrow>In a row</Eyebrow>
                             <span className="font-display text-xl leading-none font-semibold tracking-tight text-accent">
-                                {mockMind.streak + (markedToday ? 1 : 0)}d
+                                {streak + (markedToday ? 1 : 0)}d
                             </span>
                         </div>
                     </div>

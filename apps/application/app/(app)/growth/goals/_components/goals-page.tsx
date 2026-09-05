@@ -11,7 +11,6 @@ import { cn, formatMoney } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { mockGoals } from '@/app/_mock';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
@@ -49,11 +48,11 @@ export function GoalsPageClient() {
 
     const goalsQuery = useLiveQuery(
         api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
-        mockGoals as never,
+        [] as never,
         live
     );
 
-    const goals = (goalsQuery.data ?? mockGoals) as ReadonlyArray<{
+    const goals = (goalsQuery.data ?? []) as ReadonlyArray<{
         id: string;
         name: string;
         icon: string | null;

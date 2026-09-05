@@ -8,7 +8,7 @@ import { Button, Field, Input } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
 import { markOnboardingDone } from '@/app/_lib/onboarding-storage';
-import { JAR_META } from '@/app/_mock';
+import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -28,7 +28,7 @@ const STEPS = [
 
 export function OnboardingOverlay() {
     const client = useApiClient();
-    const { session, householdId, setActiveHousehold, refreshSession } = useAuth();
+    const { session, householdId, isPending, setActiveHousehold, refreshSession } = useAuth();
     const {
         onboardingOpen,
         onboardingStep,
@@ -39,8 +39,13 @@ export function OnboardingOverlay() {
     } = useAppShell();
 
     useEffect(() => {
-        if (session && !householdId) openOnboarding();
-    }, [session, householdId, openOnboarding]);
+        if (isPending) return;
+        if (householdId) {
+            closeOnboarding();
+            return;
+        }
+        if (session) openOnboarding();
+    }, [session, householdId, isPending, openOnboarding, closeOnboarding]);
 
     const [householdName, setHouseholdName] = useState('My household');
     const [monthlyIncome, setMonthlyIncome] = useState('4300');

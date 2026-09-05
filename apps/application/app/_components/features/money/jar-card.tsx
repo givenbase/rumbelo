@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { cn, formatMoney } from '@rumbelo/utils';
 
 import { CREATE_HREF, spendFromJarHref } from '@/app/_lib/create-routes';
-import { JAR_GUIDE, type JarGuideKey } from '@/app/_mock';
+import { JAR_GUIDE, type JarGuideKey } from '@/app/_lib/jar-guide';
 
 interface JarCategory {
     id: string;

@@ -1,0 +1,58 @@
+/** Jar catalogue — names, icons, default split percentages. */
+
+export const JAR_META = [
+    {
+        key: 'NECESSITIES',
+        name: 'Necessity',
+        subtitle: 'Must-pays',
+        icon: '🏠',
+        pct: 55,
+        color: 'bg-jar-nec',
+        text: 'text-jar-nec',
+    },
+    {
+        key: 'FINANCIAL_FREEDOM',
+        name: 'Financial Freedom',
+        subtitle: 'Never spend',
+        icon: '🔒',
+        pct: 10,
+        color: 'bg-jar-ff',
+        text: 'text-jar-ff',
+    },
+    {
+        key: 'LONG_TERM_SAVINGS',
+        name: 'Long Term Savings',
+        subtitle: 'Big things',
+        icon: '🎯',
+        pct: 10,
+        color: 'bg-jar-lts',
+        text: 'text-jar-lts',
+    },
+    {
+        key: 'EDUCATION',
+        name: 'Education',
+        subtitle: 'Grow yourself',
+        icon: '📚',
+        pct: 10,
+        color: 'bg-jar-edu',
+        text: 'text-jar-edu',
+    },
+    {
+        key: 'PLAY',
+        name: 'Play',
+        subtitle: 'Guilt-free',
+        icon: '✨',
+        pct: 10,
+        color: 'bg-jar-play',
+        text: 'text-jar-play',
+    },
+    {
+        key: 'GIVE',
+        name: 'Give / foundation',
+        subtitle: 'Pass it on',
+        icon: '🤲',
+        pct: 5,
+        color: 'bg-jar-give',
+        text: 'text-jar-give',
+    },
+] as const;

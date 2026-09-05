@@ -237,11 +237,11 @@ export interface Plan {
 
 export const PLANS: Plan[] = [
     {
-        key: 'grip',
-        name: 'Grip',
+        key: 'basic',
+        name: 'Basic',
         m: 0,
         y: 0,
-        tag: 'Free forever',
+        tag: 'From €0',
         line: 'The six jars and the practice underneath. No bank needed, no card needed — enough to start, and never a reason to stop.',
         feats: [
             'MONEY · the six jars with your own percentages',
@@ -252,8 +252,8 @@ export const PLANS: Plan[] = [
         ],
     },
     {
-        key: 'ritme',
-        name: 'Engine',
+        key: 'plus',
+        name: 'Plus',
         m: 9,
         y: 90,
         tag: 'Most chosen',
@@ -268,8 +268,8 @@ export const PLANS: Plan[] = [
         ],
     },
     {
-        key: 'groei',
-        name: 'Compound',
+        key: 'max',
+        name: 'Max',
         m: 19,
         y: 190,
         tag: 'All four portals',
@@ -285,7 +285,7 @@ export const PLANS: Plan[] = [
 ];
 
 export const ASSURANCES: { t: string; icon: IconName }[] = [
-    { t: 'Free plan needs no card and never expires.', icon: 'shield' },
+    { t: 'Basic needs no card to start — price can stay €0 or become a small fee later.', icon: 'shield' },
     { t: 'Bank data is read-only, via PSD2, and only after you connect it yourself.', icon: 'eye' },
     { t: 'Cancel a paid plan and everything you entered stays readable.', icon: 'db' },
 ];

@@ -10,12 +10,14 @@ import {
     type ReactNode,
 } from 'react';
 
-import type { PlanKey } from '@/app/_lib/plan';
-import { Locale } from '@rumbelo/contracts';
+import { Locale, type PlanKey } from '@rumbelo/contracts';
+import { useQuery } from '@tanstack/react-query';
 
+import { useApi } from '@/app/_lib/api-hooks';
 import { markOnboardingDone, resetOnboarding } from '@/app/_lib/onboarding-storage';
-import { MOCK_PLAN } from '@/app/_lib/plan';
+import { DEFAULT_PLAN } from '@/app/_lib/plan';
 import { resolvePreviewPlan } from '@/app/_lib/preview';
+import { useAuth } from '@/components/features/shell/auth-provider';
 
 export interface Toast {
     id: number;
@@ -51,6 +53,8 @@ interface AppShellCtx {
 const AppShellContext = createContext<AppShellCtx | null>(null);
 
 export function AppShellProvider({ children }: { children: ReactNode }) {
+    const api = useApi();
+    const { householdId } = useAuth();
     const [toast, setToast] = useState<Toast | null>(null);
     const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
     const toastId = useRef(0);
@@ -58,7 +62,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
     const [quickOpen, setQuickOpen] = useState(false);
     const [onboardingOpen, setOnboardingOpen] = useState(false);
     const [onboardingStep, setOnboardingStep] = useState(0);
-    const [plan, setPlan] = useState<PlanKey>(resolvePreviewPlan(MOCK_PLAN));
+    const [plan, setPlan] = useState<PlanKey>(resolvePreviewPlan(DEFAULT_PLAN));
     const [locale, setLocale] = useState<Locale>(Locale.EN);
 
     const now = new Date();
@@ -66,6 +70,18 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
         year: now.getFullYear(),
         month: now.getMonth() + 1,
     });
+
+    const settingsQuery = useQuery({
+        ...api.household.settings.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        enabled: Boolean(householdId),
+    });
+
+    useEffect(() => {
+        const key = settingsQuery.data?.planKey;
+        if (key) setPlan(resolvePreviewPlan(key));
+    }, [settingsQuery.data?.planKey]);
 
     const showToast = useCallback((message: string, type: Toast['type'] = 'info') => {
         if (toastTimer.current) clearTimeout(toastTimer.current);

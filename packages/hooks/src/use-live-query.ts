@@ -1,24 +1,28 @@
 /**
- * Thin bridge for mock → live migration (Phase 4).
- * Screens keep mock data until `enabled` is flipped per procedure.
+ * Query helper for household-scoped screens.
+ * When `enabled` is false (no household), returns empty fallback without hitting the network.
  */
 import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
 
 export function useLiveQuery<TData>(
     options: UseQueryOptions<TData>,
-    mockFallback: TData,
+    emptyFallback: TData,
     enabled = false
 ): UseQueryResult<TData> {
     const query = useQuery({ ...options, enabled });
     if (!enabled) {
         return {
             ...query,
-            data: mockFallback,
+            data: emptyFallback,
             isPending: false,
             isLoading: false,
+            isFetching: false,
             isSuccess: true,
             status: 'success',
         } as UseQueryResult<TData>;
     }
-    return query;
+    return {
+        ...query,
+        data: query.data !== undefined ? query.data : emptyFallback,
+    } as UseQueryResult<TData>;
 }

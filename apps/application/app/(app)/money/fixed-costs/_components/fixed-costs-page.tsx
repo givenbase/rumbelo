@@ -11,15 +11,13 @@ import { cn, formatMoney } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { INCOME_SOURCES, JAR_META, mockDebts, mockFixedCosts } from '@/app/_mock';
+import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 type Tab = 'ERUIT' | 'ERIN';
 
 const toVar = (bgClass: string) => bgClass.replace('bg-', 'var(--color-') + ')';
-
-const MOCK_TOTAL_DEBT = mockDebts.reduce((s, d) => s + d.balance, 0);
 
 export function FixedCostsPageClient() {
     const api = useApi();
@@ -76,7 +74,7 @@ export function FixedCostsPageClient() {
 
     const fixedCosts =
         liveFixedCosts ??
-        (mockFixedCosts as unknown as Array<{
+        ([] as Array<{
             id: string;
             name: string;
             amount: number;
@@ -107,19 +105,18 @@ export function FixedCostsPageClient() {
 
     const incomeSources =
         liveIncome ??
-        INCOME_SOURCES.map(s => ({
-            id: s.id,
-            label: s.label,
-            amount: s.amount,
-            kind: s.kind,
-            dueDay: null as null,
-        }));
+        ([] as Array<{
+            id: string;
+            label: string;
+            amount: number;
+            kind: string;
+            dueDay: number | null;
+        }>);
 
     const NET = incomeSources.reduce((s, i) => s + i.amount, 0);
     const outTotal = fixedCosts.reduce((s, f) => s + Math.abs(f.amount), 0);
     const leftover = NET - outTotal;
-    const commitmentRatio =
-        NET > 0 ? Math.round(((outTotal + (live ? 0 : MOCK_TOTAL_DEBT / 12)) / NET) * 100) : 0;
+    const commitmentRatio = NET > 0 ? Math.round((outTotal / NET) * 100) : 0;
 
     return (
         <div className="grid animate-rise gap-8">
@@ -317,7 +314,7 @@ export function FixedCostsPageClient() {
                             ✦ Is this enough?
                         </span>
                         <p className="mt-3 text-sm leading-relaxed text-pretty text-fg-secondary">
-                            {formatMoney(NET)}/mo. Fixed costs{!live && ' + debt'} take{' '}
+                            {formatMoney(NET)}/mo. Fixed costs take{' '}
                             <strong className="text-fg">{commitmentRatio}%</strong> — that&apos;s{' '}
                             {commitmentRatio < 50 ? 'comfortable' : 'tight'}. Under 50% there&apos;s
                             room to build. The real ceiling is income, not cutting costs.

@@ -1,8 +1,21 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    type ReactNode,
+} from 'react';
 
-import { activeHouseholdId, setActiveOrganization, useSession } from '@/app/_lib/auth';
+import {
+    activeHouseholdId,
+    listOrganizations,
+    setActiveOrganization,
+    useSession,
+} from '@/app/_lib/auth';
 
 interface AuthCtx {
     session: ReturnType<typeof useSession>['data'];
@@ -16,6 +29,7 @@ const AuthContext = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: session, isPending, refetch } = useSession();
+    const activating = useRef(false);
 
     const householdId = activeHouseholdId(session);
 
@@ -30,6 +44,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
         [refetch]
     );
+
+    // Demo / first login: activate the only household if session has none.
+    useEffect(() => {
+        if (isPending || !session?.user || householdId || activating.current) return;
+        activating.current = true;
+        void (async () => {
+            try {
+                const orgs = await listOrganizations();
+                const first = orgs.data?.[0];
+                if (first?.id) {
+                    await setActiveOrganization(first.id);
+                    await refetch();
+                }
+            } finally {
+                activating.current = false;
+            }
+        })();
+    }, [isPending, session?.user, householdId, refetch]);
 
     const value = useMemo(
         () => ({ session, isPending, householdId, refreshSession, setActiveHousehold }),

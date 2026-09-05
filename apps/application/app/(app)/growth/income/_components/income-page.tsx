@@ -10,7 +10,7 @@ import { formatMoney, toPeriodKey } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { JAR_META, mockJars } from '@/app/_mock';
+import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
@@ -62,16 +62,14 @@ export function IncomePageClient() {
         api.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
-        mockJars as never,
+        [] as never,
         live
     );
 
-    const NET = live
-        ? (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0)
-        : 430_000;
+    const NET = (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0);
     const GAP = TARGET - NET;
-    const jars = jarsQuery.data ?? mockJars;
-    const sources = live ? (incomeQuery.data ?? []).filter(s => s.isActive) : [];
+    const jars = jarsQuery.data ?? [];
+    const sources = (incomeQuery.data ?? []).filter(s => s.isActive);
 
     return (
         <div className="grid animate-rise gap-8">
@@ -131,7 +129,7 @@ export function IncomePageClient() {
                     </span>
                     <div>
                         {JAR_META.map(j => {
-                            const jar = jars.find(mj => mj.key === j.key)!;
+                            const jar = jars.find(mj => mj.key === j.key);
                             const now = jar?.allocated ?? 0;
                             const then = Math.round((TARGET * j.pct) / 100);
                             return (

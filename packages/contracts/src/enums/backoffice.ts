@@ -1,7 +1,7 @@
-/** Backoffice product-tier keys (Grip / Engine / Compound). */
+/** Backoffice product-tier keys (Basic / Plus / Max). */
 
 export enum PlanKey {
-    GRIP = 'GRIP',
-    RITME = 'RITME',
-    GROEI = 'GROEI',
+    BASIC = 'BASIC',
+    PLUS = 'PLUS',
+    MAX = 'MAX',
 }

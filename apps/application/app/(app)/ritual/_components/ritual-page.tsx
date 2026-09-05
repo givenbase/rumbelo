@@ -8,7 +8,6 @@ import { Eyebrow } from '@rumbelo/ui';
 import { currentWeekKey, toPeriodKey } from '@rumbelo/utils';
 
 import { isLiveData } from '@/app/_lib/preview';
-import { mockJars } from '@/app/_mock';
 import { RitualWizard } from '@/components/features/ritual/ritual-wizard';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -27,11 +26,11 @@ export function RitualPageClient() {
     const ritualQuery = useLiveQuery(
         api.money.ritual.current.queryOptions({ input: { householdId: householdId!, week } }),
         {
-            id: 'mock',
+            id: '',
             householdId: householdId ?? '',
             week,
             stage: 'LOOK' as const,
-            surplus: 34_000,
+            surplus: 0,
             allocations: [],
             intention: null,
             completedAt: null,
@@ -43,7 +42,7 @@ export function RitualPageClient() {
         api.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
-        mockJars as never,
+        [] as never,
         live
     );
 
@@ -67,7 +66,7 @@ export function RitualPageClient() {
         },
     });
 
-    const jars = (jarsQuery.data ?? mockJars).map(j => ({
+    const jars = (jarsQuery.data ?? []).map(j => ({
         id: j.id,
         key: j.key,
         name: j.name,
@@ -76,7 +75,7 @@ export function RitualPageClient() {
         overspent: 'overspent' in j ? Boolean(j.overspent) : false,
     }));
 
-    const surplus = ritualQuery.data?.surplus ?? 34_000;
+    const surplus = ritualQuery.data?.surplus ?? 0;
 
     return (
         <PageContent width="narrow" className="grid gap-8">

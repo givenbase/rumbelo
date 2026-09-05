@@ -1,5 +1,5 @@
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
-import { Currency, HouseholdKind, IncomeRhythm, PayoffStrategy } from '@rumbelo/contracts';
+import { Currency, HouseholdKind, IncomeRhythm, PlanKey, PayoffStrategy } from '@rumbelo/contracts';
 
 import { entityConfig } from '../../../../common/database/entity-config.util';
 import { NativeEnum } from '../../../../common/database/native-enum.util';
@@ -45,6 +45,9 @@ export class HouseholdSettings {
     updatedAt: Date = new Date();
 
     // ? ENUMS
+    @Enum(NativeEnum({ PlanKey, domain: 'backoffice', defaultValue: PlanKey.BASIC }))
+    planKey: PlanKey = PlanKey.BASIC;
+
     @Enum(NativeEnum({ HouseholdKind, domain: 'platform', defaultValue: HouseholdKind.SOLO }))
     kind: HouseholdKind = HouseholdKind.SOLO;
 

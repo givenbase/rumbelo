@@ -11,13 +11,11 @@ import { formatMoney, toPeriodKey, cn } from '@rumbelo/utils';
 
 import { CREATE_HREF } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { INCOME_SOURCES, mockGoals, mockJars } from '@/app/_mock';
+import { JAR_META } from '@/app/_lib/jar-meta';
 import { JarCard } from '@/components/features/money/jar-card';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar, ListToolbarTab } from '@/components/layout/list-toolbar';
-
-const MOCK_NET = INCOME_SOURCES.reduce((s, i) => s + i.amount, 0);
 
 type Tab = 'JARS' | 'SIMULATOR';
 
@@ -39,14 +37,14 @@ export function JarsPageClient() {
     const [tab, setTab] = useState<Tab>('JARS');
 
     const [simEuros, setSimEuros] = useState(4_300);
-    const [goalId, setGoalId] = useState<string>(mockGoals[0]?.id ?? '');
+    const [goalId, setGoalId] = useState<string>('');
     const [wantMonths, setWantMonths] = useState(36);
 
     const jarsQuery = useLiveQuery(
         api.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
-        mockJars as never,
+        [] as never,
         live
     );
 
@@ -56,15 +54,20 @@ export function JarsPageClient() {
         live
     );
 
-    const jars = jarsQuery.data ?? mockJars;
-    const net = live
-        ? (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0)
-        : MOCK_NET;
+    const goalsQuery = useLiveQuery(
+        api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
+        [],
+        live
+    );
+
+    const jars = jarsQuery.data ?? [];
+    const goals = goalsQuery.data ?? [];
+    const net = (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0);
     const totalPct = jars.reduce((s, j) => s + j.percentage, 0);
     const onTarget = jars.filter(j => !j.overspent).length;
 
     const simCents = simEuros * 100;
-    const goal = mockGoals.find(g => g.id === goalId) ?? mockGoals[0];
+    const goal = goals.find(g => g.id === goalId) ?? goals[0];
     const goalJarPct =
         jars.find(j => j.key === 'LONG_TERM_SAVINGS')?.percentage ??
         jars.find(j => j.key === 'FINANCIAL_FREEDOM')?.percentage ??
@@ -141,7 +144,7 @@ export function JarsPageClient() {
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {jars.map(jar => {
-                            const meta = mockJars.find(m => m.key === jar.key);
+                            const meta = JAR_META.find(m => m.key === jar.key);
                             return (
                                 <JarCard
                                     key={jar.id}
@@ -203,7 +206,7 @@ export function JarsPageClient() {
 
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
                         {jars.map(j => {
-                            const meta = mockJars.find(m => m.key === j.key);
+                            const meta = JAR_META.find(m => m.key === j.key);
                             const color = meta?.color ?? 'bg-jar-nec';
                             return (
                                 <div
@@ -230,7 +233,7 @@ export function JarsPageClient() {
                         </p>
 
                         <div className="my-4 flex flex-wrap gap-1.5">
-                            {mockGoals.map(g => {
+                            {goals.map(g => {
                                 const isActive = g.id === goal?.id;
                                 return (
                                     <button

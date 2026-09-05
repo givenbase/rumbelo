@@ -12,7 +12,6 @@ import { cn, formatMoney } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { mockJars, mockTransactions } from '@/app/_mock';
 import { InboxSortCard } from '@/components/features/money/inbox-sort-card';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -45,7 +44,7 @@ export function TransactionsPageClient() {
 
     const inboxQuery = useLiveQuery(
         api.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
-        mockTransactions.filter(t => t.status === 'INBOX') as never,
+        [] as never,
         live
     );
 
@@ -53,13 +52,13 @@ export function TransactionsPageClient() {
         api.money.transactions.list.queryOptions({
             input: { householdId: householdId!, limit: 50 },
         }),
-        { items: [...mockTransactions] as never, nextCursor: null },
+        { items: [] as never, nextCursor: null },
         live
     );
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
-        mockJars as never,
+        [] as never,
         live
     );
 
@@ -70,10 +69,10 @@ export function TransactionsPageClient() {
     );
 
     const inbox = inboxQuery.data ?? [];
-    const jars = jarsQuery.data ?? mockJars;
+    const jars = jarsQuery.data ?? [];
     const jarById = new Map(jars.map(j => [j.id, j]));
     const rules = rulesQuery.data ?? [];
-    const all = (live ? (listQuery.data?.items ?? []) : [...mockTransactions])
+    const all = (listQuery.data?.items ?? [])
         .slice()
         .sort((a, b) => b.bookedOn.localeCompare(a.bookedOn));
 

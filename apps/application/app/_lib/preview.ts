@@ -1,10 +1,10 @@
 /**
  * Design / demo preview switches (app only — NEXT_PUBLIC_*).
  *
- * PREVIEW_MODE  — force design fixtures even when a household exists
- * PREVIEW_PLAN  — override plan gating (GRIP | RITME | GROEI | all)
+ * PREVIEW_MODE  — force empty fallbacks (no live API) even when a household exists
+ * PREVIEW_PLAN  — override plan gating (BASIC | PLUS | MAX | ALL | FULL)
  *
- * Production: leave both unset. Values come from `@/app/_utils/get-env`.
+ * Production / normal local: leave both unset so household planKey drives gating.
  */
 
 import { PlanKey } from '@rumbelo/contracts';
@@ -15,8 +15,9 @@ export type PreviewPlanKey = PlanKey;
 
 function parsePlan(value: (typeof env)['NEXT_PUBLIC_PREVIEW_PLAN']): PreviewPlanKey | null {
     if (!value) return null;
-    if (value === PlanKey.GRIP || value === PlanKey.RITME || value === PlanKey.GROEI) return value;
-    if (value === 'ALL' || value === 'MAX' || value === 'FULL') return PlanKey.GROEI;
+    if (value === PlanKey.BASIC || value === PlanKey.PLUS || value === PlanKey.MAX) return value;
+    // ALL / FULL = design preview “see every artboard” (not the Max product tier alone)
+    if (value === 'ALL' || value === 'FULL') return PlanKey.MAX;
     return null;
 }
 
@@ -29,12 +30,12 @@ export const PREVIEW_PLAN = parsePlan(env.NEXT_PUBLIC_PREVIEW_PLAN);
 /**
  * Effective plan for the shell.
  * - PREVIEW_PLAN wins when set
- * - else PREVIEW_MODE alone defaults to GROEI (see every artboard)
- * - else fallback (billing / MOCK_PLAN)
+ * - else PREVIEW_MODE alone defaults to MAX (see every artboard)
+ * - else fallback (household settings / DEFAULT_PLAN)
  */
-export function resolvePreviewPlan(fallback: PreviewPlanKey = PlanKey.GRIP): PreviewPlanKey {
+export function resolvePreviewPlan(fallback: PreviewPlanKey = PlanKey.BASIC): PreviewPlanKey {
     if (PREVIEW_PLAN) return PREVIEW_PLAN;
-    if (PREVIEW_MODE) return PlanKey.GROEI;
+    if (PREVIEW_MODE) return PlanKey.MAX;
     return fallback;
 }
 

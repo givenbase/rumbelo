@@ -37,7 +37,7 @@ import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import { PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
 import { isLiveData } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
-import { JAR_META, mockJars } from '@/app/_mock';
+import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -138,7 +138,7 @@ export function AccountSettings() {
         () => typeof window !== 'undefined' && localStorage.getItem('rumbelo-theme') === 'dark'
     );
     const [periodDayDraft, setPeriodDayDraft] = useState<number | null>(null);
-    const periodDay = periodDayDraft ?? settingsQuery.data?.periodStartDay ?? 1;
+    const periodDay = periodDayDraft ?? settingsQuery.data?.money?.periodStartDay ?? 1;
 
     const saveProfile = useMutation({
         mutationFn: async (nextName: string) => {
@@ -218,7 +218,7 @@ export function AccountSettings() {
             if (!householdId) throw new Error('No household');
             return client.household.updateSettings({
                 householdId,
-                periodStartDay: periodDay,
+                money: { periodStartDay: periodDay },
             });
         },
         onSuccess: () => {
@@ -257,7 +257,7 @@ export function AccountSettings() {
     const saveIncomeRhythm = useMutation({
         mutationFn: async (next: IncomeRhythm) => {
             if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({ householdId, incomeRhythm: next });
+            return client.household.updateSettings({ householdId, money: { incomeRhythm: next } });
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
@@ -523,7 +523,7 @@ export function AccountSettings() {
                             ] as const
                         ).map(option => {
                             const on =
-                                (settingsQuery.data?.incomeRhythm ?? IncomeRhythm.STABLE) ===
+                                (settingsQuery.data?.money?.incomeRhythm ?? IncomeRhythm.STABLE) ===
                                 option.key;
                             return (
                                 <button
@@ -692,17 +692,7 @@ export function JarsSettings() {
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
-        mockJars.map(jar => ({
-            id: jar.id,
-            householdId: 'mock',
-            key: jar.key,
-            name: jar.name,
-            subtitle: jar.subtitle,
-            icon: jar.icon,
-            percentage: jar.percentage,
-            isSpendable: jar.isSpendable,
-            sortOrder: 0,
-        })) as never,
+        [] as never,
         live
     );
 
@@ -737,13 +727,10 @@ export function JarsSettings() {
         live
     );
     const monthlyNet = useMemo(() => {
-        if (!live) {
-            return mockJars.reduce((s, j) => s + j.allocated, 0);
-        }
         return (incomeQuery.data ?? [])
             .filter(s => s.isActive)
             .reduce((sum, s) => sum + s.amount, 0);
-    }, [live, incomeQuery.data]);
+    }, [incomeQuery.data]);
 
     const saveSplit = useMutation({
         mutationFn: async () => {
@@ -946,14 +933,14 @@ export function DebtSettings() {
         live
     );
 
-    const strategy = settingsQuery.data?.payoffStrategy ?? PayoffStrategy.AVALANCHE;
+    const strategy = settingsQuery.data?.money?.payoffStrategy ?? PayoffStrategy.AVALANCHE;
 
     const saveStrategy = useMutation({
         mutationFn: async (next: PayoffStrategy) => {
             if (!householdId) throw new Error('No household');
             return client.household.updateSettings({
                 householdId,
-                payoffStrategy: next,
+                money: { payoffStrategy: next },
             });
         },
         onSuccess: () => {
@@ -1413,9 +1400,25 @@ export function SysteemSettings() {
 }
 
 export function PlanSettings() {
-    const { showToast } = useAppShell();
+    const api = useApi();
+    const client = useApiClient();
+    const queryClient = useQueryClient();
+    const { householdId } = useAuth();
+    const { showToast, plan, setPlan } = useAppShell();
     const [billing, setBilling] = useState<'month' | 'year'>('month');
-    const [plan, setPlan] = useState<PlanKey>(PlanKey.GRIP);
+
+    const savePlan = useMutation({
+        mutationFn: async (next: PlanKey) => {
+            if (!householdId) throw new Error('No household');
+            return client.household.updateSettings({ householdId, planKey: next });
+        },
+        onSuccess: data => {
+            setPlan(data.planKey);
+            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            showToast(`${PLAN_LABELS[data.planKey]} selected`, 'success');
+        },
+        onError: () => showToast('Could not update plan', 'error'),
+    });
 
     const cards: {
         key: PlanKey;
@@ -1426,28 +1429,28 @@ export function PlanSettings() {
         feats: string;
     }[] = [
         {
-            key: PlanKey.GRIP,
+            key: PlanKey.BASIC,
             priceM: 0,
             priceY: 0,
-            tag: 'Free forever',
-            line: 'The six jars and the practice underneath. No bank needed, no card needed — enough to start today.',
+            tag: 'From €0',
+            line: 'The six jars and the practice underneath. No bank needed — enough to start today.',
             feats: 'MONEY · the six jars · Add expenses · Safe to spend · SOUL · The coach',
         },
         {
-            key: PlanKey.RITME,
+            key: PlanKey.PLUS,
             priceM: 9,
             priceY: 90,
             tag: 'Most chosen',
             line: 'The part that runs without you — plus Energy. Banks tied to jars, transactions sorted on arrival.',
-            feats: 'Everything in Grip · Bank connect · Debt plan · ENERGY · Unlimited history',
+            feats: 'Everything in Basic · Bank connect · Debt plan · ENERGY · Unlimited history',
         },
         {
-            key: PlanKey.GROEI,
+            key: PlanKey.MAX,
             priceM: 19,
             priceY: 190,
             tag: 'All four portals',
             line: 'Where the money starts making money. Goals, income curve, learning, and net worth.',
-            feats: 'Everything in Engine · GROWTH · Income · Learning · Net worth · Devices later',
+            feats: 'Everything in Plus · GROWTH · Income · Learning · Net worth · Devices later',
         },
     ];
 
@@ -1455,7 +1458,7 @@ export function PlanSettings() {
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="What you use and pay"
-                blurb="Three plans named after the road itself. Start free and stay free as long as you like — nothing you have entered is ever locked away."
+                blurb="Three plans: Basic, Plus, and Max. Start on Basic — nothing you have entered is ever locked away."
                 badge={
                     <div className="flex gap-1 rounded-full bg-raised p-1">
                         {(
@@ -1525,22 +1528,26 @@ export function PlanSettings() {
                                     size="sm"
                                     className="shrink-0 rounded-full font-mono text-[10px] tracking-widest uppercase"
                                     onClick={() => {
-                                        setPlan(p.key);
-                                        showToast(
-                                            cur
-                                                ? `Already on ${PLAN_LABELS[p.key]}`
-                                                : `${PLAN_LABELS[p.key]} selected — billing coming soon`,
-                                            'info'
-                                        );
+                                        if (cur) {
+                                            showToast(`Already on ${PLAN_LABELS[p.key]}`, 'info');
+                                            return;
+                                        }
+                                        savePlan.mutate(p.key);
                                     }}>
-                                    {cur ? 'Current' : p.priceM === 0 ? 'Choose Grip' : 'Choose'}
+                                    {cur
+                                        ? 'Current'
+                                        : savePlan.isPending
+                                          ? '…'
+                                          : p.priceM === 0
+                                            ? 'Choose Basic'
+                                            : 'Choose'}
                                 </Button>
                             </div>
                         );
                     })}
                 </div>
             </SettingsInkCard>
-            <StubNotice what="Stripe billing and plan gates — coming soon." />
+            <StubNotice what="Stripe billing comes later — plan gates already follow Basic / Plus / Max." />
         </SettingsPanel>
     );
 }
