@@ -120,6 +120,17 @@ export function createBetterAuthRouteHandlers(options?: BetterAuthProxyOptions) 
     return {
         DELETE: proxy,
         GET: proxy,
+        OPTIONS: async (request: Request) =>
+            new Response(null, {
+                status: 204,
+                headers: {
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Access-Control-Allow-Headers':
+                        'Content-Type, Authorization, Cookie, x-household-id',
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+                    'Access-Control-Allow-Origin': request.headers.get('origin') || '*',
+                },
+            }),
         PATCH: proxy,
         POST: proxy,
         PUT: proxy,
