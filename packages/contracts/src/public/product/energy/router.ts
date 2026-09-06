@@ -1,14 +1,21 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../../schemas';
+import * as schemas from '../../../schemas';
 
 /** Product: Energie — the floor under financial decisions. */
 export const contract = {
     logs: {
         list: oc
-            .input(S.HouseholdScoped.extend({ from: S.IsoDate.nullish(), to: S.IsoDate.nullish() }))
-            .output(z.array(S.EnergyLog)),
-        create: oc.input(S.EnergyLog.omit({ id: true, userId: true })).output(S.EnergyLog),
-        summary: oc.input(S.HouseholdScoped).output(z.array(S.EnergySummary)),
+            .input(
+                schemas.HouseholdScoped.extend({
+                    from: schemas.IsoDate.nullish(),
+                    to: schemas.IsoDate.nullish(),
+                })
+            )
+            .output(z.array(schemas.EnergyLog)),
+        create: oc
+            .input(schemas.EnergyLog.omit({ id: true, userId: true }))
+            .output(schemas.EnergyLog),
+        summary: oc.input(schemas.HouseholdScoped).output(z.array(schemas.EnergySummary)),
     },
 };

@@ -7,9 +7,9 @@
 export function parseEurosToCents(raw: string): number | null {
     const trimmed = raw.trim().replace(/\s/g, '').replace(',', '.');
     if (!trimmed) return null;
-    const n = Number(trimmed);
-    if (!Number.isFinite(n)) return null;
-    return Math.round(n * 100);
+    const parsed = Number(trimmed);
+    if (!Number.isFinite(parsed)) return null;
+    return Math.round(parsed * 100);
 }
 
 /** Format cents for form inputs (Dutch decimal comma when needed). */

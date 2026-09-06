@@ -23,7 +23,7 @@ export function GoalUpdatePage({ id, embedded = false }: { id: string; embedded?
         [] as never,
         live
     );
-    const row = (query.data ?? []).find(g => g.id === id) as
+    const row = (query.data ?? []).find(goal => goal.id === id) as
         | {
               id: string;
               name: string;

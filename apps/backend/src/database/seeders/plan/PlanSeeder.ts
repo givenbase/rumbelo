@@ -11,8 +11,11 @@ import { PLAN_SEED } from '../../../modules/backoffice/plan/seed/plan.seed-data'
  */
 export class PlanSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = PLAN_SEED.map(row => row.key);
+        const existingRows = await em.find(Plan, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of PLAN_SEED.entries()) {
-            const existing = await em.findOne(Plan, { key: row.key });
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.priceMonthly = row.priceMonthly;

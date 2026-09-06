@@ -57,8 +57,8 @@ export function GratitudePageClient() {
     function formatDay(entry: { day?: string; createdAt?: string }): string {
         if (entry.day) return entry.day;
         if (entry.createdAt) {
-            const d = new Date(entry.createdAt);
-            return d.toLocaleDateString('en-US', { weekday: 'short' });
+            const date = new Date(entry.createdAt);
+            return date.toLocaleDateString('en-US', { weekday: 'short' });
         }
         return '';
     }
@@ -89,9 +89,9 @@ export function GratitudePageClient() {
                     className="w-full min-w-0 flex-1 sm:min-w-65"
                     placeholder="What are you grateful for?"
                     value={text}
-                    onChange={e => setText(e.target.value)}
-                    onKeyDown={e => {
-                        if (e.key === 'Enter') handleAdd();
+                    onChange={event => setText(event.target.value)}
+                    onKeyDown={event => {
+                        if (event.key === 'Enter') handleAdd();
                     }}
                     disabled={createMutation.isPending}
                 />
@@ -110,16 +110,16 @@ export function GratitudePageClient() {
                 </p>
             ) : (
                 <div className="grid gap-2.5">
-                    {entries.map(g => (
+                    {entries.map(entry => (
                         <div
-                            key={g.id}
+                            key={entry.id}
                             className="flex items-center gap-3 rounded-xl border border-l-4 border-line bg-surface px-4 py-3.5"
                             style={{ borderLeftColor: 'var(--color-portal-soul)' }}>
                             <span className="min-w-0 flex-1 text-sm leading-snug text-fg">
-                                {g.text}
+                                {entry.text}
                             </span>
                             <span className="font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-muted uppercase">
-                                {formatDay(g)}
+                                {formatDay(entry)}
                             </span>
                             <button
                                 type="button"

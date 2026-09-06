@@ -7,9 +7,11 @@ import { INCOME_SOURCE_PRESET_SEED } from '../../../../modules/backoffice/produc
 
 export class IncomeSourcePresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = INCOME_SOURCE_PRESET_SEED.map(row => row.key);
+        const existingRows = await em.find(IncomeSourcePreset, { key: { $in: keys } });
+        const existingKeys = new Set(existingRows.map(row => row.key));
         for (const [sortOrder, row] of INCOME_SOURCE_PRESET_SEED.entries()) {
-            const existing = await em.findOne(IncomeSourcePreset, { key: row.key });
-            if (existing) continue;
+            if (existingKeys.has(row.key)) continue;
             em.create(IncomeSourcePreset, { ...row, sortOrder, isActive: true } as never);
         }
         await em.flush();

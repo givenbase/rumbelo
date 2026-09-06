@@ -110,11 +110,17 @@
             }
         },
         {
-            "files": ["**/scripts/**", "**/*.config.{js,mjs,cjs,ts,mts}", "**/mikro-orm.config.ts"],
+            "files": [
+                "**/scripts/**",
+                "**/*.config.{js,mjs,cjs,ts,mts}",
+                "**/mikro-orm.config.ts",
+                "**/generate-languages.ts"
+            ],
             "rules": {
                 "no-console": "off",
                 "import/no-cycle": "off",
-                "id-length": "off"
+                "id-length": "off",
+                "no-await-in-loop": "off"
             }
         }
     ]

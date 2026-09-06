@@ -14,7 +14,11 @@ export function JarDrilldownRow({ jar }: { jar: JarDrilldownItem }) {
 
     return (
         <div className="border-b border-line last:border-b-0">
-            <JarDrilldownTrigger jar={jar} open={open} onToggle={() => setOpen(v => !v)} />
+            <JarDrilldownTrigger
+                jar={jar}
+                open={open}
+                onToggle={() => setOpen(previous => !previous)}
+            />
             {open && (
                 <div className="mb-3 ml-0 animate-rise pl-0 sm:ml-11.5">
                     <JarCategoryTable categories={jar.categories} />

@@ -110,11 +110,11 @@ function AppShellInner({ children }: { children: ReactNode }) {
     }
 
     const activeGroup =
-        NAV_GROUPS.find(g =>
-            g.children.some(c =>
-                c.href === '/'
+        NAV_GROUPS.find(group =>
+            group.children.some(child =>
+                child.href === '/'
                     ? pathname === '/'
-                    : pathname === c.href || pathname.startsWith(`${c.href}/`)
+                    : pathname === child.href || pathname.startsWith(`${child.href}/`)
             )
         ) ?? null;
 
@@ -122,7 +122,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
     // Plan-gate: check if the current screen is locked for the active plan.
     const activeChild = activeGroup?.children.find(
-        c => c.href === pathname || pathname.startsWith(c.href + '/')
+        child => child.href === pathname || pathname.startsWith(child.href + '/')
     );
     const screenIsLocked = isScreenLocked(activeChild?.screenKey ?? null, plan);
     const requiredPlan = activeChild?.screenKey ? SCREEN_MIN[activeChild.screenKey] : undefined;
@@ -147,20 +147,20 @@ function AppShellInner({ children }: { children: ReactNode }) {
                         className="hidden flex-1 justify-center md:flex"
                         aria-label="Main navigation">
                         <div className="flex items-center gap-0.5 rounded-full border border-line bg-sunken p-1 shadow-md">
-                            {NAV_GROUPS.map(g => {
-                                const active = g === activeGroup;
+                            {NAV_GROUPS.map(group => {
+                                const active = group === activeGroup;
                                 return (
                                     <Link
-                                        key={g.key}
-                                        href={g.href}
+                                        key={group.key}
+                                        href={group.href}
                                         className={cn(
                                             'flex items-center gap-1.5 rounded-full px-4 py-2 font-mono text-xs font-semibold tracking-widest uppercase transition-colors',
                                             active
                                                 ? 'bg-accent text-on-accent'
                                                 : 'text-fg-secondary hover:text-accent'
                                         )}>
-                                        <span aria-hidden>{g.icon}</span>
-                                        {TOP_PILL_LABELS[g.key] ?? g.label}
+                                        <span aria-hidden>{group.icon}</span>
+                                        {TOP_PILL_LABELS[group.key] ?? group.label}
                                     </Link>
                                 );
                             })}
@@ -182,7 +182,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
                         <button
                             type="button"
-                            onClick={() => setMenuOpen(v => !v)}
+                            onClick={() => setMenuOpen(previous => !previous)}
                             aria-label="User menu"
                             aria-expanded={menuOpen}
                             className="grid size-9 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent transition hover:brightness-110 active:scale-95">
@@ -295,14 +295,15 @@ function AppShellInner({ children }: { children: ReactNode }) {
                         <div className="mx-auto flex max-w-7xl items-center gap-1.5 px-4 py-2.5">
                             {/* Desktop pill strip */}
                             <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
-                                {activeGroup.children.map(c => {
+                                {activeGroup.children.map(child => {
                                     const active =
-                                        pathname === c.href || pathname.startsWith(c.href + '/');
-                                    const locked = isScreenLocked(c.screenKey, plan);
+                                        pathname === child.href ||
+                                        pathname.startsWith(child.href + '/');
+                                    const locked = isScreenLocked(child.screenKey, plan);
                                     return (
                                         <Link
-                                            key={c.href}
-                                            href={c.href}
+                                            key={child.href}
+                                            href={child.href}
                                             className={cn(
                                                 'rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide uppercase transition-colors',
                                                 active
@@ -315,7 +316,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                                     🔒
                                                 </span>
                                             )}
-                                            {c.label}
+                                            {child.label}
                                         </Link>
                                     );
                                 })}
@@ -325,13 +326,13 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             <div className="relative min-w-0 sm:hidden">
                                 <button
                                     type="button"
-                                    onClick={() => setSubOpen(v => !v)}
+                                    onClick={() => setSubOpen(previous => !previous)}
                                     className="flex max-w-[min(100%,14rem)] items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
                                     <span className="truncate">
                                         {activeGroup.children.find(
-                                            c =>
-                                                pathname === c.href ||
-                                                pathname.startsWith(c.href + '/')
+                                            child =>
+                                                pathname === child.href ||
+                                                pathname.startsWith(child.href + '/')
                                         )?.label ?? activeGroup.children[0].label}
                                     </span>
                                     <span className="shrink-0 text-xs opacity-70" aria-hidden>
@@ -340,13 +341,13 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                 </button>
                                 {subOpen && (
                                     <div className="absolute top-10 left-0 z-40 grid w-[min(16rem,calc(100vw-2rem))] animate-rise gap-0.5 rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl">
-                                        {activeGroup.children.map(c => (
+                                        {activeGroup.children.map(child => (
                                             <Link
-                                                key={c.href}
-                                                href={c.href}
+                                                key={child.href}
+                                                href={child.href}
                                                 onClick={() => setSubOpen(false)}
                                                 className="rounded-lg px-3 py-2.5 text-sm text-fg transition-colors hover:bg-raised">
-                                                {c.label}
+                                                {child.label}
                                             </Link>
                                         ))}
                                     </div>

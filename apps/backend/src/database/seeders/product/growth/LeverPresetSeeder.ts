@@ -7,8 +7,11 @@ import { LEVER_PRESET_SEED } from '../../../../modules/backoffice/product/growth
 
 export class LeverPresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = LEVER_PRESET_SEED.map(row => row.key);
+        const existingRows = await em.find(LeverPreset, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of LEVER_PRESET_SEED.entries()) {
-            const existing = await em.findOne(LeverPreset, { key: row.key });
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.summary = row.summary;

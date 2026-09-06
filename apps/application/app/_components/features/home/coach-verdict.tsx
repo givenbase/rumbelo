@@ -50,8 +50,8 @@ export function CoachVerdict({
     if (!msg) return null;
     const meta = KIND_META[msg.kind] ?? { label: msg.kind, dot: 'var(--color-accent)' };
 
-    const prev = () => setIndex(i => (i - 1 + messages.length) % messages.length);
-    const next = () => setIndex(i => (i + 1) % messages.length);
+    const prev = () => setIndex(previous => (previous - 1 + messages.length) % messages.length);
+    const next = () => setIndex(previous => (previous + 1) % messages.length);
 
     return (
         <div className="overflow-hidden rounded-2xl border border-accent/40 bg-surface shadow-md">
@@ -78,9 +78,9 @@ export function CoachVerdict({
                 <div className="flex flex-wrap items-center gap-3.5">
                     {/* Dot pagination */}
                     <span className="flex items-center gap-1.5">
-                        {messages.map((_, i) => (
+                        {messages.map((message, i) => (
                             <button
-                                key={i}
+                                key={message.text}
                                 type="button"
                                 onClick={() => setIndex(i)}
                                 aria-label={`Message ${i + 1}`}
@@ -137,20 +137,20 @@ export function CoachVerdict({
 
             {/* Cross-portal recap strip */}
             <div className="grid grid-cols-2 border-t border-line bg-bg-app sm:flex sm:flex-wrap">
-                {recap.map(r => (
+                {recap.map(row => (
                     <Link
-                        key={r.portal}
-                        href={r.href}
+                        key={row.portal}
+                        href={row.href}
                         className="grid min-w-0 gap-1 border-t-2 border-r border-b border-line px-3 py-2.5 transition-colors last:border-r-0 hover:bg-raised sm:flex-1 sm:border-b-0 sm:px-4"
-                        style={{ borderTopColor: r.tint }}>
+                        style={{ borderTopColor: row.tint }}>
                         <span
                             className="font-mono text-xs font-semibold tracking-widest uppercase"
-                            style={{ color: r.tint }}>
-                            {r.portal}
+                            style={{ color: row.tint }}>
+                            {row.portal}
                         </span>
                         <span className="flex min-w-0 flex-wrap items-baseline gap-1.5">
-                            <span className="font-mono text-xs text-fg">{r.value}</span>
-                            <span className="text-xs text-fg-faint">{r.what}</span>
+                            <span className="font-mono text-xs text-fg">{row.value}</span>
+                            <span className="text-xs text-fg-faint">{row.what}</span>
                         </span>
                     </Link>
                 ))}

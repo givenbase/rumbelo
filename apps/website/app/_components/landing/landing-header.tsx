@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useState } from 'react';
+import Link from 'next/link';
 
 import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { ThemeToggle } from '@rumbelo/ui';
@@ -19,8 +20,8 @@ export function LandingHeader() {
 
     useEffect(() => {
         if (!open) return;
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') setOpen(false);
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setOpen(false);
         };
         document.addEventListener('keydown', onKey);
         const prev = document.body.style.overflow;
@@ -48,9 +49,9 @@ export function LandingHeader() {
             style={{ background: 'var(--color-chrome)' }}>
             <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-3 px-4 py-3 lg:gap-5 lg:px-6">
                 <div className="flex min-w-0 flex-1 items-baseline gap-2 lg:flex-none">
-                    <a href="/" className="font-display text-xl font-bold tracking-tight">
+                    <Link href="/" className="font-display text-xl font-bold tracking-tight">
                         Rumbelo
-                    </a>
+                    </Link>
                     <span className="hidden font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint sm:inline">
                         {BRAND_TAGLINE}
                     </span>
@@ -83,7 +84,7 @@ export function LandingHeader() {
                         aria-expanded={open}
                         aria-controls={menuId}
                         aria-label={open ? 'Close menu' : 'Open menu'}
-                        onClick={() => setOpen(v => !v)}>
+                        onClick={() => setOpen(previous => !previous)}>
                         <span className="relative block size-4" aria-hidden>
                             <span
                                 className={`absolute inset-x-0 top-0.5 h-0.5 rounded-full bg-current transition-transform ${

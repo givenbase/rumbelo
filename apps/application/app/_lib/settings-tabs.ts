@@ -108,9 +108,9 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
 ];
 
 /** Flat list for lookups — order follows sections. */
-export const SETTINGS_TABS: SettingsNavItem[] = SETTINGS_SECTIONS.flatMap(s => s.items);
+export const SETTINGS_TABS: SettingsNavItem[] = SETTINGS_SECTIONS.flatMap(section => section.items);
 
-const TAB_KEYS = new Set<string>(SETTINGS_TABS.map(t => t.key));
+const TAB_KEYS = new Set<string>(SETTINGS_TABS.map(tab => tab.key));
 const HREF_TO_TAB = new Map(
     (Object.entries(SETTINGS_HREF) as [SettingsTab, string][]).map(([tab, href]) => [href, tab])
 );

@@ -94,12 +94,12 @@ export function FixedCostsPageClient() {
                       kind: string;
                       expectedDay: number | null;
                   }>
-              ).map(s => ({
-                  id: s.id,
-                  label: s.name,
-                  amount: s.amount,
-                  kind: s.kind,
-                  dueDay: s.expectedDay,
+              ).map(source => ({
+                  id: source.id,
+                  label: source.name,
+                  amount: source.amount,
+                  kind: source.kind,
+                  dueDay: source.expectedDay,
               }))
             : null;
 
@@ -113,8 +113,8 @@ export function FixedCostsPageClient() {
             dueDay: number | null;
         }>);
 
-    const NET = incomeSources.reduce((s, i) => s + i.amount, 0);
-    const outTotal = fixedCosts.reduce((s, f) => s + Math.abs(f.amount), 0);
+    const NET = incomeSources.reduce((total, i) => total + i.amount, 0);
+    const outTotal = fixedCosts.reduce((total, fixedCost) => total + Math.abs(fixedCost.amount), 0);
     const leftover = NET - outTotal;
     const commitmentRatio = NET > 0 ? Math.round((outTotal / NET) * 100) : 0;
 
@@ -144,24 +144,26 @@ export function FixedCostsPageClient() {
                         {formatMoney(leftover)} left after costs
                     </span>
                 }>
-                {(['ERUIT', 'ERIN'] as const).map(t => (
+                {(['ERUIT', 'ERIN'] as const).map(tabKey => (
                     <button
-                        key={t}
+                        key={tabKey}
                         type="button"
-                        onClick={() => setTab(t)}
+                        onClick={() => setTab(tabKey)}
                         className={cn(
                             'flex items-center gap-2.5 rounded-full border px-4 py-2 font-mono text-xs font-medium tracking-wide uppercase transition-all duration-200',
-                            tab === t
+                            tab === tabKey
                                 ? 'border-accent/40 bg-accent-soft text-accent'
                                 : 'border-line text-fg-muted hover:border-line-strong hover:text-fg'
                         )}>
-                        {t === 'ERUIT' ? 'Out' : 'In'}
+                        {tabKey === 'ERUIT' ? 'Out' : 'In'}
                         <span
                             className={cn(
                                 'rounded-full px-2 py-0.5 font-mono text-xs',
-                                tab === t ? 'bg-accent/10 text-accent' : 'bg-raised text-fg-faint'
+                                tab === tabKey
+                                    ? 'bg-accent/10 text-accent'
+                                    : 'bg-raised text-fg-faint'
                             )}>
-                            {t === 'ERUIT' ? formatMoney(outTotal) : formatMoney(NET)}
+                            {tabKey === 'ERUIT' ? formatMoney(outTotal) : formatMoney(NET)}
                         </span>
                     </button>
                 ))}
@@ -180,13 +182,15 @@ export function FixedCostsPageClient() {
                         </div>
 
                         <div className="grid gap-px">
-                            {fixedCosts.map(f => {
-                                const jar = JAR_META.find(j => j.key === f.jarKey);
+                            {fixedCosts.map(fixedCost => {
+                                const jar = JAR_META.find(j => j.key === fixedCost.jarKey);
                                 return (
                                     <button
                                         type="button"
-                                        key={f.id}
-                                        onClick={() => router.push(updateHref('fixed', f.id))}
+                                        key={fixedCost.id}
+                                        onClick={() =>
+                                            router.push(updateHref('fixed', fixedCost.id))
+                                        }
                                         className="flex w-full cursor-pointer items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised">
                                         <div className="min-w-0">
                                             <div className="flex flex-wrap items-center gap-2">
@@ -196,7 +200,9 @@ export function FixedCostsPageClient() {
                                                         style={{ background: toVar(jar.color) }}
                                                     />
                                                 )}
-                                                <span className="text-sm text-fg">{f.name}</span>
+                                                <span className="text-sm text-fg">
+                                                    {fixedCost.name}
+                                                </span>
                                                 {jar && (
                                                     <span className="font-mono text-xs tracking-wide text-fg-muted uppercase">
                                                         {jar.name}
@@ -205,11 +211,13 @@ export function FixedCostsPageClient() {
                                             </div>
                                             <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
                                                 Monthly
-                                                {f.dueDay !== null ? ` · day ${f.dueDay}` : ''}
+                                                {fixedCost.dueDay !== null
+                                                    ? ` · day ${fixedCost.dueDay}`
+                                                    : ''}
                                             </div>
                                         </div>
                                         <span className="font-mono text-sm whitespace-nowrap text-fg">
-                                            {formatMoney(f.amount)}
+                                            {formatMoney(fixedCost.amount)}
                                         </span>
                                     </button>
                                 );
@@ -217,20 +225,20 @@ export function FixedCostsPageClient() {
                         </div>
 
                         <div className="flex flex-wrap gap-2 border-t border-line px-5 py-4">
-                            {JAR_META.filter(j => fixedCosts.some(f => f.jarKey === j.key)).map(
-                                j => (
-                                    <button
-                                        key={j.key}
-                                        type="button"
-                                        className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent">
-                                        <span
-                                            className="size-1.75 rounded-sm"
-                                            style={{ background: toVar(j.color) }}
-                                        />
-                                        {j.name} ›
-                                    </button>
-                                )
-                            )}
+                            {JAR_META.filter(j =>
+                                fixedCosts.some(fixedCost => fixedCost.jarKey === j.key)
+                            ).map(j => (
+                                <button
+                                    key={j.key}
+                                    type="button"
+                                    className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent">
+                                    <span
+                                        className="size-1.75 rounded-sm"
+                                        style={{ background: toVar(j.color) }}
+                                    />
+                                    {j.name} ›
+                                </button>
+                            ))}
                         </div>
                     </Card>
 
@@ -260,29 +268,29 @@ export function FixedCostsPageClient() {
                         </div>
 
                         <div className="grid gap-px">
-                            {incomeSources.map((s, i) => (
+                            {incomeSources.map((source, i) => (
                                 <button
                                     type="button"
-                                    key={s.id ?? i}
+                                    key={source.id ?? i}
                                     onClick={() => {
-                                        if (!s.id) {
+                                        if (!source.id) {
                                             router.push(CREATE_HREF.income);
                                             return;
                                         }
-                                        router.push(updateHref('income', s.id));
+                                        router.push(updateHref('income', source.id));
                                     }}
                                     className="flex w-full cursor-pointer items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised">
                                     <div>
-                                        <div className="text-sm text-fg">{s.label}</div>
+                                        <div className="text-sm text-fg">{source.label}</div>
                                         <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
                                             Monthly
-                                            {s.dueDay !== null
-                                                ? ` · pay day ${s.dueDay}`
+                                            {source.dueDay !== null
+                                                ? ` · pay day ${source.dueDay}`
                                                 : ' · pay day'}
                                         </div>
                                     </div>
                                     <span className="font-mono text-sm whitespace-nowrap text-success">
-                                        {formatMoney(s.amount)}
+                                        {formatMoney(source.amount)}
                                     </span>
                                 </button>
                             ))}

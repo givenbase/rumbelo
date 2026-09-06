@@ -9,17 +9,21 @@ export function LandingFooter() {
             {/* Trust cards row */}
             <div className="mx-auto max-w-6xl px-4 pt-8 lg:px-6">
                 <div className="grid grid-cols-1 gap-3.5 border-b border-line pb-8 sm:grid-cols-2 lg:grid-cols-4">
-                    {TRUST_CARDS.map(t => (
-                        <div key={t.head} className="flex min-w-0 items-start gap-3">
+                    {TRUST_CARDS.map(card => (
+                        <div key={card.head} className="flex min-w-0 items-start gap-3">
                             <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft">
-                                <LandingIcon name={t.icon} size={18} color="var(--color-accent)" />
+                                <LandingIcon
+                                    name={card.icon}
+                                    size={18}
+                                    color="var(--color-accent)"
+                                />
                             </span>
                             <span className="grid min-w-0 gap-0.5">
                                 <span className="text-sm font-semibold text-fg-strong">
-                                    {t.head}
+                                    {card.head}
                                 </span>
                                 <span className="text-xs leading-relaxed text-fg-faint">
-                                    {t.line}
+                                    {card.line}
                                 </span>
                             </span>
                         </div>
@@ -58,12 +62,12 @@ export function LandingFooter() {
                             <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
                                 {col.head}
                             </span>
-                            {col.links.map(l => (
+                            {col.links.map(link => (
                                 <a
-                                    key={l.t}
-                                    href={l.href}
+                                    key={link.text}
+                                    href={link.href}
                                     className="text-sm text-fg-muted transition-colors hover:text-accent">
-                                    {l.t}
+                                    {link.text}
                                 </a>
                             ))}
                         </div>
@@ -78,13 +82,13 @@ export function LandingFooter() {
                         © 2026 Rumbelo B.V. · KvK 00000000 · All rights reserved
                     </span>
                     <div className="flex flex-wrap gap-2">
-                        {TRUST_BADGES.map(b => (
+                        {TRUST_BADGES.map(badge => (
                             <span
-                                key={b}
+                                key={badge}
                                 className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5">
                                 <span className="size-1.5 shrink-0 rounded-full bg-success" />
                                 <span className="font-mono text-xs font-medium tracking-wide text-fg-muted sm:tracking-widest">
-                                    {b}
+                                    {badge}
                                 </span>
                             </span>
                         ))}

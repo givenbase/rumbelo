@@ -19,26 +19,28 @@ export function LandingPillars() {
                 </p>
 
                 <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-                    {PILLARS.map(p => (
+                    {PILLARS.map(pillar => (
                         <div
-                            key={p.name}
+                            key={pillar.name}
                             className="grid min-w-0 content-start gap-3 rounded-2xl border border-line bg-surface p-5"
                             style={{
-                                borderTop: `3px solid ${p.color}`,
+                                borderTop: `3px solid ${pillar.color}`,
                                 boxShadow: 'inset 0 0 0 1px rgb(14 17 22 / 0.08)',
                             }}>
                             <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-line bg-raised">
-                                <LandingIcon name={p.icon} size={19} color={p.color} />
+                                <LandingIcon name={pillar.icon} size={19} color={pillar.color} />
                             </span>
                             <span className="font-display text-xl font-semibold tracking-tight text-fg">
-                                {p.name}
+                                {pillar.name}
                             </span>
                             <span
                                 className="font-mono text-xs font-medium tracking-widest"
-                                style={{ color: p.color }}>
-                                {p.metric}
+                                style={{ color: pillar.color }}>
+                                {pillar.metric}
                             </span>
-                            <span className="text-sm leading-relaxed text-fg-muted">{p.line}</span>
+                            <span className="text-sm leading-relaxed text-fg-muted">
+                                {pillar.line}
+                            </span>
                         </div>
                     ))}
                 </div>

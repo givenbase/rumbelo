@@ -54,7 +54,9 @@ export function JarCard({ jar }: { jar: JarCardModel }) {
         jar.categories.length === 0
             ? 'Nothing booked this month'
             : (() => {
-                  const biggest = [...jar.categories].sort((a, b) => b.actual - a.actual)[0];
+                  const biggest = [...jar.categories].sort(
+                      (left, right) => right.actual - left.actual
+                  )[0];
                   if (!biggest) return 'Nothing booked this month';
                   return `${jar.categories.length} entries · biggest: ${biggest.name} ${formatMoney(biggest.actual)}`;
               })();
@@ -123,7 +125,7 @@ export function JarCard({ jar }: { jar: JarCardModel }) {
 
             <button
                 type="button"
-                onClick={() => setOpen(v => !v)}
+                onClick={() => setOpen(previous => !previous)}
                 className="mt-3.5 w-full rounded-full border border-accent/40 bg-accent-soft p-2.5 font-mono text-xs font-medium tracking-wide text-accent uppercase transition-colors hover:bg-accent-soft">
                 {open ? 'Hide ▴' : 'What can I use this for? ▾'}
             </button>
@@ -185,21 +187,22 @@ export function JarCard({ jar }: { jar: JarCardModel }) {
                                 This month
                             </p>
                             <div className="grid gap-1.5">
-                                {jar.categories.map(c => {
-                                    const diff = c.budgeted - c.actual;
+                                {jar.categories.map(category => {
+                                    const diff = category.budgeted - category.actual;
                                     return (
                                         <div
-                                            key={c.id}
+                                            key={category.id}
                                             className="flex items-baseline justify-between gap-2 border-t border-line pt-1.5 first:border-t-0 first:pt-0">
                                             <span className="text-sm text-fg-secondary">
-                                                {c.name}
+                                                {category.name}
                                             </span>
                                             <span
                                                 className={cn(
                                                     'font-mono text-sm',
                                                     diff < 0 ? 'text-danger' : 'text-fg-muted'
                                                 )}>
-                                                {formatMoney(c.actual)} / {formatMoney(c.budgeted)}
+                                                {formatMoney(category.actual)} /{' '}
+                                                {formatMoney(category.budgeted)}
                                             </span>
                                         </div>
                                     );
@@ -213,12 +216,12 @@ export function JarCard({ jar }: { jar: JarCardModel }) {
                     </p>
 
                     <div className="flex flex-wrap gap-1.5">
-                        {guide.links.map(l => (
+                        {guide.links.map(link => (
                             <Link
-                                key={l.href}
-                                href={l.href}
+                                key={link.href}
+                                href={link.href}
                                 className="rounded-full border border-line-strong bg-transparent px-3 py-2 font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
-                                {l.label}
+                                {link.label}
                             </Link>
                         ))}
                     </div>

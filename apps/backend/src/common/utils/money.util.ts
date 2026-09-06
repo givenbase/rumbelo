@@ -21,7 +21,7 @@ export function splitByPercentage(
         percentage: share.percentage,
     }));
 
-    const distributed = allocated.reduce((sum, share) => sum + share.amount, 0);
+    const distributed = allocated.reduce((running, share) => running + share.amount, 0);
     const remainder = total - distributed;
 
     if (remainder !== 0) {

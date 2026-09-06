@@ -4,10 +4,15 @@ import { useApi } from '@/app/_lib/api-hooks';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 
+import type { Transaction } from '@rumbelo/contracts';
+
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
 import { ExpenseForm } from '@/components/features/forms/expense-form';
 import { useAuth } from '@/components/features/shell/auth-provider';
+
+const EMPTY_TRANSACTIONS: Transaction[] = [];
+const EMPTY_TRANSACTION_PAGE = { items: EMPTY_TRANSACTIONS, nextCursor: null };
 
 export function ExpenseCreatePage({
     embedded = false,
@@ -34,17 +39,17 @@ export function ExpenseUpdatePage({ id, embedded = false }: { id: string; embedd
         api.money.transactions.list.queryOptions({
             input: { householdId: householdId!, limit: 100 },
         }),
-        { items: [] as never, nextCursor: null },
+        EMPTY_TRANSACTION_PAGE,
         live
     );
     const inboxQuery = useLiveQuery(
         api.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
-        [] as never,
+        EMPTY_TRANSACTIONS,
         live
     );
 
-    const fromList = listQuery.data?.items?.find(t => t.id === id);
-    const fromInbox = (inboxQuery.data ?? []).find(t => t.id === id);
+    const fromList = listQuery.data?.items?.find(transaction => transaction.id === id);
+    const fromInbox = (inboxQuery.data ?? []).find(transaction => transaction.id === id);
     const tx = fromList ?? fromInbox;
 
     if (live && (listQuery.isLoading || inboxQuery.isLoading) && !tx) {

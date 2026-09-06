@@ -43,15 +43,15 @@ export function HeroKluis({
 
                 {/* Anchor stats */}
                 <div className="flex flex-wrap gap-7">
-                    {stats.map(s => (
-                        <div key={s.label} className="grid gap-1.5">
-                            <Eyebrow className="whitespace-nowrap">{s.label}</Eyebrow>
+                    {stats.map(stat => (
+                        <div key={stat.label} className="grid gap-1.5">
+                            <Eyebrow className="whitespace-nowrap">{stat.label}</Eyebrow>
                             <p
                                 className={cn(
                                     'font-display text-3xl leading-none font-semibold tracking-tight tabular-nums',
-                                    s.tone === 'accent' ? 'text-accent' : 'text-fg'
+                                    stat.tone === 'accent' ? 'text-accent' : 'text-fg'
                                 )}>
-                                {s.value}
+                                {stat.value}
                             </p>
                         </div>
                     ))}

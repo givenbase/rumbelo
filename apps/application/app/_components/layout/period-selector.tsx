@@ -37,12 +37,12 @@ const MONTHS_LONG = [
     'December',
 ] as const;
 
-function encode(p: Period): string {
-    return `${p.year}-${String(p.month).padStart(2, '0')}`;
+function encode(period: Period): string {
+    return `${period.year}-${String(period.month).padStart(2, '0')}`;
 }
 
-function decode(v: string): Period {
-    const [ys, ms] = v.split('-');
+function decode(value: string): Period {
+    const [ys, ms] = value.split('-');
     const year = Number(ys);
     const month = Number(ms);
     if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) {
@@ -57,21 +57,21 @@ function nowPeriod(): Period {
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
 }
 
-function shiftPeriod(p: Period, deltaMonths: number): Period {
-    const d = new Date(p.year, p.month - 1 + deltaMonths, 1);
-    return { year: d.getFullYear(), month: d.getMonth() + 1 };
+function shiftPeriod(period: Period, deltaMonths: number): Period {
+    const date = new Date(period.year, period.month - 1 + deltaMonths, 1);
+    return { year: date.getFullYear(), month: date.getMonth() + 1 };
 }
 
-function isAfter(a: Period, b: Period): boolean {
-    return a.year > b.year || (a.year === b.year && a.month > b.month);
+function isAfter(left: Period, right: Period): boolean {
+    return left.year > right.year || (left.year === right.year && left.month > right.month);
 }
 
-function isBefore(a: Period, b: Period): boolean {
-    return a.year < b.year || (a.year === b.year && a.month < b.month);
+function isBefore(left: Period, right: Period): boolean {
+    return left.year < right.year || (left.year === right.year && left.month < right.month);
 }
 
-function labelShort(p: Period): string {
-    return `${MONTHS_SHORT[p.month - 1]} ${p.year}`;
+function labelShort(period: Period): string {
+    return `${MONTHS_SHORT[period.month - 1]} ${period.year}`;
 }
 
 /**
@@ -244,8 +244,8 @@ export function PeriodSelector() {
                             type="button"
                             aria-label="Previous year"
                             disabled={viewYear <= minYear}
-                            onPointerDown={e => e.preventDefault()}
-                            onClick={() => setViewYear(y => Math.max(minYear, y - 1))}
+                            onPointerDown={event => event.preventDefault()}
+                            onClick={() => setViewYear(previous => Math.max(minYear, previous - 1))}
                             className="inline-flex size-9 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-raised hover:text-fg disabled:opacity-30">
                             ‹
                         </button>
@@ -256,8 +256,8 @@ export function PeriodSelector() {
                             type="button"
                             aria-label="Next year"
                             disabled={viewYear >= maxYear}
-                            onPointerDown={e => e.preventDefault()}
-                            onClick={() => setViewYear(y => Math.min(maxYear, y + 1))}
+                            onPointerDown={event => event.preventDefault()}
+                            onClick={() => setViewYear(previous => Math.min(maxYear, previous + 1))}
                             className="inline-flex size-9 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-raised hover:text-fg disabled:opacity-30">
                             ›
                         </button>

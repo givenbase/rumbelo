@@ -65,9 +65,9 @@ export function GoalsPageClient() {
     }>;
 
     const active = goals.filter(
-        g => g.saved < g.target && g.status !== 'REACHED' && g.status !== 'ARCHIVED'
+        goal => goal.saved < goal.target && goal.status !== 'REACHED' && goal.status !== 'ARCHIVED'
     );
-    const reached = goals.filter(g => g.saved >= g.target || g.status === 'REACHED');
+    const reached = goals.filter(goal => goal.saved >= goal.target || goal.status === 'REACHED');
     const shown = tab === 'ON_TRACK' ? active : reached;
 
     return (
@@ -86,20 +86,20 @@ export function GoalsPageClient() {
             </div>
 
             <ListToolbar createLabel="+ Add goal" onCreate={() => router.push(CREATE_HREF.goal)}>
-                {(['ON_TRACK', 'REACHED'] as const).map(t => {
-                    const count = t === 'ON_TRACK' ? active.length : reached.length;
+                {(['ON_TRACK', 'REACHED'] as const).map(tabKey => {
+                    const count = tabKey === 'ON_TRACK' ? active.length : reached.length;
                     return (
                         <button
-                            key={t}
+                            key={tabKey}
                             type="button"
-                            onClick={() => setTab(t)}
+                            onClick={() => setTab(tabKey)}
                             className={cn(
                                 'flex items-baseline gap-2 rounded-full border px-4 py-2.5 font-mono text-xs font-medium tracking-wide uppercase transition-all duration-200',
-                                tab === t
+                                tab === tabKey
                                     ? 'border-accent/40 bg-accent-soft text-accent'
                                     : 'border-line text-fg-muted hover:border-line-strong hover:text-fg'
                             )}>
-                            {t === 'ON_TRACK' ? 'On track' : 'Reached'}
+                            {tabKey === 'ON_TRACK' ? 'On track' : 'Reached'}
                             <span className="opacity-70">{count}</span>
                         </button>
                     );
@@ -118,40 +118,40 @@ export function GoalsPageClient() {
                         }
                     />
                 ) : (
-                    shown.map(g => {
-                        const progress = g.target > 0 ? g.saved / g.target : 0;
+                    shown.map(goal => {
+                        const progress = goal.target > 0 ? goal.saved / goal.target : 0;
                         return (
                             <AccentCard
-                                key={g.id}
+                                key={goal.id}
                                 tint="var(--color-jar-lts)"
                                 className="cursor-pointer transition-colors hover:border-accent-hover">
                                 <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-2.5 py-1 font-mono text-xs tracking-widest text-fg-secondary uppercase">
-                                    {g.icon ?? '🎯'} Long term ›
+                                    {goal.icon ?? '🎯'} Long term ›
                                 </div>
 
                                 <h3 className="font-display text-2xl leading-tight font-semibold tracking-tight text-fg">
-                                    {g.name}
+                                    {goal.name}
                                 </h3>
 
                                 <div className="mt-3 flex items-baseline gap-2">
                                     <span className="font-mono text-2xl text-accent">
-                                        {formatMoney(g.saved)}
+                                        {formatMoney(goal.saved)}
                                     </span>
                                     <span className="font-mono text-xs text-fg-muted">
-                                        of {formatMoney(g.target)}
+                                        of {formatMoney(goal.target)}
                                     </span>
                                 </div>
 
                                 <Meter value={progress} className="mt-3.5" />
 
                                 <p className="mt-3 text-sm text-fg-muted">
-                                    ◇ {formatMoney(g.monthlyContribution)} p/m · done by{' '}
-                                    {eta(g.saved, g.target, g.monthlyContribution)}
+                                    ◇ {formatMoney(goal.monthlyContribution)} p/m · done by{' '}
+                                    {eta(goal.saved, goal.target, goal.monthlyContribution)}
                                 </p>
 
                                 <button
                                     type="button"
-                                    onClick={() => router.push(updateHref('goal', g.id))}
+                                    onClick={() => router.push(updateHref('goal', goal.id))}
                                     className="mt-4 w-full rounded-full border border-line-strong py-2.5 font-mono text-xs tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent">
                                     Edit goal
                                 </button>

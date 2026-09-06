@@ -5,13 +5,13 @@ import { useEffect, useRef, useState } from 'react';
 import { DEMO_INCOME_DEFAULT, FLOATERS, JARS, PROOF, TICKER } from '@/lib/landing-content';
 import { webSignUpPath } from '@/lib/portal-urls';
 
-function fmt(n: number) {
-    return '€' + Number(n).toLocaleString('en-IE');
+function fmt(value: number) {
+    return '€' + Number(value).toLocaleString('en-IE');
 }
 
-function ease(x: number) {
-    const c = Math.min(1, Math.max(0, x));
-    return 1 - Math.pow(1 - c, 3);
+function ease(value: number) {
+    const clamped = Math.min(1, Math.max(0, value));
+    return 1 - Math.pow(1 - clamped, 3);
 }
 
 export function LandingHero() {
@@ -25,12 +25,12 @@ export function LandingHero() {
         const loop = () => {
             const t0 = performance.now();
             const tick = (now: number) => {
-                const t = (now - t0) / 1000;
-                const lp = Math.round(ease(t / 1.1) * 60) / 60;
-                const sp = Math.round(ease((t - 1.3) / 1.6) * 60) / 60;
+                const elapsed = (now - t0) / 1000;
+                const lp = Math.round(ease(elapsed / 1.1) * 60) / 60;
+                const sp = Math.round(ease((elapsed - 1.3) / 1.6) * 60) / 60;
                 setLandP(lp);
                 setSplitP(sp);
-                if (t < 3.2) rafRef.current = requestAnimationFrame(tick);
+                if (elapsed < 3.2) rafRef.current = requestAnimationFrame(tick);
             };
             rafRef.current = requestAnimationFrame(tick);
         };
@@ -67,9 +67,9 @@ export function LandingHero() {
             <div
                 className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block"
                 aria-hidden>
-                {FLOATERS.map((fl, i) => (
+                {FLOATERS.map(fl => (
                     <span
-                        key={i}
+                        key={fl.text}
                         data-float
                         className="absolute font-mono font-medium tracking-normal whitespace-nowrap opacity-0"
                         style={{
@@ -77,7 +77,7 @@ export function LandingHero() {
                             top: fl.top,
                             fontSize: fl.size,
                             color: fl.color,
-                            ['--fl-o' as string]: fl.o,
+                            ['--fl-o' as string]: fl.opacity,
                             animation: `floatUp ${fl.dur} linear ${fl.delay} infinite`,
                         }}>
                         {fl.text}
@@ -95,15 +95,15 @@ export function LandingHero() {
                         data-ticker
                         className="inline-flex gap-10 pr-10 whitespace-nowrap"
                         style={{ animation: 'tickerX 46s linear infinite' }}>
-                        {TICKER.map((tk, i) => (
+                        {TICKER.map(tk => (
                             <span
-                                key={i}
+                                key={tk.key}
                                 className="inline-flex items-center gap-2 font-mono text-xs font-medium tracking-widest text-fg-faint opacity-55">
                                 <span
                                     className="size-1 shrink-0 rounded-full"
                                     style={{ background: tk.dot }}
                                 />
-                                {tk.t}
+                                {tk.text}
                             </span>
                         ))}
                     </div>
@@ -143,13 +143,13 @@ export function LandingHero() {
 
                     {/* Proof stats */}
                     <div className="mt-8 flex flex-wrap gap-5">
-                        {PROOF.map(p => (
-                            <span key={p.l} className="grid gap-0.5">
+                        {PROOF.map(item => (
+                            <span key={item.label} className="grid gap-0.5">
                                 <span className="font-display text-2xl font-semibold tracking-tight">
-                                    {p.n}
+                                    {item.value}
                                 </span>
                                 <span className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
-                                    {p.l}
+                                    {item.label}
                                 </span>
                             </span>
                         ))}

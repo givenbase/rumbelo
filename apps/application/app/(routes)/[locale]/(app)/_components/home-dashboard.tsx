@@ -111,18 +111,18 @@ export function HomeDashboardClient() {
     });
 
     const liveData = dashboardQuery.data;
-    const d = liveData ?? emptyDashboard;
+    const dashboard = liveData ?? emptyDashboard;
     const jars = liveData?.jars?.length ? liveData.jars : [];
     const turn = liveData?.turn ?? emptyTurn;
     const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'en-US');
     const coach: CoachMessage[] =
         live && liveData?.coach?.length
-            ? liveData.coach.map((m: (typeof liveData.coach)[number]) => ({
-                  id: m.id,
-                  kind: m.kind,
-                  text: m.text,
-                  ctaLabel: m.ctaLabel ?? 'Open',
-                  ctaHref: m.ctaHref ?? '/',
+            ? liveData.coach.map((message: (typeof liveData.coach)[number]) => ({
+                  id: message.id,
+                  kind: message.kind,
+                  text: message.text,
+                  ctaLabel: message.ctaLabel ?? 'Open',
+                  ctaHref: message.ctaHref ?? '/',
               }))
             : [];
 
@@ -132,7 +132,7 @@ export function HomeDashboardClient() {
         <div className="grid gap-6">
             <div>
                 <Eyebrow>
-                    ✦ {formatPeriod(d.period ?? periodKey, 'en-US')}
+                    ✦ {formatPeriod(dashboard.period ?? periodKey, 'en-US')}
                     {travel.direction !== 'current' ? ` · ${travel.relativeLabel}` : ''}
                 </Eyebrow>
                 <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg lg:text-4xl">
@@ -151,11 +151,11 @@ export function HomeDashboardClient() {
                               {
                                   id: 'fallback',
                                   kind: 'NUDGE',
-                                  text: d.inboxCount
-                                      ? `${d.inboxCount} transaction${d.inboxCount === 1 ? '' : 's'} waiting for a jar.`
+                                  text: dashboard.inboxCount
+                                      ? `${dashboard.inboxCount} transaction${dashboard.inboxCount === 1 ? '' : 's'} waiting for a jar.`
                                       : 'All sorted — time for intention.',
-                                  ctaLabel: d.inboxCount ? 'Sort inbox' : 'Weekly ritual',
-                                  ctaHref: d.inboxCount
+                                  ctaLabel: dashboard.inboxCount ? 'Sort inbox' : 'Weekly ritual',
+                                  ctaHref: dashboard.inboxCount
                                       ? '/product/money/transactions'
                                       : '/product/ritual',
                               },
@@ -165,20 +165,20 @@ export function HomeDashboardClient() {
             />
 
             <HeroKluis
-                total={formatMoney(d.allocatedTotal ?? 0)}
+                total={formatMoney(dashboard.allocatedTotal ?? 0)}
                 incomeBreakdown={`Distributed across ${jars.length} jar${jars.length === 1 ? '' : 's'}`}
                 stats={[
                     {
                         label: 'Avg left/month',
-                        value: formatMoney(d.avgLeftOver ?? 0),
+                        value: formatMoney(dashboard.avgLeftOver ?? 0),
                         tone: 'accent',
                     },
                     {
                         label: 'Safe per day',
-                        value: formatMoney(d.safePerDay ?? 0),
+                        value: formatMoney(dashboard.safePerDay ?? 0),
                         tone: 'accent',
                     },
-                    { label: 'Left in Play', value: formatMoney(d.playLeft ?? 0) },
+                    { label: 'Left in Play', value: formatMoney(dashboard.playLeft ?? 0) },
                 ]}>
                 <JarDrilldownTable jars={jars as never} />
             </HeroKluis>
@@ -190,8 +190,11 @@ export function HomeDashboardClient() {
                     title="Growth"
                     href="/product/growth"
                     stats={[
-                        { label: 'INCOME THIS MONTH', value: formatMoney(d.incomeTotal ?? 0) },
-                        { label: 'INBOX', value: String(d.inboxCount ?? 0) },
+                        {
+                            label: 'INCOME THIS MONTH',
+                            value: formatMoney(dashboard.incomeTotal ?? 0),
+                        },
+                        { label: 'INBOX', value: String(dashboard.inboxCount ?? 0) },
                     ]}
                     tagline="Cutting costs has a floor; raising income does not."
                 />
@@ -213,7 +216,7 @@ export function HomeDashboardClient() {
                     href="/product/soul"
                     stats={[
                         { label: 'STILLNESS TODAY', value: '—' },
-                        { label: 'WHY', value: d.why ? '✓' : '—' },
+                        { label: 'WHY', value: dashboard.why ? '✓' : '—' },
                     ]}
                     tagline="A calm mind directs money. A restless one spends it."
                 />

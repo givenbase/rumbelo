@@ -1,21 +1,21 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
-import * as S from '../../../schemas';
+import * as schemas from '../../../schemas';
 
 /** Product: Ziel — intention, gratitude, and the reason behind the numbers. */
 export const contract = {
     gratitude: {
         list: oc
-            .input(S.HouseholdScoped.extend({ week: S.WeekKey.nullish() }))
-            .output(z.array(S.Gratitude)),
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
+            .output(z.array(schemas.Gratitude)),
         create: oc
             .input(
                 z.object({
-                    householdId: S.HouseholdId,
-                    week: S.WeekKey,
+                    householdId: schemas.HouseholdId,
+                    week: schemas.WeekKey,
                     text: z.string().min(1).max(280),
                 })
             )
-            .output(S.Gratitude),
+            .output(schemas.Gratitude),
     },
 };

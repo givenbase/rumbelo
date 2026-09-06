@@ -85,22 +85,22 @@ export function WeekPageClient() {
             {summary.length > 0 && (
                 <div className="flex flex-wrap gap-3">
                     {(summary as Array<{ metric: string; average7d: number; trend: string }>).map(
-                        s => (
+                        stat => (
                             <div
-                                key={s.metric}
+                                key={stat.metric}
                                 className="flex items-center gap-3 rounded-xl border border-line bg-raised px-4 py-2.5">
                                 <span className="font-mono text-xs font-medium tracking-wide text-fg-muted uppercase">
-                                    {METRIC_LABEL[s.metric] ?? s.metric}
+                                    {METRIC_LABEL[stat.metric] ?? stat.metric}
                                 </span>
                                 <span className="font-mono text-base font-semibold text-fg">
-                                    {Math.round(s.average7d)}
+                                    {Math.round(stat.average7d)}
                                 </span>
                                 <span
                                     className={cn(
                                         'font-mono text-xs',
-                                        TREND_CLASS[s.trend] ?? 'text-fg-muted'
+                                        TREND_CLASS[stat.trend] ?? 'text-fg-muted'
                                     )}>
-                                    {TREND_ICON[s.trend] ?? ''}
+                                    {TREND_ICON[stat.trend] ?? ''}
                                 </span>
                             </div>
                         )
@@ -113,25 +113,25 @@ export function WeekPageClient() {
                 <div>
                     <Eyebrow>Your week has 168 hours</Eyebrow>
                     <div className="mt-3 flex h-3 gap-0.5 overflow-hidden rounded-full">
-                        {WEEK_WHOLE.map(w => (
+                        {WEEK_WHOLE.map(week => (
                             <span
-                                key={w.name}
-                                title={`${w.name} — ${w.hours}`}
+                                key={week.name}
+                                title={`${week.name} — ${week.hours}`}
                                 className="block h-full"
-                                style={{ width: `${w.pct}%`, background: w.color }}
+                                style={{ width: `${week.pct}%`, background: week.color }}
                             />
                         ))}
                     </div>
                     <div className="mt-3 flex flex-wrap gap-4">
-                        {WEEK_WHOLE.map(w => (
+                        {WEEK_WHOLE.map(week => (
                             <span
-                                key={w.name}
+                                key={week.name}
                                 className="flex items-baseline gap-2 font-mono text-xs text-fg-muted">
                                 <span
                                     className="size-2 rounded-sm"
-                                    style={{ background: w.color }}
+                                    style={{ background: week.color }}
                                 />
-                                {w.name} {w.hours}
+                                {week.name} {week.hours}
                             </span>
                         ))}
                     </div>

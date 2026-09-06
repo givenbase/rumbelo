@@ -4,13 +4,20 @@ import { Seeder } from '@mikro-orm/seeder';
 
 import { MerchantPreset } from '../../../../modules/backoffice/product/money/preset/merchant/merchant.entity';
 import { MERCHANT_PRESET_SEED } from '../../../../modules/backoffice/product/money/preset/merchant/seed/merchant.seed-data';
-import { requireJarTemplate } from '../../../../modules/backoffice/product/money/require-jar-template';
+import {
+    jarTemplateFromMap,
+    loadJarTemplateMap,
+} from '../../../../modules/backoffice/product/money/require-jar-template';
 
 export class MerchantPresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const jarByKey = await loadJarTemplateMap(em);
+        const keys = MERCHANT_PRESET_SEED.map(row => row.key);
+        const existingRows = await em.find(MerchantPreset, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of MERCHANT_PRESET_SEED.entries()) {
-            const jarTemplate = await requireJarTemplate(em, row.jarKey);
-            const existing = await em.findOne(MerchantPreset, { key: row.key });
+            const jarTemplate = jarTemplateFromMap(jarByKey, row.jarKey);
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.matchValue = row.matchValue;

@@ -47,8 +47,8 @@ export class HomeController {
 
         const linksHtml = `<div class="links">${links
             .map(
-                l =>
-                    `<a href="${escapeHtml(l.href)}">${escapeHtml(l.label)}<span>${escapeHtml(l.hint)}</span></a>`
+                link =>
+                    `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}<span>${escapeHtml(link.hint)}</span></a>`
             )
             .join('')}</div>`;
 

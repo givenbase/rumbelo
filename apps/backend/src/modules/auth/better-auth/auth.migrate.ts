@@ -28,9 +28,9 @@ if (toBeCreated.length === 0 && toBeAdded.length === 0) {
 console.log(
     'Running better-auth migrations:',
     'create',
-    toBeCreated.map(t => t.table),
+    toBeCreated.map(migration => migration.table),
     'alter',
-    toBeAdded.map(t => t.table)
+    toBeAdded.map(migration => migration.table)
 );
 
 await runMigrations();

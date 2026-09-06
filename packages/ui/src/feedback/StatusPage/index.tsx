@@ -43,8 +43,8 @@ export function StatusPage({
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const t = window.setTimeout(() => setVisible(true), 40);
-        return () => window.clearTimeout(t);
+        const timeoutId = window.setTimeout(() => setVisible(true), 40);
+        return () => window.clearTimeout(timeoutId);
     }, []);
 
     const resolvedHomeLabel = homeLabel ?? (homeHref === '/' ? 'Back home' : 'Continue');

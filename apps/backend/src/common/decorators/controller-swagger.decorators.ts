@@ -49,7 +49,7 @@ export function ControllerSwagger(path: string, schema: ApiSchema = 'public', cu
         fullPath
             .replace(/[/-]/g, ' ')
             .split(' ')
-            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
 
     return applyDecorators(

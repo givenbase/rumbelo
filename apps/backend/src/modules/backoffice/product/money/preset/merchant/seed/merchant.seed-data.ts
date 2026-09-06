@@ -10,8 +10,8 @@ type Seed = {
     categoryTemplateKey: string;
 };
 
-const N = JarKey.NECESSITIES;
-const P = JarKey.PLAY;
+const necessities = JarKey.NECESSITIES;
+const play = JarKey.PLAY;
 
 /**
  * Merchant matchbook for inbox rules / future Open Banking (Revolut, etc.).
@@ -24,7 +24,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Albert Heijn',
         aliases: ['Albert Heijn', 'AH ', 'AH.nl', 'AH TO GO', 'AH to go'],
         mcc: '5411',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'GROCERIES',
     },
     {
@@ -33,7 +33,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Jumbo',
         aliases: ['Jumbo', 'JUMBO SUPERMARKT'],
         mcc: '5411',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'GROCERIES',
     },
     {
@@ -42,7 +42,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Lidl',
         aliases: ['Lidl', 'LIDL NL'],
         mcc: '5411',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'GROCERIES',
     },
     {
@@ -51,7 +51,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'PLUS',
         aliases: ['PLUS supermarket', 'Plus Supermarkt'],
         mcc: '5411',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'GROCERIES',
     },
     {
@@ -60,7 +60,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Spotify',
         aliases: ['Spotify', 'SPOTIFY AB', 'Spotify P', 'SPOTIFY*'],
         mcc: '4899',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'MEDIA',
     },
     {
@@ -69,7 +69,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Netflix',
         aliases: ['Netflix', 'NETFLIX.COM', 'NETFLIX COM'],
         mcc: '4899',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'MEDIA',
     },
     {
@@ -78,7 +78,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Disney',
         aliases: ['Disney+', 'Disney Plus', 'DISNEYPLUS', 'Disney*'],
         mcc: '4899',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'MEDIA',
     },
     {
@@ -87,7 +87,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'NS ',
         aliases: ['NS ', 'NS Groep', 'Nederlandse Spoorwegen', 'OV-chipkaart NS'],
         mcc: '4111',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'TRANSPORT',
     },
     {
@@ -96,7 +96,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Shell',
         aliases: ['Shell', 'SHELL NL', 'Shell Station'],
         mcc: '5541',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'TRANSPORT',
     },
     {
@@ -105,7 +105,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'BP ',
         aliases: ['BP ', 'BP Station', 'BP EXPRESS'],
         mcc: '5541',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'TRANSPORT',
     },
     {
@@ -114,7 +114,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'bol.com',
         aliases: ['bol.com', 'BOL.COM', 'Bol Com', 'BOL COM BV'],
         mcc: '5399',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'HOBBIES',
     },
     {
@@ -123,7 +123,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Amazon',
         aliases: ['Amazon', 'AMAZON EU', 'AMZN', 'Amazon.nl', 'AMAZON PAYMENTS'],
         mcc: '5399',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'HOBBIES',
     },
     {
@@ -132,7 +132,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Uber',
         aliases: ['Uber', 'UBER BV', 'UBER *TRIP', 'UBER *EATS'],
         mcc: '4121',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'EATING_OUT',
     },
     {
@@ -141,7 +141,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Thuisbezorgd',
         aliases: ['Thuisbezorgd', 'Just Eat', 'JE*THUISBEZORGD'],
         mcc: '5812',
-        jarKey: P,
+        jarKey: play,
         categoryTemplateKey: 'EATING_OUT',
     },
     {
@@ -150,7 +150,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'Vodafone',
         aliases: ['Vodafone', 'VODAFONE NL', 'VodafoneZiggo'],
         mcc: '4814',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'SUBSCRIPTIONS',
     },
     {
@@ -159,7 +159,7 @@ export const MERCHANT_PRESET_SEED: readonly Seed[] = [
         matchValue: 'KPN',
         aliases: ['KPN', 'KPN BV', 'KPN Mobiel'],
         mcc: '4814',
-        jarKey: N,
+        jarKey: necessities,
         categoryTemplateKey: 'SUBSCRIPTIONS',
     },
 ];

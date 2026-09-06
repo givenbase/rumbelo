@@ -35,11 +35,15 @@ export function BoardPageClient() {
     const router = useRouter();
     const [filter, setFilter] = useState<FilterKey>('all');
 
-    const assetWorth = holdings.reduce((s, h) => s + h.value, 0);
-    const monthlyPassive = holdings.filter(h => !h.locked).reduce((s, h) => s + h.flow, 0);
+    const assetWorth = holdings.reduce((total, holding) => total + holding.value, 0);
+    const monthlyPassive = holdings
+        .filter(holding => !holding.locked)
+        .reduce((total, holding) => total + holding.flow, 0);
     const netWorth = assetWorth - TOTAL_DEBT;
 
-    const presentKinds = HOLDING_KINDS.filter(k => holdings.some(h => h.kind === k.key));
+    const presentKinds = HOLDING_KINDS.filter(k =>
+        holdings.some(holding => holding.kind === k.key)
+    );
 
     const groups: Array<{
         key: HoldingKind;
@@ -54,10 +58,10 @@ export function BoardPageClient() {
 
     for (const meta of HOLDING_KINDS) {
         if (filter !== 'all' && filter !== meta.key) continue;
-        const items = holdings.filter(h => h.kind === meta.key);
+        const items = holdings.filter(holding => holding.kind === meta.key);
         if (items.length === 0) continue;
-        const total = items.reduce((s, h) => s + h.value, 0);
-        const flow = items.reduce((s, h) => s + h.flow, 0);
+        const total = items.reduce((running, holding) => running + holding.value, 0);
+        const flow = items.reduce((running, holding) => running + holding.flow, 0);
         const isPension = meta.key === 'pension';
         groups.push({
             ...meta,
@@ -149,56 +153,56 @@ export function BoardPageClient() {
                                 { key: 'all' as const, label: `All  ${holdings.length}` },
                                 ...presentKinds.map(k => ({
                                     key: k.key,
-                                    label: `${k.nl}  ${holdings.filter(h => h.kind === k.key).length}`,
+                                    label: `${k.nl}  ${holdings.filter(holding => holding.kind === k.key).length}`,
                                 })),
                             ] as const
-                        ).map(f => (
+                        ).map(filterOption => (
                             <button
-                                key={f.key}
+                                key={filterOption.key}
                                 type="button"
-                                onClick={() => setFilter(f.key)}
+                                onClick={() => setFilter(filterOption.key)}
                                 className={cn(
                                     'rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide uppercase transition-colors',
-                                    filter === f.key
+                                    filter === filterOption.key
                                         ? 'border-accent/40 bg-accent-soft text-accent'
                                         : 'border-line text-fg-secondary hover:border-accent-hover hover:text-accent'
                                 )}>
-                                {f.label}
+                                {filterOption.label}
                             </button>
                         ))}
                     </div>
 
                     <div className="grid gap-4">
-                        {groups.map(g => (
-                            <Card key={g.key} className="overflow-hidden p-0">
+                        {groups.map(group => (
+                            <Card key={group.key} className="overflow-hidden p-0">
                                 <div className="flex flex-wrap items-start gap-4 border-b border-line px-5 py-4">
                                     <div className="min-w-0 flex-1">
                                         <div className="flex flex-wrap items-baseline gap-2.5">
                                             <h3 className="font-display text-xl font-semibold tracking-tight text-fg">
-                                                {g.nl}
+                                                {group.nl}
                                             </h3>
                                             <span className="font-mono text-xs tracking-wide text-fg-muted uppercase">
-                                                {g.items.length === 1
+                                                {group.items.length === 1
                                                     ? '1 asset'
-                                                    : `${g.items.length} assets`}
+                                                    : `${group.items.length} assets`}
                                             </span>
                                         </div>
                                         <p className="mt-1 text-sm leading-relaxed text-pretty text-fg-muted">
-                                            {g.desc}
+                                            {group.desc}
                                         </p>
                                     </div>
                                     <div className="grid justify-items-end gap-1">
                                         <span className="font-display text-2xl leading-none font-semibold tracking-tight text-fg">
-                                            {formatMoney(g.total)}
+                                            {formatMoney(group.total)}
                                         </span>
                                         <span
                                             className={cn(
                                                 'font-mono text-xs',
-                                                g.isPension || g.flow <= 0
+                                                group.isPension || group.flow <= 0
                                                     ? 'text-fg-muted'
                                                     : 'text-accent'
                                             )}>
-                                            {g.flowLabel}
+                                            {group.flowLabel}
                                         </span>
                                     </div>
                                     <Button
@@ -210,12 +214,12 @@ export function BoardPageClient() {
                                     </Button>
                                 </div>
                                 <div className="grid gap-3.5 p-4 sm:grid-cols-2 lg:grid-cols-3">
-                                    {g.items.map(h => {
-                                        const jar = JAR_META.find(j => j.key === h.jarKey);
-                                        const pays = !h.locked && h.flow > 0;
+                                    {group.items.map(holding => {
+                                        const jar = JAR_META.find(j => j.key === holding.jarKey);
+                                        const pays = !holding.locked && holding.flow > 0;
                                         return (
                                             <button
-                                                key={h.id}
+                                                key={holding.id}
                                                 type="button"
                                                 onClick={() => router.push(CREATE_HREF.asset)}
                                                 className={cn(
@@ -227,7 +231,7 @@ export function BoardPageClient() {
                                                 <div
                                                     className="h-8.5"
                                                     style={{
-                                                        background: h.locked
+                                                        background: holding.locked
                                                             ? 'repeating-linear-gradient(45deg, var(--color-sunken) 0 3px, transparent 3px 9px)'
                                                             : pays
                                                               ? 'var(--gradient-accent)'
@@ -236,7 +240,7 @@ export function BoardPageClient() {
                                                 />
                                                 <div className="grid gap-2 p-4">
                                                     <span className="font-mono text-xs font-medium tracking-wide text-fg-muted uppercase">
-                                                        {h.locked
+                                                        {holding.locked
                                                             ? 'Locked until pension'
                                                             : pays
                                                               ? 'Pays you monthly'
@@ -254,12 +258,12 @@ export function BoardPageClient() {
                                                         </span>
                                                     )}
                                                     <span className="font-display text-xl leading-snug font-semibold tracking-tight text-fg">
-                                                        {h.name}
+                                                        {holding.name}
                                                     </span>
                                                     <div className="flex justify-between font-mono text-xs">
                                                         <span className="text-fg-muted">Value</span>
                                                         <span className="text-fg-secondary">
-                                                            {formatMoney(h.value)}
+                                                            {formatMoney(holding.value)}
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between font-mono text-xs">
@@ -272,10 +276,10 @@ export function BoardPageClient() {
                                                                     ? 'text-accent'
                                                                     : 'text-fg-muted'
                                                             }>
-                                                            {h.locked
+                                                            {holding.locked
                                                                 ? 'not available yet'
                                                                 : pays
-                                                                  ? `+ ${formatMoney(h.flow)} p/m`
+                                                                  ? `+ ${formatMoney(holding.flow)} p/m`
                                                                   : formatMoney(0) + ' p/m'}
                                                         </span>
                                                     </div>

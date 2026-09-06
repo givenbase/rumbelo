@@ -157,13 +157,13 @@ export const PILLARS: Pillar[] = [
 ];
 
 export const PROOF = [
-    { n: '4', l: 'portals, one switch' },
-    { n: '55%', l: 'cap on must-pays' },
-    { n: '€0', l: 'to start' },
+    { value: '4', label: 'portals, one switch' },
+    { value: '55%', label: 'cap on must-pays' },
+    { value: '€0', label: 'to start' },
 ];
 
 export interface JourneyStep {
-    n: string;
+    step: string;
     title: string;
     tag: string;
     you: string;
@@ -174,7 +174,7 @@ export interface JourneyStep {
 
 export const JOURNEY: JourneyStep[] = [
     {
-        n: '01',
+        step: '01',
         title: 'Tell Rumbelo what lands',
         tag: 'THE SIX-JAR SPLIT',
         you: 'Type one number: what arrives in your account each month. Salary, freelance, anything.',
@@ -184,7 +184,7 @@ export const JOURNEY: JourneyStep[] = [
         why: 'The oldest budgeting idea there is. The rule that matters: the split happens on arrival, not at month end. If must-pays need more than 55%, that is the problem to fix — not your discipline.',
     },
     {
-        n: '02',
+        step: '02',
         title: 'Income arrives — the split just happens',
         tag: 'PAY YOURSELF FIRST',
         you: 'Nothing. That is the point.',
@@ -194,7 +194,7 @@ export const JOURNEY: JourneyStep[] = [
         why: 'Compound growth is the whole trick. The jar exists so you never have to decide to invest — it already happened.',
     },
     {
-        n: '03',
+        step: '03',
         title: 'You spend from jars, not a balance',
         tag: 'SAFE TO SPEND',
         you: 'Live your life. Buy the coffee, book the dinner — from the jar that is for it.',
@@ -204,7 +204,7 @@ export const JOURNEY: JourneyStep[] = [
         why: 'A bank balance lies — it shows money that is already spoken for. Stay under the number and every jar survives the month by construction.',
     },
     {
-        n: '04',
+        step: '04',
         title: 'Your debts get a plan',
         tag: 'AVALANCHE & SNOWBALL',
         you: 'Enter each debt once: what, how much, what interest.',
@@ -214,7 +214,7 @@ export const JOURNEY: JourneyStep[] = [
         why: 'Debt under roughly 4–5% is cheaper than inflation — pay the minimum and invest the difference. Expensive debt gets killed first, always.',
     },
     {
-        n: '05',
+        step: '05',
         title: 'You watch freedom grow',
         tag: 'THE FREEDOM NUMBER',
         you: 'Keep going. Check in once a week.',
@@ -228,8 +228,8 @@ export const JOURNEY: JourneyStep[] = [
 export interface Plan {
     key: string;
     name: string;
-    m: number;
-    y: number;
+    monthly: number;
+    yearly: number;
     tag: string;
     line: string;
     feats: string[];
@@ -239,8 +239,8 @@ export const PLANS: Plan[] = [
     {
         key: 'basic',
         name: 'Basic',
-        m: 0,
-        y: 0,
+        monthly: 0,
+        yearly: 0,
         tag: 'From €0',
         line: 'The six jars and the practice underneath. No bank needed, no card needed — enough to start, and never a reason to stop.',
         feats: [
@@ -254,8 +254,8 @@ export const PLANS: Plan[] = [
     {
         key: 'plus',
         name: 'Plus',
-        m: 9,
-        y: 90,
+        monthly: 9,
+        yearly: 90,
         tag: 'Most chosen',
         line: 'The part that runs without you — plus Energy. Banks tied to jars, transactions sorted on arrival, your week and your body in view.',
         feats: [
@@ -270,8 +270,8 @@ export const PLANS: Plan[] = [
     {
         key: 'max',
         name: 'Max',
-        m: 19,
-        y: 190,
+        monthly: 19,
+        yearly: 190,
         tag: 'All four portals',
         line: 'Where the money starts making money. Your goals, your income curve, what you learn and your net worth — plus your devices later.',
         feats: [
@@ -284,13 +284,16 @@ export const PLANS: Plan[] = [
     },
 ];
 
-export const ASSURANCES: { t: string; icon: IconName }[] = [
+export const ASSURANCES: { text: string; icon: IconName }[] = [
     {
-        t: 'Basic needs no card to start — price can stay €0 or become a small fee later.',
+        text: 'Basic needs no card to start — price can stay €0 or become a small fee later.',
         icon: 'shield',
     },
-    { t: 'Bank data is read-only, via PSD2, and only after you connect it yourself.', icon: 'eye' },
-    { t: 'Cancel a paid plan and everything you entered stays readable.', icon: 'db' },
+    {
+        text: 'Bank data is read-only, via PSD2, and only after you connect it yourself.',
+        icon: 'eye',
+    },
+    { text: 'Cancel a paid plan and everything you entered stays readable.', icon: 'db' },
 ];
 
 export const TRUST_CARDS: { icon: IconName; head: string; line: string }[] = [
@@ -327,27 +330,27 @@ export const FOOT_COLS = [
     {
         head: 'Product',
         links: [
-            { t: 'The jars', href: '#jars' },
-            { t: 'How it works', href: '#how' },
-            { t: 'Pricing', href: '#pricing' },
-            { t: 'Bank connections', href: '#how' },
+            { text: 'The jars', href: '#jars' },
+            { text: 'How it works', href: '#how' },
+            { text: 'Pricing', href: '#pricing' },
+            { text: 'Bank connections', href: '#how' },
         ],
     },
     {
         head: 'Legal',
         links: [
-            { t: 'Privacy policy', href: '#' },
-            { t: 'Terms of service', href: '#' },
-            { t: 'Data processing', href: '#' },
-            { t: 'Cookie policy', href: '#' },
+            { text: 'Privacy policy', href: '#' },
+            { text: 'Terms of service', href: '#' },
+            { text: 'Data processing', href: '#' },
+            { text: 'Cookie policy', href: '#' },
         ],
     },
     {
         head: 'Contact',
         links: [
-            { t: 'support@rumbelo.app', href: 'mailto:support@rumbelo.app' },
-            { t: 'Press & partnerships', href: '#' },
-            { t: 'Status', href: '#' },
+            { text: 'support@rumbelo.app', href: 'mailto:support@rumbelo.app' },
+            { text: 'Press & partnerships', href: '#' },
+            { text: 'Status', href: '#' },
         ],
     },
 ];
@@ -365,14 +368,14 @@ export const FLOATERS = [
     ['55 / 10 / 10 / 10 / 10 / 5', 62, 8, 11, 4.4, 0.11],
     ['€64 / day', 92, 18, 12, 1.1, 0.12],
     ['LTS → €430', 10, 72, 10, 10.6, 0.08],
-].map(([text, left, top, size, delay, o], i) => ({
+].map(([text, left, top, size, delay, opacity], i) => ({
     text: text as string,
     left: `${left}%`,
     top: `${top}%`,
     size: `${size}px`,
     dur: `${14 + (i % 5) * 3}s`,
     delay: `${delay}s`,
-    o: o as number,
+    opacity: opacity as number,
     color: i % 3 === 0 ? 'var(--color-accent)' : 'var(--color-fg-muted)',
 }));
 
@@ -386,9 +389,10 @@ const TICKER_RAW = [
     ['Safe to spend today: €64', 'var(--color-accent)'],
     ['Gym −€32 → Play · flagged', 'var(--color-warning)'],
 ];
-export const TICKER = [...TICKER_RAW, ...TICKER_RAW].map(([t, dot]) => ({
-    t: t as string,
+export const TICKER = [...TICKER_RAW, ...TICKER_RAW].map(([text, dot], index) => ({
+    text: text as string,
     dot: dot as string,
+    key: `${index}-${text as string}`,
 }));
 
 export const COACH_GLANCE_POINTS = [

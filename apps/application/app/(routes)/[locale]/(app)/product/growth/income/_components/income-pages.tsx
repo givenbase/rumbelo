@@ -23,7 +23,7 @@ export function IncomeUpdatePage({ id, embedded = false }: { id: string; embedde
         [] as never,
         live
     );
-    const row = (query.data ?? []).find(s => s.id === id);
+    const row = (query.data ?? []).find(source => source.id === id);
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;

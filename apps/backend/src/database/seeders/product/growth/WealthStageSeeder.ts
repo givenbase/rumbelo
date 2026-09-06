@@ -8,8 +8,11 @@ import { WEALTH_STAGE_SEED } from '../../../../modules/backoffice/product/growth
 /** Seeds backoffice.reference_growth_wealth_stage — safe to re-run. */
 export class WealthStageSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = WEALTH_STAGE_SEED.map(row => row.key);
+        const existingRows = await em.find(WealthStage, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of WEALTH_STAGE_SEED.entries()) {
-            const existing = await em.findOne(WealthStage, { key: row.key });
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.summary = row.summary;

@@ -10,27 +10,43 @@ import { useLiveQuery } from '@rumbelo/hooks';
 import { Button, Card, EmptyState } from '@rumbelo/ui';
 import { cn, formatMoney } from '@rumbelo/utils';
 
+import {
+    JarKey,
+    RuleField,
+    RuleMatcher,
+    TransactionStatus,
+    type Jar,
+    type Rule,
+    type Transaction,
+} from '@rumbelo/contracts';
+
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
 import { InboxSortCard } from '@/components/features/money/inbox-sort-card';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
+import { ConfirmActionButton } from '@/components/features/forms/confirm-action-button';
 
 type Tab = 'INBOX' | 'ALL' | 'RULES';
 
-const MATCHER_LABEL: Record<string, string> = {
-    CONTAINS: 'contains',
-    EQUALS: 'is',
-    STARTS_WITH: 'starts with',
-    REGEX: 'regex',
+const MATCHER_LABEL: Record<RuleMatcher, string> = {
+    [RuleMatcher.CONTAINS]: 'contains',
+    [RuleMatcher.EQUALS]: 'is',
+    [RuleMatcher.STARTS_WITH]: 'starts with',
+    [RuleMatcher.REGEX]: 'regex',
 };
 
-const FIELD_LABEL: Record<string, string> = {
-    DESCRIPTION: 'description',
-    COUNTERPARTY: 'counterparty',
-    AMOUNT: 'amount',
+const FIELD_LABEL: Record<RuleField, string> = {
+    [RuleField.DESCRIPTION]: 'description',
+    [RuleField.COUNTERPARTY]: 'counterparty',
+    [RuleField.AMOUNT]: 'amount',
 };
+
+const EMPTY_TRANSACTIONS: Transaction[] = [];
+const EMPTY_JARS: Jar[] = [];
+const EMPTY_RULES: Rule[] = [];
+const EMPTY_TRANSACTION_PAGE = { items: EMPTY_TRANSACTIONS, nextCursor: null };
 
 export function TransactionsPageClient() {
     const api = useApi();
@@ -44,7 +60,7 @@ export function TransactionsPageClient() {
 
     const inboxQuery = useLiveQuery(
         api.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
-        [] as never,
+        EMPTY_TRANSACTIONS,
         live
     );
 
@@ -52,29 +68,29 @@ export function TransactionsPageClient() {
         api.money.transactions.list.queryOptions({
             input: { householdId: householdId!, limit: 50 },
         }),
-        { items: [] as never, nextCursor: null },
+        EMPTY_TRANSACTION_PAGE,
         live
     );
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
-        [] as never,
+        EMPTY_JARS,
         live
     );
 
     const rulesQuery = useLiveQuery(
         api.money.rules.list.queryOptions({ input: { householdId: householdId! } }),
-        [],
+        EMPTY_RULES,
         live
     );
 
-    const inbox = inboxQuery.data ?? [];
-    const jars = jarsQuery.data ?? [];
-    const jarById = new Map(jars.map(j => [j.id, j]));
-    const rules = rulesQuery.data ?? [];
+    const inbox = inboxQuery.data ?? EMPTY_TRANSACTIONS;
+    const jars = jarsQuery.data ?? EMPTY_JARS;
+    const jarById = new Map(jars.map(jar => [jar.id, jar]));
+    const rules = rulesQuery.data ?? EMPTY_RULES;
     const all = (listQuery.data?.items ?? [])
         .slice()
-        .sort((a, b) => b.bookedOn.localeCompare(a.bookedOn));
+        .sort((left, right) => right.bookedOn.localeCompare(left.bookedOn));
 
     const sortMutation = useMutation({
         mutationFn: async ({
@@ -140,8 +156,8 @@ export function TransactionsPageClient() {
         onError: () => showToast('Delete failed', 'error'),
     });
 
-    function resolveJarId(fallbackKey: string): string {
-        const match = jars.find(j => j.key === fallbackKey);
+    function resolveJarId(fallbackKey: JarKey): string {
+        const match = jars.find(jar => jar.key === fallbackKey);
         return match?.id ?? jars[0]?.id ?? fallbackKey;
     }
 
@@ -214,12 +230,13 @@ export function TransactionsPageClient() {
                     />
                 ) : (
                     <div className="grid gap-3">
-                        {inbox.map(t => {
-                            const suggestedKey = t.amount > 0 ? 'NECESSITIES' : 'PLAY';
+                        {inbox.map(transaction => {
+                            const suggestedKey =
+                                transaction.amount > 0 ? JarKey.NECESSITIES : JarKey.PLAY;
                             return (
                                 <InboxSortCard
-                                    key={t.id}
-                                    transaction={t}
+                                    key={transaction.id}
+                                    transaction={transaction}
                                     jars={jars}
                                     suggestedJarId={resolveJarId(suggestedKey)}
                                     onConfirm={
@@ -252,37 +269,40 @@ export function TransactionsPageClient() {
                                     No expenses in this period yet.
                                 </p>
                             ) : (
-                                all.map(t => {
-                                    const jarId =
-                                        'jarId' in t && typeof t.jarId === 'string'
-                                            ? t.jarId
-                                            : 'jarKey' in t && typeof t.jarKey === 'string'
-                                              ? (jars.find(j => j.key === t.jarKey)?.id ?? '')
-                                              : '';
-                                    const jar = jarId ? jarById.get(jarId) : undefined;
+                                all.map(transaction => {
+                                    const jar = transaction.jarId
+                                        ? jarById.get(transaction.jarId)
+                                        : undefined;
                                     return (
                                         <button
                                             type="button"
-                                            key={t.id}
-                                            onClick={() => router.push(updateHref('tx', t.id))}
+                                            key={transaction.id}
+                                            aria-label={transaction.description}
+                                            onClick={() =>
+                                                router.push(updateHref('tx', transaction.id))
+                                            }
                                             className="grid w-full gap-1 border-b border-line px-5 py-3.5 text-left last:border-b-0 hover:bg-raised">
                                             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                                                 <span className="min-w-0 flex-1 text-sm text-fg">
-                                                    {t.description}
+                                                    {transaction.description}
                                                 </span>
                                                 <span
                                                     className={cn(
                                                         'font-mono text-sm',
-                                                        t.amount < 0 ? 'text-fg' : 'text-success'
+                                                        transaction.amount < 0
+                                                            ? 'text-fg'
+                                                            : 'text-success'
                                                     )}>
-                                                    {formatMoney(t.amount, { signed: true })}
+                                                    {formatMoney(transaction.amount, {
+                                                        signed: true,
+                                                    })}
                                                 </span>
                                             </div>
                                             <div className="flex flex-wrap gap-x-2 font-mono text-xs tracking-wide text-fg-faint uppercase">
-                                                <span>{t.bookedOn}</span>
+                                                <span>{transaction.bookedOn}</span>
                                                 <span>·</span>
                                                 <span>
-                                                    {t.status === 'INBOX'
+                                                    {transaction.status === TransactionStatus.INBOX
                                                         ? 'Inbox'
                                                         : (jar?.name ?? 'No jar')}
                                                 </span>
@@ -325,8 +345,8 @@ export function TransactionsPageClient() {
                                             className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5 last:border-b-0">
                                             <div className="min-w-0">
                                                 <p className="text-sm text-fg">
-                                                    If {FIELD_LABEL[rule.field] ?? rule.field}{' '}
-                                                    {MATCHER_LABEL[rule.matcher] ?? rule.matcher}{' '}
+                                                    If {FIELD_LABEL[rule.field]}{' '}
+                                                    {MATCHER_LABEL[rule.matcher]}{' '}
                                                     <span className="font-mono text-sm">
                                                         “{rule.value}”
                                                     </span>
@@ -337,18 +357,18 @@ export function TransactionsPageClient() {
                                                     {!rule.isActive ? ' · off' : ''}
                                                 </p>
                                             </div>
-                                            <Button
+                                            <ConfirmActionButton
                                                 variant="ghost"
                                                 size="sm"
                                                 className="text-danger hover:bg-danger/10 hover:text-danger"
                                                 disabled={removeRuleMutation.isPending}
-                                                onClick={() => {
-                                                    if (!window.confirm('Delete this sort rule?'))
-                                                        return;
-                                                    void removeRuleMutation.mutateAsync(rule.id);
-                                                }}>
-                                                Delete
-                                            </Button>
+                                                pending={removeRuleMutation.isPending}
+                                                label="Delete"
+                                                confirmLabel="Click again to delete"
+                                                onConfirm={() =>
+                                                    void removeRuleMutation.mutateAsync(rule.id)
+                                                }
+                                            />
                                         </div>
                                     );
                                 })}

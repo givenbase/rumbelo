@@ -44,10 +44,12 @@ export default function WhyFoundationPage() {
 
             {/* Four principle cards */}
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {PRINCIPLES.map(p => (
-                    <Card key={p.num} className="grid gap-2">
-                        <Eyebrow>{p.title}</Eyebrow>
-                        <p className="text-sm leading-relaxed text-fg-secondary">{p.body}</p>
+                {PRINCIPLES.map(principle => (
+                    <Card key={principle.num} className="grid gap-2">
+                        <Eyebrow>{principle.title}</Eyebrow>
+                        <p className="text-sm leading-relaxed text-fg-secondary">
+                            {principle.body}
+                        </p>
                     </Card>
                 ))}
             </div>

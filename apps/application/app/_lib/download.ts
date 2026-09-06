@@ -3,10 +3,10 @@
 export function downloadTextFile(filename: string, content: string, mime: string) {
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
     URL.revokeObjectURL(url);
 }
 
@@ -21,7 +21,7 @@ export function toCsv(rows: Record<string, unknown>[]): string {
     const headers = Object.keys(rows[0]!);
     const lines = [
         headers.join(','),
-        ...rows.map(row => headers.map(h => csvEscape(row[h])).join(',')),
+        ...rows.map(row => headers.map(header => csvEscape(row[header])).join(',')),
     ];
     return lines.join('\n');
 }

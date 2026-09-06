@@ -39,24 +39,26 @@ export default function LearnPage() {
 
             {/* Book list */}
             <div className="grid gap-2.5">
-                {BOOKS.map(b => (
+                {BOOKS.map(book => (
                     <div
-                        key={b.title}
-                        className={`grid gap-1.5 rounded-2xl border ${b.edge} bg-surface p-5 shadow-md`}>
+                        key={book.title}
+                        className={`grid gap-1.5 rounded-2xl border ${book.edge} bg-surface p-5 shadow-md`}>
                         <div className="flex flex-wrap items-baseline justify-between gap-3">
                             <span className="flex min-w-0 flex-wrap items-baseline gap-2.5">
                                 <span className="font-display text-xl font-semibold tracking-tight text-fg">
-                                    {b.title}
+                                    {book.title}
                                 </span>
-                                <span className="font-mono text-xs text-fg-muted">{b.author}</span>
+                                <span className="font-mono text-xs text-fg-muted">
+                                    {book.author}
+                                </span>
                             </span>
                             <span
-                                className={`font-mono text-xs font-semibold tracking-widest whitespace-nowrap uppercase ${b.tagColor}`}>
-                                {b.tag}
+                                className={`font-mono text-xs font-semibold tracking-widest whitespace-nowrap uppercase ${book.tagColor}`}>
+                                {book.tag}
                             </span>
                         </div>
                         <p className="text-sm leading-relaxed text-pretty text-fg-muted">
-                            ◇ {b.use}
+                            ◇ {book.use}
                         </p>
                     </div>
                 ))}

@@ -8,8 +8,11 @@ import { INCOME_POSTURE_SEED } from '../../../../modules/backoffice/product/grow
 /** Seeds backoffice.reference_growth_income_posture — safe to re-run. */
 export class IncomePostureSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = INCOME_POSTURE_SEED.map(row => row.key);
+        const existingRows = await em.find(IncomePosture, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of INCOME_POSTURE_SEED.entries()) {
-            const existing = await em.findOne(IncomePosture, { key: row.key });
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.summary = row.summary;

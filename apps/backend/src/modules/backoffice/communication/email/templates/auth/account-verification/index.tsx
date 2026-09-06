@@ -28,34 +28,36 @@ export const AccountVerificationTemplate: React.FC<AccountVerificationTemplatePr
     darkMode = false,
     locale = 'en',
 }) => {
-    const t = createEmailTranslator(languageObject, locale);
+    const translate = createEmailTranslator(languageObject, locale);
     const styles = createEmailStyles(darkMode);
 
     return (
         <EmailLayout
             darkMode={darkMode}
-            previewText={t('email.auth.verification.header.preview_text')}
-            title={t('email.auth.verification.header.title')}>
-            <Heading style={styles.heading}>{t('email.auth.verification.header.heading')}</Heading>
+            previewText={translate('email.auth.verification.header.preview_text')}
+            title={translate('email.auth.verification.header.title')}>
+            <Heading style={styles.heading}>
+                {translate('email.auth.verification.header.heading')}
+            </Heading>
 
             <Section style={styles.section}>
                 <Text style={styles.text}>
-                    {t('email.auth.verification.body.greeting', { firstName })}
+                    {translate('email.auth.verification.body.greeting', { firstName })}
                 </Text>
-                <Text style={styles.text}>{t('email.auth.verification.body.message')}</Text>
+                <Text style={styles.text}>{translate('email.auth.verification.body.message')}</Text>
 
                 <Button darkMode={darkMode} href={verificationUrl} size="large">
-                    {t('email.auth.verification.body.button')}
+                    {translate('email.auth.verification.body.button')}
                 </Button>
 
                 <Text style={styles.noteText}>
-                    {t('email.auth.verification.body.expiration_note', { expiresInHours })}
+                    {translate('email.auth.verification.body.expiration_note', { expiresInHours })}
                 </Text>
                 <Text style={styles.noteText}>
-                    {t('email.auth.verification.body.renewal_note')}
+                    {translate('email.auth.verification.body.renewal_note')}
                 </Text>
                 <Text style={styles.smallText}>
-                    {t('email.auth.verification.body.safety_note')}
+                    {translate('email.auth.verification.body.safety_note')}
                 </Text>
             </Section>
         </EmailLayout>

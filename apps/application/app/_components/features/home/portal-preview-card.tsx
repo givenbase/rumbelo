@@ -48,17 +48,17 @@ export function PortalPreviewCard({
                 </Link>
             </div>
             <div className="grid">
-                {rows.map(r => (
+                {rows.map(row => (
                     <div
-                        key={r.label}
+                        key={row.label}
                         className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
                         <span className="font-mono text-xs tracking-wide whitespace-nowrap text-fg-faint">
-                            {r.label}
+                            {row.label}
                         </span>
                         <span
                             className="font-display text-2xl leading-none font-semibold tracking-tight"
-                            style={{ color: r.color }}>
-                            {r.value}
+                            style={{ color: row.color }}>
+                            {row.value}
                         </span>
                     </div>
                 ))}

@@ -38,6 +38,7 @@ export function JarDrilldownTrigger({
             type="button"
             onClick={onToggle}
             aria-expanded={open}
+            aria-label={jar.name}
             className="grid w-full gap-2 rounded-lg px-1.5 py-2.5 text-left transition-colors outline-none hover:bg-raised focus-visible:ring-2 focus-visible:ring-accent/25">
             <span className="flex items-center gap-3 sm:grid sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] sm:gap-3">
                 <span className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -108,18 +109,20 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
         <>
             {/* Mobile: stacked cards */}
             <ul className="grid gap-2 border-t border-line pt-2 sm:hidden">
-                {categories.map(c => {
-                    const diff = c.budgeted - c.actual;
+                {categories.map(category => {
+                    const diff = category.budgeted - category.actual;
                     return (
                         <li
-                            key={c.id}
+                            key={category.id}
                             className="grid gap-1.5 rounded-lg border border-line bg-raised px-3 py-2.5">
-                            <span className="text-sm text-fg-secondary">{c.name}</span>
+                            <span className="text-sm text-fg-secondary">{category.name}</span>
                             <span className="flex flex-wrap justify-between gap-x-3 gap-y-1 font-mono text-xs tabular-nums">
                                 <span className="text-fg-muted">
-                                    Planned {formatMoney(c.budgeted)}
+                                    Planned {formatMoney(category.budgeted)}
                                 </span>
-                                <span className="text-fg">Spent {formatMoney(c.actual)}</span>
+                                <span className="text-fg">
+                                    Spent {formatMoney(category.actual)}
+                                </span>
                                 <span className={diff < 0 ? 'text-danger' : 'text-success'}>
                                     {formatMoney(diff, { signed: true })}
                                 </span>
@@ -141,16 +144,18 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
                         </tr>
                     </thead>
                     <tbody>
-                        {categories.map(c => {
-                            const diff = c.budgeted - c.actual;
+                        {categories.map(category => {
+                            const diff = category.budgeted - category.actual;
                             return (
-                                <tr key={c.id} className="border-t border-line">
-                                    <td className="py-1.5 text-sm text-fg-secondary">{c.name}</td>
+                                <tr key={category.id} className="border-t border-line">
+                                    <td className="py-1.5 text-sm text-fg-secondary">
+                                        {category.name}
+                                    </td>
                                     <td className="py-1.5 text-right font-mono text-sm text-fg-muted tabular-nums">
-                                        {formatMoney(c.budgeted)}
+                                        {formatMoney(category.budgeted)}
                                     </td>
                                     <td className="py-1.5 text-right font-mono text-sm text-fg tabular-nums">
-                                        {formatMoney(c.actual)}
+                                        {formatMoney(category.actual)}
                                     </td>
                                     <td
                                         className={cn(

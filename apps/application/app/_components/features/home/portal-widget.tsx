@@ -49,17 +49,19 @@ export function PortalWidget({
 
             {/* Stat rows */}
             <div className="grid">
-                {stats.map(s => (
+                {stats.map(stat => (
                     <div
-                        key={s.label}
+                        key={stat.label}
                         className="flex items-baseline justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
                         <span className="font-mono text-xs tracking-wide whitespace-nowrap text-fg-faint">
-                            {s.label}
+                            {stat.label}
                         </span>
                         <span
                             className="font-display text-2xl leading-none font-semibold tracking-tight"
-                            style={s.color ? { color: s.color } : { color: 'var(--color-fg)' }}>
-                            {s.value}
+                            style={
+                                stat.color ? { color: stat.color } : { color: 'var(--color-fg)' }
+                            }>
+                            {stat.value}
                         </span>
                     </div>
                 ))}

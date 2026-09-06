@@ -16,9 +16,11 @@ export class JarTemplateService {
 
     /** Idempotent seed / staff upsert of catalog rows. */
     async ensureDefaults(rows: Array<Partial<JarTemplate> & { key: JarTemplate['key'] }>) {
+        const keys = rows.map(row => row.key);
+        const existingRows = await this.em.find(JarTemplate, { key: { $in: keys } });
+        const existingKeys = new Set(existingRows.map(row => row.key));
         for (const [sortOrder, row] of rows.entries()) {
-            const existing = await this.em.findOne(JarTemplate, { key: row.key });
-            if (existing) continue;
+            if (existingKeys.has(row.key)) continue;
             this.em.create(JarTemplate, {
                 sortOrder: row.sortOrder ?? sortOrder,
                 isActive: true,

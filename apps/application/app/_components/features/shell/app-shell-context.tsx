@@ -5,6 +5,7 @@ import {
     useCallback,
     useContext,
     useEffect,
+    useMemo,
     useRef,
     useState,
     type ReactNode,
@@ -95,7 +96,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
         toastTimer.current = setTimeout(() => setToast(null), 2800);
     }, []);
 
-    const toggleQuick = useCallback(() => setQuickOpen(v => !v), []);
+    const toggleQuick = useCallback(() => setQuickOpen(previous => !previous), []);
 
     const openOnboarding = useCallback((step = 0) => {
         setOnboardingStep(step);
@@ -114,17 +115,17 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const toggleLocale = useCallback(
-        () => setLocale(l => (l === Locale.NL ? Locale.EN : Locale.NL)),
+        () => setLocale(previous => (previous === Locale.NL ? Locale.EN : Locale.NL)),
         []
     );
 
     useEffect(() => {
-        const handler = (e: KeyboardEvent) => {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                setQuickOpen(v => !v);
+        const handler = (event: KeyboardEvent) => {
+            if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+                event.preventDefault();
+                setQuickOpen(previous => !previous);
             }
-            if (e.key === 'Escape') {
+            if (event.key === 'Escape') {
                 setQuickOpen(false);
                 setOnboardingOpen(false);
             }
@@ -133,30 +134,48 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
         return () => window.removeEventListener('keydown', handler);
     }, []);
 
-    return (
-        <AppShellContext.Provider
-            value={{
-                toast,
-                showToast,
-                quickOpen,
-                setQuickOpen,
-                toggleQuick,
-                onboardingOpen,
-                onboardingStep,
-                openOnboarding,
-                closeOnboarding,
-                resetOnboardingFlow,
-                setOnboardingStep,
-                plan,
-                setPlan,
-                period,
-                setPeriod,
-                locale,
-                toggleLocale,
-            }}>
-            {children}
-        </AppShellContext.Provider>
+    const ctxValue = useMemo(
+        () => ({
+            toast,
+            showToast,
+            quickOpen,
+            setQuickOpen,
+            toggleQuick,
+            onboardingOpen,
+            onboardingStep,
+            openOnboarding,
+            closeOnboarding,
+            resetOnboardingFlow,
+            setOnboardingStep,
+            plan,
+            setPlan,
+            period,
+            setPeriod,
+            locale,
+            toggleLocale,
+        }),
+        [
+            toast,
+            showToast,
+            quickOpen,
+            setQuickOpen,
+            toggleQuick,
+            onboardingOpen,
+            onboardingStep,
+            openOnboarding,
+            closeOnboarding,
+            resetOnboardingFlow,
+            setOnboardingStep,
+            plan,
+            setPlan,
+            period,
+            setPeriod,
+            locale,
+            toggleLocale,
+        ]
     );
+
+    return <AppShellContext.Provider value={ctxValue}>{children}</AppShellContext.Provider>;
 }
 
 export function useAppShell(): AppShellCtx {

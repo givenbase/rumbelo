@@ -21,8 +21,8 @@ export function LandingIcon({ name, size = 20, color = 'currentColor', className
             strokeLinejoin="round"
             className={className}
             aria-hidden>
-            {paths.map((d, i) => (
-                <path key={i} d={d} />
+            {paths.map(pathData => (
+                <path key={pathData} d={pathData} />
             ))}
         </svg>
     );

@@ -21,7 +21,7 @@ export function LandingHowItWorks() {
                     const isLast = i === JOURNEY.length - 1;
                     return (
                         <div
-                            key={j.n}
+                            key={j.step}
                             className="grid gap-4 lg:gap-6"
                             style={{ gridTemplateColumns: '44px minmax(0,1fr)' }}>
                             {/* Step indicator */}
@@ -41,7 +41,7 @@ export function LandingHowItWorks() {
                                             ? 'transparent'
                                             : 'rgb(67 56 202 / 0.34)',
                                     }}>
-                                    {j.n}
+                                    {j.step}
                                 </span>
                                 {!isLast && (
                                     <span

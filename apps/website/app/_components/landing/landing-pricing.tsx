@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { PLANS } from '@/lib/landing-content';
 import { webSignUpPath } from '@/lib/portal-urls';
 
-function fmt(n: number) {
-    return '€' + Number(n).toLocaleString('en-IE');
+function fmt(value: number) {
+    return '€' + Number(value).toLocaleString('en-IE');
 }
 
 export function LandingPricing() {
@@ -59,21 +59,21 @@ export function LandingPricing() {
             </div>
 
             <div className="grid grid-cols-1 items-start gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-                {PLANS.map(p => {
-                    const rec = p.key === 'plus';
-                    const price = p.m === 0 ? 0 : yearly ? p.y : p.m;
-                    const per = p.m === 0 ? '' : yearly ? '/year' : '/month';
+                {PLANS.map(plan => {
+                    const rec = plan.key === 'plus';
+                    const price = plan.monthly === 0 ? 0 : yearly ? plan.yearly : plan.monthly;
+                    const per = plan.monthly === 0 ? '' : yearly ? '/year' : '/month';
                     const sub =
-                        p.m === 0
+                        plan.monthly === 0
                             ? 'no card needed'
                             : yearly
-                              ? `€${(p.y / 12).toFixed(2)}/month billed yearly`
+                              ? `€${(plan.yearly / 12).toFixed(2)}/month billed yearly`
                               : 'cancel any month';
-                    const cta = p.m === 0 ? 'Start free' : `Choose ${p.name}`;
+                    const cta = plan.monthly === 0 ? 'Start free' : `Choose ${plan.name}`;
 
                     return (
                         <div
-                            key={p.key}
+                            key={plan.key}
                             className="flex min-w-0 flex-col overflow-hidden rounded-2xl bg-surface"
                             style={{
                                 border: `1px solid ${rec ? 'rgb(67 56 202 / 0.34)' : 'var(--color-line)'}`,
@@ -88,7 +88,7 @@ export function LandingPricing() {
 
                             <div className="flex flex-wrap items-center justify-between gap-2.5 px-6 pt-6">
                                 <span className="font-display text-2xl font-semibold tracking-tight">
-                                    {p.name}
+                                    {plan.name}
                                 </span>
                                 <span
                                     className="rounded-full border px-3 py-1 font-mono text-xs font-semibold tracking-wide whitespace-nowrap uppercase"
@@ -99,7 +99,7 @@ export function LandingPricing() {
                                             : 'var(--color-fg-faint)',
                                         borderColor: rec ? 'transparent' : 'var(--color-line)',
                                     }}>
-                                    {p.tag}
+                                    {plan.tag}
                                 </span>
                             </div>
 
@@ -118,17 +118,19 @@ export function LandingPricing() {
                             </div>
 
                             <p className="mx-6 my-4 text-sm leading-relaxed text-fg-secondary">
-                                {p.line}
+                                {plan.line}
                             </p>
 
                             <div className="mx-0 mb-5 grid gap-2 border-t border-line px-6 pt-4">
-                                {p.feats.map(f => (
-                                    <span key={f} className="flex min-w-0 items-baseline gap-2">
+                                {plan.feats.map(feature => (
+                                    <span
+                                        key={feature}
+                                        className="flex min-w-0 items-baseline gap-2">
                                         <span className="shrink-0 font-mono text-xs text-accent">
                                             ✦
                                         </span>
                                         <span className="text-sm leading-normal text-fg-secondary">
-                                            {f}
+                                            {feature}
                                         </span>
                                     </span>
                                 ))}

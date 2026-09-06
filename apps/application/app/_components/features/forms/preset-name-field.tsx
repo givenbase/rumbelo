@@ -37,24 +37,26 @@ export function PresetNameField({
     const rootRef = useRef<HTMLDivElement>(null);
 
     const selectedKey = useMemo(() => {
-        const match = options.find(o => o.name.toLowerCase() === value.trim().toLowerCase());
+        const match = options.find(
+            option => option.name.toLowerCase() === value.trim().toLowerCase()
+        );
         return match?.key ?? null;
     }, [options, value]);
 
     const grouped = useMemo(() => {
         const map = new Map<string, NamePresetOption[]>();
         for (const opt of options) {
-            const g = opt.group ?? '';
-            const list = map.get(g) ?? [];
+            const group = opt.group ?? '';
+            const list = map.get(group) ?? [];
             list.push(opt);
-            map.set(g, list);
+            map.set(group, list);
         }
         return [...map.entries()];
     }, [options]);
 
     useEffect(() => {
-        function onDoc(e: MouseEvent) {
-            if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+        function onDoc(event: MouseEvent) {
+            if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
         }
         document.addEventListener('mousedown', onDoc);
         return () => document.removeEventListener('mousedown', onDoc);
@@ -69,7 +71,7 @@ export function PresetNameField({
                     disabled={disabled}
                     placeholder={placeholder}
                     autoComplete="off"
-                    onChange={e => onChange(e.target.value)}
+                    onChange={event => onChange(event.target.value)}
                     onFocus={() => setOpen(true)}
                 />
                 <button
@@ -77,18 +79,18 @@ export function PresetNameField({
                     disabled={disabled || options.length === 0}
                     aria-label="Show suggestions"
                     className="absolute top-1/2 right-2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md bg-accent/15 text-accent hover:bg-accent/25 disabled:opacity-40"
-                    onClick={() => setOpen(o => !o)}>
+                    onClick={() => setOpen(previous => !previous)}>
                     <span className="text-xs tracking-widest" aria-hidden>
                         ···
                     </span>
                 </button>
             </div>
             {open && options.length > 0 ? (
-                <ul
+                <div
                     role="listbox"
                     className="absolute z-30 mt-1 max-h-64 w-full overflow-auto rounded-xl bg-fg py-1.5 text-sm text-bg shadow-lg">
                     {grouped.map(([group, items]) => (
-                        <li key={group || 'all'}>
+                        <div key={group || 'all'}>
                             {group ? (
                                 <div className="px-3 pt-2 pb-1 text-[10px] font-semibold tracking-wider text-bg/50 uppercase">
                                     {group}
@@ -120,9 +122,9 @@ export function PresetNameField({
                                     );
                                 })}
                             </ul>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : null}
         </div>
     );

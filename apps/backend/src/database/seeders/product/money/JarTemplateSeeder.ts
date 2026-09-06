@@ -7,8 +7,11 @@ import { JAR_TEMPLATE_SEED } from '../../../../modules/backoffice/product/money/
 
 export class JarTemplateSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = JAR_TEMPLATE_SEED.map(row => row.key);
+        const existingRows = await em.find(JarTemplate, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of JAR_TEMPLATE_SEED.entries()) {
-            const existing = await em.findOne(JarTemplate, { key: row.key });
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.subtitle = row.subtitle;

@@ -17,9 +17,9 @@ export function currentYearMonth(now = new Date()): YearMonth {
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
 }
 
-/** Months from `a` to `b`: positive if `b` is after `a`. */
-export function monthsBetween(a: YearMonth, b: YearMonth): number {
-    return (b.year - a.year) * 12 + (b.month - a.month);
+/** Months from `from` to `to`: positive if `to` is after `from`. */
+export function monthsBetween(from: YearMonth, to: YearMonth): number {
+    return (to.year - from.year) * 12 + (to.month - from.month);
 }
 
 function formatSpan(absMonths: number, suffix: 'ago' | 'ahead'): string {

@@ -5,7 +5,10 @@ import { emailRadii } from './email-tokens';
 import { getTheme } from './theme-styles';
 
 export const mergeStyles = (...styles: (CSSProperties | undefined)[]): CSSProperties =>
-    styles.reduce<CSSProperties>((merged, style) => (style ? { ...merged, ...style } : merged), {});
+    styles.reduce<CSSProperties>((merged, style) => {
+        if (style) Object.assign(merged, style);
+        return merged;
+    }, {});
 
 export const getButtonStyle = (
     darkMode: boolean,

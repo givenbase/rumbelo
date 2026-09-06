@@ -2,35 +2,37 @@ import { oc } from '@orpc/contract';
 import { z } from 'zod';
 
 import { HouseholdRole } from '../../enums';
-import * as S from '../../schemas';
+import * as schemas from '../../schemas';
 
 /** Platform-level: account prefs, the household itself, and cross-product advisory. */
 export const contract = {
     account: {
         /** CREATE */
         createSettings: oc
-            .input(S.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))
-            .output(S.AccountSettings),
+            .input(schemas.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))
+            .output(schemas.AccountSettings),
         /** READ — current authenticated user's settings */
-        settings: oc.output(S.AccountSettings),
+        settings: oc.output(schemas.AccountSettings),
         /** UPDATE */
         updateSettings: oc
-            .input(S.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))
-            .output(S.AccountSettings),
+            .input(schemas.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))
+            .output(schemas.AccountSettings),
         /** DELETE */
-        deleteSettings: oc.input(z.object({ id: S.Id })).output(z.object({ ok: z.literal(true) })),
+        deleteSettings: oc
+            .input(z.object({ id: schemas.Id }))
+            .output(z.object({ ok: z.literal(true) })),
     },
     household: {
-        list: oc.output(z.array(S.Household)),
-        current: oc.input(z.object({ householdId: S.HouseholdId })).output(S.Household),
-        members: oc.input(S.HouseholdScoped).output(z.array(S.HouseholdMember)),
-        settings: oc.input(S.HouseholdScoped).output(S.HouseholdSettings),
-        updateSettings: oc.input(S.HouseholdSettingsPatch).output(S.HouseholdSettings),
-        onboard: oc.input(S.OnboardingInput).output(S.Household),
+        list: oc.output(z.array(schemas.Household)),
+        current: oc.input(z.object({ householdId: schemas.HouseholdId })).output(schemas.Household),
+        members: oc.input(schemas.HouseholdScoped).output(z.array(schemas.HouseholdMember)),
+        settings: oc.input(schemas.HouseholdScoped).output(schemas.HouseholdSettings),
+        updateSettings: oc.input(schemas.HouseholdSettingsPatch).output(schemas.HouseholdSettings),
+        onboard: oc.input(schemas.OnboardingInput).output(schemas.Household),
         invite: oc
             .input(
                 z.object({
-                    householdId: S.HouseholdId,
+                    householdId: schemas.HouseholdId,
                     email: z.email(),
                     role: z.enum(HouseholdRole),
                 })
@@ -39,10 +41,10 @@ export const contract = {
     },
     coach: {
         feed: oc
-            .input(S.HouseholdScoped.extend({ period: S.PeriodKey.nullish() }))
-            .output(z.array(S.CoachMessage)),
+            .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey.nullish() }))
+            .output(z.array(schemas.CoachMessage)),
         dismiss: oc
-            .input(z.object({ householdId: S.HouseholdId, id: S.Id }))
+            .input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id }))
             .output(z.object({ ok: z.literal(true) })),
     },
 };

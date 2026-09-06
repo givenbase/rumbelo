@@ -26,14 +26,15 @@ import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
+import { ConfirmActionButton } from './confirm-action-button';
 
 const expenseFormSchema = z.object({
     amount: z
         .string()
         .min(1, 'Amount is required')
         .refine(
-            v => {
-                const cents = parseEurosToCents(v);
+            value => {
+                const cents = parseEurosToCents(value);
                 return cents !== null && cents > 0;
             },
             { message: 'Enter a valid amount' }
@@ -190,8 +191,7 @@ export function ExpenseForm({
                               : 'Save expense'}
                     </Button>
                     {mode === 'edit' && entityId ? (
-                        <Button
-                            type="button"
+                        <ConfirmActionButton
                             variant="ghost"
                             className="w-full text-danger hover:bg-danger/10 hover:text-danger"
                             disabled={
@@ -199,12 +199,11 @@ export function ExpenseForm({
                                 saveMutation.isPending ||
                                 removeMutation.isPending
                             }
-                            onClick={() => {
-                                if (!window.confirm('Permanently delete this expense?')) return;
-                                void removeMutation.mutateAsync();
-                            }}>
-                            {removeMutation.isPending ? 'Deleting…' : 'Delete'}
-                        </Button>
+                            pending={removeMutation.isPending}
+                            label="Delete"
+                            confirmLabel="Click again to delete"
+                            onConfirm={() => void removeMutation.mutateAsync()}
+                        />
                     ) : null}
                 </div>
             }>

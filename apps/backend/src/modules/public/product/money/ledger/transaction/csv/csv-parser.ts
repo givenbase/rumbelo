@@ -24,7 +24,7 @@ export function parseStatementCsv(content: string): ParsedRow[] {
     if (lines.length < 2) return [];
 
     const delimiter = sniffDelimiter(lines[0]!);
-    const header = splitRow(lines[0]!, delimiter).map(h => h.toLowerCase());
+    const header = splitRow(lines[0]!, delimiter).map(headerCell => headerCell.toLowerCase());
     const col = (aliases: readonly string[]) =>
         header.findIndex(headerCol => aliases.some(alias => headerCol.includes(alias)));
 
@@ -59,7 +59,7 @@ function sniffDelimiter(headerLine: string): string {
 }
 
 function splitRow(line: string, delimiter: string): string[] {
-    return line.split(delimiter).map(c => c.trim().replace(/^"|"$/g, ''));
+    return line.split(delimiter).map(cell => cell.trim().replace(/^"|"$/g, ''));
 }
 
 /**

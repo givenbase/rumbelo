@@ -27,14 +27,15 @@ import { useFormDismiss } from '@/app/_lib/use-form-dismiss';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
+import { ConfirmActionButton } from './confirm-action-button';
 import { PresetNameField } from './preset-name-field';
 
 const euros = z
     .string()
     .min(1, 'Amount is required')
     .refine(
-        v => {
-            const cents = parseEurosToCents(v);
+        value => {
+            const cents = parseEurosToCents(value);
             return cents !== null && cents >= 0;
         },
         { message: 'Enter a valid amount' }
@@ -47,9 +48,9 @@ const debtFormSchema = z.object({
         .string()
         .min(1, 'Interest rate is required')
         .refine(
-            v => {
-                const n = Number(v.replace(',', '.'));
-                return Number.isFinite(n) && n >= 0 && n <= 100;
+            value => {
+                const parsed = Number(value.replace(',', '.'));
+                return Number.isFinite(parsed) && parsed >= 0 && parsed <= 100;
             },
             { message: 'Interest must be between 0 and 100' }
         ),
@@ -90,7 +91,12 @@ export function DebtForm({
         live && mode === 'create'
     );
     const presetOptions = useMemo(
-        () => (presetsQuery.data ?? []).map(p => ({ key: p.key, name: p.name, kind: p.kind })),
+        () =>
+            (presetsQuery.data ?? []).map(preset => ({
+                key: preset.key,
+                name: preset.name,
+                kind: preset.kind,
+            })),
         [presetsQuery.data]
     );
 
@@ -192,17 +198,15 @@ export function DebtForm({
                               : 'Save debt'}
                     </Button>
                     {mode === 'edit' && entityId ? (
-                        <Button
-                            type="button"
+                        <ConfirmActionButton
                             variant="ghost"
                             className="w-full text-danger hover:bg-danger/10 hover:text-danger"
                             disabled={busy}
-                            onClick={() => {
-                                if (!window.confirm('Permanently delete this debt?')) return;
-                                void removeMutation.mutateAsync();
-                            }}>
-                            {removeMutation.isPending ? 'Deleting…' : 'Delete'}
-                        </Button>
+                            pending={removeMutation.isPending}
+                            label="Delete"
+                            confirmLabel="Click again to delete"
+                            onConfirm={() => void removeMutation.mutateAsync()}
+                        />
                     ) : null}
                 </div>
             }>
@@ -220,7 +224,9 @@ export function DebtForm({
                                     placeholder="e.g. credit card"
                                     options={presetOptions}
                                     onSelect={opt => {
-                                        const full = presetOptions.find(p => p.key === opt.key);
+                                        const full = presetOptions.find(
+                                            preset => preset.key === opt.key
+                                        );
                                         if (full) form.setValue('kind', full.kind);
                                     }}
                                 />

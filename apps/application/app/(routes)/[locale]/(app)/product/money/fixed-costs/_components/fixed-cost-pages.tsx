@@ -23,7 +23,7 @@ export function FixedCostUpdatePage({ id, embedded = false }: { id: string; embe
         [] as never,
         live
     );
-    const row = (query.data ?? []).find(f => f.id === id);
+    const row = (query.data ?? []).find(fixedCost => fixedCost.id === id);
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;

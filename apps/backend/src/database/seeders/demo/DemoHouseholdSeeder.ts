@@ -59,9 +59,9 @@ export class DemoHouseholdSeeder extends Seeder {
             throw new Error('DemoHouseholdSeeder: no jar templates — run JarTemplateSeeder first');
         }
 
-        for (const account of DEMO_ACCOUNTS) {
-            await this.seedPersona(em, auth, account, templates);
-        }
+        await Promise.all(
+            DEMO_ACCOUNTS.map(account => this.seedPersona(em.fork(), auth, account, templates))
+        );
     }
 
     private async seedPersona(

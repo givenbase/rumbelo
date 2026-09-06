@@ -124,7 +124,7 @@ export function NativeEnum<T extends Record<string, string>>(options: {
     if (nameOverride !== undefined && domain !== undefined) {
         suffix = `${domain}_${nameOverride}`;
     } else if (nameOverride !== undefined) {
-        const hasDomainPrefix = DOMAIN_PREFIXES.some(p => nameOverride.startsWith(p));
+        const hasDomainPrefix = DOMAIN_PREFIXES.some(prefix => nameOverride.startsWith(prefix));
         if (!hasDomainPrefix) {
             throw new Error(
                 `NativeEnum: name "${nameOverride}" has no recognised domain prefix. ` +
@@ -134,7 +134,7 @@ export function NativeEnum<T extends Record<string, string>>(options: {
         suffix = nameOverride;
     } else {
         const snakeCase = toSnakeCaseEnumName(enumNamePascalCase);
-        const hasDomainPrefix = DOMAIN_PREFIXES.some(p => snakeCase.startsWith(p));
+        const hasDomainPrefix = DOMAIN_PREFIXES.some(prefix => snakeCase.startsWith(prefix));
 
         if (hasDomainPrefix) {
             suffix = snakeCase;

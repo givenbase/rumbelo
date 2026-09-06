@@ -84,11 +84,11 @@ export function AuthAside() {
                 </div>
 
                 <div className="mt-10 flex gap-1.5" aria-hidden>
-                    {AUTH_QUOTES.map((_, i) => (
+                    {AUTH_QUOTES.map((item, quoteIdx) => (
                         <span
-                            key={i}
+                            key={item.headline}
                             className={
-                                i === quoteIndex
+                                quoteIdx === quoteIndex
                                     ? 'h-1 w-6 rounded-full bg-white'
                                     : 'h-1 w-1.5 rounded-full bg-white/35'
                             }

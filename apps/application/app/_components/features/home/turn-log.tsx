@@ -41,22 +41,22 @@ export function TurnLog({
 
             {/* Event log */}
             <div className="mt-4.5 grid gap-0">
-                {events.map((e, i) => (
+                {events.map(entry => (
                     <div
-                        key={i}
+                        key={`${entry.day}-${entry.text}`}
                         className="flex items-baseline gap-2.5 border-b border-line py-3 last:border-b-0 last:pb-0">
                         <span className="w-14 shrink-0 font-mono text-xs text-fg-faint">
-                            {e.day}
+                            {entry.day}
                         </span>
                         <span className="min-w-0 flex-1 text-sm text-pretty text-fg-secondary">
-                            {e.text}
+                            {entry.text}
                         </span>
                         <span
                             className={cn(
                                 'shrink-0 font-mono text-xs',
-                                e.points < 0 ? 'text-danger' : 'text-success'
+                                entry.points < 0 ? 'text-danger' : 'text-success'
                             )}>
-                            {e.points > 0 ? `+${e.points}` : e.points}
+                            {entry.points > 0 ? `+${entry.points}` : entry.points}
                         </span>
                     </div>
                 ))}

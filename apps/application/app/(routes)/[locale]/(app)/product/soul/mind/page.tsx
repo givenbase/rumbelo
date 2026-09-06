@@ -70,7 +70,7 @@ export default function MindPage() {
                             min={1}
                             max={45}
                             value={minutes}
-                            onChange={e => setMinutes(Number(e.target.value))}
+                            onChange={event => setMinutes(Number(event.target.value))}
                             className="min-w-0 flex-1 accent-accent"
                         />
                         <span className="font-display text-3xl leading-none font-semibold tracking-tight whitespace-nowrap text-accent sm:text-4xl lg:text-5xl">
@@ -80,7 +80,7 @@ export default function MindPage() {
 
                     <button
                         type="button"
-                        onClick={() => setMarkedToday(p => !p)}
+                        onClick={() => setMarkedToday(previous => !previous)}
                         className={cn(
                             'rounded-full border px-4 py-3.5 font-mono text-xs font-bold tracking-wide uppercase transition-all',
                             markedToday
@@ -100,18 +100,22 @@ export default function MindPage() {
 
             {/* ── Practice cards ── */}
             <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 lg:grid-cols-3">
-                {PRACTICES.map(p => (
+                {PRACTICES.map(practice => (
                     <div
-                        key={p.name}
+                        key={practice.name}
                         className="grid gap-2.5 rounded-2xl border border-t-4 border-line bg-surface p-5 shadow-md"
-                        style={{ borderTopColor: p.color }}>
+                        style={{ borderTopColor: practice.color }}>
                         <span
                             className="font-mono text-xs font-medium tracking-widest uppercase"
-                            style={{ color: p.color }}>
-                            {p.meta}
+                            style={{ color: practice.color }}>
+                            {practice.meta}
                         </span>
-                        <span className="font-display text-xl font-semibold text-fg">{p.name}</span>
-                        <span className="text-sm leading-relaxed text-fg-muted">{p.desc}</span>
+                        <span className="font-display text-xl font-semibold text-fg">
+                            {practice.name}
+                        </span>
+                        <span className="text-sm leading-relaxed text-fg-muted">
+                            {practice.desc}
+                        </span>
                     </div>
                 ))}
             </div>

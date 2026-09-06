@@ -61,7 +61,7 @@ export function RitualWizard({
 }) {
     const stageIndex =
         initialStage && initialStage !== RitualStage.DONE
-            ? STEPS.findIndex(s => s.key === initialStage)
+            ? STEPS.findIndex(stageItem => stageItem.key === initialStage)
             : 0;
     const [step, setStep] = useState(Math.max(0, stageIndex));
     const [intent, setIntent] = useState('');
@@ -79,7 +79,7 @@ export function RitualWizard({
                       : undefined;
             await onStepComplete(current.key, payload);
         }
-        if (step < STEPS.length - 1) setStep(s => s + 1);
+        if (step < STEPS.length - 1) setStep(previous => previous + 1);
     }
 
     async function finish() {
@@ -92,9 +92,9 @@ export function RitualWizard({
         <div className="grid gap-6">
             {/* Step indicator strip */}
             <div className="flex items-stretch overflow-hidden rounded-2xl border border-line bg-surface shadow-md">
-                {STEPS.map((s, i) => (
+                {STEPS.map((stageItem, i) => (
                     <button
-                        key={s.key}
+                        key={stageItem.key}
                         type="button"
                         onClick={() => setStep(i)}
                         className={cn(
@@ -117,9 +117,9 @@ export function RitualWizard({
                                 'font-display text-sm font-semibold',
                                 i === step ? 'text-fg' : 'text-fg-secondary'
                             )}>
-                            {s.label}
+                            {stageItem.label}
                         </span>
-                        <span className="text-xs leading-tight text-fg-faint">{s.sub}</span>
+                        <span className="text-xs leading-tight text-fg-faint">{stageItem.sub}</span>
                         {/* Progress pip */}
                         <span
                             className={cn(
@@ -227,7 +227,7 @@ export function RitualWizard({
                         <textarea
                             rows={4}
                             value={intent}
-                            onChange={e => setIntent(e.target.value)}
+                            onChange={event => setIntent(event.target.value)}
                             placeholder="Write your intention here..."
                             className="w-full resize-none rounded-xl border border-line bg-raised px-4 py-3 text-sm text-fg transition-colors placeholder:text-fg-faint focus:border-accent focus:outline-none"
                             aria-label="Intention for next week"
@@ -244,7 +244,7 @@ export function RitualWizard({
             {/* Navigation row */}
             <div className="flex items-center justify-between gap-3">
                 {step > 0 ? (
-                    <Button variant="ghost" onClick={() => setStep(s => s - 1)}>
+                    <Button variant="ghost" onClick={() => setStep(previous => previous - 1)}>
                         ← Back
                     </Button>
                 ) : (

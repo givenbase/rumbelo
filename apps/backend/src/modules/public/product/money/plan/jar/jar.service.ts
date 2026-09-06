@@ -118,9 +118,11 @@ export class JarService {
         if (Math.abs(total - 100) > 0.01) {
             throw new Error(`Jar split must total 100%, received ${total}%`);
         }
-        for (const { jarId, percentage } of split) {
-            const jar = await this.jars.findOneOrFail({ id: jarId });
-            jar.percentage = percentage.toFixed(2);
+        const jars = await Promise.all(
+            split.map(({ jarId }) => this.jars.findOneOrFail({ id: jarId }))
+        );
+        for (const [index, jar] of jars.entries()) {
+            jar.percentage = split[index]!.percentage.toFixed(2);
         }
         await this.em.flush();
         return this.list();

@@ -86,8 +86,8 @@ export class LogService {
         const rows = await this.repo.find({}, { orderBy: { loggedOn: 'DESC' }, limit: 400 });
         return Object.values(EnergyMetric).map(metric => {
             const forMetric = rows.filter(row => row.metric === metric);
-            const avg = (n: number) => {
-                const slice = forMetric.slice(0, n);
+            const avg = (value: number) => {
+                const slice = forMetric.slice(0, value);
                 return slice.length
                     ? slice.reduce((total, row) => total + Number(row.value), 0) / slice.length
                     : 0;

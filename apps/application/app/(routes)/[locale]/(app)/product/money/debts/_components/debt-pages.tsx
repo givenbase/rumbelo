@@ -23,7 +23,7 @@ export function DebtUpdatePage({ id, embedded = false }: { id: string; embedded?
         [] as never,
         live
     );
-    const row = (query.data ?? []).find(d => d.id === id);
+    const row = (query.data ?? []).find(debt => debt.id === id);
 
     if (live && query.isLoading && !row) {
         return <p className="text-sm text-fg-muted">Loading…</p>;

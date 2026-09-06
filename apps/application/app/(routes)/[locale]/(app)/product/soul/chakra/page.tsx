@@ -75,13 +75,13 @@ export default function ChakraPage() {
 
             {/* ── Centre picker ── */}
             <div className="grid gap-2">
-                {CENTRES.map(c => {
-                    const active = pick?.id === c.id;
+                {CENTRES.map(centre => {
+                    const active = pick?.id === centre.id;
                     return (
                         <button
-                            key={c.id}
+                            key={centre.id}
                             type="button"
-                            onClick={() => setPick(active ? null : c)}
+                            onClick={() => setPick(active ? null : centre)}
                             className={cn(
                                 'flex items-center gap-3.5 rounded-xl border px-4 py-3.5 text-left transition-all',
                                 active
@@ -90,17 +90,17 @@ export default function ChakraPage() {
                             )}>
                             <span
                                 className="size-2.5 shrink-0 rounded-full"
-                                style={{ background: c.color }}
+                                style={{ background: centre.color }}
                             />
                             <span
                                 className={cn(
                                     'min-w-0 flex-1 font-display text-lg font-semibold',
                                     active ? 'text-fg' : 'text-fg'
                                 )}>
-                                {c.name}
+                                {centre.name}
                             </span>
                             <span className="shrink-0 font-mono text-xs text-fg-faint">
-                                {c.gov}
+                                {centre.gov}
                             </span>
                         </button>
                     );

@@ -7,9 +7,11 @@ import { DEBT_PRESET_SEED } from '../../../../modules/backoffice/product/money/p
 
 export class DebtPresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const keys = DEBT_PRESET_SEED.map(row => row.key);
+        const existingRows = await em.find(DebtPreset, { key: { $in: keys } });
+        const existingKeys = new Set(existingRows.map(row => row.key));
         for (const [sortOrder, row] of DEBT_PRESET_SEED.entries()) {
-            const existing = await em.findOne(DebtPreset, { key: row.key });
-            if (existing) continue;
+            if (existingKeys.has(row.key)) continue;
             em.create(DebtPreset, { ...row, sortOrder, isActive: true } as never);
         }
         await em.flush();

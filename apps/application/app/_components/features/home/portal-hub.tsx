@@ -77,58 +77,58 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
             </div>
 
             <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-                {cards.map(c => (
+                {cards.map(card => (
                     <Link
-                        key={c.name}
-                        href={c.href}
+                        key={card.name}
+                        href={card.href}
                         className="grid content-start gap-2.5 rounded-2xl border border-t-4 border-line bg-surface p-5 shadow-md transition-all hover:-translate-y-px hover:border-accent-hover"
-                        style={{ borderTopColor: c.color }}>
+                        style={{ borderTopColor: card.color }}>
                         <span className="flex items-center justify-between gap-2">
                             <span className="font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">
-                                {c.name}
+                                {card.name}
                             </span>
-                            {c.locked && <span className="text-xs text-fg-faint">🔒</span>}
+                            {card.locked && <span className="text-xs text-fg-faint">🔒</span>}
                         </span>
                         <span className="flex min-h-13 items-end justify-between gap-3">
                             <span className="font-display text-2xl font-semibold tracking-tight text-fg lg:text-3xl">
-                                {c.value}
+                                {card.value}
                             </span>
-                            {c.chart.kind === 'bars' ? (
+                            {card.chart.kind === 'bars' ? (
                                 <span className="flex h-11 items-end gap-0.75">
-                                    {c.chart.bars.map((h, i) => (
+                                    {card.chart.bars.map(height => (
                                         <span
-                                            key={i}
+                                            key={`${card.name}-bar-${height}`}
                                             className="block w-1.5 rounded-sm"
                                             style={{
-                                                height: `${h}%`,
+                                                height: `${height}%`,
                                                 minHeight: 4,
-                                                background: c.color,
+                                                background: card.color,
                                             }}
                                         />
                                     ))}
                                 </span>
                             ) : (
-                                <RingChart pct={c.chart.pct} color={c.color} />
+                                <RingChart pct={card.chart.pct} color={card.color} />
                             )}
                         </span>
                         <span className="text-sm leading-relaxed text-pretty text-fg-muted">
-                            {c.note}
+                            {card.note}
                         </span>
-                        {c.delta && (
+                        {card.delta && (
                             <span className="flex items-center gap-1.5 border-t border-line pt-2.5">
                                 <span
                                     className={cn(
                                         'text-xs',
-                                        c.delta.positive ? 'text-success' : 'text-danger'
+                                        card.delta.positive ? 'text-success' : 'text-danger'
                                     )}>
-                                    {c.delta.mark}
+                                    {card.delta.mark}
                                 </span>
                                 <span
                                     className={cn(
                                         'font-mono text-xs font-medium tracking-normal',
-                                        c.delta.positive ? 'text-success' : 'text-danger'
+                                        card.delta.positive ? 'text-success' : 'text-danger'
                                     )}>
-                                    {c.delta.text}
+                                    {card.delta.text}
                                 </span>
                             </span>
                         )}

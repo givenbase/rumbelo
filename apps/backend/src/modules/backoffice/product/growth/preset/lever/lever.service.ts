@@ -29,7 +29,7 @@ export class LeverPresetService {
             this.wealthStages.listActive(),
         ]);
 
-        const sortByKey = new Map(stages.map(s => [s.key, s.sortOrder]));
+        const sortByKey = new Map(stages.map(stage => [stage.key, stage.sortOrder]));
         const mapped = rows.map(row => toDto(row, sortByKey));
 
         const stageKey = filters?.stageKey ?? WEALTH_STAGE_KEYS.BUILDING;

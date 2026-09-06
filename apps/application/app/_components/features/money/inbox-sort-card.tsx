@@ -45,7 +45,7 @@ function resolveInitialJarId(
 }
 
 export function InboxSortCard({
-    transaction: t,
+    transaction,
     jars,
     suggestedJarId,
     onConfirm,
@@ -64,15 +64,15 @@ export function InboxSortCard({
 
     const jarId = useMemo(() => {
         if (pickedJarId && jars.some(j => j.id === pickedJarId)) return pickedJarId;
-        return resolveInitialJarId(jars, suggestedJarId, t.amount);
-    }, [pickedJarId, jars, suggestedJarId, t.amount]);
+        return resolveInitialJarId(jars, suggestedJarId, transaction.amount);
+    }, [pickedJarId, jars, suggestedJarId, transaction.amount]);
 
     const selected = jars.find(j => j.id === jarId) ?? jars[0];
-    const meta = metaForKey(selected?.key ?? suggestJarKey(t.amount));
+    const meta = metaForKey(selected?.key ?? suggestJarKey(transaction.amount));
     const confident =
         Boolean(suggestedJarId) ||
-        suggestJarKey(t.amount) === 'NECESSITIES' ||
-        Math.abs(t.amount) < 2_000;
+        suggestJarKey(transaction.amount) === 'NECESSITIES' ||
+        Math.abs(transaction.amount) < 2_000;
 
     if (done) return null;
 
@@ -84,7 +84,7 @@ export function InboxSortCard({
         }
         setPending(createRule ? 'rule' : 'sort');
         try {
-            await onConfirm(t.id, jarId, createRule);
+            await onConfirm(transaction.id, jarId, createRule);
             setDone(true);
         } finally {
             setPending(null);
@@ -95,24 +95,25 @@ export function InboxSortCard({
         <div className="grid animate-rise gap-4 rounded-2xl border border-line bg-surface p-5 shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
-                    <p className="text-base font-semibold text-fg">{t.description}</p>
+                    <p className="text-base font-semibold text-fg">{transaction.description}</p>
                     <p className="mt-1 font-mono text-xs tracking-normal text-fg-muted">
-                        {t.counterparty ?? 'Unknown counterparty'} · {t.bookedOn}
+                        {transaction.counterparty ?? 'Unknown counterparty'} ·{' '}
+                        {transaction.bookedOn}
                     </p>
                 </div>
                 <span
                     className={cn(
                         'shrink-0 font-mono text-lg',
-                        t.amount < 0 ? 'text-fg' : 'text-success'
+                        transaction.amount < 0 ? 'text-fg' : 'text-success'
                     )}>
-                    {formatMoney(t.amount, { signed: true })}
+                    {formatMoney(transaction.amount, { signed: true })}
                 </span>
             </div>
 
             <div className="grid gap-2.5">
                 <button
                     type="button"
-                    onClick={() => setPicking(v => !v)}
+                    onClick={() => setPicking(previous => !previous)}
                     className="flex flex-wrap items-center gap-2.5 rounded-xl border border-line bg-raised px-3.5 py-3 text-left transition-colors hover:border-line-strong">
                     <span className="font-mono text-xs tracking-widest text-fg-muted uppercase">
                         Looks like
@@ -183,7 +184,7 @@ export function InboxSortCard({
                     variant="ghost"
                     size="sm"
                     disabled={pending !== null || !jarId}
-                    onClick={() => onChange?.(t, jarId)}>
+                    onClick={() => onChange?.(transaction, jarId)}>
                     Other
                 </Button>
             </div>

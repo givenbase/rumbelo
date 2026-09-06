@@ -32,6 +32,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const activating = useRef(false);
 
     const householdId = activeHouseholdId(session);
+    const refetchRef = useRef(refetch);
+    useEffect(() => {
+        refetchRef.current = refetch;
+    }, [refetch]);
 
     const refreshSession = useCallback(async () => {
         await refetch();
@@ -55,13 +59,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 const first = orgs.data?.[0];
                 if (first?.id) {
                     await setActiveOrganization(first.id);
-                    await refetch();
+                    await refetchRef.current();
                 }
             } finally {
                 activating.current = false;
             }
         })();
-    }, [isPending, session?.user, householdId, refetch]);
+    }, [isPending, session?.user, householdId]);
 
     const value = useMemo(
         () => ({ session, isPending, householdId, refreshSession, setActiveHousehold }),

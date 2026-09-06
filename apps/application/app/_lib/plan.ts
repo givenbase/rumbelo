@@ -35,10 +35,9 @@ export const DEFAULT_PLAN: PlanKey = PlanKey.BASIC;
  * Absence → screen is accessible on every plan.
  */
 export const SCREEN_MIN: Record<string, PlanKey> = Object.fromEntries(
-    [...new Set(Object.values(PLAN_CAPABILITIES).flatMap(c => c.screens))].map(screen => [
-        screen,
-        minPlanForScreen(screen)!,
-    ])
+    [...new Set(Object.values(PLAN_CAPABILITIES).flatMap(capability => capability.screens))].map(
+        screen => [screen, minPlanForScreen(screen)!]
+    )
 ) as Record<string, PlanKey>;
 
 /** Returns true when `plan` is insufficient to access the given screenKey. */

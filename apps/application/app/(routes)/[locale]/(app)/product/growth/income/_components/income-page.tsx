@@ -60,10 +60,12 @@ export function IncomePageClient() {
         live
     );
 
-    const NET = (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0);
+    const NET = (incomeQuery.data ?? [])
+        .filter(source => source.isActive)
+        .reduce((total, i) => total + i.amount, 0);
     const GAP = TARGET - NET;
     const jars = jarsQuery.data ?? [];
-    const sources = (incomeQuery.data ?? []).filter(s => s.isActive);
+    const sources = (incomeQuery.data ?? []).filter(source => source.isActive);
     const levers = leversQuery.data ?? [];
 
     return (
@@ -162,20 +164,20 @@ export function IncomePageClient() {
                     </p>
                 ) : (
                     <div className="grid gap-px">
-                        {sources.map(s => (
+                        {sources.map(source => (
                             <button
                                 type="button"
-                                key={s.id}
-                                onClick={() => router.push(updateHref('income', s.id))}
+                                key={source.id}
+                                onClick={() => router.push(updateHref('income', source.id))}
                                 className="flex w-full items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised">
                                 <div>
-                                    <div className="text-sm text-fg">{s.name}</div>
+                                    <div className="text-sm text-fg">{source.name}</div>
                                     <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                        {s.kind}
+                                        {source.kind}
                                     </div>
                                 </div>
                                 <span className="font-mono text-sm text-success">
-                                    {formatMoney(s.amount)}
+                                    {formatMoney(source.amount)}
                                 </span>
                             </button>
                         ))}

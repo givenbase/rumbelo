@@ -34,6 +34,6 @@ export function formatPeriod(period: string, locale = 'en-IE'): string {
     );
 }
 
-export function currentPeriod(d = new Date()): string {
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+export function currentPeriod(date = new Date()): string {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }

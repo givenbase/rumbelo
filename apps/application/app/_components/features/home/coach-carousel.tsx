@@ -58,15 +58,15 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
 
                 <div className="flex flex-wrap items-center gap-3.5">
                     <span className="flex items-center gap-1.5">
-                        {slides.map((_, i) => (
+                        {slides.map((entry, slideIndex) => (
                             <button
-                                key={i}
+                                key={entry.text}
                                 type="button"
-                                onClick={() => setIndex(i)}
-                                aria-label={`Slide ${i + 1}`}
+                                onClick={() => setIndex(slideIndex)}
+                                aria-label={`Slide ${slideIndex + 1}`}
                                 className={cn(
                                     'h-1 rounded-full transition-all',
-                                    i === index ? 'w-6 bg-accent' : 'w-2.5 bg-line-strong'
+                                    slideIndex === index ? 'w-6 bg-accent' : 'w-2.5 bg-line-strong'
                                 )}
                             />
                         ))}
@@ -74,7 +74,9 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
                     <span className="flex items-center gap-2">
                         <button
                             type="button"
-                            onClick={() => setIndex(i => (i - 1 + slides.length) % slides.length)}
+                            onClick={() =>
+                                setIndex(previous => (previous - 1 + slides.length) % slides.length)
+                            }
                             className="grid size-6.5 place-items-center rounded-full border border-line text-fg-muted transition-colors hover:border-accent-hover hover:text-accent">
                             ←
                         </button>
@@ -83,7 +85,7 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
                         </span>
                         <button
                             type="button"
-                            onClick={() => setIndex(i => (i + 1) % slides.length)}
+                            onClick={() => setIndex(previous => (previous + 1) % slides.length)}
                             className="grid size-6.5 place-items-center rounded-full border border-line text-fg-muted transition-colors hover:border-accent-hover hover:text-accent">
                             →
                         </button>
@@ -100,20 +102,20 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
             </div>
 
             <div className="flex flex-wrap border-t border-line bg-bg-app">
-                {recap.map(r => (
+                {recap.map(row => (
                     <Link
-                        key={r.label}
-                        href={r.href}
+                        key={row.label}
+                        href={row.href}
                         className="grid flex-1 gap-1 border-t-2 border-r border-line px-4 py-2.5 transition-colors last:border-r-0 hover:bg-raised"
-                        style={{ borderTopColor: r.color }}>
+                        style={{ borderTopColor: row.color }}>
                         <span
                             className="font-mono text-xs font-semibold tracking-widest"
-                            style={{ color: r.color }}>
-                            {r.label}
+                            style={{ color: row.color }}>
+                            {row.label}
                         </span>
                         <span className="flex items-baseline gap-1.5">
-                            <span className="font-mono text-xs text-fg">{r.value}</span>
-                            <span className="text-xs text-fg-faint">{r.what}</span>
+                            <span className="font-mono text-xs text-fg">{row.value}</span>
+                            <span className="text-xs text-fg-faint">{row.what}</span>
                         </span>
                     </Link>
                 ))}

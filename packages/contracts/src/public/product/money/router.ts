@@ -9,7 +9,7 @@ import {
     PayoffStrategy,
     RitualStage,
 } from '../../../enums';
-import * as S from '../../../schemas';
+import * as schemas from '../../../schemas';
 
 const ok = z.object({ ok: z.literal(true) });
 
@@ -19,205 +19,243 @@ const ok = z.object({ ok: z.literal(true) });
  */
 export const contract = {
     jars: {
-        list: oc.input(S.HouseholdScoped).output(z.array(S.Jar)),
+        list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Jar)),
         balances: oc
-            .input(S.HouseholdScoped.extend({ period: S.PeriodKey.nullish() }))
-            .output(z.array(S.JarBalance)),
+            .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey.nullish() }))
+            .output(z.array(schemas.JarBalance)),
         update: oc
-            .input(S.Jar.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.Jar),
-        updateSplit: oc.input(S.UpdateJarSplit).output(z.array(S.Jar)),
+            .input(
+                schemas.Jar.partial().extend({ id: schemas.Id, householdId: schemas.HouseholdId })
+            )
+            .output(schemas.Jar),
+        updateSplit: oc.input(schemas.UpdateJarSplit).output(z.array(schemas.Jar)),
         createCategory: oc
             .input(
                 z.object({
-                    householdId: S.HouseholdId,
-                    jarId: S.Id,
+                    householdId: schemas.HouseholdId,
+                    jarId: schemas.Id,
                     name: z.string().min(1).max(80),
-                    budgeted: S.Money,
+                    budgeted: schemas.Money,
                 })
             )
-            .output(S.Category),
+            .output(schemas.Category),
         updateCategory: oc
-            .input(S.Category.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.Category),
-        deleteCategory: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
+            .input(
+                schemas.Category.partial().extend({
+                    id: schemas.Id,
+                    householdId: schemas.HouseholdId,
+                })
+            )
+            .output(schemas.Category),
+        deleteCategory: oc
+            .input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id }))
+            .output(ok),
     },
 
     income: {
-        list: oc.input(S.HouseholdScoped).output(z.array(S.IncomeSource)),
-        create: oc.input(S.IncomeSource.omit({ id: true })).output(S.IncomeSource),
+        list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.IncomeSource)),
+        create: oc.input(schemas.IncomeSource.omit({ id: true })).output(schemas.IncomeSource),
         update: oc
-            .input(S.IncomeSource.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.IncomeSource),
-        remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
+            .input(
+                schemas.IncomeSource.partial().extend({
+                    id: schemas.Id,
+                    householdId: schemas.HouseholdId,
+                })
+            )
+            .output(schemas.IncomeSource),
+        remove: oc.input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id })).output(ok),
         /** Turns an income event into per-jar allocations atomically. */
         applySplit: oc
             .input(
                 z.object({
-                    householdId: S.HouseholdId,
-                    incomeSourceId: S.Id,
-                    amount: S.Money,
-                    bookedOn: S.IsoDate,
+                    householdId: schemas.HouseholdId,
+                    incomeSourceId: schemas.Id,
+                    amount: schemas.Money,
+                    bookedOn: schemas.IsoDate,
                 })
             )
-            .output(z.object({ allocations: z.array(z.object({ jarId: S.Id, amount: S.Money })) })),
+            .output(
+                z.object({
+                    allocations: z.array(z.object({ jarId: schemas.Id, amount: schemas.Money })),
+                })
+            ),
     },
 
     fixedCosts: {
         list: oc
-            .input(S.HouseholdScoped.extend({ direction: z.enum(FlowDirection).nullish() }))
-            .output(z.array(S.FixedCost)),
-        byJar: oc.input(S.HouseholdScoped).output(z.array(S.FixedCostsByJar)),
-        create: oc.input(S.FixedCost.omit({ id: true })).output(S.FixedCost),
+            .input(schemas.HouseholdScoped.extend({ direction: z.enum(FlowDirection).nullish() }))
+            .output(z.array(schemas.FixedCost)),
+        byJar: oc.input(schemas.HouseholdScoped).output(z.array(schemas.FixedCostsByJar)),
+        create: oc.input(schemas.FixedCost.omit({ id: true })).output(schemas.FixedCost),
         update: oc
-            .input(S.FixedCost.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.FixedCost),
-        remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
+            .input(
+                schemas.FixedCost.partial().extend({
+                    id: schemas.Id,
+                    householdId: schemas.HouseholdId,
+                })
+            )
+            .output(schemas.FixedCost),
+        remove: oc.input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id })).output(ok),
     },
 
     accounts: {
-        list: oc.input(S.HouseholdScoped).output(z.array(S.Account)),
+        list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Account)),
         create: oc
-            .input(S.Account.omit({ id: true, connectionId: true, lastSyncedAt: true }))
-            .output(S.Account),
+            .input(schemas.Account.omit({ id: true, connectionId: true, lastSyncedAt: true }))
+            .output(schemas.Account),
     },
 
     transactions: {
-        list: oc.input(S.ListTransactions).output(S.paginated(S.Transaction)),
-        inbox: oc.input(S.HouseholdScoped).output(z.array(S.Transaction)),
-        create: oc.input(S.CreateTransaction).output(S.Transaction),
+        list: oc.input(schemas.ListTransactions).output(schemas.paginated(schemas.Transaction)),
+        inbox: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Transaction)),
+        create: oc.input(schemas.CreateTransaction).output(schemas.Transaction),
         update: oc
-            .input(S.Transaction.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.Transaction),
-        sort: oc.input(S.SortTransaction).output(S.Transaction),
+            .input(
+                schemas.Transaction.partial().extend({
+                    id: schemas.Id,
+                    householdId: schemas.HouseholdId,
+                })
+            )
+            .output(schemas.Transaction),
+        sort: oc.input(schemas.SortTransaction).output(schemas.Transaction),
         bulkSort: oc
             .input(
                 z.object({
-                    householdId: S.HouseholdId,
-                    transactionIds: z.array(S.Id).min(1),
-                    jarId: S.Id,
-                    categoryId: S.Id.nullish(),
+                    householdId: schemas.HouseholdId,
+                    transactionIds: z.array(schemas.Id).min(1),
+                    jarId: schemas.Id,
+                    categoryId: schemas.Id.nullish(),
                 })
             )
             .output(z.object({ updated: z.int() })),
-        remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
-        importCsv: oc.input(S.ImportCsv).output(S.ImportPreview),
+        remove: oc.input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id })).output(ok),
+        importCsv: oc.input(schemas.ImportCsv).output(schemas.ImportPreview),
     },
 
     rules: {
-        list: oc.input(S.HouseholdScoped).output(z.array(S.Rule)),
-        create: oc.input(S.Rule.omit({ id: true, hitCount: true })).output(S.Rule),
+        list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Rule)),
+        create: oc.input(schemas.Rule.omit({ id: true, hitCount: true })).output(schemas.Rule),
         update: oc
-            .input(S.Rule.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.Rule),
-        remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
+            .input(
+                schemas.Rule.partial().extend({ id: schemas.Id, householdId: schemas.HouseholdId })
+            )
+            .output(schemas.Rule),
+        remove: oc.input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id })).output(ok),
         /** Re-runs isActive rules over unsorted history — the "clean my inbox" button. */
-        replay: oc.input(S.HouseholdScoped).output(z.object({ sorted: z.int() })),
+        replay: oc.input(schemas.HouseholdScoped).output(z.object({ sorted: z.int() })),
     },
 
     goals: {
-        list: oc.input(S.HouseholdScoped).output(z.array(S.Goal)),
-        create: oc.input(S.Goal.omit({ id: true, saved: true })).output(S.Goal),
+        list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Goal)),
+        create: oc.input(schemas.Goal.omit({ id: true, saved: true })).output(schemas.Goal),
         update: oc
-            .input(S.Goal.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.Goal),
-        remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
-        projections: oc.input(S.HouseholdScoped).output(z.array(S.GoalProjection)),
+            .input(
+                schemas.Goal.partial().extend({ id: schemas.Id, householdId: schemas.HouseholdId })
+            )
+            .output(schemas.Goal),
+        remove: oc.input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id })).output(ok),
+        projections: oc.input(schemas.HouseholdScoped).output(z.array(schemas.GoalProjection)),
     },
 
     debts: {
-        list: oc.input(S.HouseholdScoped).output(z.array(S.Debt)),
-        create: oc.input(S.Debt.omit({ id: true })).output(S.Debt),
+        list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Debt)),
+        create: oc.input(schemas.Debt.omit({ id: true })).output(schemas.Debt),
         update: oc
-            .input(S.Debt.partial().extend({ id: S.Id, householdId: S.HouseholdId }))
-            .output(S.Debt),
-        remove: oc.input(z.object({ householdId: S.HouseholdId, id: S.Id })).output(ok),
+            .input(
+                schemas.Debt.partial().extend({ id: schemas.Id, householdId: schemas.HouseholdId })
+            )
+            .output(schemas.Debt),
+        remove: oc.input(z.object({ householdId: schemas.HouseholdId, id: schemas.Id })).output(ok),
         plan: oc
             .input(
-                S.HouseholdScoped.extend({
+                schemas.HouseholdScoped.extend({
                     strategy: z.enum(PayoffStrategy).nullish(),
                 })
             )
-            .output(S.DebtPlan),
+            .output(schemas.DebtPlan),
     },
 
     turn: {
         current: oc
-            .input(S.HouseholdScoped.extend({ period: S.PeriodKey.nullish() }))
-            .output(S.Turn),
-        levels: oc.input(S.HouseholdScoped).output(z.array(S.Level)),
-        recap: oc.input(S.HouseholdScoped.extend({ period: S.PeriodKey })).output(S.PeriodRecap),
+            .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey.nullish() }))
+            .output(schemas.Turn),
+        levels: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Level)),
+        recap: oc
+            .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey }))
+            .output(schemas.PeriodRecap),
         /** Idempotent: closing an already-closed turn returns the existing recap. */
-        close: oc.input(S.HouseholdScoped.extend({ period: S.PeriodKey })).output(S.PeriodRecap),
+        close: oc
+            .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey }))
+            .output(schemas.PeriodRecap),
     },
 
     ritual: {
         current: oc
-            .input(S.HouseholdScoped.extend({ week: S.WeekKey.nullish() }))
-            .output(S.WeeklyRitual),
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
+            .output(schemas.WeeklyRitual),
         advance: oc
             .input(
                 z.object({
-                    householdId: S.HouseholdId,
-                    week: S.WeekKey,
+                    householdId: schemas.HouseholdId,
+                    week: schemas.WeekKey,
                     stage: z.enum(RitualStage),
-                    allocations: z.array(S.SurplusAllocation).nullish(),
+                    allocations: z.array(schemas.SurplusAllocation).nullish(),
                     intention: z.string().max(280).nullish(),
                 })
             )
-            .output(S.WeeklyRitual),
-        history: oc.input(S.HouseholdScoped).output(z.array(S.WeeklyRitual)),
+            .output(schemas.WeeklyRitual),
+        history: oc.input(schemas.HouseholdScoped).output(z.array(schemas.WeeklyRitual)),
     },
 
     dashboard: {
         get: oc
-            .input(S.HouseholdScoped.extend({ period: S.PeriodKey.nullish() }))
-            .output(S.Dashboard),
+            .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey.nullish() }))
+            .output(schemas.Dashboard),
     },
 
     /** Backoffice company catalogs — read-only suggestions for create forms. */
     catalogs: {
         categoryTemplates: {
             list: oc
-                .input(S.HouseholdScoped.extend({ jarKey: z.enum(JarKey).nullish() }))
-                .output(z.array(S.CategoryTemplate)),
+                .input(schemas.HouseholdScoped.extend({ jarKey: z.enum(JarKey).nullish() }))
+                .output(z.array(schemas.CategoryTemplate)),
         },
         fixedCostPresets: {
             list: oc
                 .input(
-                    S.HouseholdScoped.extend({
+                    schemas.HouseholdScoped.extend({
                         jarKey: z.enum(JarKey).nullish(),
                         categoryTemplateKey: z.string().max(64).nullish(),
                         audienceTag: z.string().max(32).nullish(),
                     })
                 )
-                .output(z.array(S.FixedCostPreset)),
+                .output(z.array(schemas.FixedCostPreset)),
         },
         debtPresets: {
             list: oc
-                .input(S.HouseholdScoped.extend({ kind: z.enum(DebtKind).nullish() }))
-                .output(z.array(S.DebtPreset)),
+                .input(schemas.HouseholdScoped.extend({ kind: z.enum(DebtKind).nullish() }))
+                .output(z.array(schemas.DebtPreset)),
         },
         incomeSourcePresets: {
             list: oc
-                .input(S.HouseholdScoped.extend({ kind: z.enum(IncomeKind).nullish() }))
-                .output(z.array(S.IncomeSourcePreset)),
+                .input(schemas.HouseholdScoped.extend({ kind: z.enum(IncomeKind).nullish() }))
+                .output(z.array(schemas.IncomeSourcePreset)),
         },
         goalPresets: {
             list: oc
-                .input(S.HouseholdScoped.extend({ jarKey: z.enum(JarKey).nullish() }))
-                .output(z.array(S.GoalPreset)),
+                .input(schemas.HouseholdScoped.extend({ jarKey: z.enum(JarKey).nullish() }))
+                .output(z.array(schemas.GoalPreset)),
         },
         merchantPresets: {
             list: oc
                 .input(
-                    S.HouseholdScoped.extend({
+                    schemas.HouseholdScoped.extend({
                         jarKey: z.enum(JarKey).nullish(),
                         categoryTemplateKey: z.string().max(64).nullish(),
                         mcc: z.string().length(4).nullish(),
                     })
                 )
-                .output(z.array(S.MerchantPreset)),
+                .output(z.array(schemas.MerchantPreset)),
         },
     },
 };

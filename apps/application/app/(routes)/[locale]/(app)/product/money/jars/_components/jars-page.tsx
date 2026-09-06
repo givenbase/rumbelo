@@ -62,12 +62,14 @@ export function JarsPageClient() {
 
     const jars = jarsQuery.data ?? [];
     const goals = goalsQuery.data ?? [];
-    const net = (incomeQuery.data ?? []).filter(s => s.isActive).reduce((s, i) => s + i.amount, 0);
-    const totalPct = jars.reduce((s, j) => s + j.percentage, 0);
+    const net = (incomeQuery.data ?? [])
+        .filter(source => source.isActive)
+        .reduce((total, i) => total + i.amount, 0);
+    const totalPct = jars.reduce((total, j) => total + j.percentage, 0);
     const onTarget = jars.filter(j => !j.overspent).length;
 
     const simCents = simEuros * 100;
-    const goal = goals.find(g => g.id === goalId) ?? goals[0];
+    const goal = goals.find(candidate => candidate.id === goalId) ?? goals[0];
     const goalJarPct =
         jars.find(j => j.key === 'LONG_TERM_SAVINGS')?.percentage ??
         jars.find(j => j.key === 'FINANCIAL_FREEDOM')?.percentage ??
@@ -81,9 +83,9 @@ export function JarsPageClient() {
     const whenLabel = useMemo(() => {
         if (!Number.isFinite(monthsAtPace)) return '—';
         if (monthsAtPace <= 0) return 'Now';
-        const d = new Date();
-        d.setMonth(d.getMonth() + monthsAtPace);
-        return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const date = new Date();
+        date.setMonth(date.getMonth() + monthsAtPace);
+        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }, [monthsAtPace]);
 
     return (
@@ -113,14 +115,17 @@ export function JarsPageClient() {
                         </span>
                     ) : null
                 }>
-                {(['JARS', 'SIMULATOR'] as const).map(t => (
-                    <ListToolbarTab key={t} active={tab === t} onClick={() => setTab(t)}>
-                        {t === 'JARS' ? 'Jars' : 'Simulator'}
-                        {t === 'JARS' && (
+                {(['JARS', 'SIMULATOR'] as const).map(tabKey => (
+                    <ListToolbarTab
+                        key={tabKey}
+                        active={tab === tabKey}
+                        onClick={() => setTab(tabKey)}>
+                        {tabKey === 'JARS' ? 'Jars' : 'Simulator'}
+                        {tabKey === 'JARS' && (
                             <span
                                 className={cn(
                                     'rounded-full px-2 py-0.5 font-mono text-xs',
-                                    tab === t
+                                    tab === tabKey
                                         ? 'bg-accent/10 text-accent'
                                         : 'bg-raised text-fg-faint'
                                 )}>
@@ -144,7 +149,7 @@ export function JarsPageClient() {
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {jars.map(jar => {
-                            const meta = JAR_META.find(m => m.key === jar.key);
+                            const meta = JAR_META.find(entry => entry.key === jar.key);
                             return (
                                 <JarCard
                                     key={jar.id}
@@ -195,7 +200,7 @@ export function JarsPageClient() {
                             max={8000}
                             step={50}
                             value={simEuros}
-                            onChange={e => setSimEuros(Number(e.target.value))}
+                            onChange={event => setSimEuros(Number(event.target.value))}
                             className="min-w-0 flex-1 accent-accent"
                             aria-label="Simulate income"
                         />
@@ -206,7 +211,7 @@ export function JarsPageClient() {
 
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
                         {jars.map(j => {
-                            const meta = JAR_META.find(m => m.key === j.key);
+                            const meta = JAR_META.find(entry => entry.key === j.key);
                             const color = meta?.color ?? 'bg-jar-nec';
                             return (
                                 <div
@@ -233,21 +238,21 @@ export function JarsPageClient() {
                         </p>
 
                         <div className="my-4 flex flex-wrap gap-1.5">
-                            {goals.map(g => {
-                                const isActive = g.id === goal?.id;
+                            {goals.map(goalItem => {
+                                const isActive = goalItem.id === goal?.id;
                                 return (
                                     <button
-                                        key={g.id}
+                                        key={goalItem.id}
                                         type="button"
-                                        onClick={() => setGoalId(g.id)}
+                                        onClick={() => setGoalId(goalItem.id)}
                                         className={cn(
                                             'flex items-center gap-2 rounded-full border px-3 py-2 text-sm whitespace-nowrap transition-colors',
                                             isActive
                                                 ? 'border-accent/40 bg-accent-soft text-accent'
                                                 : 'border-line text-fg-secondary hover:border-accent hover:text-accent'
                                         )}>
-                                        <span>{g.icon}</span>
-                                        {g.name}
+                                        <span>{goalItem.icon}</span>
+                                        {goalItem.name}
                                     </button>
                                 );
                             })}
@@ -312,7 +317,7 @@ export function JarsPageClient() {
                                 max={120}
                                 step={1}
                                 value={wantMonths}
-                                onChange={e => setWantMonths(Number(e.target.value))}
+                                onChange={event => setWantMonths(Number(event.target.value))}
                                 className="min-w-0 flex-1 accent-accent"
                                 aria-label="Target months"
                             />

@@ -29,22 +29,25 @@ async function loadTranslations(): Promise<Record<string, Record<string, unknown
         const sectionDir = join(translationsDir, section);
         if (!existsSync(sectionDir)) continue;
 
-        out[section] = {};
+        const bucket: Record<string, unknown> = {};
+        out[section] = bucket;
         const files = readdirSync(sectionDir).filter(
             file => file.endsWith('.ts') && file !== 'index.ts'
         );
 
-        for (const file of files) {
-            const moduleName = basename(file, '.ts');
-            const modulePath = join(sectionDir, file);
-            const mod = await import(`${modulePath}?t=${Date.now()}`);
-            if (!mod.default) {
-                console.warn(`No default export: ${section}/${file}`);
-                continue;
-            }
-            out[section][moduleName] = mod.default;
-            console.log(`Loaded ${section}.${moduleName}`);
-        }
+        await Promise.all(
+            files.map(async file => {
+                const moduleName = basename(file, '.ts');
+                const modulePath = join(sectionDir, file);
+                const mod = await import(`${modulePath}?t=${Date.now()}`);
+                if (!mod.default) {
+                    console.warn(`No default export: ${section}/${file}`);
+                    return;
+                }
+                bucket[moduleName] = mod.default;
+                console.log(`Loaded ${section}.${moduleName}`);
+            })
+        );
     }
 
     return out;

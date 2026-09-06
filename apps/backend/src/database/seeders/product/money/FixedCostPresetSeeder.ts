@@ -4,13 +4,20 @@ import { Seeder } from '@mikro-orm/seeder';
 
 import { FixedCostPreset } from '../../../../modules/backoffice/product/money/preset/fixed-cost/fixed-cost.entity';
 import { FIXED_COST_PRESET_SEED } from '../../../../modules/backoffice/product/money/preset/fixed-cost/seed/fixed-cost.seed-data';
-import { requireJarTemplate } from '../../../../modules/backoffice/product/money/require-jar-template';
+import {
+    jarTemplateFromMap,
+    loadJarTemplateMap,
+} from '../../../../modules/backoffice/product/money/require-jar-template';
 
 export class FixedCostPresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
+        const jarByKey = await loadJarTemplateMap(em);
+        const keys = FIXED_COST_PRESET_SEED.map(row => row.key);
+        const existingRows = await em.find(FixedCostPreset, { key: { $in: keys } });
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of FIXED_COST_PRESET_SEED.entries()) {
-            const jarTemplate = await requireJarTemplate(em, row.jarKey);
-            const existing = await em.findOne(FixedCostPreset, { key: row.key });
+            const jarTemplate = jarTemplateFromMap(jarByKey, row.jarKey);
+            const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
                 existing.jarTemplate = jarTemplate;

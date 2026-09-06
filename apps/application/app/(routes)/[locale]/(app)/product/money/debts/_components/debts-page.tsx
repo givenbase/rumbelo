@@ -29,22 +29,22 @@ function computeFreedomLocal(
     extraMonthly: number
 ): string {
     const debtList = Array.from(debts);
-    const balances: number[] = debtList.map(d => d.balance);
+    const balances: number[] = debtList.map(debt => debt.balance);
     let months = 0;
 
-    while (balances.some(b => (b ?? 0) > 0) && months < 600) {
+    while (balances.some(balance => (balance ?? 0) > 0) && months < 600) {
         for (let i = 0; i < debtList.length; i++) {
-            const d = debtList[i]!;
+            const debt = debtList[i]!;
             const bal = balances[i] ?? 0;
             if (bal <= 0) continue;
-            const interest = Math.round((bal * d.interestRate) / 100 / 12);
-            balances[i] = Math.max(0, bal + interest - d.minimumPayment);
+            const interest = Math.round((bal * debt.interestRate) / 100 / 12);
+            balances[i] = Math.max(0, bal + interest - debt.minimumPayment);
         }
         let budget = extraMonthly;
         const byRate = debtList
-            .map((d, i) => ({ i, rate: d.interestRate }))
+            .map((debt, i) => ({ i, rate: debt.interestRate }))
             .filter(({ i }) => (balances[i] ?? 0) > 0)
-            .sort((a, b) => b.rate - a.rate);
+            .sort((left, right) => right.rate - left.rate);
         for (const { i } of byRate) {
             if (budget <= 0) break;
             const bal = balances[i] ?? 0;
@@ -90,9 +90,9 @@ export function DebtsPageClient() {
         minimumPayment: number;
     }>;
 
-    const total = debts.reduce((s, d) => s + d.balance, 0);
-    const monthly = debts.reduce((s, d) => s + d.minimumPayment, 0);
-    const avalanche = [...debts].sort((a, b) => b.interestRate - a.interestRate);
+    const total = debts.reduce((running, debt) => running + debt.balance, 0);
+    const monthly = debts.reduce((running, debt) => running + debt.minimumPayment, 0);
+    const avalanche = [...debts].sort((left, right) => right.interestRate - left.interestRate);
 
     // Freedom date: use live plan if available, otherwise local simulator
     const liveDebtFreeOn =
@@ -170,31 +170,34 @@ export function DebtsPageClient() {
 
             <Card className="p-0">
                 <div className="grid gap-3 p-5">
-                    {avalanche.map((d, i) => (
+                    {avalanche.map((debt, i) => (
                         <button
                             type="button"
-                            key={d.id}
-                            onClick={() => router.push(updateHref('debt', d.id))}
+                            key={debt.id}
+                            aria-label={debt.name}
+                            onClick={() => router.push(updateHref('debt', debt.id))}
                             className="w-full cursor-pointer rounded-2xl border border-line bg-raised p-4.5 text-left transition-colors hover:border-accent-hover">
                             <div className="flex flex-wrap items-baseline justify-between gap-3">
                                 <div className="flex items-baseline gap-3">
                                     <span className="font-mono text-xs text-accent">#{i + 1}</span>
                                     <div>
                                         <div className="flex flex-wrap items-center gap-2.5">
-                                            <span className="text-base text-fg">{d.name}</span>
+                                            <span className="text-base text-fg">{debt.name}</span>
                                             <Badge
-                                                tone={d.interestRate > 10 ? 'danger' : 'neutral'}>
-                                                {d.interestRate}% interest
+                                                tone={
+                                                    debt.interestRate > 10 ? 'danger' : 'neutral'
+                                                }>
+                                                {debt.interestRate}% interest
                                             </Badge>
                                         </div>
                                         <div className="mt-1 font-mono text-xs tracking-normal text-fg-faint">
-                                            {formatMoney(d.minimumPayment)}/mo minimum
+                                            {formatMoney(debt.minimumPayment)}/mo minimum
                                         </div>
                                     </div>
                                 </div>
                                 <div className="text-right">
                                     <div className="font-mono text-base text-fg">
-                                        {formatMoney(d.balance)}
+                                        {formatMoney(debt.balance)}
                                     </div>
                                 </div>
                             </div>

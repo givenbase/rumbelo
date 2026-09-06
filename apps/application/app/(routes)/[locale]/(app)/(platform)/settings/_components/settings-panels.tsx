@@ -315,8 +315,7 @@ export function AccountSettings() {
                             <div className="grid min-w-0 flex-1 gap-1.5">
                                 <Input
                                     value={nameDraft}
-                                    onChange={e => setNameDraft(e.target.value)}
-                                    autoFocus
+                                    onChange={event => setNameDraft(event.target.value)}
                                     aria-label="Name"
                                 />
                                 <p className="truncate font-mono text-[10px] text-fg-muted">
@@ -558,7 +557,7 @@ export function AccountSettings() {
                             id="cur-pw"
                             type="password"
                             value={currentPassword}
-                            onChange={e => setCurrentPassword(e.target.value)}
+                            onChange={event => setCurrentPassword(event.target.value)}
                             placeholder="••••••••••••"
                             autoComplete="current-password"
                         />
@@ -568,7 +567,7 @@ export function AccountSettings() {
                             id="new-pw"
                             type="password"
                             value={newPassword}
-                            onChange={e => setNewPassword(e.target.value)}
+                            onChange={event => setNewPassword(event.target.value)}
                             placeholder="••••••••••••"
                             autoComplete="new-password"
                         />
@@ -594,17 +593,19 @@ export function AccountSettings() {
                 <div className="grid gap-3 py-2.5">
                     {live && (membersQuery.data?.length ?? 0) > 0 ? (
                         <ul className="divide-y divide-line rounded-lg border border-line">
-                            {(membersQuery.data ?? []).map(m => (
+                            {(membersQuery.data ?? []).map(member => (
                                 <li
-                                    key={m.id}
+                                    key={member.id}
                                     className="flex items-center justify-between gap-3 px-3 py-2.5">
                                     <div className="min-w-0">
                                         <p className="truncate text-sm font-medium text-fg">
-                                            {m.name}
+                                            {member.name}
                                         </p>
-                                        <p className="truncate text-xs text-fg-muted">{m.email}</p>
+                                        <p className="truncate text-xs text-fg-muted">
+                                            {member.email}
+                                        </p>
                                     </div>
-                                    <Badge>{m.role}</Badge>
+                                    <Badge>{member.role}</Badge>
                                 </li>
                             ))}
                         </ul>
@@ -628,7 +629,7 @@ export function AccountSettings() {
                                     id="invite-email"
                                     type="email"
                                     value={inviteEmail}
-                                    onChange={e => setInviteEmail(e.target.value)}
+                                    onChange={event => setInviteEmail(event.target.value)}
                                     placeholder="partner@example.com"
                                     disabled={!live}
                                 />
@@ -671,9 +672,9 @@ export function AccountSettings() {
                                 min={1}
                                 max={28}
                                 value={periodDay}
-                                onChange={e =>
+                                onChange={event =>
                                     setPeriodDayDraft(
-                                        Math.min(28, Math.max(1, Number(e.target.value) || 1))
+                                        Math.min(28, Math.max(1, Number(event.target.value) || 1))
                                     )
                                 }
                                 className="w-28"
@@ -734,7 +735,7 @@ export function JarsSettings() {
     const [dismissedTips, setDismissedTips] = useState<Record<string, true>>({});
     const pct = pctDraft ?? serverPct;
 
-    const total = Object.values(pct).reduce((s, n) => s + n, 0);
+    const total = Object.values(pct).reduce((running, value) => running + value, 0);
     const balanced = Math.abs(total - 100) < 0.01;
 
     const coachTips = useMemo(() => {
@@ -750,8 +751,8 @@ export function JarsSettings() {
     );
     const monthlyNet = useMemo(() => {
         return (incomeQuery.data ?? [])
-            .filter(s => s.isActive)
-            .reduce((sum, s) => sum + s.amount, 0);
+            .filter(source => source.isActive)
+            .reduce((sum, source) => sum + source.amount, 0);
     }, [incomeQuery.data]);
 
     const saveSplit = useMutation({
@@ -870,10 +871,10 @@ export function JarsSettings() {
                                         max={100}
                                         step={0.5}
                                         value={value}
-                                        onChange={e =>
+                                        onChange={event =>
                                             setPctDraft(prev => ({
                                                 ...(prev ?? serverPct),
-                                                [jar.id]: Number(e.target.value) || 0,
+                                                [jar.id]: Number(event.target.value) || 0,
                                             }))
                                         }
                                         className="h-8 w-16 text-sm"
@@ -1007,6 +1008,7 @@ export function DebtSettings() {
                         <button
                             key={option.key}
                             type="button"
+                            aria-label={option.name}
                             disabled={!live || saveStrategy.isPending}
                             onClick={() => {
                                 if (live) saveStrategy.mutate(option.key);
@@ -1135,13 +1137,13 @@ export function BankSettings() {
                 {accounts.length === 0 ? (
                     <p className="py-2.5 text-sm text-fg-muted">No accounts yet.</p>
                 ) : (
-                    accounts.map((a, i) => (
-                        <SettingsRow key={a.id} last={i === accounts.length - 1 && !adding}>
+                    accounts.map((account, i) => (
+                        <SettingsRow key={account.id} last={i === accounts.length - 1 && !adding}>
                             <SettingsRowLabel
-                                title={a.name}
-                                sub={`${a.iban ?? 'No IBAN'} · ${formatMoney(a.balance)}`}
+                                title={account.name}
+                                sub={`${account.iban ?? 'No IBAN'} · ${formatMoney(account.balance)}`}
                             />
-                            <Badge>{kindLabel[a.kind] ?? a.kind}</Badge>
+                            <Badge>{kindLabel[account.kind] ?? account.kind}</Badge>
                         </SettingsRow>
                     ))
                 )}
@@ -1153,9 +1155,8 @@ export function BankSettings() {
                                 id="acc-name"
                                 placeholder="Checking account"
                                 value={name}
-                                onChange={e => setName(e.target.value)}
+                                onChange={event => setName(event.target.value)}
                                 disabled={!live}
-                                autoFocus
                             />
                         </Field>
                         <Field
@@ -1166,7 +1167,7 @@ export function BankSettings() {
                                 id="acc-iban"
                                 placeholder="NL00 BANK 0000 0000 00"
                                 value={iban}
-                                onChange={e => setIban(e.target.value)}
+                                onChange={event => setIban(event.target.value)}
                                 disabled={!live}
                             />
                         </Field>
@@ -1174,7 +1175,7 @@ export function BankSettings() {
                             <Select
                                 id="acc-kind"
                                 value={kind}
-                                onChange={e => setKind(e.target.value as AccountKind)}
+                                onChange={event => setKind(event.target.value as AccountKind)}
                                 disabled={!live}>
                                 <option value={AccountKind.CHECKING}>Checking</option>
                                 <option value={AccountKind.SAVINGS}>Savings</option>
@@ -1215,7 +1216,7 @@ export function GrowthSettings() {
                         max={60}
                         step={3}
                         value={horizon}
-                        onChange={e => setHorizon(Number(e.target.value))}
+                        onChange={event => setHorizon(Number(event.target.value))}
                         className="min-w-0 flex-1 accent-(--color-accent)"
                         aria-label="Planning horizon in months"
                     />
@@ -1249,7 +1250,7 @@ export function EnergySettings() {
                         max={80}
                         step={1}
                         value={weekHours}
-                        onChange={e => setWeekHours(Number(e.target.value))}
+                        onChange={event => setWeekHours(Number(event.target.value))}
                         className="min-w-35 flex-1 accent-(--color-accent)"
                         aria-label="Steered hours per week"
                     />
@@ -1267,7 +1268,7 @@ export function EnergySettings() {
                         max={11}
                         step={0.5}
                         value={sleepHours}
-                        onChange={e => setSleepHours(Number(e.target.value))}
+                        onChange={event => setSleepHours(Number(event.target.value))}
                         className="min-w-35 flex-1 accent-(--color-accent)"
                         aria-label="Sleep hours per night"
                     />
@@ -1285,7 +1286,7 @@ export function EnergySettings() {
                         max={140}
                         step={1}
                         value={weightKg}
-                        onChange={e => setWeightKg(Number(e.target.value))}
+                        onChange={event => setWeightKg(Number(event.target.value))}
                         className="min-w-35 flex-1 accent-(--color-accent)"
                         aria-label="Weight in kilograms"
                     />
@@ -1314,7 +1315,7 @@ export function SoulSettings() {
                         max={45}
                         step={1}
                         value={mindMin}
-                        onChange={e => setMindMin(Number(e.target.value))}
+                        onChange={event => setMindMin(Number(event.target.value))}
                         className="min-w-0 flex-1 accent-(--color-accent)"
                         aria-label="Daily stillness minutes"
                     />
@@ -1346,7 +1347,10 @@ export function AutomationSettings() {
 
     const [rules, setRules] = useState(
         () =>
-            Object.fromEntries(AUTO_RULES.map(r => [r.key, r.defaultOn])) as Record<string, boolean>
+            Object.fromEntries(AUTO_RULES.map(rule => [rule.key, rule.defaultOn])) as Record<
+                string,
+                boolean
+            >
     );
 
     const saveHouseholdName = useMutation({
@@ -1368,25 +1372,25 @@ export function AutomationSettings() {
             <SettingsInkCard
                 eyebrow="What Rumbelo does by itself"
                 blurb="Four rules. Everything off means Rumbelo only shows, never acts.">
-                {AUTO_RULES.map((r, i) => (
+                {AUTO_RULES.map((rule, i) => (
                     <button
-                        key={r.key}
+                        key={rule.key}
                         type="button"
-                        onClick={() => setRules(prev => ({ ...prev, [r.key]: !prev[r.key] }))}
+                        onClick={() => setRules(prev => ({ ...prev, [rule.key]: !prev[rule.key] }))}
                         className={cn(
                             'flex w-full flex-wrap items-center justify-between gap-2 py-2.5 text-left',
                             i < AUTO_RULES.length - 1 && 'border-b border-line'
                         )}>
-                        <SettingsRowLabel title={r.name} sub={r.desc} />
+                        <SettingsRowLabel title={rule.name} sub={rule.desc} />
                         <span
                             className={cn(
                                 'relative h-5 w-9 shrink-0 rounded-full transition-colors',
-                                rules[r.key] ? 'bg-accent' : 'bg-raised'
+                                rules[rule.key] ? 'bg-accent' : 'bg-raised'
                             )}>
                             <span
                                 className={cn(
                                     'absolute top-0.5 size-3.5 rounded-full bg-surface transition-[left]',
-                                    rules[r.key] ? 'left-[18px]' : 'left-0.5'
+                                    rules[rule.key] ? 'left-[18px]' : 'left-0.5'
                                 )}
                             />
                         </span>
@@ -1402,7 +1406,7 @@ export function AutomationSettings() {
                         <Input
                             id="hh-name"
                             value={hhName}
-                            onChange={e => setHhNameDraft(e.target.value)}
+                            onChange={event => setHhNameDraft(event.target.value)}
                             disabled={!live}
                         />
                     </Field>
@@ -1506,16 +1510,16 @@ export function PlanSettings() {
                     </div>
                 }>
                 <div className="grid gap-2 py-2.5">
-                    {cards.map(p => {
+                    {cards.map(card => {
                         const yearly = billing === 'year';
-                        const cur = plan === p.key;
+                        const cur = plan === card.key;
                         const price =
-                            p.priceM === 0
+                            card.priceM === 0
                                 ? '€0'
-                                : formatMoney((yearly ? p.priceY : p.priceM) * 100);
+                                : formatMoney((yearly ? card.priceY : card.priceM) * 100);
                         return (
                             <div
-                                key={p.key}
+                                key={card.key}
                                 className={cn(
                                     'grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-l-[3px] px-3.5 py-3',
                                     cur
@@ -1525,25 +1529,25 @@ export function PlanSettings() {
                                 <div className="grid min-w-0 gap-1">
                                     <span className="flex flex-wrap items-baseline gap-2">
                                         <span className="font-display text-lg font-semibold tracking-tight text-fg">
-                                            {PLAN_LABELS[p.key]}
+                                            {PLAN_LABELS[card.key]}
                                         </span>
                                         <span className="font-display text-lg font-semibold tracking-tight text-accent">
                                             {price}
                                         </span>
-                                        {p.priceM > 0 ? (
+                                        {card.priceM > 0 ? (
                                             <span className="font-mono text-[10px] text-fg-muted">
                                                 {yearly ? '/year' : '/month'}
                                             </span>
                                         ) : null}
                                         <span className="rounded-full border border-line px-2 py-0.5 font-mono text-[8px] tracking-widest text-fg-secondary uppercase">
-                                            {p.tag}
+                                            {card.tag}
                                         </span>
                                     </span>
                                     <p className="line-clamp-2 text-xs leading-snug text-fg-muted">
-                                        {p.line}
+                                        {card.line}
                                     </p>
                                     <span className="line-clamp-1 font-mono text-[10px] text-fg-faint">
-                                        {p.feats}
+                                        {card.feats}
                                     </span>
                                 </div>
                                 <Button
@@ -1552,16 +1556,19 @@ export function PlanSettings() {
                                     className="shrink-0 rounded-full font-mono text-[10px] tracking-widest uppercase"
                                     onClick={() => {
                                         if (cur) {
-                                            showToast(`Already on ${PLAN_LABELS[p.key]}`, 'info');
+                                            showToast(
+                                                `Already on ${PLAN_LABELS[card.key]}`,
+                                                'info'
+                                            );
                                             return;
                                         }
-                                        savePlan.mutate(p.key);
+                                        savePlan.mutate(card.key);
                                     }}>
                                     {cur
                                         ? 'Current'
                                         : savePlan.isPending
                                           ? '…'
-                                          : p.priceM === 0
+                                          : card.priceM === 0
                                             ? 'Choose Basic'
                                             : 'Choose'}
                                 </Button>
@@ -1593,15 +1600,15 @@ export function ExportSettings() {
             });
             const jars = await client.money.jars.list({ householdId });
             const jarName = new Map(jars.map(j => [j.id, j.name]));
-            const rows = items.map(t => ({
-                id: t.id,
-                bookedOn: t.bookedOn,
-                description: t.description,
-                counterparty: t.counterparty ?? '',
-                amountCents: t.amount,
-                status: t.status,
-                jar: t.jarId ? (jarName.get(t.jarId) ?? t.jarId) : '',
-                categoryId: t.categoryId ?? '',
+            const rows = items.map(transaction => ({
+                id: transaction.id,
+                bookedOn: transaction.bookedOn,
+                description: transaction.description,
+                counterparty: transaction.counterparty ?? '',
+                amountCents: transaction.amount,
+                status: transaction.status,
+                jar: transaction.jarId ? (jarName.get(transaction.jarId) ?? transaction.jarId) : '',
+                categoryId: transaction.categoryId ?? '',
             }));
             const stamp = `${period.year}-${String(period.month).padStart(2, '0')}`;
             downloadTextFile(
@@ -1698,13 +1705,13 @@ export function ExportSettings() {
                         What goes in
                     </p>
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-2.5">
-                        {scopes.map(o => {
-                            const on = scope === o.key;
+                        {scopes.map(option => {
+                            const on = scope === option.key;
                             return (
                                 <button
-                                    key={o.key}
+                                    key={option.key}
                                     type="button"
-                                    onClick={() => setScope(o.key)}
+                                    onClick={() => setScope(option.key)}
                                     className={cn(
                                         'grid gap-1 rounded-[13px] border p-3.5 text-left transition-colors',
                                         on
@@ -1717,7 +1724,7 @@ export function ExportSettings() {
                                                 'text-[13.5px] font-semibold',
                                                 on ? 'text-accent' : 'text-fg'
                                             )}>
-                                            {o.label}
+                                            {option.label}
                                         </span>
                                         {on ? (
                                             <span className="font-mono text-[11px] text-accent">
@@ -1726,7 +1733,7 @@ export function ExportSettings() {
                                         ) : null}
                                     </span>
                                     <span className="font-mono text-[10px] leading-snug text-fg-muted">
-                                        {o.desc}
+                                        {option.desc}
                                     </span>
                                 </button>
                             );

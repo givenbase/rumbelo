@@ -29,7 +29,7 @@ export const HouseholdInviteTemplate: React.FC<HouseholdInviteTemplateProps> = (
     darkMode = false,
     locale = 'en',
 }) => {
-    const t = createEmailTranslator(languageObject, locale);
+    const translate = createEmailTranslator(languageObject, locale);
     const styles = createEmailStyles(darkMode);
     const who = inviterName?.trim() || (locale === 'nl' ? 'Iemand' : 'Someone');
     const roleLabel = role.toLowerCase();
@@ -37,13 +37,15 @@ export const HouseholdInviteTemplate: React.FC<HouseholdInviteTemplateProps> = (
     return (
         <EmailLayout
             darkMode={darkMode}
-            previewText={t('email.household.invite.header.preview_text')}
-            title={t('email.household.invite.header.title')}>
-            <Heading style={styles.heading}>{t('email.household.invite.header.heading')}</Heading>
+            previewText={translate('email.household.invite.header.preview_text')}
+            title={translate('email.household.invite.header.title')}>
+            <Heading style={styles.heading}>
+                {translate('email.household.invite.header.heading')}
+            </Heading>
 
             <Section style={styles.section}>
                 <Text style={styles.text}>
-                    {t('email.household.invite.body.message', {
+                    {translate('email.household.invite.body.message', {
                         who,
                         household: householdName,
                         role: roleLabel,
@@ -51,11 +53,11 @@ export const HouseholdInviteTemplate: React.FC<HouseholdInviteTemplateProps> = (
                 </Text>
 
                 <Button darkMode={darkMode} href={inviteUrl} size="large">
-                    {t('email.household.invite.body.button')}
+                    {translate('email.household.invite.body.button')}
                 </Button>
 
                 <Text style={styles.smallText}>
-                    {t('email.household.invite.body.link_hint')}
+                    {translate('email.household.invite.body.link_hint')}
                     <br />
                     <Link href={inviteUrl} style={{ color: styles.colors.textMuted }}>
                         {inviteUrl}

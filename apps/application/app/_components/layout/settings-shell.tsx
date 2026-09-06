@@ -91,7 +91,7 @@ export function SettingsShell({ children }: { children: ReactNode }) {
                 <nav
                     aria-label="Settings sections"
                     className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 md:hidden">
-                    {SETTINGS_SECTIONS.flatMap(s => s.items).map(tab => (
+                    {SETTINGS_SECTIONS.flatMap(section => section.items).map(tab => (
                         <NavLink key={tab.key} tab={tab} active={tab.key === activeTab} />
                     ))}
                 </nav>

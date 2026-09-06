@@ -33,7 +33,6 @@ export function LandingSignupForm() {
     const {
         register,
         handleSubmit,
-        setValue,
         control,
         formState: { errors, isSubmitting, touchedFields, submitCount },
     } = form;
@@ -78,17 +77,19 @@ export function LandingSignupForm() {
                             Tell us what lands each month; Rumbelo assigns it from there.
                         </p>
                         <div className="grid gap-3">
-                            {ASSURANCES.map(a => (
-                                <span key={a.t} className="flex min-w-0 items-start gap-2.5">
+                            {ASSURANCES.map(assurance => (
+                                <span
+                                    key={assurance.text}
+                                    className="flex min-w-0 items-start gap-2.5">
                                     <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-accent-soft">
                                         <LandingIcon
-                                            name={a.icon}
+                                            name={assurance.icon}
                                             size={17}
                                             color="var(--color-accent)"
                                         />
                                     </span>
                                     <span className="pt-1 text-sm leading-relaxed text-fg-secondary">
-                                        {a.t}
+                                        {assurance.text}
                                     </span>
                                 </span>
                             ))}
@@ -113,23 +114,23 @@ export function LandingSignupForm() {
                         </div>
 
                         <form className="grid gap-3" onSubmit={handleSubmit(onSubmit)} noValidate>
-                            {FIELDS.map(f => {
-                                const message = fieldError(f.name);
+                            {FIELDS.map(field => {
+                                const message = fieldError(field.name);
                                 return (
-                                    <label key={f.name} className="grid gap-1.5">
+                                    <label key={field.name} className="grid gap-1.5">
                                         <span className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
-                                            {f.label}
+                                            {field.label}
                                         </span>
                                         <input
-                                            type={f.type}
+                                            type={field.type}
                                             autoComplete={
-                                                f.name === 'password'
+                                                field.name === 'password'
                                                     ? 'new-password'
-                                                    : f.name === 'email'
+                                                    : field.name === 'email'
                                                       ? 'email'
                                                       : 'name'
                                             }
-                                            placeholder={f.ph}
+                                            placeholder={field.ph}
                                             disabled={isSubmitting}
                                             className="w-full rounded-lg border bg-raised px-3.5 py-3 text-sm text-fg transition-colors outline-none focus:border-accent"
                                             style={{
@@ -137,7 +138,7 @@ export function LandingSignupForm() {
                                                     ? 'var(--color-danger)'
                                                     : 'var(--color-line)',
                                             }}
-                                            {...register(f.name)}
+                                            {...register(field.name)}
                                         />
                                         {message ? (
                                             <span className="font-mono text-xs font-medium text-danger">
@@ -148,14 +149,8 @@ export function LandingSignupForm() {
                                 );
                             })}
 
-                            <label
-                                className="mt-1 flex cursor-pointer items-start gap-2.5"
-                                onClick={() =>
-                                    setValue('terms', !terms, {
-                                        shouldValidate: true,
-                                        shouldTouch: true,
-                                    })
-                                }>
+                            <label className="mt-1 flex cursor-pointer items-start gap-2.5">
+                                <input type="checkbox" className="sr-only" {...register('terms')} />
                                 <span
                                     className="mt-px grid size-4 shrink-0 place-items-center rounded-sm border text-xs text-on-accent"
                                     style={{

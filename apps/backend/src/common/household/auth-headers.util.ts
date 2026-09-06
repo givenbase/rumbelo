@@ -6,11 +6,11 @@ export function toAuthHeaders(
     req: Req,
     appUrl = process.env.DOMAIN_APP ?? 'http://localhost:3000'
 ): Headers {
-    const h = new Headers();
+    const headers = new Headers();
     for (const [key, value] of Object.entries(req.headers)) {
         if (value === undefined) continue;
-        h.set(key, Array.isArray(value) ? value.join(', ') : value);
+        headers.set(key, Array.isArray(value) ? value.join(', ') : value);
     }
-    if (!h.has('origin')) h.set('origin', appUrl);
-    return h;
+    if (!headers.has('origin')) headers.set('origin', appUrl);
+    return headers;
 }
