@@ -40,8 +40,10 @@ function authUserFirstName(user: { name?: string | null; email: string }): strin
  * sessions bind on DOMAIN_APP via `/api/auth` proxies. Production/staging use
  * cross-subdomain cookies on `.rumbelo.com` (no www).
  *
- * IDs: `advanced.database.generateId: false` — PostgreSQL supplies UUIDs
- * (@see https://www.better-auth.com/docs/concepts/database#option-1-let-database-generate-ids).
+ * IDs: leave Better Auth defaults (opaque text). Do **not** set
+ * `generateId: false` / Postgres UUID defaults here — that mixed BA text FKs
+ * with uuid validation and caused confusion. Rumbelo-owned rows (`auth.account`,
+ * product tables) keep native Postgres uuid via BaseEntity.
  * Personal profile (names, DOB, address) lives on Rumbelo `auth.account`, not BA.
  */
 export function createAuth(env: Env) {
@@ -243,17 +245,9 @@ export function createAuth(env: Env) {
          * Better Auth only applies Domain via `advanced.crossSubDomainCookies` —
          * a top-level `cookie.domain` is ignored (host-only → re-login per app).
          * @see https://www.better-auth.com/docs/concepts/cookies#cross-subdomain-cookies
-         * @see https://www.better-auth.com/docs/concepts/database#option-1-let-database-generate-ids
          */
         advanced: {
-            database: {
-                /**
-                 * Option 1 — Better Auth does not mint ids; PostgreSQL defaults
-                 * (`gen_random_uuid()::text`) fill user / session / organization / ….
-                 * Personal profile data stays on Rumbelo `auth.account`, not here.
-                 */
-                generateId: false,
-            },
+            // Better Auth mints its own opaque text ids. App rows use uuid via BaseEntity.
             cookiePrefix: 'rumbelo',
             useSecureCookies: isSecureCookieEnv,
             ...(cookieDomain

@@ -11,7 +11,7 @@ import { v7 as uuidv7 } from 'uuid';
  * that class adds only `householdId` on top of this base (no duplicated fields).
  *
  * Better Auth tables (`AuthUser`, `AuthHousehold`, …) do **not** extend this —
- * they keep library-owned text/UUID primary keys.
+ * they keep library-owned opaque text primary keys (not Postgres uuid).
  */
 export abstract class BaseEntity {
     /** uuid v7 — time-ordered keys keep btree inserts local. */

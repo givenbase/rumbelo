@@ -252,7 +252,8 @@ export function JarsPageClient() {
                     {net > 0 ? (
                         <div className="-mt-3 mb-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-fg-faint">
                             <span>
-                                Range {formatMoney(range.min * 100)} – {formatMoney(range.max * 100)}
+                                Range {formatMoney(range.min * 100)} –{' '}
+                                {formatMoney(range.max * 100)}
                             </span>
                             {simDeltaPct !== 0 ? (
                                 <>

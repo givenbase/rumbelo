@@ -1966,7 +1966,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -2754,7 +2754,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -3146,7 +3146,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -10169,7 +10169,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -14828,7 +14828,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -15603,7 +15603,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -15966,7 +15966,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"
@@ -16341,7 +16341,7 @@
           "length": null,
           "precision": null,
           "scale": null,
-          "default": "(gen_random_uuid())::text",
+          "default": null,
           "comment": null,
           "enumItems": [],
           "mappedType": "text"

@@ -7,7 +7,7 @@ import { Entity, Property, Unique } from '@mikro-orm/core';
  * so the database and our code speak Rumbelo. Finance settings hang off this
  * id in `auth.household_settings`.
  *
- *   id    = householdId (UUID from PostgreSQL — generateId: false)
+ *   id    = householdId (opaque text from Better Auth — not Postgres uuid)
  *   slug  = unique human-readable handle (not used for API scoping)
  *   name  = display label for the household
  *
@@ -16,6 +16,7 @@ import { Entity, Property, Unique } from '@mikro-orm/core';
 @Entity({ tableName: 'household', schema: 'auth' })
 @Unique({ properties: ['slug'] })
 export class AuthHousehold {
+    /** Better Auth opaque text id — not Rumbelo `Id` (uuid). */
     @Property({ type: 'text', primary: true })
     id!: string;
 

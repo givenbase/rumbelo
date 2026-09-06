@@ -172,8 +172,7 @@ export class HouseholdService {
 
     /**
      * Unique organization.slug. Prefer readable slugify(name); on collision append
-     * a short random suffix. householdId is a UUID from PostgreSQL (Better Auth
-     * advanced.database.generateId: false).
+     * a short random suffix. householdId is opaque text minted by Better Auth.
      */
     private async uniqueOrgSlug(name: string): Promise<string> {
         const base = slugify(name);

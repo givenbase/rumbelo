@@ -82,6 +82,10 @@ auth/
 - `auth/user/managed/`, `auth/household/managed/` — better-auth owns writes; we map read entities
 - `auth/user/account/` — person data + prefs (theme, locale) — **user** writes
 - `auth/household/household-settings/` — board prefs — **household** writes
+
+**IDs:** Better Auth keeps opaque text `id`s (BA default generator). Rumbelo-owned
+rows use Postgres `uuid` via `BaseEntity`. Contracts: `UserId` / `HouseholdId` =
+opaque string; product `Id` = `z.uuid()`. Never validate a BA id as uuid.
 - Jar **instances** → `public/product/money/plan/jar` — **household** writes (table in `public`)
 - Jar **templates** → `backoffice/product/money/template/jar` — **we** write; onboard copies into household jars
 - Product **tiers** → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)

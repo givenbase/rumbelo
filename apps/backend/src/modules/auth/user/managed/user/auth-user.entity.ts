@@ -3,14 +3,14 @@ import { Entity, Property, Unique } from '@mikro-orm/core';
 /**
  * better-auth `user` table — auth credentials and identity only.
  *
- * Written by better-auth (single writer). `id` is a UUID from PostgreSQL
- * (`advanced.database.generateId: false`). `name` is the **display name**.
+ * Written by better-auth (single writer). `id` is opaque text minted by BA
+ * (not a Postgres uuid). `name` is the **display name**.
  * Legal names, DOB, and address live on application `auth.account`.
  */
 @Entity({ tableName: 'user', schema: 'auth' })
 @Unique({ properties: ['email'] })
 export class AuthUser {
-    /** better-auth ids are text, not UUID. */
+    /** Better Auth opaque text id — not Postgres `uuid`, not Rumbelo `Id`. */
     @Property({ type: 'text', primary: true })
     id!: string;
 

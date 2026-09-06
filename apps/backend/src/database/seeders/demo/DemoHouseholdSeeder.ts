@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 
 import type { EntityManager } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
@@ -106,15 +106,16 @@ export class DemoHouseholdSeeder extends Seeder {
 
         let org = await em.findOne(AuthHousehold, { slug: demo.slug });
         if (!org) {
+            // Seeder-only insert into BA tables — opaque text ids (not BaseEntity uuid).
             org = em.create(AuthHousehold, {
-                id: randomUUID(),
+                id: authTextId(),
                 name: demo.householdName,
                 slug: demo.slug,
                 createdAt: new Date(),
             } as never);
             em.persist(org);
             em.create(AuthMember, {
-                id: randomUUID(),
+                id: authTextId(),
                 household: org,
                 user,
                 role: 'owner',
@@ -293,6 +294,11 @@ export class DemoHouseholdSeeder extends Seeder {
 
         await em.flush();
     }
+}
+
+/** Opaque text id for seeder inserts into Better Auth tables (not BaseEntity uuid). */
+function authTextId(): string {
+    return randomBytes(16).toString('hex');
 }
 
 function isoWeekKey(date: Date): string {
