@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -32,6 +32,13 @@ export const metadata: Metadata = {
     title: 'Rumbelo — Stop wondering where it went.',
     description:
         'Six jars, one calm overview. Rumbelo splits your income the second it lands — every amount gets a job before it arrives.',
+};
+
+export const viewport: Viewport = {
+    themeColor: [
+        { media: '(prefers-color-scheme: light)', color: '#EDEFF3' },
+        { media: '(prefers-color-scheme: dark)', color: '#0B0F16' },
+    ],
 };
 
 export function generateStaticParams() {
