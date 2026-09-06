@@ -2,8 +2,8 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useMemo, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
@@ -42,7 +42,7 @@ const euros = z
     );
 
 const debtFormSchema = z.object({
-    name: z.string().min(1, 'Name is required').max(120),
+    name: z.string().min(1, 'Who you owe is required').max(120),
     balance: euros,
     interestRate: z
         .string()
@@ -82,24 +82,32 @@ export function DebtForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
+    const [typeKey, setTypeKey] = useState<string | null>(null);
+    const [typeQuery, setTypeQuery] = useState('');
+    const [customLender, setCustomLender] = useState(false);
 
-    const presetsQuery = useLiveQuery(
+    const debtTypesQuery = useLiveQuery(
         api.money.catalogs.debtPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
         live && mode === 'create'
     );
-    const presetOptions = useMemo(
+
+    const typeOptions = useMemo(
         () =>
-            (presetsQuery.data ?? []).map(preset => ({
+            (debtTypesQuery.data ?? []).map(preset => ({
                 key: preset.key,
                 name: preset.name,
                 kind: preset.kind,
                 icon: preset.icon,
+                suggestedLenders: preset.suggestedLenders ?? [],
             })),
-        [presetsQuery.data]
+        [debtTypesQuery.data]
     );
+
+    const selectedType = typeOptions.find(option => option.key === typeKey) ?? null;
+    const lendersForType = selectedType?.suggestedLenders ?? [];
 
     const form = useForm<DebtFormValues>({
         defaultValues: {
@@ -121,20 +129,22 @@ export function DebtForm({
             if (!householdId) throw new Error('No household');
             const balance = parseEurosToCents(values.balance);
             if (balance === null || balance < 0) throw new Error('Invalid balance');
-            const minimum = values.minimumPayment?.trim()
-                ? (parseEurosToCents(values.minimumPayment) ?? 0)
+            const minimumRaw = values.minimumPayment?.trim()
+                ? parseEurosToCents(values.minimumPayment)
                 : 0;
-            const name = values.name.trim();
+            const minimumPayment = minimumRaw === null ? 0 : minimumRaw;
             const interestRate = Number(values.interestRate.replace(',', '.'));
+            const name = values.name.trim();
+
             if (mode === 'edit' && entityId) {
                 return client.money.debts.update({
                     id: entityId,
                     householdId,
                     name,
+                    kind: values.kind,
                     balance,
                     interestRate,
-                    minimumPayment: minimum,
-                    kind: values.kind,
+                    minimumPayment,
                 });
             }
             return client.money.debts.create({
@@ -144,7 +154,7 @@ export function DebtForm({
                 balance,
                 originalBalance: balance,
                 interestRate,
-                minimumPayment: minimum,
+                minimumPayment,
                 extraPayment: 0,
                 dueDay: null,
                 closedOn: null,
@@ -178,10 +188,17 @@ export function DebtForm({
             showToast('Sign in to save debts', 'error');
             return;
         }
+        if (mode === 'create' && !typeKey) {
+            showToast('Pick a debt type first', 'error');
+            return;
+        }
         await saveMutation.mutateAsync(values);
     }
 
     const busy = form.formState.isSubmitting || saveMutation.isPending || removeMutation.isPending;
+
+    const selectedLenderName = useWatch({ control: form.control, name: 'name' }) ?? '';
+    const showLenderInput = customLender || lendersForType.length === 0;
 
     return (
         <FormCreateEditShell
@@ -211,57 +228,166 @@ export function DebtForm({
                     ) : null}
                 </div>
             }>
-            <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                            {mode === 'create' ? (
-                                <PresetNameField
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    placeholder="e.g. credit card"
-                                    options={presetOptions}
-                                    onSelect={opt => {
-                                        const full = presetOptions.find(
-                                            preset => preset.key === opt.key
+            {mode === 'create' ? (
+                <>
+                    <div className="grid gap-2">
+                        <p className="font-mono text-[10px] font-semibold tracking-wider text-fg-muted uppercase">
+                            What kind of debt?
+                        </p>
+                        {selectedType ? (
+                            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-line bg-raised px-3 py-2.5 text-sm">
+                                <span className="min-w-0 flex-1 font-medium text-fg">
+                                    {selectedType.icon ? `${selectedType.icon} ` : ''}
+                                    {selectedType.name}
+                                </span>
+                                <button
+                                    type="button"
+                                    className="font-mono text-xs tracking-wide text-accent uppercase hover:underline"
+                                    onClick={() => {
+                                        setTypeKey(null);
+                                        setTypeQuery('');
+                                        setCustomLender(false);
+                                        form.setValue('name', '');
+                                    }}>
+                                    Change
+                                </button>
+                            </div>
+                        ) : (
+                            <PresetNameField
+                                value={typeQuery}
+                                onChange={setTypeQuery}
+                                placeholder="e.g. student loan"
+                                options={typeOptions}
+                                onSelect={opt => {
+                                    const full = typeOptions.find(preset => preset.key === opt.key);
+                                    if (!full) return;
+                                    setTypeKey(full.key);
+                                    setTypeQuery('');
+                                    setCustomLender(false);
+                                    form.setValue('kind', full.kind);
+                                    form.setValue('name', '');
+                                }}
+                            />
+                        )}
+                    </div>
+
+                    {selectedType ? (
+                        <div className="grid gap-2">
+                            <p className="font-mono text-[10px] font-semibold tracking-wider text-fg-muted uppercase">
+                                Who do you owe?
+                            </p>
+                            {lendersForType.length > 0 && !customLender ? (
+                                <div className="flex flex-wrap gap-1.5">
+                                    {lendersForType.map(lender => {
+                                        const selected =
+                                            selectedLenderName.toLowerCase() ===
+                                            lender.toLowerCase();
+                                        return (
+                                            <button
+                                                key={lender}
+                                                type="button"
+                                                disabled={busy}
+                                                className={
+                                                    selected
+                                                        ? 'rounded-full border border-accent bg-accent/15 px-3 py-1.5 text-sm text-accent'
+                                                        : 'rounded-full border border-line bg-raised px-3 py-1.5 text-sm text-fg hover:border-accent hover:text-accent'
+                                                }
+                                                onClick={() =>
+                                                    form.setValue('name', lender, {
+                                                        shouldValidate: true,
+                                                    })
+                                                }>
+                                                {lender}
+                                            </button>
                                         );
-                                        if (full) form.setValue('kind', full.kind);
-                                    }}
+                                    })}
+                                    <button
+                                        type="button"
+                                        disabled={busy}
+                                        className="rounded-full border border-dashed border-line px-3 py-1.5 text-sm text-fg-muted hover:border-accent hover:text-accent"
+                                        onClick={() => {
+                                            setCustomLender(true);
+                                            form.setValue('name', '', {
+                                                shouldValidate: false,
+                                            });
+                                        }}>
+                                        Other…
+                                    </button>
+                                </div>
+                            ) : null}
+                            {showLenderInput ? (
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={
+                                                        lendersForType.length > 0
+                                                            ? 'Lender name'
+                                                            : 'e.g. bank or person'
+                                                    }
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
                             ) : (
-                                <Input placeholder="e.g. credit card" {...field} />
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={() => (
+                                        <FormItem>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             )}
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-
-            <FormField
-                control={form.control}
-                name="kind"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Type</FormLabel>
-                        <FormControl>
-                            <select
-                                className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
-                                {...field}>
-                                <option value="CREDIT_CARD">Credit card</option>
-                                <option value="LOAN">Loan</option>
-                                <option value="STUDENT">Student loan</option>
-                                <option value="MORTGAGE">Mortgage</option>
-                                <option value="FAMILY">Family</option>
-                                <option value="OTHER">Other</option>
-                            </select>
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                        </div>
+                    ) : null}
+                </>
+            ) : (
+                <>
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Who do you owe?</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g. DUO" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="kind"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Type</FormLabel>
+                                <FormControl>
+                                    <select
+                                        className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
+                                        {...field}>
+                                        <option value="CREDIT_CARD">Credit card</option>
+                                        <option value="LOAN">Loan</option>
+                                        <option value="STUDENT">Student loan</option>
+                                        <option value="MORTGAGE">Mortgage</option>
+                                        <option value="FAMILY">Family</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </>
+            )}
 
             <FormField
                 control={form.control}

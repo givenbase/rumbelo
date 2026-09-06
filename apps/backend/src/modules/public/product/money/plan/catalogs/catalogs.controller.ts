@@ -78,6 +78,7 @@ export class MoneyCatalogsController {
                 sortOrder: preset.sortOrder,
                 kind: preset.kind,
                 icon: preset.icon,
+                suggestedLenders: preset.suggestedLenders ?? [],
             }));
         });
     }

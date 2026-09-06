@@ -24,6 +24,8 @@ export type FixedCostPreset = z.infer<typeof FixedCostPreset>;
 export const DebtPreset = CatalogItemBase.extend({
     kind: z.enum(DebtKind),
     icon: z.string().max(8).nullable(),
+    /** Lender name chips for “Who do you owe?” after this type is picked. */
+    suggestedLenders: z.array(z.string().min(1).max(120)),
 });
 export type DebtPreset = z.infer<typeof DebtPreset>;
 

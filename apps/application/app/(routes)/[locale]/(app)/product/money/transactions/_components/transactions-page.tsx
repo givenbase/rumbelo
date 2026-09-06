@@ -296,14 +296,12 @@ export function TransactionsPageClient() {
                                         ? jarById.get(transaction.jarId)
                                         : undefined;
                                     const title =
-                                        transaction.counterparty?.trim() ||
-                                        transaction.description;
+                                        transaction.counterparty?.trim() || transaction.description;
                                     const detailParts = [
                                         transaction.note?.trim() || null,
                                         !transaction.note?.trim() &&
                                         transaction.counterparty?.trim() &&
-                                        transaction.description !==
-                                            transaction.counterparty.trim()
+                                        transaction.description !== transaction.counterparty.trim()
                                             ? transaction.description
                                             : null,
                                     ].filter(Boolean);

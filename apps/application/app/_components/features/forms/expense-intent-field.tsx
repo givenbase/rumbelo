@@ -88,8 +88,7 @@ export function ExpenseIntentField({
     }, [merchants, value.categoryKey]);
 
     const hasSelection = Boolean(value.vendor || value.categoryKey);
-    const showVendorPrompt =
-        value.source === 'category' && !value.vendor && !skippedVendor;
+    const showVendorPrompt = value.source === 'category' && !value.vendor && !skippedVendor;
 
     useEffect(() => {
         function onDoc(event: MouseEvent) {
@@ -100,7 +99,9 @@ export function ExpenseIntentField({
     }, []);
 
     function selectMerchant(merchant: ExpenseMerchantOption) {
-        const category = categories.find(c => c.key === merchant.categoryTemplateKey);
+        const category = categories.find(
+            candidate => candidate.key === merchant.categoryTemplateKey
+        );
         onChange({
             vendor: merchant.name,
             categoryKey: merchant.categoryTemplateKey,
@@ -262,8 +263,8 @@ export function ExpenseIntentField({
                                                         ) ?? null;
                                                     const categoryName =
                                                         categories.find(
-                                                            c =>
-                                                                c.key ===
+                                                            candidate =>
+                                                                candidate.key ===
                                                                 merchant.categoryTemplateKey
                                                         )?.name ?? merchant.categoryTemplateKey;
                                                     return (
@@ -271,6 +272,7 @@ export function ExpenseIntentField({
                                                             <button
                                                                 type="button"
                                                                 role="option"
+                                                                aria-selected={false}
                                                                 className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-bg/10"
                                                                 onClick={() =>
                                                                     selectMerchant(merchant)
@@ -307,6 +309,7 @@ export function ExpenseIntentField({
                                                         <button
                                                             type="button"
                                                             role="option"
+                                                            aria-selected={false}
                                                             className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-bg/10"
                                                             onClick={() =>
                                                                 selectCategory(category)

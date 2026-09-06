@@ -8,23 +8,33 @@ import { DEBT_PRESET_SEED } from '../../../../modules/backoffice/product/money/p
 export class DebtPresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
         const keys = DEBT_PRESET_SEED.map(row => row.key);
-        const existingRows = await em.find(DebtPreset, { key: { $in: keys } });
+        const seedKeys = new Set<string>(keys);
+        const existingRows = await em.find(DebtPreset, {});
         const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of DEBT_PRESET_SEED.entries()) {
             const existing = existingByKey.get(row.key);
+            const suggestedLenders = [...row.suggestedLenders];
             if (existing) {
                 existing.name = row.name;
                 existing.kind = row.kind;
                 existing.icon = row.icon;
+                existing.suggestedLenders = suggestedLenders;
                 existing.sortOrder = sortOrder;
                 existing.isActive = true;
                 continue;
             }
             em.create(DebtPreset, {
-                ...row,
+                key: row.key,
+                name: row.name,
+                kind: row.kind,
+                icon: row.icon,
+                suggestedLenders,
                 sortOrder,
                 isActive: true,
             } as never);
+        }
+        for (const row of existingRows) {
+            if (!seedKeys.has(row.key)) row.isActive = false;
         }
         await em.flush();
     }

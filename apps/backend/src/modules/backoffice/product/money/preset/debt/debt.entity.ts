@@ -37,6 +37,13 @@ export class DebtPreset extends BaseEntity {
     @Property({ length: 8, nullable: true })
     icon: string | null = null;
 
+    /**
+     * Lender name chips after this type is chosen (“Who do you owe?”).
+     * Plain labels — not merchant FKs. Free-type always allowed.
+     */
+    @Property({ type: 'json', default: [] })
+    suggestedLenders: string[] = [];
+
     /** Display / seed order within the catalog. */
     @Property({ default: 0 })
     sortOrder = 0;

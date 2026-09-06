@@ -70,7 +70,7 @@ export function DebtCreateModalShell({ closeHref }: ShellProps) {
         <RouteModalShell
             closeHref={closeHref}
             title="New debt"
-            description="Put the debt on the board so you can pay it off.">
+            description="Pick the type, then who you owe.">
             <DebtCreatePage embedded />
         </RouteModalShell>
     );

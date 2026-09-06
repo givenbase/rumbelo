@@ -3,7 +3,7 @@
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
@@ -28,10 +28,7 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 import { ConfirmActionButton } from './confirm-action-button';
 import { resolveCategoryId, useCategoryTemplates } from './catalog-helpers';
-import {
-    ExpenseIntentField,
-    type ExpenseIntentSelection,
-} from './expense-intent-field';
+import { ExpenseIntentField, type ExpenseIntentSelection } from './expense-intent-field';
 
 const expenseFormSchema = z.object({
     amount: z
@@ -82,9 +79,13 @@ function buildIntentFromDefaults(
     const note = defaults?.note?.trim() || '';
 
     if (vendor) {
-        const merchant = merchants.find(m => m.name.toLowerCase() === vendor.toLowerCase());
+        const merchant = merchants.find(
+            candidate => candidate.name.toLowerCase() === vendor.toLowerCase()
+        );
         if (merchant) {
-            const category = categories.find(c => c.key === merchant.categoryTemplateKey);
+            const category = categories.find(
+                candidate => candidate.key === merchant.categoryTemplateKey
+            );
             return {
                 vendor,
                 categoryKey: merchant.categoryTemplateKey,
@@ -94,7 +95,7 @@ function buildIntentFromDefaults(
             };
         }
         const categoryFromDesc = categories.find(
-            c => c.name.toLowerCase() === description.toLowerCase()
+            candidate => candidate.name.toLowerCase() === description.toLowerCase()
         );
         return {
             vendor,
@@ -106,7 +107,9 @@ function buildIntentFromDefaults(
     }
 
     if (description && description !== note) {
-        const category = categories.find(c => c.name.toLowerCase() === description.toLowerCase());
+        const category = categories.find(
+            candidate => candidate.name.toLowerCase() === description.toLowerCase()
+        );
         if (category) {
             return {
                 vendor: '',
@@ -148,8 +151,7 @@ export function ExpenseForm({
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
     const [showNote, setShowNote] = useState(Boolean(defaultValues?.note?.trim()));
-    const [intent, setIntent] = useState<ExpenseIntentSelection>(EMPTY_INTENT);
-    const [intentReady, setIntentReady] = useState(mode === 'create');
+    const [intentOverride, setIntentOverride] = useState<ExpenseIntentSelection | null>(null);
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
@@ -204,21 +206,14 @@ export function ExpenseForm({
         return map;
     }, [categories]);
 
-    useEffect(() => {
-        if (mode !== 'edit') return;
-        if (intentReady) return;
-        if (merchantsQuery.isLoading || categoriesQuery.isLoading) return;
-        setIntent(buildIntentFromDefaults(defaultValues, merchants, categories));
-        setIntentReady(true);
-    }, [
-        mode,
-        intentReady,
-        merchantsQuery.isLoading,
-        categoriesQuery.isLoading,
-        defaultValues,
-        merchants,
-        categories,
-    ]);
+    const catalogsReady = !merchantsQuery.isLoading && !categoriesQuery.isLoading;
+    const editIntent = useMemo(() => {
+        if (mode !== 'edit' || !catalogsReady) return null;
+        return buildIntentFromDefaults(defaultValues, merchants, categories);
+    }, [mode, catalogsReady, defaultValues, merchants, categories]);
+
+    const intent = intentOverride ?? editIntent ?? EMPTY_INTENT;
+    const intentReady = mode === 'create' || editIntent !== null;
 
     const form = useForm<z.infer<typeof expenseFormSchema>>({
         defaultValues: {
@@ -237,7 +232,7 @@ export function ExpenseForm({
 
     useEffect(() => {
         if (!intent.jarKey) return;
-        const jar = jars.find(j => j.key === intent.jarKey);
+        const jar = jars.find(candidate => candidate.key === intent.jarKey);
         if (jar) form.setValue('jarId', jar.id);
     }, [intent.jarKey, jars, form]);
 
@@ -256,12 +251,13 @@ export function ExpenseForm({
 
             const vendor = intent.vendor.trim();
             const note = values.note.trim();
-            const description =
-                note || intent.categoryName?.trim() || vendor || 'Expense';
+            const description = note || intent.categoryName?.trim() || vendor || 'Expense';
 
             let categoryId: string | null = null;
             if (intent.categoryName) {
-                const jarBalance = (balancesQuery.data ?? []).find(j => j.id === values.jarId);
+                const jarBalance = (balancesQuery.data ?? []).find(
+                    candidate => candidate.id === values.jarId
+                );
                 categoryId = await resolveCategoryId({
                     client,
                     householdId,
@@ -349,7 +345,7 @@ export function ExpenseForm({
         (live && jars.length === 0) ||
         (mode === 'edit' && !intentReady);
 
-    const noteValue = form.watch('note');
+    const noteValue = useWatch({ control: form.control, name: 'note' }) ?? '';
 
     return (
         <FormCreateEditShell
@@ -389,7 +385,7 @@ export function ExpenseForm({
                 </p>
                 <ExpenseIntentField
                     value={intent}
-                    onChange={setIntent}
+                    onChange={setIntentOverride}
                     merchants={merchants}
                     categories={categories}
                     categoryIconByKey={categoryIconByKey}

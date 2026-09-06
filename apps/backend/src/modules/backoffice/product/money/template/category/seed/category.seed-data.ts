@@ -10,6 +10,7 @@ export const CATEGORY_TEMPLATE_SEED = [
     { key: 'TRANSPORT', name: 'Transport', jarKey: JarKey.NECESSITIES, icon: '🚌' },
     { key: 'SUBSCRIPTIONS', name: 'Subscriptions', jarKey: JarKey.NECESSITIES, icon: '📱' },
     { key: 'TAXES', name: 'Taxes', jarKey: JarKey.NECESSITIES, icon: '🧾' },
+    { key: 'FINES', name: 'Fines & tickets', jarKey: JarKey.NECESSITIES, icon: '🚨' },
     { key: 'FAMILY', name: 'Family', jarKey: JarKey.NECESSITIES, icon: '👪' },
     { key: 'DEBT_PAYMENTS', name: 'Debt payments', jarKey: JarKey.NECESSITIES, icon: '💳' },
     { key: 'CARE', name: 'Care', jarKey: JarKey.NECESSITIES, icon: '💊' },
