@@ -10,7 +10,7 @@ import {
     PayoffStrategy,
     PlanKey,
 } from '../../../enums';
-import { HouseholdId, Id, UserId } from '../../../common/schemas';
+import { HouseholdId, MemberId, UserId } from '../../../common/schemas';
 
 export { HouseholdKind, HouseholdRole, IncomeRhythm, MoneyCharacter } from '../../../enums';
 
@@ -33,14 +33,16 @@ export const Household = z.object({
 export type Household = z.infer<typeof Household>;
 
 export const HouseholdMember = z.object({
-    id: Id,
+    /** Better Auth `auth.member.id` — opaque text, not Rumbelo uuid. */
+    id: MemberId,
     householdId: HouseholdId,
     userId: UserId,
     role: z.enum(HouseholdRole),
     /** Better Auth display name (`user.name`). */
     displayName: z.string(),
     email: z.email(),
-    image: z.url().nullable(),
+    /** Better Auth may store absolute URLs or leave null. */
+    image: z.string().nullable(),
 });
 
 /** Shared money-board prefs (period, income picture, debt order). */

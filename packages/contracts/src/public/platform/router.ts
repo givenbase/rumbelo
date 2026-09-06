@@ -41,7 +41,7 @@ export const contract = {
                     role: z.enum(HouseholdRole),
                 })
             )
-            .output(z.object({ invitationId: z.string() })),
+            .output(z.object({ invitationId: schemas.AuthId })),
     },
     coach: {
         feed: oc

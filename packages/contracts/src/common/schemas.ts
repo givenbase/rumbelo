@@ -9,18 +9,23 @@ export const Id = z.uuid();
 export type Id = z.infer<typeof Id>;
 
 /**
- * Better Auth household id (`auth.household.id`) — opaque text minted by BA.
- * Not a Postgres uuid column; do not validate as `z.uuid()`.
+]]| * Better Auth opaque text id (user, household, member, invitation, session, …).
+ * BA mints these — never validate as `z.uuid()` and never confuse with {@link Id}.
  */
-export const HouseholdId = z.string().min(1).max(64);
-export type HouseholdId = z.infer<typeof HouseholdId>;
+export const AuthId = z.string().min(1).max(64);
+export type AuthId = z.infer<typeof AuthId>;
 
-/**
- * Better Auth user id (`auth.user.id`) — opaque text minted by BA.
- * Not a Postgres uuid column; do not validate as `z.uuid()`.
- */
-export const UserId = z.string().min(1).max(64);
-export type UserId = z.infer<typeof UserId>;
+/** Better Auth household id (`auth.household.id`). */
+export const HouseholdId = AuthId;
+export type HouseholdId = AuthId;
+
+/** Better Auth user id (`auth.user.id`). */
+export const UserId = AuthId;
+export type UserId = AuthId;
+
+/** Better Auth membership row id (`auth.member.id`). */
+export const MemberId = AuthId;
+export type MemberId = AuthId;
 
 /**
  * Money is stored and transported as integer minor units (eurocents) — never floats.

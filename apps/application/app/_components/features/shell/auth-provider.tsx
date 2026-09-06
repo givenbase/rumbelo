@@ -13,16 +13,25 @@ import {
 import {
     activeHouseholdId,
     listOrganizations,
+    sessionUserId,
     setActiveOrganization,
     useSession,
+    type Session,
 } from '@/app/_lib/auth';
 
 interface AuthCtx {
-    session: ReturnType<typeof useSession>['data'];
-    isPending: boolean;
+    session: Session | null | undefined;
+    /** Better Auth user — null while loading or signed out. */
+    user: Session['user'] | null;
+    /** Better Auth `user.id` (opaque AuthId). */
+    userId: string | null;
+    /** Active household id (opaque AuthId). Null until onboarded / activated. */
     householdId: string | null;
+    isPending: boolean;
+    isAuthenticated: boolean;
     refreshSession: () => Promise<void>;
-    setActiveHousehold: (organizationId: string) => Promise<void>;
+    /** Sets BA active organization (= Rumbelo household) and refreshes session. */
+    setActiveHousehold: (householdId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthCtx | null>(null);
@@ -32,6 +41,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const activating = useRef(false);
 
     const householdId = activeHouseholdId(session);
+    const userId = sessionUserId(session);
+    const user = session?.user ?? null;
+    const isAuthenticated = Boolean(userId);
+
     const refetchRef = useRef(refetch);
     useEffect(() => {
         refetchRef.current = refetch;
@@ -42,14 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [refetch]);
 
     const setActiveHousehold = useCallback(
-        async (organizationId: string) => {
-            await setActiveOrganization(organizationId);
+        async (nextHouseholdId: string) => {
+            await setActiveOrganization(nextHouseholdId);
             await refetch();
         },
         [refetch]
     );
 
-    // Demo / first login: activate the only household if session has none.
+    // First login / demo: activate the only household if session has none.
     useEffect(() => {
         if (isPending || !session?.user || householdId || activating.current) return;
         activating.current = true;
@@ -68,8 +81,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [isPending, session?.user, householdId]);
 
     const value = useMemo(
-        () => ({ session, isPending, householdId, refreshSession, setActiveHousehold }),
-        [session, isPending, householdId, refreshSession, setActiveHousehold]
+        () => ({
+            session,
+            user,
+            userId,
+            householdId,
+            isPending,
+            isAuthenticated,
+            refreshSession,
+            setActiveHousehold,
+        }),
+        [
+            session,
+            user,
+            userId,
+            householdId,
+            isPending,
+            isAuthenticated,
+            refreshSession,
+            setActiveHousehold,
+        ]
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -81,12 +112,26 @@ export function useAuth(): AuthCtx {
     return ctx;
 }
 
+/** Active household AuthId, or null if none selected. */
 export function useHouseholdId(): string | null {
     return useAuth().householdId;
 }
 
+/** Active household AuthId — throws if missing (call after onboarding). */
 export function useRequireHouseholdId(): string {
     const id = useHouseholdId();
     if (!id) throw new Error('No active household — complete onboarding first');
+    return id;
+}
+
+/** Better Auth user id, or null if signed out. */
+export function useUserId(): string | null {
+    return useAuth().userId;
+}
+
+/** Better Auth user id — throws if signed out. */
+export function useRequireUserId(): string {
+    const id = useUserId();
+    if (!id) throw new Error('Not signed in');
     return id;
 }

@@ -1,6 +1,6 @@
 /**
- * Module-level active household for OpenAPILink headers.
- * AuthProvider writes; createClient headers() reads — no React remount.
+ * Client-only active household for oRPC headers (`x-household-id`).
+ * Value is a Better Auth opaque AuthId — not a Rumbelo uuid.
  */
 let activeHouseholdId: string | null = null;
 

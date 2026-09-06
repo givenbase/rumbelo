@@ -83,9 +83,15 @@ auth/
 - `auth/user/account/` — person data + prefs (theme, locale) — **user** writes
 - `auth/household/household-settings/` — board prefs — **household** writes
 
-**IDs:** Better Auth keeps opaque text `id`s (BA default generator). Rumbelo-owned
-rows use Postgres `uuid` via `BaseEntity`. Contracts: `UserId` / `HouseholdId` =
-opaque string; product `Id` = `z.uuid()`. Never validate a BA id as uuid.
+**IDs (do not mix):**
+
+| Kind | Contract | Storage | Example consumers |
+|---|---|---|---|
+| Better Auth identity | `AuthId` / `UserId` / `HouseholdId` / `MemberId` | opaque text | `useAuth().userId`, `useAuth().householdId`, `x-household-id` |
+| Rumbelo product rows | `Id` | Postgres `uuid` | jar, transaction, goal, account profile |
+
+Never validate a BA id as `z.uuid()`. Frontend session field stays
+`activeOrganizationId` (BA SDK name); DB column is `active_household_id`.
 - Jar **instances** → `public/product/money/plan/jar` — **household** writes (table in `public`)
 - Jar **templates** → `backoffice/product/money/template/jar` — **we** write; onboard copies into household jars
 - Product **tiers** → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)

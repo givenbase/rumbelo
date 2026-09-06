@@ -24,7 +24,7 @@ export const AccountProfile = z.object({
     /** ISO calendar date `YYYY-MM-DD`. */
     dateOfBirth: z.iso.date().nullable(),
     email: z.email(),
-    image: z.url().nullable(),
+    image: z.string().nullable(),
 });
 export type AccountProfile = z.infer<typeof AccountProfile>;
 

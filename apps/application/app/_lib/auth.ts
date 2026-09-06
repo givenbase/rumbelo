@@ -1,10 +1,13 @@
 /**
  * Application auth helpers — product sign-in + session only.
  * Sign-up / verify / forgot-password live on DOMAIN_WEB.
+ *
+ * IDs from Better Auth (`user.id`, `activeOrganizationId`) are opaque text —
+ * not Postgres uuids. Pass them straight into oRPC as `UserId` / `HouseholdId`.
+ * Product row ids (`jar.id`, …) are separate Rumbelo uuids (`Id`).
  */
 
 import { createAuthClient } from 'better-auth/react';
-
 import { organizationClient } from 'better-auth/client/plugins';
 
 import { env } from '@/app/_utils/get-env';
@@ -39,6 +42,7 @@ export async function changePassword(data: {
     return client.changePassword(data);
 }
 
+/** BA organization plugin — SDK still says organization; Rumbelo calls it household. */
 export async function setActiveOrganization(organizationId: string) {
     await client.organization.setActive({ organizationId });
 }
@@ -53,9 +57,19 @@ export async function updateOrganization(organizationId: string, data: { name?: 
 
 export type Session = NonNullable<ReturnType<typeof useSession>['data']>;
 
+/**
+ * Active household for this session.
+ * Better Auth exposes `activeOrganizationId` (SDK name); DB column is
+ * `active_household_id`. Value is an opaque AuthId string.
+ */
 export function activeHouseholdId(session: Session | null | undefined): string | null {
     if (!session) return null;
     return session.session?.activeOrganizationId ?? null;
+}
+
+/** Better Auth `user.id` — opaque AuthId, not Rumbelo uuid. */
+export function sessionUserId(session: Session | null | undefined): string | null {
+    return session?.user?.id ?? null;
 }
 
 export function webOrigin(): string {

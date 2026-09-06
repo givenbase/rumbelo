@@ -98,7 +98,9 @@ function isSystemPublicPath(pathname: string): boolean {
     );
 }
 
-/** Explicit header wins, then the oRPC input body, then the session's active org. */
+/** Explicit header wins, then the oRPC input body, then the session's active org.
+ * All three are Better Auth opaque AuthIds (not Rumbelo uuids).
+ */
 function resolveHouseholdId(req: Req): string | null {
     const header = req.headers['x-household-id'];
     if (typeof header === 'string' && header.length > 0) return header;
@@ -106,6 +108,7 @@ function resolveHouseholdId(req: Req): string | null {
     const body = req.body as { householdId?: string } | undefined;
     if (body?.householdId) return body.householdId;
 
+    // SDK name remains activeOrganizationId; DB column is active_household_id.
     const activeOrg = (req.session?.session as { activeOrganizationId?: string | null } | undefined)
         ?.activeOrganizationId;
     return activeOrg ?? null;
