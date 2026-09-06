@@ -25,6 +25,7 @@ import { AuthService } from '@thallesp/nestjs-better-auth';
 import type { Auth } from '../../../auth/better-auth/auth.config';
 
 import { currentUserId, currentAuthHeaders } from '../../../../common/household/household.context';
+import { mapToOrpcClientError } from '../../../../common/utils/database-constraint-error.util';
 import { AccountSettingsService } from '../../../auth/account/account-settings/account-settings.service';
 import { AuthInvitation } from '../../../auth/better-auth/invitation/auth-invitation.entity';
 import { AuthMember } from '../../../auth/better-auth/member/auth-member.entity';
@@ -230,6 +231,17 @@ export class HouseholdService {
         return members + pending;
     }
 
+    /** Avoid slug collisions when onboard is retried after a partial failure. */
+    private async uniqueOrgSlug(name: string): Promise<string> {
+        const base = slugify(name);
+        for (let attempt = 0; attempt < 8; attempt++) {
+            const candidate = attempt === 0 ? base : `${base}-${attempt + 1}`;
+            const existing = await this.em.findOne(AuthOrganization, { slug: candidate });
+            if (!existing) return candidate;
+        }
+        return `${base}-${Date.now().toString(36)}`;
+    }
+
     private async onboardInternal(input: z.infer<typeof OnboardingInput>, headers: Headers) {
         const userId = currentUserId();
         const planKey = PlanKey.BASIC;
@@ -243,13 +255,18 @@ export class HouseholdService {
             throw new BadRequestException(`Jar split must total 100%, received ${splitTotal}%`);
         }
 
-        const slug = slugify(input.householdName);
-        const org = await this.authService.api.createOrganization({
-            body: { name: input.householdName, slug },
-            headers,
-        });
-
-        if (!org?.id) throw new BadRequestException('Could not create household');
+        const slug = await this.uniqueOrgSlug(input.householdName);
+        let org: { id: string; name: string; slug: string };
+        try {
+            const created = await this.authService.api.createOrganization({
+                body: { name: input.householdName, slug },
+                headers,
+            });
+            if (!created?.id) throw new BadRequestException('Could not create household');
+            org = { id: created.id, name: created.name, slug: created.slug };
+        } catch (error) {
+            throw mapToOrpcClientError(error);
+        }
 
         await this.authService.api.setActiveOrganization({
             body: { organizationId: org.id },

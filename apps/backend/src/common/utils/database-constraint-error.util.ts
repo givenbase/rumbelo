@@ -1,5 +1,7 @@
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { ORPCError } from '@orpc/server';
+import { APIError } from 'better-auth/api';
 
 export type ConstraintFieldIssue = {
     message: string;
@@ -153,11 +155,58 @@ export function uniqueConstraintToOrpcError(
     });
 }
 
-/** Map unique-constraint failures to oRPC CONFLICT (409) instead of a generic 500. */
+/** Map unique-constraint / Nest / Better Auth failures to oRPC client errors. */
 export function mapToOrpcClientError(error: unknown): unknown {
     if (error instanceof ORPCError) return error;
+
     const parsed = parseUniqueConstraint(error);
     if (parsed) return uniqueConstraintToOrpcError(parsed);
+
+    if (error instanceof APIError) {
+        const status = typeof error.statusCode === 'number' ? error.statusCode : 400;
+        const code =
+            status === 401
+                ? 'UNAUTHORIZED'
+                : status === 403
+                  ? 'FORBIDDEN'
+                  : status === 404
+                    ? 'NOT_FOUND'
+                    : status === 429
+                      ? 'TOO_MANY_REQUESTS'
+                      : 'BAD_REQUEST';
+        return new ORPCError(code, {
+            message: error.message || 'Request failed',
+        });
+    }
+
+    if (error instanceof HttpException) {
+        const status = error.getStatus();
+        const body = error.getResponse();
+        const message =
+            typeof body === 'string'
+                ? body
+                : body && typeof body === 'object' && 'message' in body
+                  ? Array.isArray((body as { message: unknown }).message)
+                      ? (body as { message: string[] }).message.join(', ')
+                      : String((body as { message: unknown }).message)
+                  : error.message;
+        const code =
+            status === HttpStatus.UNAUTHORIZED
+                ? 'UNAUTHORIZED'
+                : status === HttpStatus.FORBIDDEN
+                  ? 'FORBIDDEN'
+                  : status === HttpStatus.NOT_FOUND
+                    ? 'NOT_FOUND'
+                    : status === HttpStatus.CONFLICT
+                      ? 'CONFLICT'
+                      : status === HttpStatus.TOO_MANY_REQUESTS
+                        ? 'TOO_MANY_REQUESTS'
+                        : status >= 500
+                          ? 'INTERNAL_SERVER_ERROR'
+                          : 'BAD_REQUEST';
+        return new ORPCError(code, { message });
+    }
+
     return error;
 }
 

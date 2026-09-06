@@ -459,6 +459,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "uuid"
+        },
+        "onboarded_at": {
+          "name": "onboarded_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
         }
       },
       "name": "account_settings",
@@ -9824,6 +9840,22 @@
           ],
           "mappedType": "unknown",
           "nativeEnumName": "backoffice_plan_key"
+        },
+        "onboarded_at": {
+          "name": "onboarded_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
         }
       },
       "name": "platform_household_settings",
