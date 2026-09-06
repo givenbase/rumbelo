@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { CADENCE_TO_MONTHLY } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Card, Eyebrow } from '@rumbelo/ui';
 import { formatMoney, toPeriodKey, cn } from '@rumbelo/utils';
@@ -19,8 +20,33 @@ import { ListToolbar, ListToolbarTab } from '@/components/layout/list-toolbar';
 
 type Tab = 'JARS' | 'SIMULATOR';
 
+/**
+ * Simulator bounds relative to real monthly income.
+ * 0.5× covers a pay cut / one income gone; 2× covers a raise or side income.
+ * Beyond that the what-if stops being planning. Tune here, nowhere else.
+ */
+const SIM_STEP_EUROS = 50;
+const SIM_FLOOR_EUROS = 500;
+const SIM_MIN_RATIO = 0.5;
+const SIM_MAX_RATIO = 2;
+/** Used only when the household has no active income yet. */
+const SIM_FALLBACK_RANGE_EUROS = { min: 500, max: 8_000, value: 4_300 } as const;
+
 function toCssVar(bgClass: string) {
     return bgClass.replace('bg-', 'var(--color-') + ')';
+}
+
+function roundToStep(euros: number) {
+    return Math.round(euros / SIM_STEP_EUROS) * SIM_STEP_EUROS;
+}
+
+/** Slider bounds anchored on real income; falls back to a generic range without income. */
+function simRange(netMonthlyCents: number) {
+    if (netMonthlyCents <= 0) return SIM_FALLBACK_RANGE_EUROS;
+    const current = roundToStep(netMonthlyCents / 100);
+    const min = Math.max(SIM_FLOOR_EUROS, roundToStep(current * SIM_MIN_RATIO));
+    const max = Math.max(min + SIM_STEP_EUROS, roundToStep(current * SIM_MAX_RATIO));
+    return { min, max, value: Math.min(max, Math.max(min, current)) };
 }
 
 /**
@@ -36,7 +62,8 @@ export function JarsPageClient() {
     const live = isLiveData(householdId);
     const [tab, setTab] = useState<Tab>('JARS');
 
-    const [simEuros, setSimEuros] = useState(4_300);
+    /** User override only — `null` means "follow real income". */
+    const [simOverrideEuros, setSimOverrideEuros] = useState<number | null>(null);
     const [goalId, setGoalId] = useState<string>('');
     const [wantMonths, setWantMonths] = useState(36);
 
@@ -62,13 +89,26 @@ export function JarsPageClient() {
 
     const jars = jarsQuery.data ?? [];
     const goals = goalsQuery.data ?? [];
-    const net = (incomeQuery.data ?? [])
-        .filter(source => source.isActive)
-        .reduce((total, i) => total + i.amount, 0);
+    // Monthly-normalised, same rule as JarService.monthlyNetIncome() on the backend.
+    const net = Math.round(
+        (incomeQuery.data ?? [])
+            .filter(source => source.isActive)
+            .reduce(
+                (total, source) =>
+                    total + source.amount * (CADENCE_TO_MONTHLY[source.cadence] ?? 0),
+                0
+            )
+    );
     const totalPct = jars.reduce((total, j) => total + j.percentage, 0);
     const onTarget = jars.filter(j => !j.overspent).length;
 
+    const range = simRange(net);
+    const simEuros =
+        simOverrideEuros === null
+            ? range.value
+            : Math.min(range.max, Math.max(range.min, simOverrideEuros));
     const simCents = simEuros * 100;
+    const simDeltaPct = net > 0 ? Math.round(((simCents - net) / net) * 100) : 0;
     const goal = goals.find(candidate => candidate.id === goalId) ?? goals[0];
     const goalJarPct =
         jars.find(j => j.key === 'LONG_TERM_SAVINGS')?.percentage ??
@@ -196,11 +236,11 @@ export function JarsPageClient() {
                     <div className="my-5 flex flex-wrap items-center gap-4">
                         <input
                             type="range"
-                            min={500}
-                            max={8000}
-                            step={50}
+                            min={range.min}
+                            max={range.max}
+                            step={SIM_STEP_EUROS}
                             value={simEuros}
-                            onChange={event => setSimEuros(Number(event.target.value))}
+                            onChange={event => setSimOverrideEuros(Number(event.target.value))}
                             className="min-w-0 flex-1 accent-accent"
                             aria-label="Simulate income"
                         />
@@ -208,6 +248,34 @@ export function JarsPageClient() {
                             {formatMoney(simCents)}
                         </span>
                     </div>
+
+                    {net > 0 ? (
+                        <div className="-mt-3 mb-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-fg-faint">
+                            <span>
+                                Range {formatMoney(range.min * 100)} – {formatMoney(range.max * 100)}
+                            </span>
+                            {simDeltaPct !== 0 ? (
+                                <>
+                                    <span aria-hidden>·</span>
+                                    <span className="text-fg-secondary">
+                                        {simDeltaPct > 0 ? '+' : ''}
+                                        {simDeltaPct}% vs current
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSimOverrideEuros(null)}
+                                        className="text-accent underline-offset-2 hover:underline">
+                                        Reset to current
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <span aria-hidden>·</span>
+                                    <span>At current income</span>
+                                </>
+                            )}
+                        </div>
+                    ) : null}
 
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
                         {jars.map(j => {
