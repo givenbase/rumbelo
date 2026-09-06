@@ -2,6 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { type Jar as ContractJar, CADENCE_TO_MONTHLY, type Cadence } from '@rumbelo/contracts';
+import { jarCoverage, monthlyAmount } from '@rumbelo/utils';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
@@ -59,23 +60,27 @@ export class JarService {
     async balances(period: string) {
         const jars = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
         const spentByJar = await this.spentByJar(period);
+        const committedByJar = await this.committedOutByJar();
         const income = await this.monthlyNetIncome();
 
         return Promise.all(
             jars.map(async jar => {
                 const allocated = Math.round((income * Number(jar.percentage)) / 100);
                 const spent = spentByJar.get(jar.id) ?? 0;
+                const committedOut = committedByJar.get(jar.id) ?? 0;
                 const remaining = allocated - spent;
+                const coverage = jarCoverage({ allocated, spent, committedOut });
                 const cats = await this.categories.find({ jar: jar.id });
                 return {
                     ...toJarDto(jar),
                     period,
                     allocated,
                     spent,
+                    committedOut,
                     remaining,
-                    progress:
-                        allocated > 0 ? Math.min(1, Math.max(0, remaining / allocated)) : null,
-                    overspent: remaining < 0,
+                    available: coverage.available,
+                    progress: coverage.progress,
+                    overspent: coverage.overspent,
                     categories: cats.map(category => ({
                         id: category.id,
                         jarId: jar.id,
@@ -177,6 +182,25 @@ export class JarService {
             [currentHouseholdId(), period]
         );
         return new Map(rows.filter(row => row.jar_id).map(row => [row.jar_id, Number(row.total)]));
+    }
+
+    /** Active fixed OUT per jar, monthly-normalised. */
+    private async committedOutByJar(): Promise<Map<string, number>> {
+        const rows = await this.em
+            .getConnection()
+            .execute<{ jar_id: string; amount: string; cadence: Cadence }[]>(
+                `SELECT jar_id, amount::text, cadence
+             FROM money_fixed_cost
+            WHERE household_id = ? AND is_active = true AND direction = 'OUT'`,
+                [currentHouseholdId()]
+            );
+        const map = new Map<string, number>();
+        for (const row of rows) {
+            if (!row.jar_id) continue;
+            const monthly = monthlyAmount(Number(row.amount), row.cadence);
+            map.set(row.jar_id, (map.get(row.jar_id) ?? 0) + monthly);
+        }
+        return map;
     }
 }
 

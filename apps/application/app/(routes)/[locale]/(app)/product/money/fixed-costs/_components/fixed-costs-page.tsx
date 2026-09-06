@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Card } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { cn, formatMoney, monthlyAmount, sumMonthly, sumMonthlyFixedOut } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
@@ -18,6 +18,14 @@ import { ListToolbar } from '@/components/layout/list-toolbar';
 type Tab = 'ERUIT' | 'ERIN';
 
 const toVar = (bgClass: string) => bgClass.replace('bg-', 'var(--color-') + ')';
+
+const CADENCE_LABEL: Record<string, string> = {
+    WEEKLY: 'Weekly',
+    MONTHLY: 'Monthly',
+    QUARTERLY: 'Quarterly',
+    YEARLY: 'Yearly',
+    ONCE: 'Once',
+};
 
 export function FixedCostsPageClient() {
     const api = useApi();
@@ -39,83 +47,52 @@ export function FixedCostsPageClient() {
         live
     );
 
-    // Flatten byJar groups → same shape the template expects (adds jarKey per item)
-    const liveFixedCosts =
+    // Flatten byJar groups — keep cadence so OUT totals match jar committedOut.
+    const fixedCosts =
         live && byJarQuery.data?.length
-            ? (
-                  byJarQuery.data as Array<{
-                      jarId: string;
-                      jarKey: string;
-                      jarName: string;
-                      total: number;
-                      items: Array<{
-                          id: string;
-                          name: string;
-                          amount: number;
-                          direction: string;
-                          cadence: string;
-                          dueDay: number | null;
-                      }>;
-                  }>
-              ).flatMap(group =>
+            ? byJarQuery.data.flatMap(group =>
                   group.items
-                      .filter(i => i.direction === 'OUT')
-                      .map(i => ({
-                          id: i.id,
-                          name: i.name,
-                          // normalise: API amount is positive for OUT direction
-                          amount: -Math.abs(i.amount),
-                          cadence: i.cadence,
-                          dueDay: i.dueDay,
+                      .filter(item => item.direction === 'OUT' && item.isActive !== false)
+                      .map(item => ({
+                          id: item.id,
+                          name: item.name,
+                          amount: item.amount,
+                          monthly: monthlyAmount(Math.abs(item.amount), item.cadence),
+                          cadence: item.cadence,
+                          dueDay: item.dueDay,
                           jarId: group.jarId,
                           jarKey: group.jarKey,
                       }))
               )
-            : null;
-
-    const fixedCosts =
-        liveFixedCosts ??
-        ([] as Array<{
-            id: string;
-            name: string;
-            amount: number;
-            cadence: string;
-            dueDay: number | null;
-            jarId?: string;
-            jarKey: string;
-        }>);
-
-    const liveIncome =
-        live && (incomeQuery.data as unknown[] | undefined)?.length
-            ? (
-                  incomeQuery.data as Array<{
-                      id: string;
-                      name: string;
-                      amount: number;
-                      kind: string;
-                      expectedDay: number | null;
-                  }>
-              ).map(source => ({
-                  id: source.id,
-                  label: source.name,
-                  amount: source.amount,
-                  kind: source.kind,
-                  dueDay: source.expectedDay,
-              }))
-            : null;
+            : [];
 
     const incomeSources =
-        liveIncome ??
-        ([] as Array<{
-            id: string;
-            label: string;
-            amount: number;
-            kind: string;
-            dueDay: number | null;
-        }>);
+        live && incomeQuery.data?.length
+            ? incomeQuery.data
+                  .filter(source => source.isActive !== false)
+                  .map(source => ({
+                      id: source.id,
+                      label: source.name,
+                      amount: source.amount,
+                      monthly: monthlyAmount(source.amount, source.cadence),
+                      cadence: source.cadence,
+                      kind: source.kind,
+                      dueDay: source.expectedDay,
+                  }))
+            : [];
 
-    const NET = incomeSources.reduce((total, i) => total + i.amount, 0);
-    const outTotal = fixedCosts.reduce((total, fixedCost) => total + Math.abs(fixedCost.amount), 0);
+    const NET = sumMonthly(
+        incomeSources.map(source => ({ amount: source.amount, cadence: source.cadence })),
+        { activeOnly: false }
+    );
+    const outTotal = sumMonthlyFixedOut(
+        fixedCosts.map(item => ({
+            amount: item.amount,
+            cadence: item.cadence,
+            direction: 'OUT' as const,
+        })),
+        { activeOnly: false }
+    );
     const leftover = NET - outTotal;
     const commitmentRatio = NET > 0 ? Math.round((outTotal / NET) * 100) : 0;
     const visibleFixedCosts = jarFilter
@@ -221,14 +198,18 @@ export function FixedCostsPageClient() {
                                                     )}
                                                 </div>
                                                 <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                                    Monthly
+                                                    {CADENCE_LABEL[fixedCost.cadence] ??
+                                                        fixedCost.cadence}
                                                     {fixedCost.dueDay !== null
                                                         ? ` · day ${fixedCost.dueDay}`
+                                                        : ''}
+                                                    {fixedCost.cadence !== 'MONTHLY'
+                                                        ? ` · ${formatMoney(fixedCost.monthly)}/mo`
                                                         : ''}
                                                 </div>
                                             </div>
                                             <span className="font-mono text-sm whitespace-nowrap text-fg">
-                                                {formatMoney(fixedCost.amount)}
+                                                {formatMoney(-Math.abs(fixedCost.monthly))}
                                             </span>
                                         </button>
                                     );
@@ -309,14 +290,17 @@ export function FixedCostsPageClient() {
                                     <div>
                                         <div className="text-sm text-fg">{source.label}</div>
                                         <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                            Monthly
+                                            {CADENCE_LABEL[source.cadence] ?? source.cadence}
                                             {source.dueDay !== null
                                                 ? ` · pay day ${source.dueDay}`
                                                 : ' · pay day'}
+                                            {source.cadence !== 'MONTHLY'
+                                                ? ` · ${formatMoney(source.monthly)}/mo`
+                                                : ''}
                                         </div>
                                     </div>
                                     <span className="font-mono text-sm whitespace-nowrap text-success">
-                                        {formatMoney(source.amount)}
+                                        {formatMoney(source.monthly)}
                                     </span>
                                 </button>
                             ))}

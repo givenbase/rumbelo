@@ -2,6 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { Cadence, FlowDirection } from '@rumbelo/contracts';
+import { sumMonthlyFixedOut } from '@rumbelo/utils';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from '../jar/category.entity';
@@ -82,7 +83,8 @@ export class FixedCostService {
             jarId,
             jarKey: group.jarKey,
             jarName: group.jarName,
-            total: group.items.reduce((total, item) => total + item.amount, 0),
+            /** Monthly-normalised active OUT only — matches jar committedOut. */
+            total: sumMonthlyFixedOut(group.items, { activeOnly: true }),
             items: group.items,
         }));
     }

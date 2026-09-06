@@ -13,7 +13,7 @@ import { formatMoney, toPeriodKey, cn } from '@rumbelo/utils';
 import { CREATE_HREF } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
 import { JAR_META } from '@/app/_lib/jar-meta';
-import { JarCard } from '@/components/features/money/jar-card';
+import { JarSummaryRow } from '@/components/features/money/jar-summary-row';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar, ListToolbarTab } from '@/components/layout/list-toolbar';
@@ -230,15 +230,15 @@ export function JarsPageClient() {
                             {jars.length} jars · {Math.round(totalPct * 10) / 10}% allocated
                         </span>
                         <span className="font-mono text-xs font-medium text-fg-faint">
-                            Open a jar to see exactly what it may be used for
+                            Tap a jar for fixed costs, spends, and what is left
                         </span>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-2">
                         {jars.map(jar => {
                             const meta = JAR_META.find(entry => entry.key === jar.key);
                             return (
-                                <JarCard
+                                <JarSummaryRow
                                     key={jar.id}
                                     jar={{
                                         id: jar.id,
@@ -249,10 +249,11 @@ export function JarsPageClient() {
                                         color: meta?.color ?? 'bg-jar-nec',
                                         percentage: jar.percentage,
                                         allocated: jar.allocated,
-                                        remaining: jar.remaining,
+                                        available: jar.available,
                                         spent: jar.spent,
+                                        committedOut: jar.committedOut,
                                         overspent: jar.overspent,
-                                        categories: jar.categories ?? [],
+                                        categoryCount: jar.categories?.length ?? 0,
                                     }}
                                 />
                             );
