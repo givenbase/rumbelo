@@ -11981,6 +11981,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "uuid"
+        },
+        "icon": {
+          "name": "icon",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
         }
       },
       "name": "reference_money_category_template",
@@ -12378,6 +12394,22 @@
           ],
           "mappedType": "unknown",
           "nativeEnumName": "money_debt_kind"
+        },
+        "icon": {
+          "name": "icon",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
         }
       },
       "name": "reference_money_debt_preset",

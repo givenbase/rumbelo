@@ -36,6 +36,7 @@ export class MoneyCatalogsController {
                     name: template.name,
                     sortOrder: template.sortOrder,
                     jarKey: template.jarTemplate.key,
+                    icon: template.icon,
                 }));
             }
         );
@@ -76,6 +77,7 @@ export class MoneyCatalogsController {
                 name: preset.name,
                 sortOrder: preset.sortOrder,
                 kind: preset.kind,
+                icon: preset.icon,
             }));
         });
     }

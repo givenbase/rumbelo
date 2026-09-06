@@ -7,6 +7,7 @@ import { CatalogItemBase } from '../../../../common/schemas';
 
 export const CategoryTemplate = CatalogItemBase.extend({
     jarKey: z.enum(JarKey),
+    icon: z.string().max(8).nullable(),
 });
 export type CategoryTemplate = z.infer<typeof CategoryTemplate>;
 
@@ -22,6 +23,7 @@ export type FixedCostPreset = z.infer<typeof FixedCostPreset>;
 
 export const DebtPreset = CatalogItemBase.extend({
     kind: z.enum(DebtKind),
+    icon: z.string().max(8).nullable(),
 });
 export type DebtPreset = z.infer<typeof DebtPreset>;
 

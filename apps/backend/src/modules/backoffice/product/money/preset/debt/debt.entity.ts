@@ -33,6 +33,10 @@ export class DebtPreset extends BaseEntity {
     @Property({ length: 120 })
     name!: string;
 
+    /** Optional emoji for the debt create picker. */
+    @Property({ length: 8, nullable: true })
+    icon: string | null = null;
+
     /** Display / seed order within the catalog. */
     @Property({ default: 0 })
     sortOrder = 0;

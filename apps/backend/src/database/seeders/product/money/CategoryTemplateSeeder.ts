@@ -20,6 +20,7 @@ export class CategoryTemplateSeeder extends Seeder {
             const existing = existingByKey.get(row.key);
             if (existing) {
                 existing.name = row.name;
+                existing.icon = row.icon;
                 existing.jarTemplate = jarTemplate;
                 existing.sortOrder = sortOrder;
                 existing.isActive = true;
@@ -28,6 +29,7 @@ export class CategoryTemplateSeeder extends Seeder {
             em.create(CategoryTemplate, {
                 key: row.key,
                 name: row.name,
+                icon: row.icon,
                 jarTemplate,
                 sortOrder,
                 isActive: true,

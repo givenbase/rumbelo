@@ -99,24 +99,29 @@ export function FixedCostForm({
     );
     const categoriesQuery = useCategoryTemplates(live && mode === 'create');
 
-    const categoryNameByKey = useMemo(() => {
-        const map = new Map<string, string>();
-        for (const category of categoriesQuery.data ?? []) map.set(category.key, category.name);
+    const categoryByKey = useMemo(() => {
+        const map = new Map<string, { name: string; icon: string | null }>();
+        for (const category of categoriesQuery.data ?? []) {
+            map.set(category.key, { name: category.name, icon: category.icon });
+        }
         return map;
     }, [categoriesQuery.data]);
 
     const presetOptions = useMemo(
         () =>
-            (presetsQuery.data ?? []).map(preset => ({
-                key: preset.key,
-                name: preset.name,
-                group:
-                    categoryNameByKey.get(preset.categoryTemplateKey) ?? preset.categoryTemplateKey,
-                jarKey: preset.jarKey,
-                categoryTemplateKey: preset.categoryTemplateKey,
-                suggestedDueDay: preset.suggestedDueDay,
-            })),
-        [presetsQuery.data, categoryNameByKey]
+            (presetsQuery.data ?? []).map(preset => {
+                const category = categoryByKey.get(preset.categoryTemplateKey);
+                return {
+                    key: preset.key,
+                    name: preset.name,
+                    group: category?.name ?? preset.categoryTemplateKey,
+                    icon: category?.icon ?? null,
+                    jarKey: preset.jarKey,
+                    categoryTemplateKey: preset.categoryTemplateKey,
+                    suggestedDueDay: preset.suggestedDueDay,
+                };
+            }),
+        [presetsQuery.data, categoryByKey]
     );
 
     const form = useForm<FixedCostFormValues>({
@@ -281,7 +286,8 @@ export function FixedCostForm({
                                             form.setValue('dueDay', String(full.suggestedDueDay));
                                         }
                                         pendingCategoryName.current =
-                                            categoryNameByKey.get(full.categoryTemplateKey) ?? null;
+                                            categoryByKey.get(full.categoryTemplateKey)?.name ??
+                                            null;
                                         form.setValue('categoryId', null);
                                     }}
                                 />

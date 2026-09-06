@@ -96,6 +96,7 @@ export function DebtForm({
                 key: preset.key,
                 name: preset.name,
                 kind: preset.kind,
+                icon: preset.icon,
             })),
         [presetsQuery.data]
     );

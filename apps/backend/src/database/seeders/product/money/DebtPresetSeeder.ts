@@ -9,10 +9,22 @@ export class DebtPresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
         const keys = DEBT_PRESET_SEED.map(row => row.key);
         const existingRows = await em.find(DebtPreset, { key: { $in: keys } });
-        const existingKeys = new Set(existingRows.map(row => row.key));
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of DEBT_PRESET_SEED.entries()) {
-            if (existingKeys.has(row.key)) continue;
-            em.create(DebtPreset, { ...row, sortOrder, isActive: true } as never);
+            const existing = existingByKey.get(row.key);
+            if (existing) {
+                existing.name = row.name;
+                existing.kind = row.kind;
+                existing.icon = row.icon;
+                existing.sortOrder = sortOrder;
+                existing.isActive = true;
+                continue;
+            }
+            em.create(DebtPreset, {
+                ...row,
+                sortOrder,
+                isActive: true,
+            } as never);
         }
         await em.flush();
     }

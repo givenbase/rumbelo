@@ -8,6 +8,7 @@ export type NamePresetOption = {
     key: string;
     name: string;
     group?: string;
+    icon?: string | null;
 };
 
 type PresetNameFieldProps = {
@@ -144,6 +145,13 @@ export function PresetNameField({
                                                         aria-hidden>
                                                         ✓
                                                     </span>
+                                                    {opt.icon ? (
+                                                        <span
+                                                            className="w-5 shrink-0 text-center"
+                                                            aria-hidden>
+                                                            {opt.icon}
+                                                        </span>
+                                                    ) : null}
                                                     <span>{opt.name}</span>
                                                 </button>
                                             </li>

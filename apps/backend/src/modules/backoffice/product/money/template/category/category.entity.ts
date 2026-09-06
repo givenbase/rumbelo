@@ -33,6 +33,10 @@ export class CategoryTemplate extends BaseEntity {
     @Property({ length: 80 })
     name!: string;
 
+    /** Optional emoji for pickers / lists. */
+    @Property({ length: 8, nullable: true })
+    icon: string | null = null;
+
     /** Display / seed order within the catalog (and within a jar in pickers). */
     @Property({ default: 0 })
     sortOrder = 0;
