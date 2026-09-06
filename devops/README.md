@@ -47,7 +47,7 @@ Browser ──HTTPS──► Application (public) ── /api/auth   ├─► B
 | `DATABASE_SSL` | Backend | `true` |
 | `DATABASE_SYNC` | Backend | `false` |
 | `DATABASE_REDIS_URL` | Backend | `${{Redis.REDIS_URL}}` (`redis://` / `rediss://`) |
-| `DOMAIN_BACK` | Backend + Application + Website (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` |
+| `DOMAIN_BACK` | Backend + Application + Website (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` — see note below |
 | `DOMAIN_BACK_PUBLIC` | Backend | `https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}` |
 | `DOMAIN_APP` / `DOMAIN_WEB` | Backend | Public HTTPS (CORS + email link rewrite) |
 | `NEXT_PUBLIC_DOMAIN_APP` | Application + Website (build) | Application public HTTPS |
@@ -56,6 +56,16 @@ Browser ──HTTPS──► Application (public) ── /api/auth   ├─► B
 
 Private mesh uses **http + PORT** (no TLS). Public uses **https**. Browsers never call
 `.railway.internal`.
+
+**Private `DOMAIN_BACK` port:** Railway’s `${{Backend.PORT}}` reference is **empty** unless
+you set a variable named `PORT` on the **Backend** service yourself (e.g. `PORT=8080`).
+It does **not** auto-resolve to Railway’s runtime-injected listen port. Nest already
+reads `process.env.PORT`, so:
+
+1. Backend → Variables → add `PORT=8080` (or any free port you prefer).
+2. Application + Website → `DOMAIN_BACK=http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}`
+
+You should then see a real URL like `http://backend.railway.internal:8080`.
 
 ### Custom domain + Cloudflare (Error 1000)
 
