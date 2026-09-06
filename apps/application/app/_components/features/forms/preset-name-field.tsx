@@ -20,9 +20,19 @@ type PresetNameFieldProps = {
     id?: string;
 };
 
+function matchesQuery(option: NamePresetOption, query: string) {
+    if (!query) return true;
+    const needle = query.toLowerCase();
+    return (
+        option.name.toLowerCase().includes(needle) ||
+        (option.group?.toLowerCase().includes(needle) ?? false)
+    );
+}
+
 /**
  * Name input with a suggestion dropdown (design: New debt modal).
- * Free typing always allowed; selecting a preset calls onSelect then fills name.
+ * Free typing always allowed; the list filters as you type; picking a row
+ * fills the name and calls onSelect.
  */
 export function PresetNameField({
     value,
@@ -35,24 +45,31 @@ export function PresetNameField({
 }: PresetNameFieldProps) {
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
+    const listboxId = `${id ?? 'preset-name'}-listbox`;
+    const query = value.trim();
 
     const selectedKey = useMemo(() => {
         const match = options.find(
-            option => option.name.toLowerCase() === value.trim().toLowerCase()
+            option => option.name.toLowerCase() === query.toLowerCase()
         );
         return match?.key ?? null;
-    }, [options, value]);
+    }, [options, query]);
+
+    const filtered = useMemo(
+        () => options.filter(option => matchesQuery(option, query)),
+        [options, query]
+    );
 
     const grouped = useMemo(() => {
         const map = new Map<string, NamePresetOption[]>();
-        for (const opt of options) {
+        for (const opt of filtered) {
             const group = opt.group ?? '';
             const list = map.get(group) ?? [];
             list.push(opt);
             map.set(group, list);
         }
         return [...map.entries()];
-    }, [options]);
+    }, [filtered]);
 
     useEffect(() => {
         function onDoc(event: MouseEvent) {
@@ -71,7 +88,14 @@ export function PresetNameField({
                     disabled={disabled}
                     placeholder={placeholder}
                     autoComplete="off"
-                    onChange={event => onChange(event.target.value)}
+                    role="combobox"
+                    aria-expanded={open}
+                    aria-controls={listboxId}
+                    aria-autocomplete="list"
+                    onChange={event => {
+                        onChange(event.target.value);
+                        setOpen(true);
+                    }}
                     onFocus={() => setOpen(true)}
                 />
                 <button
@@ -87,43 +111,50 @@ export function PresetNameField({
             </div>
             {open && options.length > 0 ? (
                 <div
+                    id={listboxId}
                     role="listbox"
                     className="absolute z-30 mt-1 max-h-64 w-full overflow-auto rounded-xl bg-fg py-1.5 text-sm text-bg shadow-lg">
-                    {grouped.map(([group, items]) => (
-                        <div key={group || 'all'}>
-                            {group ? (
-                                <div className="px-3 pt-2 pb-1 text-[10px] font-semibold tracking-wider text-bg/50 uppercase">
-                                    {group}
-                                </div>
-                            ) : null}
-                            <ul>
-                                {items.map(opt => {
-                                    const selected = opt.key === selectedKey;
-                                    return (
-                                        <li key={opt.key}>
-                                            <button
-                                                type="button"
-                                                role="option"
-                                                aria-selected={selected}
-                                                className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-bg/10"
-                                                onClick={() => {
-                                                    onChange(opt.name);
-                                                    onSelect?.(opt);
-                                                    setOpen(false);
-                                                }}>
-                                                <span
-                                                    className={`w-4 shrink-0 text-center ${selected ? 'opacity-100' : 'opacity-0'}`}
-                                                    aria-hidden>
-                                                    ✓
-                                                </span>
-                                                <span>{opt.name}</span>
-                                            </button>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    ))}
+                    {filtered.length === 0 ? (
+                        <p className="px-3 py-2 text-bg/60">
+                            No matches — keep typing for a custom name.
+                        </p>
+                    ) : (
+                        grouped.map(([group, items]) => (
+                            <div key={group || 'all'}>
+                                {group ? (
+                                    <div className="px-3 pt-2 pb-1 text-[10px] font-semibold tracking-wider text-bg/50 uppercase">
+                                        {group}
+                                    </div>
+                                ) : null}
+                                <ul>
+                                    {items.map(opt => {
+                                        const selected = opt.key === selectedKey;
+                                        return (
+                                            <li key={opt.key}>
+                                                <button
+                                                    type="button"
+                                                    role="option"
+                                                    aria-selected={selected}
+                                                    className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-bg/10"
+                                                    onClick={() => {
+                                                        onChange(opt.name);
+                                                        onSelect?.(opt);
+                                                        setOpen(false);
+                                                    }}>
+                                                    <span
+                                                        className={`w-4 shrink-0 text-center ${selected ? 'opacity-100' : 'opacity-0'}`}
+                                                        aria-hidden>
+                                                        ✓
+                                                    </span>
+                                                    <span>{opt.name}</span>
+                                                </button>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        ))
+                    )}
                 </div>
             ) : null}
         </div>
