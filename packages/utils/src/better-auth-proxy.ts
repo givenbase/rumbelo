@@ -49,6 +49,9 @@ export async function proxyBetterAuthRequest(
     });
 
     try {
+        // Better Auth returns 302 for verify-email / OAuth when `callbackURL` is set.
+        // Default fetch follows redirects — that drops Set-Cookie and can 500 inside Next.
+        // Pass the 302 through so the browser (and cookies on rumbelo.com) handle it.
         response = await fetch(backendPath, {
             body:
                 request.method !== 'GET' && request.method !== 'HEAD'
@@ -57,6 +60,7 @@ export async function proxyBetterAuthRequest(
             credentials: 'include',
             headers: forwardHeaders,
             method: request.method,
+            redirect: 'manual',
         });
     } catch (error) {
         const isConnectionRefused =

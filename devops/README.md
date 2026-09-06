@@ -28,6 +28,8 @@ Dutch bank transaction data stays EU-resident under GDPR:
 Email verification links are rewritten to **DOMAIN_WEB** and hit
 `https://<website>/api/auth/verify-email` → Website Next proxy → Nest. The Website
 service must be live and that hostname must resolve to **Website**, not Backend.
+The auth proxy must use `redirect: 'manual'` — otherwise Nest’s 302 for
+`callbackURL` is followed inside Next and the browser gets HTTP 500.
 
 ### Private vs public
 
