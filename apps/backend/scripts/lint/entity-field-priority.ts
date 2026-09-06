@@ -45,10 +45,11 @@ export function findMissingBaseEntity(text: string): string | null {
     }
 
     const importsBase =
-        /from\s+['"][^'"]*common\/database\/base\.entity['"]/.test(text) ||
-        /from\s+['"][^'"]*\/base\.entity['"]/.test(text);
+        /from\s+['"][^'"]*common\/database\/(?:base|household)\.entity['"]/.test(text) ||
+        /from\s+['"][^'"]*\/(?:base|household)\.entity['"]/.test(text) ||
+        /from\s+['"][^'"]*common\/database['"]/.test(text);
     if (!importsBase) {
-        return `${decl.className} extends ${decl.extendsName} but does not import it from common/database/base.entity`;
+        return `${decl.className} extends ${decl.extendsName} but does not import BaseEntity / HouseholdEntity from common/database`;
     }
 
     return null;
@@ -184,7 +185,13 @@ export function findTemporalNamingViolations(text: string): string[] {
             );
         }
         if (kind === 'date' && !endsOn && !endsDate) {
-            violations.push(`"${fieldName}" is type date — name it *On (e.g. startedOn, endsOn)`);
+            if (fieldName === 'dateOfBirth') {
+                // Standard legal DOB field — not a period start/end *On.
+            } else {
+                violations.push(
+                    `"${fieldName}" is type date — name it *On (e.g. startedOn, endsOn)`
+                );
+            }
         }
         if (kind === 'timestamptz' && !endsAt) {
             violations.push(

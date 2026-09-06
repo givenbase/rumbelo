@@ -8,7 +8,8 @@ import { z } from 'zod';
 export const AUTH_MIN_PASSWORD_LENGTH = 12;
 
 export const AuthEmail = z.email('Enter a valid email');
-export const AuthName = z.string().trim().min(1, 'Name is required').max(80);
+/** Maps to Better Auth `user.name` — how we greet you in the product. */
+export const AuthDisplayName = z.string().trim().min(1, 'Display name is required').max(80);
 export const AuthPassword = z
     .string()
     .min(
@@ -23,7 +24,7 @@ export const SignInForm = z.object({
 export type SignInForm = z.infer<typeof SignInForm>;
 
 export const SignUpForm = z.object({
-    name: AuthName,
+    displayName: AuthDisplayName,
     email: AuthEmail,
     password: AuthPassword,
 });

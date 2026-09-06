@@ -15,7 +15,7 @@ import { HouseholdContextModule } from './common/household/household-context.mod
 import { MarkErrorsDefinedPlugin } from './common/plugins/mark-errors-defined.plugin';
 import { RedisModule } from './common/redis';
 import { mapDatabaseConstraintErrorInterceptor } from './common/utils/database-constraint-error.util';
-import { createAuth } from './modules/auth/better-auth/auth.config';
+import { createAuth } from './modules/auth/engine/auth.config';
 import { FeatureModules } from './modules/index';
 import { PagesModule } from './pages/pages.module';
 

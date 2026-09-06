@@ -35,7 +35,7 @@ import {
 } from '@rumbelo/ui';
 import { cn, formatMoney, formatPercent } from '@rumbelo/utils';
 
-import { changePassword, signOut, updateOrganization, updateUser } from '@/app/_lib/auth';
+import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import { LOCK_COPY, memberLimitLabel, PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
 import { isLiveData } from '@/app/_lib/preview';
@@ -109,8 +109,13 @@ export function AccountSettings() {
     const live = isLiveData(householdId);
 
     const user = session?.user;
+    const profileQuery = useLiveQuery(api.account.profile.queryOptions(), null, Boolean(user));
     const [editingName, setEditingName] = useState(false);
     const [nameDraft, setNameDraft] = useState(user?.name ?? '');
+    const [firstNameDraft, setFirstNameDraft] = useState('');
+    const [middleNameDraft, setMiddleNameDraft] = useState('');
+    const [lastNameDraft, setLastNameDraft] = useState('');
+    const [dobDraft, setDobDraft] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [inviteEmail, setInviteEmail] = useState('');
@@ -149,12 +154,20 @@ export function AccountSettings() {
     const periodDay = periodDayDraft ?? settingsQuery.data?.money?.periodStartDay ?? 1;
 
     const saveProfile = useMutation({
-        mutationFn: async (nextName: string) => {
-            const result = await updateUser({ name: nextName });
-            if (result.error) throw new Error(result.error.message ?? 'Profile save failed');
+        mutationFn: async () => {
+            await client.account.updateProfile({
+                displayName: nameDraft.trim(),
+                firstName: firstNameDraft.trim() || null,
+                middleName: middleNameDraft.trim() || null,
+                lastName: lastNameDraft.trim() || null,
+                dateOfBirth: dobDraft.trim() || null,
+            });
         },
         onSuccess: async () => {
-            await refreshSession();
+            await Promise.all([
+                refreshSession(),
+                queryClient.invalidateQueries({ queryKey: api.account.profile.key() }),
+            ]);
             setEditingName(false);
             showToast('Profile saved', 'success');
         },
@@ -297,15 +310,24 @@ export function AccountSettings() {
         }
     }
 
-    const displayName = user?.name?.trim() || 'Guest';
-    const displayEmail = user?.email ?? '';
+    const displayName = profileQuery.data?.displayName?.trim() || user?.name?.trim() || 'Guest';
+    const displayEmail = profileQuery.data?.email ?? user?.email ?? '';
     const activeLang = (accountSettingsQuery.data?.locale ?? locale) as Locale;
+
+    function beginEditProfile() {
+        setNameDraft(profileQuery.data?.displayName ?? user?.name ?? '');
+        setFirstNameDraft(profileQuery.data?.firstName ?? '');
+        setMiddleNameDraft(profileQuery.data?.middleName ?? '');
+        setLastNameDraft(profileQuery.data?.lastName ?? '');
+        setDobDraft(profileQuery.data?.dateOfBirth ?? '');
+        setEditingName(true);
+    }
 
     return (
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="Profile"
-                blurb="Your identity in Rumbelo. Sessions run through Better Auth.">
+                blurb="Display name for the product; legal name and date of birth on your account.">
                 <SettingsRow>
                     <div className="flex min-w-0 items-center gap-3.5">
                         <div className="grid size-8 shrink-0 place-items-center rounded-full bg-accent font-mono text-[10px] font-bold text-on-accent">
@@ -316,7 +338,8 @@ export function AccountSettings() {
                                 <Input
                                     value={nameDraft}
                                     onChange={event => setNameDraft(event.target.value)}
-                                    aria-label="Name"
+                                    aria-label="Display name"
+                                    placeholder="Display name"
                                 />
                                 <p className="truncate font-mono text-[10px] text-fg-muted">
                                     {displayEmail}
@@ -333,23 +356,13 @@ export function AccountSettings() {
                     </div>
                     {editingName ? (
                         <div className="flex gap-2">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                    setEditingName(false);
-                                    setNameDraft(user?.name ?? '');
-                                }}>
+                            <Button variant="ghost" size="sm" onClick={() => setEditingName(false)}>
                                 Cancel
                             </Button>
                             <Button
                                 size="sm"
-                                disabled={
-                                    saveProfile.isPending ||
-                                    !nameDraft.trim() ||
-                                    nameDraft.trim() === (user?.name ?? '')
-                                }
-                                onClick={() => saveProfile.mutate(nameDraft.trim())}>
+                                disabled={saveProfile.isPending || !nameDraft.trim()}
+                                onClick={() => saveProfile.mutate()}>
                                 {saveProfile.isPending ? '…' : 'Save'}
                             </Button>
                         </div>
@@ -358,14 +371,55 @@ export function AccountSettings() {
                             variant="secondary"
                             size="sm"
                             className="rounded-full font-mono text-[10px] tracking-[0.12em] uppercase"
-                            onClick={() => {
-                                setNameDraft(user?.name ?? '');
-                                setEditingName(true);
-                            }}>
+                            onClick={beginEditProfile}>
                             Edit
                         </Button>
                     )}
                 </SettingsRow>
+
+                {editingName ? (
+                    <div className="grid gap-2 border-t border-line pt-3 sm:grid-cols-2">
+                        <Input
+                            value={firstNameDraft}
+                            onChange={event => setFirstNameDraft(event.target.value)}
+                            aria-label="First name"
+                            placeholder="First name"
+                        />
+                        <Input
+                            value={middleNameDraft}
+                            onChange={event => setMiddleNameDraft(event.target.value)}
+                            aria-label="Middle name"
+                            placeholder="Middle name (optional)"
+                        />
+                        <Input
+                            value={lastNameDraft}
+                            onChange={event => setLastNameDraft(event.target.value)}
+                            aria-label="Last name"
+                            placeholder="Last name"
+                        />
+                        <Input
+                            type="date"
+                            value={dobDraft}
+                            onChange={event => setDobDraft(event.target.value)}
+                            aria-label="Date of birth"
+                        />
+                    </div>
+                ) : profileQuery.data ? (
+                    <SettingsRow>
+                        <SettingsRowLabel
+                            title={
+                                [profileQuery.data.firstName, profileQuery.data.lastName]
+                                    .filter(Boolean)
+                                    .join(' ') || 'Legal name'
+                            }
+                            sub={
+                                profileQuery.data.dateOfBirth
+                                    ? `Born ${profileQuery.data.dateOfBirth}`
+                                    : 'Add first / last name and date of birth'
+                            }
+                        />
+                    </SettingsRow>
+                ) : null}
 
                 <SettingsRow>
                     <SettingsRowLabel title="Sign-in method" sub="Email, through Better Auth" />
@@ -599,7 +653,7 @@ export function AccountSettings() {
                                     className="flex items-center justify-between gap-3 px-3 py-2.5">
                                     <div className="min-w-0">
                                         <p className="truncate text-sm font-medium text-fg">
-                                            {member.name}
+                                            {member.displayName}
                                         </p>
                                         <p className="truncate text-xs text-fg-muted">
                                             {member.email}

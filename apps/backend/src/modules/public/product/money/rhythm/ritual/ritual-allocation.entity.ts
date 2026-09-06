@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, Property, Unique } from '@mikro-orm/core';
 
-import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 import { Jar } from '../../plan/jar/jar.entity';
 import { WeeklyRitual } from './weekly-ritual.entity';

@@ -23,17 +23,23 @@ import {
 const BACKEND_ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..');
 const SRC_ROOT = join(BACKEND_ROOT, 'src');
 
-const EXCLUDED = new Set(['common/database/base.entity.ts']);
+const EXCLUDED = new Set(['common/database/base.entity.ts', 'common/database/household.entity.ts']);
 
-/** Path prefixes (relative to SRC_ROOT) whose entity files are owned by a library. */
-const EXCLUDED_PREFIXES: readonly string[] = ['modules/auth/better-auth/'];
+/**
+ * Path prefixes (relative to SRC_ROOT) whose entity files are owned by a library.
+ * Better Auth tables are mirrored under `modules/auth/<plane>/managed/`.
+ */
+const EXCLUDED_PREFIXES: readonly string[] = [
+    'modules/auth/user/managed/',
+    'modules/auth/household/managed/',
+];
 
 /**
  * Rare rows keyed by an external id (not uuid) — cannot use BaseEntity's `@PrimaryKey id`.
  * Prefer BaseEntity / HouseholdEntity everywhere else.
  */
 const ALLOWED_WITHOUT_BASE_ENTITY = new Set([
-    'modules/public/platform/household/household-settings.entity.ts',
+    'modules/auth/household/household-settings/household-settings.entity.ts',
 ]);
 
 const CANONICAL_SECTIONS = [
@@ -365,7 +371,7 @@ function validateEntity(absPath: string): EntityIssue[] {
 
     // @Index / @Unique belong on the class (with @Entity), never on fields
     const classDeclMatch = text.match(/\bexport\s+class\s+\w+/);
-    if (classDeclMatch?.index !== null) {
+    if (classDeclMatch?.index !== undefined) {
         const classBody = text.slice(classDeclMatch.index);
         const fieldIndexOrUnique = classBody.match(/@(Index|Unique)\s*\(/g);
         if (fieldIndexOrUnique) {

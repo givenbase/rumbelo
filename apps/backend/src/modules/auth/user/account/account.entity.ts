@@ -1,0 +1,48 @@
+import { Entity, OneToOne, Property } from '@mikro-orm/core';
+
+import type { AccountSettings } from './account-settings/account-settings.entity';
+
+import { BaseEntity } from '../../../../common/database/base.entity';
+import { entityConfig } from '../../../../common/database/entity-config.util';
+import { AuthUser } from '../managed/user/auth-user.entity';
+
+/**
+ * Application-owned person profile — NOT Better Auth.
+ *
+ * Better Auth owns login identity only (`auth.user`: email, password/OAuth,
+ * display `name`, image, verification, 2FA). Everything personal for the product
+ * lives here: legal names, date of birth, and (later) address / contact facts.
+ *
+ *   user/managed/*            auth machinery (library-owned tables)
+ *   auth.account              personal information for the application
+ *   auth.account_settings     UI prefs (locale, theme, money character)
+ *   household/household-settings   shared money board
+ *
+ * Display name stays on Better Auth `user.name` and is synced when the profile
+ * updates it — sessions and member lists keep one greeting field.
+ *
+ * @see https://mikro-orm.io/docs/defining-entities
+ */
+@Entity(entityConfig({ schema: 'auth', tableName: 'account' }))
+export class Account extends BaseEntity {
+    // ? RELATIONSHIPS
+    @OneToOne(() => AuthUser, { deleteRule: 'cascade', unique: true })
+    user!: AuthUser;
+
+    @OneToOne('AccountSettings', { mappedBy: 'account' })
+    settings?: AccountSettings;
+
+    // ? PROPERTIES
+    @Property({ type: 'varchar', length: 80, nullable: true })
+    firstName: string | null = null;
+
+    @Property({ type: 'varchar', length: 80, nullable: true })
+    lastName: string | null = null;
+
+    @Property({ type: 'varchar', length: 80, nullable: true })
+    middleName: string | null = null;
+
+    /** Calendar date only (no time zone), ISO `YYYY-MM-DD`. */
+    @Property({ type: 'date', nullable: true })
+    dateOfBirth: string | null = null;
+}

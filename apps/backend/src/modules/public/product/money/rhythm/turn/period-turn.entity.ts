@@ -2,7 +2,7 @@ import { Collection, Entity, OneToMany, Property, Unique } from '@mikro-orm/core
 
 import type { TurnEvent } from './turn-event.entity';
 
-import { HouseholdEntity } from '../../../../../../common/database/base.entity';
+import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
 
 /**

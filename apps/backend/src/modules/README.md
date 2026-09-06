@@ -15,16 +15,18 @@ with its `*.entity.ts`, service, controller and module as flat siblings.
 
 | Control | Module | Examples |
 |---|---|---|
-| **Household / user writes** | `public/product/*`, `public/platform/household`, `auth/account` | jars, txs, board settings, theme, language, which plan the household is *on* |
+| **Household / user writes** | `public/product/*`, `auth/user/account`, `auth/household/household-settings` | jars, txs, board settings, theme, language, which plan the household is *on* |
 | **We write** | `backoffice/*` | Basic/Plus/Max **plan** catalog, countries, question bank, FAQ, coach tip **templates** (+ billing later if Stripe needs it) |
-| **Library writes** | `auth/better-auth/` | sessions, members, provider credentials |
+| **Library writes** | `auth/*/managed/` | sessions, members, provider credentials |
 
-`public/platform/` is shared app runtime (household + coach) — **not** company catalogs. If Rumbelo authors it, it lives under `backoffice/`.
+`public/platform/` is shared app runtime (coach) — **not** company catalogs. If Rumbelo authors it, it lives under `backoffice/`.
 
 | Module | Children |
 |---|---|
-| `auth/` | `better-auth/` · `account/` (`account-settings`, …) |
-| `public/platform/` | `household` · `coach` |
+| `auth/` | `engine/` · `user/` · `household/` |
+| `auth/user/` | `managed/` (`user` `session` `provider` `verification` `two-factor`) · `account/` (`account-settings`) |
+| `auth/household/` | `managed/` (`household` `member` `invitation`) · `household-settings/` |
+| `public/platform/` | `coach` |
 | `public/product/` | `money/` (Geld) · `growth/` (Groei) · `energy/` (Energie) · `soul/` (Ziel) |
 | `public/product/money/` | `plan/` (`jar` `income` `fixed-cost` `catalogs`) · `ledger/` · `targets/` · `rhythm/` · `dashboard` |
 | `public/product/growth/` | `lever` `milestone` `catalogs` |
@@ -56,11 +58,30 @@ Under **each** `backoffice/product/{money\|growth\|…}` only these kind folders
 | **`preset/`** | We author suggestions; household **may adopt** |
 | **`catalog/`** | Taxonomy / lookup — filter & label, not copied into household rows |
 
-### Auth vs account vs catalogs
+### Auth plane: engine / user / household
 
-- `auth/better-auth/` — better-auth owns writes; we map read entities + config
-- `auth/account/` — person prefs (theme, locale) — **user** writes
-- Board prefs → `public/platform/household` — **household** writes
+Grouped by **concept** (person, group), not by vendor. Inside each concept the
+`managed/` folder holds Better Auth's tables as read-only entity mirrors (one
+folder per entity, entity file only — no module/controller, the library writes);
+the sibling folders are Rumbelo aggregates with the full entity + service +
+controller + module shape.
+
+```
+auth/
+  engine/                  Better Auth wiring only — auth.config, access-control, migrate
+  user/                    PERSON
+    managed/{user,session,provider,verification,two-factor}/   ← library writes
+    account/               ← ours: legal names, DOB (+ account-settings/)
+  household/               GROUP
+    managed/{household,member,invitation}/                     ← library writes
+    household.*            ← ours: onboard, invite, list, members, current
+    household-settings/    ← ours: board prefs (currency, plan, rituals)
+```
+
+- `auth/engine/` — config only, no tables
+- `auth/user/managed/`, `auth/household/managed/` — better-auth owns writes; we map read entities
+- `auth/user/account/` — person data + prefs (theme, locale) — **user** writes
+- `auth/household/household-settings/` — board prefs — **household** writes
 - Jar **instances** → `public/product/money/plan/jar` — **household** writes (table in `public`)
 - Jar **templates** → `backoffice/product/money/template/jar` — **we** write; onboard copies into household jars
 - Product **tiers** → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)
@@ -75,7 +96,7 @@ Every Rumbelo-owned entity uses `entityConfig({ schema, domain?, tableName })` f
 `common/database/entity-config.util.ts`:
 
 - `auth` / `backoffice` / `public` schemas
-- Domain prefixes in `public` (`money_jar`, `platform_household_settings`, …)
+- Domain prefixes in `public` (`money_jar`, …); auth settings (`account_settings`, `household_settings`)
 - Backoffice product catalogs: `reference_{money|growth}_{table}` via `domain: 'reference', group: 'money'|'growth'` (e.g. `reference_money_jar_template`)
 
 ---
@@ -91,7 +112,20 @@ Every Rumbelo-owned entity uses `entityConfig({ schema, domain?, tableName })` f
   index.ts                   # barrel
 ```
 
-Gold standard in-repo: `auth/account/account-settings/`.
+Gold standard in-repo: `auth/user/account/account-settings/`.
+
+### Helpers: `*.util.ts` vs `utils/`
+
+Same rule as sub-domains — earn the folder, never create it pre-emptively.
+
+| Situation | Where |
+|---|---|
+| One helper, one owner | loose `<name>.util.ts` beside the file that uses it (`common/database/native-enum.util.ts`, `auth/engine/auth-url.util.ts`) |
+| Two or more helpers inside one module | `<module>/utils/` with an `index.ts` barrel (`backoffice/communication/email/utils/`) |
+| Used by more than one module | `common/utils/` — a module never imports another module's `utils/` |
+
+- Suffix is always singular `.util.ts` (never `.utils.ts`); constants use `.constants.ts`
+- A `utils/` folder holds pure functions only — no Nest providers, no entities
 
 ### CRUD order — non-negotiable
 
@@ -197,9 +231,9 @@ Managed entities: mutate properties, then `await this.em.flush()`.
 
 ### Auth vs account
 
-- `auth/better-auth/` — better-auth owns writes; we map read entities + config
-- `auth/account/` — Rumbelo-owned person rows (`account`, `account-settings`)
-- Board prefs (currency, period, ritual, kind) → `platform/household`
+- `auth/engine/` — Better Auth config; `auth/*/managed/` — better-auth owns writes; we map read entities
+- `auth/user/account/` — Rumbelo-owned person rows (`account`, `account-settings`)
+- Board prefs (currency, period, ritual, kind) → `auth/household/household-settings`
 - Person prefs (theme, locale) → `account-settings`
 - better-auth credential store table is `provider`, not `account`
 

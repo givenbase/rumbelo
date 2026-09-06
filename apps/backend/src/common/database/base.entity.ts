@@ -2,10 +2,19 @@ import { PrimaryKey, Property } from '@mikro-orm/core';
 import { v7 as uuidv7 } from 'uuid';
 
 /**
- * uuid v7 rather than v4: time-ordered keys keep btree inserts local and make
- * "most recent" queries cheap, which matters for the transaction table.
+ * Root for every Rumbelo-owned MikroORM row.
+ *
+ * Use this directly for rows that are **not** scoped to a household
+ * (account profile, backoffice catalogs, templates).
+ *
+ * Household-scoped product rows extend {@link HouseholdEntity} instead —
+ * that class adds only `householdId` on top of this base (no duplicated fields).
+ *
+ * Better Auth tables (`AuthUser`, `AuthHousehold`, …) do **not** extend this —
+ * they keep library-owned text/UUID primary keys.
  */
 export abstract class BaseEntity {
+    /** uuid v7 — time-ordered keys keep btree inserts local. */
     @PrimaryKey({ type: 'uuid' })
     id: string = uuidv7();
 
@@ -14,15 +23,4 @@ export abstract class BaseEntity {
 
     @Property({ type: 'timestamptz', defaultRaw: 'now()', onUpdate: () => new Date() })
     updatedAt: Date = new Date();
-}
-
-/**
- * Every financial row carries the household it belongs to. This is the isolation
- * boundary — single schema, row-level scoping. See common/household for the
- * interceptor + scoped repository that guarantee no query escapes it.
- */
-export abstract class HouseholdEntity extends BaseEntity {
-    /** better-auth organization id (non-uuid string) */
-    @Property({ type: 'varchar', length: 64, index: true })
-    householdId!: string;
 }

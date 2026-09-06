@@ -12,7 +12,12 @@ import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 import { LandingIcon } from './landing-icon';
 
 const FIELDS = [
-    { name: 'name' as const, label: 'Your name', type: 'text', ph: 'Given Loyiso' },
+    {
+        name: 'displayName' as const,
+        label: 'Display name',
+        type: 'text',
+        ph: 'How should we greet you?',
+    },
     { name: 'email' as const, label: 'Email', type: 'email', ph: 'you@example.com' },
     {
         name: 'password' as const,
@@ -25,7 +30,7 @@ const FIELDS = [
 export function LandingSignupForm() {
     const router = useRouter();
     const form = useForm<LandingSignUpForm>({
-        defaultValues: { name: '', email: '', password: '', terms: false },
+        defaultValues: { displayName: '', email: '', password: '', terms: false },
         mode: 'onTouched',
         resolver: zodResolver(LandingSignUpForm),
     });
@@ -41,7 +46,7 @@ export function LandingSignupForm() {
 
     function onSubmit(values: LandingSignUpForm) {
         const params = new URLSearchParams({
-            name: values.name,
+            name: values.displayName,
             email: values.email,
         });
         router.push(`${webSignUpPath()}?${params.toString()}`);
@@ -128,7 +133,7 @@ export function LandingSignupForm() {
                                                     ? 'new-password'
                                                     : field.name === 'email'
                                                       ? 'email'
-                                                      : 'name'
+                                                      : 'nickname'
                                             }
                                             placeholder={field.ph}
                                             disabled={isSubmitting}

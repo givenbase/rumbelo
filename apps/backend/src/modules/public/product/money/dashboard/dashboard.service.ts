@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { sum } from '../../../../../common/utils/money.util';
 import { daysInPeriod } from '../../../../../common/utils/period.util';
 import { CoachService } from '../../../platform/coach/coach.service';
-import { HouseholdService } from '../../../platform/household/household.service';
+import { HouseholdSettingsService } from '../../../../auth/household/household-settings/household-settings.service';
 import { TransactionService } from '../ledger/transaction/transaction.service';
 import { JarService } from '../plan/jar/jar.service';
 import { TurnService } from '../rhythm/turn/turn.service';
@@ -20,7 +20,8 @@ export class DashboardService {
         @Inject(TurnService) private readonly turns: TurnService,
         @Inject(CoachService) private readonly coach: CoachService,
         @Inject(TransactionService) private readonly transactions: TransactionService,
-        @Inject(HouseholdService) private readonly households: HouseholdService
+        @Inject(HouseholdSettingsService)
+        private readonly householdSettings: HouseholdSettingsService
     ) {}
 
     // ====================================================================
@@ -34,7 +35,7 @@ export class DashboardService {
             this.coach.feed(period),
             this.transactions.countInbox(),
             this.jars.monthlyNetIncome(),
-            this.households.settings(householdId),
+            this.householdSettings.get(householdId),
         ]);
 
         const allocatedTotal = sum(jars.map(jar => jar.allocated));

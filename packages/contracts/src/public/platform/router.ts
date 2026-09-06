@@ -7,6 +7,10 @@ import * as schemas from '../../schemas';
 /** Platform-level: account prefs, the household itself, and cross-product advisory. */
 export const contract = {
     account: {
+        /** READ — structured profile + display name */
+        profile: oc.output(schemas.AccountProfile),
+        /** UPDATE — legal names / DOB / display name (syncs Better Auth `user.name`) */
+        updateProfile: oc.input(schemas.AccountProfilePatch).output(schemas.AccountProfile),
         /** CREATE */
         createSettings: oc
             .input(schemas.AccountSettings.partial().omit({ accountId: true, onboardedAt: true }))

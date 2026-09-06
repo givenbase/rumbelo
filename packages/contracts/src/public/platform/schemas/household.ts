@@ -22,6 +22,7 @@ export { HouseholdKind, HouseholdRole, IncomeRhythm, MoneyCharacter } from '../.
 export const Household = z.object({
     id: HouseholdId,
     name: z.string().min(1).max(120),
+    /** Unique human-readable handle (Better Auth organization.slug). Scoping uses `id`. */
     slug: z.string().min(1).max(120),
     /** Accounting currency for the board — shared by every member. */
     currency: z.enum(Currency),
@@ -36,7 +37,8 @@ export const HouseholdMember = z.object({
     householdId: HouseholdId,
     userId: UserId,
     role: z.enum(HouseholdRole),
-    name: z.string(),
+    /** Better Auth display name (`user.name`). */
+    displayName: z.string(),
     email: z.email(),
     image: z.url().nullable(),
 });

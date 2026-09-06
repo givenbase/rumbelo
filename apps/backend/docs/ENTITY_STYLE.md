@@ -4,9 +4,11 @@ Authoritative conventions for MikroORM entity files under `apps/backend/src/`.
 
 Reference implementations:
 
-- `modules/auth/account/account.entity.ts`
-- `modules/auth/account/account-settings/account-settings.entity.ts`
-- `modules/public/platform/household/household-settings.entity.ts`
+- `modules/auth/user/account/account.entity.ts`
+- `modules/auth/user/account/account-settings/account-settings.entity.ts`
+- `modules/auth/household/household-settings/household-settings.entity.ts`
+
+Better Auth mirrors under `modules/auth/*/managed/` are library-owned and excluded from this check.
 
 ## File layout
 
@@ -42,12 +44,15 @@ Every domain entity must extend one of:
 
 | Base | Use when |
 |------|----------|
-| `BaseEntity` | Catalog / account rows with a uuid `id` |
-| `HouseholdEntity` | Household-scoped product rows (`householdId` + uuid `id`) |
+| `BaseEntity` | Root — uuid `id` + timestamps. Catalogs, account, anything not household-scoped |
+| `HouseholdEntity` | **Extends** `BaseEntity` and adds only `householdId` (money / product rows) |
 
-Both live in `common/database/base.entity.ts`. Do **not** redeclare `id`, `createdAt`, `updatedAt` (or `householdId` on `HouseholdEntity` subclasses).
+Files: `common/database/base.entity.ts` and `common/database/household.entity.ts`.
+Do **not** redeclare `id`, `createdAt`, `updatedAt` (or `householdId` on `HouseholdEntity` subclasses).
 
-Exception: `platform.household_settings` is keyed by better-auth `householdId` (not uuid) — it is allowlisted in `scripts/lint/check-entity-style.ts` until a dedicated settings base exists.
+Not the same as `AuthHousehold` (Better Auth organization plugin table).
+
+Exception: `auth.household_settings` is keyed by better-auth `householdId` (not uuid) — it is allowlisted in `scripts/lint/check-entity-style.ts` until a dedicated settings base exists.
 
 ## Section order (mandatory)
 
@@ -187,7 +192,7 @@ pnpm --filter @rumbelo/backend lint:entities
 
 The script `scripts/lint/check-entity-style.ts` enforces:
 
-- `extends BaseEntity` or `extends HouseholdEntity` (+ import from `common/database/base.entity`)
+- `extends BaseEntity` or `extends HouseholdEntity` (+ import from `common/database/base.entity` or `household.entity`)
 - no redeclared inherited fields (`id` / `createdAt` / `updatedAt` / `householdId`)
 - boolean `@Property` names use `is*` / `has*` / `can*` (e.g. `isActive`, not `active`)
 - temporal suffix matches column kind (`*Day` = int ordinal, `*On` = date, `*At` = timestamptz)
@@ -199,7 +204,7 @@ Domain-specific field sequences are declared in `SAME_PRIORITY_ORDER` inside `sc
 
 ## Checklist for new / updated entities
 
-- [ ] `extends BaseEntity` or `extends HouseholdEntity` (imported from `common/database/base.entity`)
+- [ ] `extends BaseEntity` or `extends HouseholdEntity` (imported from `common/database`)
 - [ ] Booleans named `is*` / `has*` / `can*` (affirmative)
 - [ ] Temporal suffixes match types (`*Day` int, `*On` date, `*At` timestamptz) — never `dueDate` for day-of-month
 - [ ] jsonb fields are plural arrays or clear bags (`metadata` / `*Json` / `*Payload`)

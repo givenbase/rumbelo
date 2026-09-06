@@ -1,7 +1,7 @@
 import { Entity, Enum, Index, Property, Unique } from '@mikro-orm/core';
 import { EnergyMetric } from '@rumbelo/contracts';
 
-import { HouseholdEntity } from '../../../../../common/database/base.entity';
+import { HouseholdEntity } from '../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../common/database/entity-config.util';
 

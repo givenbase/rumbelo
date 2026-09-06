@@ -20,14 +20,14 @@ import {
 
 import { loadEnv } from '../../../common/config/env.config';
 import { loadEnvFiles } from '../../../common/config/load-env';
-import { createAuth } from '../../../modules/auth/better-auth/auth.config';
-import { AuthMember } from '../../../modules/auth/better-auth/member/auth-member.entity';
-import { AuthOrganization } from '../../../modules/auth/better-auth/organization/auth-organization.entity';
-import { AuthUser } from '../../../modules/auth/better-auth/user/auth-user.entity';
-import { Account } from '../../../modules/auth/account/account.entity';
-import { AccountSettings } from '../../../modules/auth/account/account-settings/account-settings.entity';
+import { createAuth } from '../../../modules/auth/engine/auth.config';
+import { AuthMember } from '../../../modules/auth/household/managed/member/auth-member.entity';
+import { AuthHousehold } from '../../../modules/auth/household/managed/household/auth-household.entity';
+import { AuthUser } from '../../../modules/auth/user/managed/user/auth-user.entity';
+import { Account } from '../../../modules/auth/user/account/account.entity';
+import { AccountSettings } from '../../../modules/auth/user/account/account-settings/account-settings.entity';
 import { JarTemplate } from '../../../modules/backoffice/product/money/template/jar/jar.entity';
-import { HouseholdSettings } from '../../../modules/public/platform/household/household-settings.entity';
+import { HouseholdSettings } from '../../../modules/auth/household/household-settings/household-settings.entity';
 import { EnergyLog } from '../../../modules/public/product/energy/log/energy-log.entity';
 import { BankAccount } from '../../../modules/public/product/money/ledger/account/bank-account.entity';
 import { Transaction } from '../../../modules/public/product/money/ledger/transaction/transaction.entity';
@@ -104,9 +104,9 @@ export class DemoHouseholdSeeder extends Seeder {
             } as never);
         }
 
-        let org = await em.findOne(AuthOrganization, { slug: demo.slug });
+        let org = await em.findOne(AuthHousehold, { slug: demo.slug });
         if (!org) {
-            org = em.create(AuthOrganization, {
+            org = em.create(AuthHousehold, {
                 id: randomUUID(),
                 name: demo.householdName,
                 slug: demo.slug,
@@ -115,7 +115,7 @@ export class DemoHouseholdSeeder extends Seeder {
             em.persist(org);
             em.create(AuthMember, {
                 id: randomUUID(),
-                organization: org,
+                household: org,
                 user,
                 role: 'owner',
                 createdAt: new Date(),

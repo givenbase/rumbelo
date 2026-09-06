@@ -25,7 +25,7 @@
         "schema:drop:cascade": "tsx scripts/db/drop-schema-cascade.ts",
         "schema:drop:db": "tsx scripts/db/drop-database.ts",
         "schema:fresh": "pnpm schema:drop:cascade -- --yes && pnpm db:create-schemas && pnpm db:push",
-        "auth:migrate": "tsx ./src/modules/auth/better-auth/auth.migrate.ts"
+        "auth:migrate": "tsx ./src/modules/auth/engine/auth.migrate.ts"
     },
     "dependencies": {
         "@fastify/cookie": "^11.0.2",

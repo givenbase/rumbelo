@@ -95,11 +95,21 @@ Private helpers go **after** all four public CRUD sections (or in a `// Private`
 
 Re-export module, service, entity, controller.
 
+## Helpers
+
+- One helper with one owner → loose `<name>.util.ts` beside its user; do not create a folder for one file
+- Two or more helpers in one module → `<module>/utils/` + `index.ts` barrel (model: `backoffice/communication/email/utils/`)
+- Shared across modules → `common/utils/`; never import another module's `utils/`
+- Suffix is singular `.util.ts` (never `.utils.ts`); `.constants.ts` for constants
+- `utils/` = pure functions only — no providers, no entities
+
 ## Auth split
 
-- `modules/auth/better-auth/` — library tables (read models + config); better-auth is the single writer
-- `modules/auth/account/` — Rumbelo-owned person data (`account`, `account-settings`, …) — **user** writes prefs
-- Household money-board prefs → `platform/household` (**household** writes)
+- `modules/auth/engine/` — Better Auth config only (no tables)
+- `modules/auth/user/managed/`, `modules/auth/household/managed/` — library tables as read-only entity mirrors, one folder per entity, entity file only; better-auth is the single writer
+- `modules/auth/user/account/` — Rumbelo-owned person data (`account`, `account-settings`, …) — **user** writes prefs
+- `modules/auth/household/` — onboard / invite / members over Better Auth's organization API; `household-settings/` holds board prefs (**household** writes)
+- Every Rumbelo-owned entity is a full aggregate folder (entity + service + controller + module + index); only `managed/` entities skip module/controller
 - Person UI prefs (theme, locale) → `account-settings` (**user** writes)
 - Never name better-auth's credential store `account` — it is `provider`
 
@@ -107,9 +117,9 @@ Re-export module, service, entity, controller.
 
 | Control | Module |
 |---|---|
-| Household / user writes | `public/product/*`, `public/platform/*`, `auth/account` |
+| Household / user writes | `public/product/*`, `public/platform/*`, `auth/user/account`, `auth/household/household-settings` |
 | We (Rumbelo) write | `backoffice/product/{money\|growth}/…` (kinds: `template` \| `preset` \| `catalog`), `backoffice/plan` (Basic/Plus/Max), `communication/`; reserved `reference/` for cross-product lookups |
-| Library writes | `auth/better-auth/` |
+| Library writes | `auth/*/managed/` |
 
 `public/` = app/household data (Postgres `public` schema). Company-authored catalogs live in `backoffice/`. Table names: `reference_{money|growth}_{table}` via `entityConfig({ domain: 'reference', group })`.
 

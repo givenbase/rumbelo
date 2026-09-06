@@ -1,6 +1,6 @@
 import type { EntityManager, FilterQuery, FindOptions } from '@mikro-orm/postgresql';
 
-import type { HouseholdEntity } from '../database/base.entity';
+import type { HouseholdEntity } from '../database/household.entity';
 
 import { currentHouseholdId } from './household.context';
 

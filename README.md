@@ -63,7 +63,7 @@ database. Learn it once and it holds everywhere.
 
 | Product | Backend module | Contract namespace | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/public/platform/household` | `contract.household` | `/settings` | `public` |
+| — | `modules/auth/household` | `contract.household` | `/settings` | `auth` + `public` |
 | — | `modules/public/platform/coach` | `contract.coach` | — | `public` |
 | **Geld** | `modules/public/product/money/*` | `contract.money.*` | `/money/*` | `public` |
 | **Groei** | `modules/public/product/growth/*` | `contract.growth.*` | `/growth` | `public` |

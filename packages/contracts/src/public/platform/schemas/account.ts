@@ -1,9 +1,41 @@
 import { z } from 'zod';
 
 import { Locale, MoneyCharacter, Theme } from '../../../enums';
-import { Id } from '../../../common/schemas';
+import { Id, UserId } from '../../../common/schemas';
 
 export { MoneyCharacter } from '../../../enums';
+
+const PersonName = z.string().trim().min(1).max(80);
+const OptionalPersonName = PersonName.nullable().optional();
+
+/**
+ * Application personal profile on `auth.account` (names, DOB; address later).
+ * Display name lives on Better Auth `user.name` (synced when patched here).
+ * Better Auth stays auth-only — this is product data.
+ */
+export const AccountProfile = z.object({
+    accountId: Id,
+    userId: UserId,
+    /** Public nickname / how we greet you — Better Auth `user.name`. */
+    displayName: z.string().trim().min(1).max(80),
+    firstName: z.string().trim().max(80).nullable(),
+    middleName: z.string().trim().max(80).nullable(),
+    lastName: z.string().trim().max(80).nullable(),
+    /** ISO calendar date `YYYY-MM-DD`. */
+    dateOfBirth: z.iso.date().nullable(),
+    email: z.email(),
+    image: z.url().nullable(),
+});
+export type AccountProfile = z.infer<typeof AccountProfile>;
+
+export const AccountProfilePatch = z.object({
+    displayName: PersonName.optional(),
+    firstName: OptionalPersonName,
+    middleName: OptionalPersonName,
+    lastName: OptionalPersonName,
+    dateOfBirth: z.iso.date().nullable().optional(),
+});
+export type AccountProfilePatch = z.infer<typeof AccountProfilePatch>;
 
 /**
  * Person UI prefs. Currency is NOT here — the household board has one accounting

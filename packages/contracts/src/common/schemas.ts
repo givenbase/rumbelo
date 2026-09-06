@@ -8,12 +8,12 @@ export { Cadence, Currency, Locale, Theme } from './enums';
 export const Id = z.uuid();
 export type Id = z.infer<typeof Id>;
 
-/** better-auth organization id — opaque string, not a uuid. */
-export const HouseholdId = z.string().min(1).max(64);
+/** better-auth organization id — UUID from PostgreSQL (generateId: false). */
+export const HouseholdId = z.uuid();
 export type HouseholdId = z.infer<typeof HouseholdId>;
 
-/** better-auth user id — opaque string, not a uuid. */
-export const UserId = z.string().min(1).max(64);
+/** better-auth user id — UUID from PostgreSQL (generateId: false). */
+export const UserId = z.uuid();
 export type UserId = z.infer<typeof UserId>;
 
 /**

@@ -43,7 +43,7 @@ The same product tree governs modules, API, routes, and database.
 
 | Product | Backend | Contract | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/public/platform/household` | `contract.household` | `/settings` | `public` |
+| — | `modules/auth/household` | `contract.household` | `/settings` | `auth` + `public` |
 | — | `modules/public/platform/coach` | `contract.coach` | — | `public` |
 | **Money** | `modules/public/product/money/*` | `contract.money.*` | `/money/*` | `public` |
 | **Growth** | `modules/public/product/growth/*` | `contract.growth.*` | `/growth/*` | `public` |

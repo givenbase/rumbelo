@@ -25,6 +25,7 @@ const VALID_DOMAINS = [
     'reference',
     'plan',
     'account',
+    'household',
 ] as const;
 
 export type EntityDomain = (typeof VALID_DOMAINS)[number];

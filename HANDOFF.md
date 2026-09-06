@@ -127,7 +127,7 @@ The same product tree governs modules, API, routes and database. Learn it once.
 
 | Product | Backend module | Contract | Route | DB schema |
 |---|---|---|---|---|
-| — | `modules/public/platform/household` | `contract.household` | `/settings` | `public` |
+| — | `modules/auth/household` | `contract.household` | `/settings` | `auth` + `public` |
 | — | `modules/public/platform/coach` | `contract.coach` | — | `public` |
 | **Geld** | `modules/public/product/money/*` | `contract.money.*` | `/money/*` | `public` |
 | **Groei** | `modules/public/product/growth/*` | `contract.growth.*` | `/growth/*` | `public` |
@@ -150,7 +150,7 @@ not at all.**
 `auth/account`. Rumbelo writes → `backoffice/*` (`product/{money|growth}/…` with kinds
 `template` | `preset` | `catalog`, plus root `plan/` for Basic/Plus/Max tiers and
 `communication/`; reserved `reference/` for cross-product lookups later).
-better-auth library writes → `auth/better-auth/`. `public/` is the app/household
+better-auth library writes → `auth/*/managed/`. `public/` is the app/household
 plane (Postgres `public`); not company CMS.
 
 **Structure.** One folder per domain aggregate with flat siblings:

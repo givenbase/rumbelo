@@ -1,20 +1,21 @@
 import { Module } from '@nestjs/common';
 
-import { AccountModule } from './account/account.module';
-import { BetterAuthModule } from './better-auth/better-auth.module';
+import { AuthEngineModule } from './engine/engine.module';
+import { HouseholdModule } from './household/household.module';
+import { UserModule } from './user/user.module';
 
 /**
- * Auth plane — who you are and what we know about you.
+ * Auth plane — who you are and which household you belong to.
  *
- *   account/      Rumbelo-owned account information (profile data we store)
- *   better-auth/  the auth library's domain: config, access control, and
- *                 read-only entities over its tables (user, session, member, …)
+ *   engine/     Better Auth wiring only (config, access control, migrate) — no tables
+ *   user/       PERSON: managed/ (Better Auth tables) + account/ (ours)
+ *   household/  GROUP:  managed/ (Better Auth tables) + household-settings/ (ours)
  *
- * better-auth itself is mounted by AppModule via @thallesp/nestjs-better-auth;
+ * Better Auth itself is mounted by AppModule via @thallesp/nestjs-better-auth;
  * request-level household scoping lives in common/household.
  */
 @Module({
-    imports: [AccountModule, BetterAuthModule],
-    exports: [AccountModule, BetterAuthModule],
+    imports: [AuthEngineModule, UserModule, HouseholdModule],
+    exports: [AuthEngineModule, UserModule, HouseholdModule],
 })
 export class AuthModule {}

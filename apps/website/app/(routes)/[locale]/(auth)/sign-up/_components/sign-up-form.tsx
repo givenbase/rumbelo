@@ -33,7 +33,7 @@ export function SignUpForm() {
 
     const form = useForm<SignUpFormSchema>({
         defaultValues: {
-            name: searchParams.get('name')?.trim() ?? '',
+            displayName: searchParams.get('name')?.trim() ?? '',
             email: searchParams.get('email')?.trim() ?? '',
             password: '',
         },
@@ -47,7 +47,7 @@ export function SignUpForm() {
         setApiError(null);
 
         const result = await signUp.email({
-            name: values.name,
+            name: values.displayName,
             email: values.email,
             password: values.password,
             callbackURL: '/verify?status=confirmed',
@@ -83,14 +83,14 @@ export function SignUpForm() {
 
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="displayName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Name</FormLabel>
+                                <FormLabel>Display name</FormLabel>
                                 <FormControl>
                                     <Input
-                                        autoComplete="name"
-                                        placeholder="Your name"
+                                        autoComplete="nickname"
+                                        placeholder="How should we greet you?"
                                         disabled={busy}
                                         {...field}
                                     />

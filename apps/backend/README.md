@@ -84,10 +84,12 @@ See `docs/ENTITY_STYLE.md`. Enforced by `pnpm lint:entities`:
 ## Households: the isolation model
 
 A **household** is one shared money unit — one board of jars, one ritual, one
-pot of money to steer. It is a better-auth `organization`. A solo user is a
+pot of money to steer. It is a better-auth organization stored as `auth.household`
+(`modelName: 'household'`). A solo user is a
 household of one; a couple, family or friends-investing-together group are
 households of several. One person can belong to up to five households
-(`organizationLimit: 5`) and switches via `activeOrganizationId`.
+(`organizationLimit: 5`) and switches via `activeOrganizationId` (column
+`active_household_id`).
 
 ### Platform vs household-scoped data
 
@@ -125,7 +127,7 @@ enforcement layer.
   Role names are capability-neutral on purpose — "Partner", "Kid" or
   "Housemate" are UI copy driven by the household's kind, never enum values.
   Role *is* the trust level — there is no separate trust-score system.
-- **Kind** (per household, `platform.household_settings.kind`): what is the
+- **Kind** (per household, `auth.household_settings.kind`): what is the
   nature of the group — `family`, `partners`, `friends`, `solo`? Kind only
   drives copy and defaults (e.g. a friends portfolio may hide energy/soul
   modules later); it never gates queries.
