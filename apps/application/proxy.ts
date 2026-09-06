@@ -27,9 +27,7 @@ function isSignInRoute(pathname: string): boolean {
 /** Public redirects to DOMAIN_WEB + product sign-in. */
 function isPublicAuthRoute(pathname: string): boolean {
     return (
-        isSignInRoute(pathname) ||
-        pathname.startsWith('/sign-up') ||
-        pathname.startsWith('/verify')
+        isSignInRoute(pathname) || pathname.startsWith('/sign-up') || pathname.startsWith('/verify')
     );
 }
 

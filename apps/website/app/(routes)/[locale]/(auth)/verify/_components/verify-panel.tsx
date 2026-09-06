@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -82,7 +82,7 @@ export function VerifyPanel() {
     }
 
     const busy = form.formState.isSubmitting;
-    const watchedEmail = form.watch('email');
+    const watchedEmail = useWatch({ control: form.control, name: 'email' }) ?? '';
     const subtitle = confirmed
         ? AUTH_VERIFY.confirmed
         : watchedEmail.trim()

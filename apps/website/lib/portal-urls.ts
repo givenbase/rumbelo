@@ -1,11 +1,5 @@
 import { env } from '@/lib/get-env';
 
-function joinOrigin(origin: string, path: string): string {
-    const base = origin.replace(/\/$/, '');
-    const suffix = path.startsWith('/') ? path : `/${path}`;
-    return `${base}${suffix}`;
-}
-
 /** Product app origin. */
 export function appOrigin(): string {
     return env.NEXT_PUBLIC_DOMAIN_APP.replace(/\/$/, '');

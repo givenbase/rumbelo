@@ -55,6 +55,7 @@
         "@react-email/components": "^1.0.12",
         "@react-email/render": "^2.1.0",
         "@rumbelo/contracts": "workspace:*",
+        "@rumbelo/utils": "workspace:*",
         "@thallesp/nestjs-better-auth": "^2.4.0",
         "better-auth": "^1.5.3",
         "class-transformer": "^0.5.1",

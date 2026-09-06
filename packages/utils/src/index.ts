@@ -14,3 +14,9 @@ export {
     type BetterAuthProxyOptions,
 } from './better-auth-proxy';
 export { rewriteBetterAuthSetCookie } from './better-auth-proxy-cookies';
+export {
+    buildBetterAuthTrustedOrigins,
+    extractRootDomainFromUrl,
+    normalizeOrigin,
+    resolveCrossSubdomainCookieDomain,
+} from './better-auth-domains';

@@ -49,9 +49,9 @@ Browser ──HTTPS──► Application (public) ── /api/auth   ├─► B
 | `DATABASE_REDIS_URL` | Backend | `${{Redis.REDIS_URL}}` (`redis://` / `rediss://`) |
 | `DOMAIN_BACK` | Backend + Application + Website (server) | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` — see note below |
 | `DOMAIN_BACK_PUBLIC` | Backend | `https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}` |
-| `DOMAIN_APP` / `DOMAIN_WEB` | Backend | Public HTTPS (CORS + email link rewrite) |
-| `NEXT_PUBLIC_DOMAIN_APP` | Application + Website (build) | Application public HTTPS |
-| `NEXT_PUBLIC_DOMAIN_WEB` | Application + Website (build) | Website public HTTPS (`https://rumbelo.com`) |
+| `DOMAIN_APP` / `DOMAIN_WEB` | Backend | Public HTTPS — no www (`https://app.rumbelo.com`, `https://rumbelo.com`) |
+| `NEXT_PUBLIC_DOMAIN_APP` | Application + Website (build) | Same as `DOMAIN_APP` |
+| `NEXT_PUBLIC_DOMAIN_WEB` | Application + Website (build) | Same as `DOMAIN_WEB` (`https://rumbelo.com`) |
 | `NEXT_PUBLIC_DOMAIN_BACK` | Application + Website (build) | Backend **public** HTTPS (optional; not used by proxies) |
 
 Private mesh uses **http + PORT** (no TLS). Public uses **https**. Browsers never call

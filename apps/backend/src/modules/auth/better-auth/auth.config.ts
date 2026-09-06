@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { organization, twoFactor } from 'better-auth/plugins';
+import { buildBetterAuthTrustedOrigins, resolveCrossSubdomainCookieDomain } from '@rumbelo/utils';
 import { Pool } from 'pg';
 
 import type { Env } from '../../../common/config/env.config';
@@ -36,7 +37,8 @@ function authUserFirstName(user: { name?: string | null; email: string }): strin
  * sharing a budget need.
  *
  * Acquisition / recovery emails (verify, reset) land on DOMAIN_WEB; product
- * sessions bind on DOMAIN_APP via `/api/auth` proxies.
+ * sessions bind on DOMAIN_APP via `/api/auth` proxies. Production/staging use
+ * cross-subdomain cookies on `.rumbelo.com` (no www).
  */
 export function createAuth(env: Env) {
     const pool = new Pool({
@@ -53,13 +55,24 @@ export function createAuth(env: Env) {
     const emailService = new EmailService();
     const requireEmailVerification = env.EMAIL_VERIFICATION_ENABLED;
     const webOrigin = env.DOMAIN_WEB.replace(/\/$/, '');
+    const isSecureCookieEnv = env.NODE_ENV === 'production' || env.NODE_ENV === 'staging';
+
+    const trustedOrigins = buildBetterAuthTrustedOrigins([
+        env.DOMAIN_APP,
+        env.DOMAIN_WEB,
+        env.DOMAIN_BACK_PUBLIC,
+    ]);
+
+    const cookieDomain = isSecureCookieEnv
+        ? resolveCrossSubdomainCookieDomain(env.DOMAIN_WEB, env.DOMAIN_APP)
+        : undefined;
 
     return betterAuth({
         database: pool,
         secret: env.BETTER_AUTH_SECRET,
         // Public origin — private DOMAIN_BACK is for service-to-service only.
         baseURL: env.DOMAIN_BACK_PUBLIC,
-        trustedOrigins: [env.DOMAIN_APP, env.DOMAIN_WEB],
+        trustedOrigins,
 
         emailAndPassword: {
             enabled: true,
@@ -219,12 +232,30 @@ export function createAuth(env: Env) {
             }),
         ],
 
+        /**
+         * Cross-subdomain SSO (`rumbelo.com` + `app.rumbelo.com`, no www).
+         * Better Auth only applies Domain via `advanced.crossSubDomainCookies` —
+         * a top-level `cookie.domain` is ignored (host-only → re-login per app).
+         * @see https://www.better-auth.com/docs/concepts/cookies#cross-subdomain-cookies
+         */
         advanced: {
             cookiePrefix: 'rumbelo',
-            useSecureCookies: env.NODE_ENV === 'production',
+            useSecureCookies: isSecureCookieEnv,
+            ...(cookieDomain
+                ? {
+                      crossSubDomainCookies: {
+                          enabled: true,
+                          // Root domain without leading dot — e.g. `rumbelo.com`
+                          domain: cookieDomain.replace(/^\./, ''),
+                      },
+                  }
+                : {}),
             defaultCookieAttributes: {
-                sameSite: 'lax',
                 httpOnly: true,
+                path: '/',
+                // Lax is enough for same-site subdomains; None+Secure for stricter browsers
+                sameSite: isSecureCookieEnv ? 'none' : 'lax',
+                secure: isSecureCookieEnv,
             },
         },
     });

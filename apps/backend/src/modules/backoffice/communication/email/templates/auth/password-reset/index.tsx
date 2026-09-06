@@ -35,7 +35,9 @@ export const PasswordResetTemplate: React.FC<PasswordResetTemplateProps> = ({
             darkMode={darkMode}
             previewText={t('email.auth.password_reset.header.preview_text')}
             title={t('email.auth.password_reset.header.title')}>
-            <Heading style={styles.heading}>{t('email.auth.password_reset.header.heading')}</Heading>
+            <Heading style={styles.heading}>
+                {t('email.auth.password_reset.header.heading')}
+            </Heading>
 
             <Section style={styles.section}>
                 <Text style={styles.text}>

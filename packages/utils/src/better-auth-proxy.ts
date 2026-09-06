@@ -43,6 +43,11 @@ export async function proxyBetterAuthRequest(
 
     let response: Response;
 
+    const forwardHeaders: Record<string, string> = {};
+    requestHeaders.forEach((value, key) => {
+        forwardHeaders[key] = value;
+    });
+
     try {
         response = await fetch(backendPath, {
             body:
@@ -50,7 +55,7 @@ export async function proxyBetterAuthRequest(
                     ? await request.arrayBuffer()
                     : undefined,
             credentials: 'include',
-            headers: Object.fromEntries(requestHeaders.entries()),
+            headers: forwardHeaders,
             method: request.method,
         });
     } catch (error) {

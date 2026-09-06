@@ -4,6 +4,7 @@ import helmet from '@fastify/helmet';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { buildBetterAuthTrustedOrigins } from '@rumbelo/utils';
 
 import { AppModule } from './app.module';
 import { loadEnv, type Env } from './common/config/env.config';
@@ -49,8 +50,12 @@ async function setupApp(app: NestFastifyApplication, env: Env): Promise<void> {
     await app.register(helmet, { contentSecurityPolicy: false });
     await app.register(cookie, { secret: env.BETTER_AUTH_SECRET });
     await app.register(cors, {
-        // Credentials + wildcard origin is not permitted; enumerate the two frontends.
-        origin: [env.DOMAIN_APP, env.DOMAIN_WEB],
+        // Credentials + wildcard origin is not permitted; enumerate frontends (+ public Nest).
+        origin: buildBetterAuthTrustedOrigins([
+            env.DOMAIN_APP,
+            env.DOMAIN_WEB,
+            env.DOMAIN_BACK_PUBLIC,
+        ]),
         credentials: true,
         allowedHeaders: ['content-type', 'authorization', 'x-household-id'],
     });

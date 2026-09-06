@@ -2,14 +2,15 @@
  * Rewrites Set-Cookie headers from the backend Better Auth API when proxied through
  * a Next.js app (`/api/auth/[...all]`).
  *
- * Development (localhost:3000):
- * - Strip `Domain=` so the cookie binds to the app origin (not DOMAIN_BACK).
- * - SameSite=Lax is fine because the browser talks to the same origin as the proxy.
+ * Development (localhost):
+ * - Strip `Domain=` so the cookie binds to the app origin (not Nest).
+ * - SameSite=Lax — browser talks to the same origin as the proxy.
  *
- * Production:
- * - Preserve Domain attributes when cross-subdomain cookies are configured later.
+ * Production / staging (`rumbelo.com` + `app.rumbelo.com`):
+ * - Preserve `Domain=rumbelo.com` from Better Auth `advanced.crossSubDomainCookies`
+ *   so sessions work across website and application (no www).
  *
- * @see https://www.better-auth.com/docs/concepts/cookies
+ * @see https://www.better-auth.com/docs/concepts/cookies#cross-subdomain-cookies
  */
 
 export function rewriteBetterAuthSetCookie(cookieValue: string): string {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
 import { AUTH_MIN_PASSWORD_LENGTH, LandingSignUpForm } from '@rumbelo/contracts';
@@ -34,11 +34,11 @@ export function LandingSignupForm() {
         register,
         handleSubmit,
         setValue,
-        watch,
+        control,
         formState: { errors, isSubmitting, touchedFields, submitCount },
     } = form;
 
-    const terms = watch('terms');
+    const terms = useWatch({ control, name: 'terms' }) ?? false;
 
     function onSubmit(values: LandingSignUpForm) {
         const params = new URLSearchParams({
