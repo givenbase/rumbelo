@@ -33,7 +33,7 @@ import {
     Toggle,
     useTheme,
 } from '@rumbelo/ui';
-import { cn, formatMoney, formatPercent } from '@rumbelo/utils';
+import { cn, formatMoney, formatPercent, toPeriodKey } from '@rumbelo/utils';
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
@@ -1644,13 +1644,15 @@ export function ExportSettings() {
     const [busy, setBusy] = useState<'csv' | 'json' | null>(null);
     const [scope, setScope] = useState<'all' | 'tx' | 'month'>('all');
 
-    async function exportCsv() {
+    async function exportCsv(periodOnly: boolean) {
         if (!householdId) return;
         setBusy('csv');
         try {
+            const periodKey = toPeriodKey(period.year, period.month);
             const { items } = await client.money.transactions.list({
                 householdId,
-                limit: 500,
+                limit: 200,
+                ...(periodOnly ? { period: periodKey } : {}),
             });
             const jars = await client.money.jars.list({ householdId });
             const jarName = new Map(jars.map(j => [j.id, j.name]));
@@ -1664,14 +1666,14 @@ export function ExportSettings() {
                 jar: transaction.jarId ? (jarName.get(transaction.jarId) ?? transaction.jarId) : '',
                 categoryId: transaction.categoryId ?? '',
             }));
-            const stamp = `${period.year}-${String(period.month).padStart(2, '0')}`;
+            const stamp = periodOnly ? periodKey : new Date().toISOString().slice(0, 10);
             downloadTextFile(
                 `rumbelo-transactions-${stamp}.csv`,
                 toCsv(rows),
                 'text/csv;charset=utf-8'
             );
             showToast(
-                `${rows.length} transaction${rows.length === 1 ? '' : 's'} exported`,
+                `${rows.length} transaction${rows.length === 1 ? '' : 's'} exported${periodOnly ? ` for ${periodKey}` : ''}`,
                 'success'
             );
         } catch {
@@ -1693,7 +1695,7 @@ export function ExportSettings() {
                     client.money.debts.list({ householdId }),
                     client.money.goals.list({ householdId }),
                     client.money.rules.list({ householdId }),
-                    client.money.transactions.list({ householdId, limit: 500 }),
+                    client.money.transactions.list({ householdId, limit: 200 }),
                 ]
             );
             const payload = {
@@ -1722,32 +1724,39 @@ export function ExportSettings() {
     }
 
     const sheets = [
-        { name: 'Jars', rows: '6 rows', cols: 'key · name · % · allocated' },
-        { name: 'Income', rows: 'sources', cols: 'label · amount · kind' },
-        { name: 'Fixed costs', rows: 'recurring', cols: 'name · amount · jar' },
-        { name: 'Transactions', rows: 'ledger', cols: 'date · desc · amount · jar' },
-        { name: 'Debts', rows: 'balances', cols: 'name · rate · balance' },
-        { name: 'Goals', rows: 'targets', cols: 'name · target · jar' },
-        { name: 'Rules', rows: 'automation', cols: 'match · jar · priority' },
+        { name: 'Jars', rows: '6 rows', cols: 'key · name · % · allocated', fullOnly: true },
+        { name: 'Income', rows: 'sources', cols: 'label · amount · kind', fullOnly: true },
+        { name: 'Fixed costs', rows: 'recurring', cols: 'name · amount · jar', fullOnly: true },
+        {
+            name: 'Transactions',
+            rows: scope === 'month' ? 'this month' : 'ledger',
+            cols: 'date · desc · amount · jar',
+            fullOnly: false,
+        },
+        { name: 'Debts', rows: 'balances', cols: 'name · rate · balance', fullOnly: true },
+        { name: 'Goals', rows: 'targets', cols: 'name · target · jar', fullOnly: true },
+        { name: 'Rules', rows: 'automation', cols: 'match · jar · priority', fullOnly: true },
     ];
 
     const scopes = [
         {
             key: 'all' as const,
             label: 'Everything',
-            desc: 'Every sheet in one file',
+            desc: 'Every sheet in one JSON file',
         },
         {
             key: 'tx' as const,
             label: 'Transactions only',
-            desc: 'For your accountant or administrator',
+            desc: 'All transactions as CSV',
         },
         {
             key: 'month' as const,
             label: 'This month only',
-            desc: 'What is running now',
+            desc: `Transactions for ${toPeriodKey(period.year, period.month)}`,
         },
     ];
+
+    const visibleSheets = sheets.filter(sheet => scope === 'all' || !sheet.fullOnly);
 
     return (
         <SettingsPanel>
@@ -1800,7 +1809,7 @@ export function ExportSettings() {
                         Tabs in the file
                     </p>
                     <div className="grid gap-1">
-                        {sheets.map(sh => (
+                        {visibleSheets.map(sh => (
                             <span
                                 key={sh.name}
                                 className="flex flex-wrap items-baseline gap-2 rounded-lg border border-line bg-raised px-2.5 py-1.5">
@@ -1837,14 +1846,14 @@ export function ExportSettings() {
                             disabled={!live || busy !== null}
                             onClick={() => {
                                 if (scope === 'all') void exportJson();
-                                else void exportCsv();
+                                else void exportCsv(scope === 'month');
                             }}>
                             {busy ? 'Working…' : scope === 'all' ? 'Download JSON' : 'Download CSV'}
                         </Button>
                     </div>
                     <p className="font-mono text-[10.5px] leading-relaxed text-pretty text-fg-muted">
-                        Excel with a real tab per subject is coming. CSV / JSON work today — pick
-                        CSV when a system asks for raw data.
+                        Excel with a real tab per subject is coming. JSON is the full archive; CSV
+                        is transactions only — pick this month when you want the current period.
                     </p>
                     {!live ? <StubNotice what="Sign in to download exports." /> : null}
                 </div>

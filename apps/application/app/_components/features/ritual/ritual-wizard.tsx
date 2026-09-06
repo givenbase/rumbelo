@@ -178,37 +178,52 @@ export function RitualWizard({
                                 Distribute surplus
                             </h2>
                             <p className="mt-1 text-sm text-fg-muted">
-                                <span className="font-semibold text-fg">
-                                    {formatMoney(surplus)}
-                                </span>{' '}
-                                has no direction yet. Send it where it works.
+                                {surplus > 0 ? (
+                                    <>
+                                        <span className="font-semibold text-fg">
+                                            {formatMoney(surplus)}
+                                        </span>{' '}
+                                        has no direction yet. Send it where it works.
+                                    </>
+                                ) : (
+                                    <>
+                                        No surplus this week — nothing to redirect. Continue when
+                                        you&apos;re ready.
+                                    </>
+                                )}
                             </p>
                         </div>
-                        <div className="grid gap-2">
-                            {jars
-                                .filter(j => j.key !== 'NECESSITIES')
-                                .map(jar => (
-                                    <div
-                                        key={jar.id}
-                                        className="flex items-center justify-between gap-3 rounded-xl border border-line bg-raised px-4 py-3">
-                                        <span className="flex items-center gap-2.5 text-sm text-fg">
-                                            <span aria-hidden className="text-base">
-                                                {jar.icon}
+                        {surplus > 0 ? (
+                            <div className="grid gap-2">
+                                {jars
+                                    .filter(j => j.key !== 'NECESSITIES')
+                                    .map(jar => (
+                                        <div
+                                            key={jar.id}
+                                            className="flex items-center justify-between gap-3 rounded-xl border border-line bg-raised px-4 py-3">
+                                            <span className="flex items-center gap-2.5 text-sm text-fg">
+                                                <span aria-hidden className="text-base">
+                                                    {jar.icon}
+                                                </span>
+                                                {jar.name}
                                             </span>
-                                            {jar.name}
-                                        </span>
-                                        <Button
-                                            variant={
-                                                redirectJarId === jar.id ? 'primary' : 'secondary'
-                                            }
-                                            size="sm"
-                                            className="h-8 px-3 text-xs"
-                                            onClick={() => setRedirectJarId(jar.id)}>
-                                            {redirectJarId === jar.id ? 'Selected' : 'Send here'}
-                                        </Button>
-                                    </div>
-                                ))}
-                        </div>
+                                            <Button
+                                                variant={
+                                                    redirectJarId === jar.id
+                                                        ? 'primary'
+                                                        : 'secondary'
+                                                }
+                                                size="sm"
+                                                className="h-8 px-3 text-xs"
+                                                onClick={() => setRedirectJarId(jar.id)}>
+                                                {redirectJarId === jar.id
+                                                    ? 'Selected'
+                                                    : 'Send here'}
+                                            </Button>
+                                        </div>
+                                    ))}
+                            </div>
+                        ) : null}
                     </div>
                 )}
 

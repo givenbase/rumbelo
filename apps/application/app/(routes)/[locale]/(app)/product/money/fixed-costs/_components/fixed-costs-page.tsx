@@ -24,6 +24,7 @@ export function FixedCostsPageClient() {
     const { householdId } = useAuth();
     const router = useRouter();
     const [tab, setTab] = useState<Tab>('ERUIT');
+    const [jarFilter, setJarFilter] = useState<string | null>(null);
     const live = isLiveData(householdId);
 
     const byJarQuery = useLiveQuery(
@@ -117,6 +118,9 @@ export function FixedCostsPageClient() {
     const outTotal = fixedCosts.reduce((total, fixedCost) => total + Math.abs(fixedCost.amount), 0);
     const leftover = NET - outTotal;
     const commitmentRatio = NET > 0 ? Math.round((outTotal / NET) * 100) : 0;
+    const visibleFixedCosts = jarFilter
+        ? fixedCosts.filter(fixedCost => fixedCost.jarKey === jarFilter)
+        : fixedCosts;
 
     return (
         <div className="grid animate-rise gap-8">
@@ -182,63 +186,85 @@ export function FixedCostsPageClient() {
                         </div>
 
                         <div className="grid gap-px">
-                            {fixedCosts.map(fixedCost => {
-                                const jar = JAR_META.find(j => j.key === fixedCost.jarKey);
-                                return (
-                                    <button
-                                        type="button"
-                                        key={fixedCost.id}
-                                        onClick={() =>
-                                            router.push(updateHref('fixed', fixedCost.id))
-                                        }
-                                        className="flex w-full cursor-pointer items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised">
-                                        <div className="min-w-0">
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                {jar && (
-                                                    <span
-                                                        className="size-1.75 shrink-0 rounded-sm"
-                                                        style={{ background: toVar(jar.color) }}
-                                                    />
-                                                )}
-                                                <span className="text-sm text-fg">
-                                                    {fixedCost.name}
-                                                </span>
-                                                {jar && (
-                                                    <span className="font-mono text-xs tracking-wide text-fg-muted uppercase">
-                                                        {jar.name}
+                            {visibleFixedCosts.length === 0 ? (
+                                <p className="px-5 py-4 text-sm text-fg-muted">
+                                    {jarFilter
+                                        ? 'No fixed costs in this jar.'
+                                        : 'No fixed costs yet.'}
+                                </p>
+                            ) : (
+                                visibleFixedCosts.map(fixedCost => {
+                                    const jar = JAR_META.find(j => j.key === fixedCost.jarKey);
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={fixedCost.id}
+                                            onClick={() =>
+                                                router.push(updateHref('fixed', fixedCost.id))
+                                            }
+                                            className="flex w-full cursor-pointer items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised">
+                                            <div className="min-w-0">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    {jar && (
+                                                        <span
+                                                            className="size-1.75 shrink-0 rounded-sm"
+                                                            style={{ background: toVar(jar.color) }}
+                                                        />
+                                                    )}
+                                                    <span className="text-sm text-fg">
+                                                        {fixedCost.name}
                                                     </span>
-                                                )}
+                                                    {jar && (
+                                                        <span className="font-mono text-xs tracking-wide text-fg-muted uppercase">
+                                                            {jar.name}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
+                                                    Monthly
+                                                    {fixedCost.dueDay !== null
+                                                        ? ` · day ${fixedCost.dueDay}`
+                                                        : ''}
+                                                </div>
                                             </div>
-                                            <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                                Monthly
-                                                {fixedCost.dueDay !== null
-                                                    ? ` · day ${fixedCost.dueDay}`
-                                                    : ''}
-                                            </div>
-                                        </div>
-                                        <span className="font-mono text-sm whitespace-nowrap text-fg">
-                                            {formatMoney(fixedCost.amount)}
-                                        </span>
-                                    </button>
-                                );
-                            })}
+                                            <span className="font-mono text-sm whitespace-nowrap text-fg">
+                                                {formatMoney(fixedCost.amount)}
+                                            </span>
+                                        </button>
+                                    );
+                                })
+                            )}
                         </div>
 
                         <div className="flex flex-wrap gap-2 border-t border-line px-5 py-4">
                             {JAR_META.filter(j =>
                                 fixedCosts.some(fixedCost => fixedCost.jarKey === j.key)
-                            ).map(j => (
-                                <button
-                                    key={j.key}
-                                    type="button"
-                                    className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent">
-                                    <span
-                                        className="size-1.75 rounded-sm"
-                                        style={{ background: toVar(j.color) }}
-                                    />
-                                    {j.name} ›
-                                </button>
-                            ))}
+                            ).map(j => {
+                                const on = jarFilter === j.key;
+                                return (
+                                    <button
+                                        key={j.key}
+                                        type="button"
+                                        onClick={() =>
+                                            setJarFilter(previous =>
+                                                previous === j.key ? null : j.key
+                                            )
+                                        }
+                                        aria-pressed={on}
+                                        className={cn(
+                                            'flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs transition-colors',
+                                            on
+                                                ? 'border-accent/40 bg-accent-soft text-accent'
+                                                : 'border-line bg-raised text-fg-secondary hover:border-accent-hover hover:text-accent'
+                                        )}>
+                                        <span
+                                            className="size-1.75 rounded-sm"
+                                            style={{ background: toVar(j.color) }}
+                                        />
+                                        {j.name}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </Card>
 
@@ -302,16 +328,16 @@ export function FixedCostsPageClient() {
                             </p>
                             <div className="flex flex-wrap gap-2">
                                 {JAR_META.map(j => (
-                                    <button
+                                    <span
                                         key={j.key}
-                                        type="button"
-                                        className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary transition-colors hover:border-accent-hover hover:text-accent">
+                                        className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary">
                                         <span
                                             className="size-1.75 rounded-sm"
                                             style={{ background: toVar(j.color) }}
                                         />
-                                        {j.name} ›
-                                    </button>
+                                        {j.name}
+                                        <span className="text-fg-faint">{j.pct}%</span>
+                                    </span>
                                 ))}
                             </div>
                         </div>

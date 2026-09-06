@@ -43,6 +43,7 @@ const incomeFormSchema = z.object({
             { message: 'Enter a valid amount' }
         ),
     kind: z.enum(IncomeKind),
+    cadence: z.enum(Cadence),
 });
 
 export type IncomeFormValues = z.infer<typeof incomeFormSchema>;
@@ -83,6 +84,7 @@ export function IncomeForm({
                 key: preset.key,
                 name: preset.name,
                 kind: preset.kind,
+                defaultCadence: preset.defaultCadence,
             })),
         [presetsQuery.data]
     );
@@ -92,6 +94,7 @@ export function IncomeForm({
             name: defaultValues?.name ?? '',
             amount: defaultValues?.amount ?? '',
             kind: defaultValues?.kind ?? IncomeKind.SALARY,
+            cadence: defaultValues?.cadence ?? Cadence.MONTHLY,
         },
         resolver: zodResolver(incomeFormSchema),
     });
@@ -113,6 +116,7 @@ export function IncomeForm({
                     name,
                     amount: cents,
                     kind: values.kind,
+                    cadence: values.cadence,
                 });
             }
             return client.money.income.create({
@@ -120,7 +124,7 @@ export function IncomeForm({
                 name,
                 amount: cents,
                 kind: values.kind,
-                cadence: Cadence.MONTHLY,
+                cadence: values.cadence,
                 expectedDay: null,
                 isActive: true,
                 startedOn: null,
@@ -206,7 +210,9 @@ export function IncomeForm({
                                         const full = presetOptions.find(
                                             preset => preset.key === opt.key
                                         );
-                                        if (full) form.setValue('kind', full.kind);
+                                        if (!full) return;
+                                        form.setValue('kind', full.kind);
+                                        form.setValue('cadence', full.defaultCadence);
                                     }}
                                 />
                             ) : (
@@ -223,9 +229,31 @@ export function IncomeForm({
                 name="amount"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Amount per month (€)</FormLabel>
+                        <FormLabel>Amount (€)</FormLabel>
                         <FormControl>
                             <Input inputMode="decimal" placeholder="0,00" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="cadence"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>How often</FormLabel>
+                        <FormControl>
+                            <select
+                                className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
+                                {...field}>
+                                <option value={Cadence.WEEKLY}>Weekly</option>
+                                <option value={Cadence.MONTHLY}>Monthly</option>
+                                <option value={Cadence.QUARTERLY}>Quarterly</option>
+                                <option value={Cadence.YEARLY}>Yearly</option>
+                                <option value={Cadence.ONCE}>One-time</option>
+                            </select>
                         </FormControl>
                         <FormMessage />
                     </FormItem>

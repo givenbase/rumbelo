@@ -41,6 +41,7 @@ export function IncomeUpdatePage({ id, embedded = false }: { id: string; embedde
                 name: row.name,
                 amount: centsToEurosInput(row.amount),
                 kind: row.kind,
+                cadence: row.cadence,
             }}
         />
     );

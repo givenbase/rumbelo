@@ -1,6 +1,7 @@
 'use client';
 
 import { useApi } from '@/app/_lib/api-hooks';
+import { useMemo, useState } from 'react';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
@@ -11,30 +12,8 @@ import { DEFAULT_SLEEP_HOURS } from '@/app/_lib/energy-constants';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
-const STEERED_HOURS = 40;
+const DEFAULT_STEERED_HOURS = 40;
 const SLEEP_WEEK = DEFAULT_SLEEP_HOURS * 7;
-const REST_HOURS = 168 - SLEEP_WEEK - STEERED_HOURS;
-
-const WEEK_WHOLE = [
-    {
-        name: 'Sleep',
-        hours: `${SLEEP_WEEK}h`,
-        pct: Math.round((SLEEP_WEEK / 168) * 100),
-        color: 'var(--color-jar-lts)',
-    },
-    {
-        name: 'Everything else',
-        hours: `${REST_HOURS}h`,
-        pct: Math.round((REST_HOURS / 168) * 100),
-        color: 'var(--color-sunken)',
-    },
-    {
-        name: 'You steer',
-        hours: `${STEERED_HOURS}h`,
-        pct: Math.round((STEERED_HOURS / 168) * 100),
-        color: 'var(--color-accent)',
-    },
-] as const;
 
 const JAR_BORDER: Record<string, string> = {
     NECESSITIES: 'border-t-jar-nec',
@@ -63,6 +42,7 @@ export function WeekPageClient() {
     const api = useApi();
     const { householdId } = useAuth();
     const live = isLiveData(householdId);
+    const [steeredHours, setSteeredHours] = useState(DEFAULT_STEERED_HOURS);
 
     const summaryQuery = useLiveQuery(
         api.energy.logs.summary.queryOptions({ input: { householdId: householdId! } }),
@@ -71,6 +51,34 @@ export function WeekPageClient() {
     );
 
     const summary = summaryQuery.data ?? [];
+    const restHours = 168 - SLEEP_WEEK - steeredHours;
+
+    const weekWhole = useMemo(
+        () =>
+            [
+                {
+                    name: 'Sleep',
+                    hours: `${SLEEP_WEEK}h`,
+                    pct: Math.round((SLEEP_WEEK / 168) * 100),
+                    color: 'var(--color-jar-lts)',
+                },
+                {
+                    name: 'Everything else',
+                    hours: `${restHours}h`,
+                    pct: Math.round((restHours / 168) * 100),
+                    color: 'var(--color-sunken)',
+                },
+                {
+                    name: 'You steer',
+                    hours: `${steeredHours}h`,
+                    pct: Math.round((steeredHours / 168) * 100),
+                    color: 'var(--color-accent)',
+                },
+            ] as const,
+        [restHours, steeredHours]
+    );
+
+    const playHours = Math.round((steeredHours * 10) / 100);
 
     return (
         <div className="grid animate-rise gap-6">
@@ -113,7 +121,7 @@ export function WeekPageClient() {
                 <div>
                     <Eyebrow>Your week has 168 hours</Eyebrow>
                     <div className="mt-3 flex h-3 gap-0.5 overflow-hidden rounded-full">
-                        {WEEK_WHOLE.map(week => (
+                        {weekWhole.map(week => (
                             <span
                                 key={week.name}
                                 title={`${week.name} — ${week.hours}`}
@@ -123,7 +131,7 @@ export function WeekPageClient() {
                         ))}
                     </div>
                     <div className="mt-3 flex flex-wrap gap-4">
-                        {WEEK_WHOLE.map(week => (
+                        {weekWhole.map(week => (
                             <span
                                 key={week.name}
                                 className="flex items-baseline gap-2 font-mono text-xs text-fg-muted">
@@ -136,8 +144,8 @@ export function WeekPageClient() {
                         ))}
                     </div>
                     <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-muted">
-                        Of those 168 hours you steer about {STEERED_HOURS} yourself. The rest goes
-                        to sleep, work, and everything that happens without a choice.
+                        Of those 168 hours you steer about {steeredHours} yourself. The rest goes to
+                        sleep, work, and everything that happens without a choice.
                     </p>
                 </div>
 
@@ -148,19 +156,21 @@ export function WeekPageClient() {
                         type="range"
                         min={8}
                         max={70}
-                        defaultValue={STEERED_HOURS}
+                        step={1}
+                        value={steeredHours}
+                        onChange={event => setSteeredHours(Number(event.target.value))}
                         className="min-w-0 flex-1 accent-accent"
-                        readOnly
+                        aria-label="Hours you steer this week"
                     />
                     <span className="font-display text-3xl font-semibold text-accent tabular-nums">
-                        {STEERED_HOURS}h
+                        {steeredHours}h
                     </span>
                 </div>
 
                 {/* ── Per-jar hour cards ── */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                     {JAR_META.map(j => {
-                        const hours = Math.round((STEERED_HOURS * j.pct) / 100);
+                        const hours = Math.round((steeredHours * j.pct) / 100);
                         return (
                             <div
                                 key={j.key}
@@ -197,9 +207,9 @@ export function WeekPageClient() {
                     <Eyebrow className="text-accent">✦ Where time and money diverge</Eyebrow>
                     <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-secondary">
                         You give Play 10% of your money but only{' '}
-                        {Math.round((Math.round((STEERED_HOURS * 10) / 100) / STEERED_HOURS) * 100)}
-                        % of your steerable hours. That is not failure — it is a signal that your
-                        joy lives mainly in small impulses, not planned blocks.
+                        {steeredHours > 0 ? Math.round((playHours / steeredHours) * 100) : 0}% of
+                        the hours you steer ({playHours}h). Drag the slider to see how the jars
+                        shift when you reclaim more of the week.
                     </p>
                 </div>
             </Card>

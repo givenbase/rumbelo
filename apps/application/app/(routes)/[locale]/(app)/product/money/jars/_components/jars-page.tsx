@@ -69,7 +69,8 @@ export function JarsPageClient() {
     /** User override only — `null` means "follow real income". */
     const [simOverrideEuros, setSimOverrideEuros] = useState<number | null>(null);
     const [goalId, setGoalId] = useState<string>('');
-    const [wantMonths, setWantMonths] = useState(36);
+    /** User deadline override — `null` means "follow projected months at pace". */
+    const [wantOverrideMonths, setWantOverrideMonths] = useState<number | null>(null);
 
     const jarsQuery = useLiveQuery(
         api.money.jars.balances.queryOptions({
@@ -118,16 +119,29 @@ export function JarsPageClient() {
     // Default to the first open goal so the pacing slider has something to do.
     const goal = picked ?? openGoals[0] ?? goals[0];
     const nextOpenGoal = openGoals.find(candidate => candidate.id !== goal?.id) ?? openGoals[0];
-    const goalJarPct =
-        jars.find(j => j.key === 'LONG_TERM_SAVINGS')?.percentage ??
-        jars.find(j => j.key === 'FINANCIAL_FREEDOM')?.percentage ??
-        10;
+    const goalJar =
+        (goal?.jarId ? jars.find(j => j.id === goal.jarId) : undefined) ??
+        jars.find(j => j.key === 'LONG_TERM_SAVINGS') ??
+        jars.find(j => j.key === 'FINANCIAL_FREEDOM');
+    const goalJarPct = goalJar?.percentage ?? 10;
+    const goalJarName = goalJar?.name ?? 'Long Term Savings';
     const goalPerMonth = Math.round((simCents * goalJarPct) / 100);
     const remaining = goal ? Math.max(0, goal.target - goal.saved) : 0;
     const goalReached = Boolean(goal) && remaining <= 0;
     const monthsAtPace =
         goalPerMonth > 0 ? Math.ceil(remaining / goalPerMonth) : Number.POSITIVE_INFINITY;
+    // Follow real pace until the user sets their own deadline.
+    const suggestedWant = Number.isFinite(monthsAtPace)
+        ? Math.min(120, Math.max(3, monthsAtPace))
+        : 36;
+    const wantMonths = wantOverrideMonths ?? suggestedWant;
     const needPerMonth = wantMonths > 0 ? Math.ceil(remaining / wantMonths) : remaining;
+    const aheadOfWant =
+        Number.isFinite(monthsAtPace) && monthsAtPace > 0 && monthsAtPace <= wantMonths;
+    const onWantTarget =
+        Number.isFinite(monthsAtPace) &&
+        monthsAtPace > 0 &&
+        Math.abs(monthsAtPace - wantMonths) <= 1;
 
     const whenLabel = useMemo(() => {
         if (!Number.isFinite(monthsAtPace)) return '—';
@@ -136,6 +150,30 @@ export function JarsPageClient() {
         date.setMonth(date.getMonth() + monthsAtPace);
         return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }, [monthsAtPace]);
+
+    const paceMessage = useMemo(() => {
+        if (goalPerMonth <= 0) {
+            return 'At this income nothing lands in this jar — raise the simulator or change the split.';
+        }
+        if (!Number.isFinite(monthsAtPace)) {
+            return 'Not enough landing in this jar to project a date yet.';
+        }
+        if (onWantTarget) {
+            return `Right on your target — about ${monthsAtPace} months (${whenLabel}).`;
+        }
+        if (aheadOfWant) {
+            return `On pace. You'll hit it in about ${monthsAtPace} months (${whenLabel}) — sooner than your ${wantMonths}-month target.`;
+        }
+        return `To hit it within ${wantMonths} months you need ${formatMoney(needPerMonth)}/mo in this jar (now ${formatMoney(goalPerMonth)}).`;
+    }, [
+        aheadOfWant,
+        goalPerMonth,
+        monthsAtPace,
+        needPerMonth,
+        onWantTarget,
+        wantMonths,
+        whenLabel,
+    ]);
 
     return (
         <div className="grid animate-rise gap-8">
@@ -324,7 +362,10 @@ export function JarsPageClient() {
                                         <button
                                             key={goalItem.id}
                                             type="button"
-                                            onClick={() => setGoalId(goalItem.id)}
+                                            onClick={() => {
+                                                setGoalId(goalItem.id);
+                                                setWantOverrideMonths(null);
+                                            }}
                                             className={cn(
                                                 'flex items-center gap-2 rounded-full border px-3 py-2 text-sm whitespace-nowrap transition-colors',
                                                 isActive
@@ -363,7 +404,7 @@ export function JarsPageClient() {
                                             {goal.name}
                                         </span>
                                         <span className="font-mono text-xs font-medium tracking-wide text-accent uppercase">
-                                            Long Term Savings
+                                            {goalJarName}
                                         </span>
                                     </span>
                                     <span className="block h-2 overflow-hidden rounded-full bg-sunken">
@@ -417,7 +458,7 @@ export function JarsPageClient() {
                                         step={1}
                                         value={wantMonths}
                                         onChange={event =>
-                                            setWantMonths(Number(event.target.value))
+                                            setWantOverrideMonths(Number(event.target.value))
                                         }
                                         className="min-w-0 flex-1 accent-accent"
                                         aria-label="Target months"
@@ -425,11 +466,17 @@ export function JarsPageClient() {
                                     <span className="font-mono text-sm font-medium whitespace-nowrap text-fg-secondary">
                                         {wantMonths} months
                                     </span>
+                                    {wantOverrideMonths !== null ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => setWantOverrideMonths(null)}
+                                            className="font-mono text-xs text-accent underline-offset-2 hover:underline">
+                                            Reset to pace
+                                        </button>
+                                    ) : null}
                                 </div>
                                 <p className="mt-3 rounded-xl border border-line bg-raised px-3.5 py-3 text-sm leading-relaxed text-pretty text-fg-secondary">
-                                    {needPerMonth <= goalPerMonth
-                                        ? `At this pace you will hit it well within ${wantMonths} months.`
-                                        : `To hit it within ${wantMonths} months you need ${formatMoney(needPerMonth)}/mo in this jar (now ${formatMoney(goalPerMonth)}).`}
+                                    {paceMessage}
                                 </p>
                             </>
                         ) : goal ? (
@@ -444,7 +491,10 @@ export function JarsPageClient() {
                                 {nextOpenGoal && nextOpenGoal.id !== goal.id ? (
                                     <button
                                         type="button"
-                                        onClick={() => setGoalId(nextOpenGoal.id)}
+                                        onClick={() => {
+                                            setGoalId(nextOpenGoal.id);
+                                            setWantOverrideMonths(null);
+                                        }}
                                         className="font-mono text-xs font-medium tracking-wide text-accent uppercase underline-offset-2 hover:underline">
                                         Next: {nextOpenGoal.name}
                                     </button>

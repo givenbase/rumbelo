@@ -16,11 +16,13 @@ import {
     RuleMatcher,
     TransactionStatus,
     type Jar,
+    type MerchantPreset,
     type Rule,
     type Transaction,
 } from '@rumbelo/contracts';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
+import { matchMerchantJarKey } from '@/app/_lib/merchant-match';
 import { isLiveData } from '@/app/_lib/preview';
 import { InboxSortCard } from '@/components/features/money/inbox-sort-card';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
@@ -46,7 +48,14 @@ const FIELD_LABEL: Record<RuleField, string> = {
 const EMPTY_TRANSACTIONS: Transaction[] = [];
 const EMPTY_JARS: Jar[] = [];
 const EMPTY_RULES: Rule[] = [];
+const EMPTY_MERCHANTS: MerchantPreset[] = [];
 const EMPTY_TRANSACTION_PAGE = { items: EMPTY_TRANSACTIONS, nextCursor: null };
+
+function fallbackJarKey(amount: number): JarKey {
+    if (amount > 0) return JarKey.NECESSITIES;
+    if (Math.abs(amount) < 2_000) return JarKey.PLAY;
+    return JarKey.NECESSITIES;
+}
 
 export function TransactionsPageClient() {
     const api = useApi();
@@ -84,10 +93,19 @@ export function TransactionsPageClient() {
         live
     );
 
+    const merchantsQuery = useLiveQuery(
+        api.money.catalogs.merchantPresets.list.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        EMPTY_MERCHANTS,
+        live
+    );
+
     const inbox = inboxQuery.data ?? EMPTY_TRANSACTIONS;
     const jars = jarsQuery.data ?? EMPTY_JARS;
     const jarById = new Map(jars.map(jar => [jar.id, jar]));
     const rules = rulesQuery.data ?? EMPTY_RULES;
+    const merchants = merchantsQuery.data ?? EMPTY_MERCHANTS;
     const all = (listQuery.data?.items ?? [])
         .slice()
         .sort((left, right) => right.bookedOn.localeCompare(left.bookedOn));
@@ -161,6 +179,11 @@ export function TransactionsPageClient() {
         return match?.id ?? jars[0]?.id ?? fallbackKey;
     }
 
+    function suggestJarKeyFor(transaction: Transaction): JarKey {
+        const text = `${transaction.counterparty ?? ''} ${transaction.description}`;
+        return matchMerchantJarKey(text, merchants) ?? fallbackJarKey(transaction.amount);
+    }
+
     return (
         <div className="grid animate-rise gap-8">
             <div>
@@ -231,8 +254,7 @@ export function TransactionsPageClient() {
                 ) : (
                     <div className="grid gap-3">
                         {inbox.map(transaction => {
-                            const suggestedKey =
-                                transaction.amount > 0 ? JarKey.NECESSITIES : JarKey.PLAY;
+                            const suggestedKey = suggestJarKeyFor(transaction);
                             return (
                                 <InboxSortCard
                                     key={transaction.id}

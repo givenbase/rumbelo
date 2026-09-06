@@ -27,6 +27,7 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 import { ConfirmActionButton } from './confirm-action-button';
+import { PresetNameField } from './preset-name-field';
 
 const expenseFormSchema = z.object({
     amount: z
@@ -80,6 +81,23 @@ export function ExpenseForm({
         live
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
+
+    const presetsQuery = useLiveQuery(
+        api.money.catalogs.merchantPresets.list.queryOptions({
+            input: { householdId: householdId! },
+        }),
+        [],
+        live && mode === 'create'
+    );
+    const presetOptions = useMemo(
+        () =>
+            (presetsQuery.data ?? []).map(preset => ({
+                key: preset.key,
+                name: preset.name,
+                jarKey: preset.jarKey,
+            })),
+        [presetsQuery.data]
+    );
 
     const form = useForm<ExpenseFormValues>({
         defaultValues: {
@@ -214,7 +232,24 @@ export function ExpenseForm({
                     <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g. groceries" {...field} />
+                            {mode === 'create' ? (
+                                <PresetNameField
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="e.g. groceries"
+                                    options={presetOptions}
+                                    onSelect={opt => {
+                                        const full = presetOptions.find(
+                                            preset => preset.key === opt.key
+                                        );
+                                        if (!full) return;
+                                        const jar = jars.find(j => j.key === full.jarKey);
+                                        if (jar) form.setValue('jarId', jar.id);
+                                    }}
+                                />
+                            ) : (
+                                <Input placeholder="e.g. groceries" {...field} />
+                            )}
                         </FormControl>
                         <FormMessage />
                     </FormItem>

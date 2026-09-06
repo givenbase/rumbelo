@@ -49,9 +49,7 @@ export function PresetNameField({
     const query = value.trim();
 
     const selectedKey = useMemo(() => {
-        const match = options.find(
-            option => option.name.toLowerCase() === query.toLowerCase()
-        );
+        const match = options.find(option => option.name.toLowerCase() === query.toLowerCase());
         return match?.key ?? null;
     }, [options, query]);
 

@@ -2,7 +2,7 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
@@ -94,9 +94,11 @@ export function GoalForm({
                 key: preset.key,
                 name: preset.name,
                 jarKey: preset.jarKey,
+                icon: preset.icon,
             })),
         [presetsQuery.data]
     );
+    const selectedIcon = useRef<string | null>(null);
 
     const form = useForm<GoalFormValues>({
         defaultValues: {
@@ -146,7 +148,7 @@ export function GoalForm({
                 householdId,
                 jarId,
                 name,
-                icon: null,
+                icon: selectedIcon.current,
                 target,
                 monthlyContribution: monthly,
                 targetOn: null,
@@ -225,14 +227,27 @@ export function GoalForm({
                             {mode === 'create' ? (
                                 <PresetNameField
                                     value={field.value}
-                                    onChange={field.onChange}
                                     placeholder="e.g. emergency fund"
                                     options={presetOptions}
+                                    onChange={value => {
+                                        field.onChange(value);
+                                        // Free-typed names drop the preset icon.
+                                        if (
+                                            !presetOptions.some(
+                                                preset =>
+                                                    preset.name.toLowerCase() ===
+                                                    value.trim().toLowerCase()
+                                            )
+                                        ) {
+                                            selectedIcon.current = null;
+                                        }
+                                    }}
                                     onSelect={opt => {
                                         const full = presetOptions.find(
                                             preset => preset.key === opt.key
                                         );
                                         if (!full) return;
+                                        selectedIcon.current = full.icon;
                                         const jar = jars.find(j => j.key === full.jarKey);
                                         if (jar) form.setValue('jarId', jar.id);
                                     }}
