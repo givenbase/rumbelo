@@ -49,6 +49,10 @@ function simRange(netMonthlyCents: number) {
     return { min, max, value: Math.min(max, Math.max(min, current)) };
 }
 
+function isGoalOpen(goal: { saved: number; target: number }) {
+    return goal.saved < goal.target;
+}
+
 /**
  * Jars screen — design Kluis Finance App.dc.html :689-839.
  * ListToolbar create stays (+ Move money → URL modal). No dashed add CTAs.
@@ -109,13 +113,18 @@ export function JarsPageClient() {
             : Math.min(range.max, Math.max(range.min, simOverrideEuros));
     const simCents = simEuros * 100;
     const simDeltaPct = net > 0 ? Math.round(((simCents - net) / net) * 100) : 0;
-    const goal = goals.find(candidate => candidate.id === goalId) ?? goals[0];
+    const openGoals = goals.filter(isGoalOpen);
+    const picked = goals.find(candidate => candidate.id === goalId);
+    // Default to the first open goal so the pacing slider has something to do.
+    const goal = picked ?? openGoals[0] ?? goals[0];
+    const nextOpenGoal = openGoals.find(candidate => candidate.id !== goal?.id) ?? openGoals[0];
     const goalJarPct =
         jars.find(j => j.key === 'LONG_TERM_SAVINGS')?.percentage ??
         jars.find(j => j.key === 'FINANCIAL_FREEDOM')?.percentage ??
         10;
     const goalPerMonth = Math.round((simCents * goalJarPct) / 100);
     const remaining = goal ? Math.max(0, goal.target - goal.saved) : 0;
+    const goalReached = Boolean(goal) && remaining <= 0;
     const monthsAtPace =
         goalPerMonth > 0 ? Math.ceil(remaining / goalPerMonth) : Number.POSITIVE_INFINITY;
     const needPerMonth = wantMonths > 0 ? Math.ceil(remaining / wantMonths) : remaining;
@@ -306,26 +315,45 @@ export function JarsPageClient() {
                             need to hit your own date.
                         </p>
 
-                        <div className="my-4 flex flex-wrap gap-1.5">
-                            {goals.map(goalItem => {
-                                const isActive = goalItem.id === goal?.id;
-                                return (
-                                    <button
-                                        key={goalItem.id}
-                                        type="button"
-                                        onClick={() => setGoalId(goalItem.id)}
-                                        className={cn(
-                                            'flex items-center gap-2 rounded-full border px-3 py-2 text-sm whitespace-nowrap transition-colors',
-                                            isActive
-                                                ? 'border-accent/40 bg-accent-soft text-accent'
-                                                : 'border-line text-fg-secondary hover:border-accent hover:text-accent'
-                                        )}>
-                                        <span>{goalItem.icon}</span>
-                                        {goalItem.name}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                        {goals.length > 0 ? (
+                            <div className="my-4 flex flex-wrap gap-1.5">
+                                {goals.map(goalItem => {
+                                    const isActive = goalItem.id === goal?.id;
+                                    const reached = !isGoalOpen(goalItem);
+                                    return (
+                                        <button
+                                            key={goalItem.id}
+                                            type="button"
+                                            onClick={() => setGoalId(goalItem.id)}
+                                            className={cn(
+                                                'flex items-center gap-2 rounded-full border px-3 py-2 text-sm whitespace-nowrap transition-colors',
+                                                isActive
+                                                    ? 'border-accent/40 bg-accent-soft text-accent'
+                                                    : 'border-line text-fg-secondary hover:border-accent hover:text-accent',
+                                                reached && !isActive && 'opacity-60'
+                                            )}>
+                                            <span>{goalItem.icon}</span>
+                                            {goalItem.name}
+                                            {reached ? (
+                                                <span className="font-mono text-[10px] tracking-wide uppercase">
+                                                    Done
+                                                </span>
+                                            ) : null}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="my-4 rounded-xl border border-line bg-raised px-3.5 py-4 text-sm text-fg-secondary">
+                                No goals yet. Add one to see when this income gets you there.
+                                <button
+                                    type="button"
+                                    onClick={() => router.push(CREATE_HREF.goal)}
+                                    className="mt-3 block font-mono text-xs font-medium tracking-wide text-accent uppercase underline-offset-2 hover:underline">
+                                    + Add a goal
+                                </button>
+                            </div>
+                        )}
 
                         {goal && (
                             <div className="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-raised p-4 lg:gap-8 lg:p-5">
@@ -350,7 +378,7 @@ export function JarsPageClient() {
                                         {formatMoney(goal.saved)} of {formatMoney(goal.target)}
                                     </span>
                                     <p className="mt-1 text-sm leading-relaxed text-pretty text-fg-secondary">
-                                        {remaining <= 0
+                                        {goalReached
                                             ? 'Already reached. Pick the next one — this is where momentum comes from.'
                                             : `At this income, ${formatMoney(goalPerMonth)}/mo lands in this jar.`}
                                     </p>
@@ -376,31 +404,60 @@ export function JarsPageClient() {
                             </div>
                         )}
 
-                        <div className="mt-4 flex flex-wrap items-center gap-3.5">
-                            <span className="font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint uppercase">
-                                Or I want it in
-                            </span>
-                            <input
-                                type="range"
-                                min={3}
-                                max={120}
-                                step={1}
-                                value={wantMonths}
-                                onChange={event => setWantMonths(Number(event.target.value))}
-                                className="min-w-0 flex-1 accent-accent"
-                                aria-label="Target months"
-                            />
-                            <span className="font-mono text-sm font-medium whitespace-nowrap text-fg-secondary">
-                                {wantMonths} months
-                            </span>
-                        </div>
-                        <p className="mt-3 rounded-xl border border-line bg-raised px-3.5 py-3 text-sm leading-relaxed text-pretty text-fg-secondary">
-                            {remaining <= 0
-                                ? 'This goal is already reached — pick a new one above.'
-                                : needPerMonth <= goalPerMonth
-                                  ? `At this pace you will hit it well within ${wantMonths} months.`
-                                  : `To hit it within ${wantMonths} months you need ${formatMoney(needPerMonth)}/mo in this jar (now ${formatMoney(goalPerMonth)}).`}
-                        </p>
+                        {!goalReached && goal ? (
+                            <>
+                                <div className="mt-4 flex flex-wrap items-center gap-3.5">
+                                    <span className="font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint uppercase">
+                                        Or I want it in
+                                    </span>
+                                    <input
+                                        type="range"
+                                        min={3}
+                                        max={120}
+                                        step={1}
+                                        value={wantMonths}
+                                        onChange={event =>
+                                            setWantMonths(Number(event.target.value))
+                                        }
+                                        className="min-w-0 flex-1 accent-accent"
+                                        aria-label="Target months"
+                                    />
+                                    <span className="font-mono text-sm font-medium whitespace-nowrap text-fg-secondary">
+                                        {wantMonths} months
+                                    </span>
+                                </div>
+                                <p className="mt-3 rounded-xl border border-line bg-raised px-3.5 py-3 text-sm leading-relaxed text-pretty text-fg-secondary">
+                                    {needPerMonth <= goalPerMonth
+                                        ? `At this pace you will hit it well within ${wantMonths} months.`
+                                        : `To hit it within ${wantMonths} months you need ${formatMoney(needPerMonth)}/mo in this jar (now ${formatMoney(goalPerMonth)}).`}
+                                </p>
+                            </>
+                        ) : goal ? (
+                            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-raised px-3.5 py-3 text-sm text-fg-secondary">
+                                <span>
+                                    {nextOpenGoal && nextOpenGoal.id !== goal.id
+                                        ? 'This goal is done — keep the momentum going.'
+                                        : openGoals.length === 0
+                                          ? 'Every goal here is done. Set the next one.'
+                                          : 'This goal is done.'}
+                                </span>
+                                {nextOpenGoal && nextOpenGoal.id !== goal.id ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => setGoalId(nextOpenGoal.id)}
+                                        className="font-mono text-xs font-medium tracking-wide text-accent uppercase underline-offset-2 hover:underline">
+                                        Next: {nextOpenGoal.name}
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => router.push(CREATE_HREF.goal)}
+                                        className="font-mono text-xs font-medium tracking-wide text-accent uppercase underline-offset-2 hover:underline">
+                                        + Add a goal
+                                    </button>
+                                )}
+                            </div>
+                        ) : null}
                     </div>
                 </Card>
             )}

@@ -9,7 +9,7 @@ export const Id = z.uuid();
 export type Id = z.infer<typeof Id>;
 
 /**
-]]| * Better Auth opaque text id (user, household, member, invitation, session, …).
+ * Better Auth opaque text id (user, household, member, invitation, session, …).
  * BA mints these — never validate as `z.uuid()` and never confuse with {@link Id}.
  */
 export const AuthId = z.string().min(1).max(64);
