@@ -85,6 +85,8 @@ export class TransactionController {
                 amount: input.amount,
                 note: input.note,
                 status: input.status as never,
+                counterparty: input.counterparty,
+                categoryId: input.categoryId,
             })
         );
     }

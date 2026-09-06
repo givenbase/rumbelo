@@ -66,6 +66,9 @@ export function ExpenseUpdatePage({ id, embedded = false }: { id: string; embedd
             embedded={embedded}
             defaultValues={{
                 description: tx.description,
+                counterparty: tx.counterparty,
+                note: tx.note ?? '',
+                categoryId: tx.categoryId,
                 amount: centsToEurosInput(Math.abs(tx.amount)),
                 jarId: tx.jarId ?? '',
             }}

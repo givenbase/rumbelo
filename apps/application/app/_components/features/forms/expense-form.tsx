@@ -2,7 +2,7 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
@@ -27,7 +27,11 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 import { ConfirmActionButton } from './confirm-action-button';
-import { PresetNameField } from './preset-name-field';
+import { resolveCategoryId, useCategoryTemplates } from './catalog-helpers';
+import {
+    ExpenseIntentField,
+    type ExpenseIntentSelection,
+} from './expense-intent-field';
 
 const expenseFormSchema = z.object({
     amount: z
@@ -40,11 +44,16 @@ const expenseFormSchema = z.object({
             },
             { message: 'Enter a valid amount' }
         ),
-    description: z.string().min(1, 'Description is required').max(120),
+    note: z.string().max(280),
     jarId: z.string().min(1, 'Choose a jar'),
 });
 
-export type ExpenseFormValues = z.infer<typeof expenseFormSchema>;
+export type ExpenseFormValues = z.infer<typeof expenseFormSchema> & {
+    /** Edit hydrate only — not submitted as description anymore */
+    description?: string;
+    counterparty?: string | null;
+    categoryId?: string | null;
+};
 
 type ExpenseFormProps = {
     defaultValues?: Partial<ExpenseFormValues>;
@@ -54,6 +63,70 @@ type ExpenseFormProps = {
     entityId?: string;
     onSuccess?: () => void;
 };
+
+const EMPTY_INTENT: ExpenseIntentSelection = {
+    vendor: '',
+    categoryKey: null,
+    categoryName: null,
+    jarKey: null,
+    source: null,
+};
+
+function buildIntentFromDefaults(
+    defaults: Partial<ExpenseFormValues> | undefined,
+    merchants: Array<{ name: string; categoryTemplateKey: string; jarKey: string }>,
+    categories: Array<{ key: string; name: string; jarKey: string }>
+): ExpenseIntentSelection {
+    const vendor = defaults?.counterparty?.trim() || '';
+    const description = defaults?.description?.trim() || '';
+    const note = defaults?.note?.trim() || '';
+
+    if (vendor) {
+        const merchant = merchants.find(m => m.name.toLowerCase() === vendor.toLowerCase());
+        if (merchant) {
+            const category = categories.find(c => c.key === merchant.categoryTemplateKey);
+            return {
+                vendor,
+                categoryKey: merchant.categoryTemplateKey,
+                categoryName: category?.name ?? merchant.categoryTemplateKey,
+                jarKey: merchant.jarKey,
+                source: 'merchant',
+            };
+        }
+        const categoryFromDesc = categories.find(
+            c => c.name.toLowerCase() === description.toLowerCase()
+        );
+        return {
+            vendor,
+            categoryKey: categoryFromDesc?.key ?? null,
+            categoryName: categoryFromDesc?.name ?? null,
+            jarKey: categoryFromDesc?.jarKey ?? null,
+            source: categoryFromDesc ? 'category' : 'custom',
+        };
+    }
+
+    if (description && description !== note) {
+        const category = categories.find(c => c.name.toLowerCase() === description.toLowerCase());
+        if (category) {
+            return {
+                vendor: '',
+                categoryKey: category.key,
+                categoryName: category.name,
+                jarKey: category.jarKey,
+                source: 'category',
+            };
+        }
+        return {
+            vendor: description,
+            categoryKey: null,
+            categoryName: null,
+            jarKey: null,
+            source: 'custom',
+        };
+    }
+
+    return EMPTY_INTENT;
+}
 
 /**
  * Canonical create/edit form — Galighticus pattern:
@@ -74,6 +147,9 @@ export function ExpenseForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
+    const [showNote, setShowNote] = useState(Boolean(defaultValues?.note?.trim()));
+    const [intent, setIntent] = useState<ExpenseIntentSelection>(EMPTY_INTENT);
+    const [intentReady, setIntentReady] = useState(mode === 'create');
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
@@ -82,27 +158,72 @@ export function ExpenseForm({
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
-    const presetsQuery = useLiveQuery(
+    const balancesQuery = useLiveQuery(
+        api.money.jars.balances.queryOptions({ input: { householdId: householdId! } }),
+        [],
+        live
+    );
+
+    const merchantsQuery = useLiveQuery(
         api.money.catalogs.merchantPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
-        live && mode === 'create'
+        live
     );
-    const presetOptions = useMemo(
+    const categoriesQuery = useCategoryTemplates(live);
+
+    const merchants = useMemo(
         () =>
-            (presetsQuery.data ?? []).map(preset => ({
+            (merchantsQuery.data ?? []).map(preset => ({
                 key: preset.key,
                 name: preset.name,
                 jarKey: preset.jarKey,
+                categoryTemplateKey: preset.categoryTemplateKey,
+                aliases: preset.aliases,
             })),
-        [presetsQuery.data]
+        [merchantsQuery.data]
     );
 
-    const form = useForm<ExpenseFormValues>({
+    const categories = useMemo(
+        () =>
+            (categoriesQuery.data ?? []).map(category => ({
+                key: category.key,
+                name: category.name,
+                jarKey: category.jarKey,
+                icon: category.icon,
+            })),
+        [categoriesQuery.data]
+    );
+
+    const categoryIconByKey = useMemo(() => {
+        const map = new Map<string, string | null>();
+        for (const category of categories) {
+            map.set(category.key, category.icon ?? null);
+        }
+        return map;
+    }, [categories]);
+
+    useEffect(() => {
+        if (mode !== 'edit') return;
+        if (intentReady) return;
+        if (merchantsQuery.isLoading || categoriesQuery.isLoading) return;
+        setIntent(buildIntentFromDefaults(defaultValues, merchants, categories));
+        setIntentReady(true);
+    }, [
+        mode,
+        intentReady,
+        merchantsQuery.isLoading,
+        categoriesQuery.isLoading,
+        defaultValues,
+        merchants,
+        categories,
+    ]);
+
+    const form = useForm<z.infer<typeof expenseFormSchema>>({
         defaultValues: {
             amount: defaultValues?.amount ?? '',
-            description: defaultValues?.description ?? '',
+            note: defaultValues?.note ?? '',
             jarId: defaultValues?.jarId ?? '',
         },
         resolver: zodResolver(expenseFormSchema),
@@ -114,16 +235,41 @@ export function ExpenseForm({
         }
     }, [jars, form]);
 
+    useEffect(() => {
+        if (!intent.jarKey) return;
+        const jar = jars.find(j => j.key === intent.jarKey);
+        if (jar) form.setValue('jarId', jar.id);
+    }, [intent.jarKey, jars, form]);
+
     const onError = createFormInvalidHandler(({ title, description }) => {
         showToast(description ?? title, 'error');
     });
 
     const saveMutation = useMutation({
-        mutationFn: async (values: ExpenseFormValues) => {
+        mutationFn: async (values: z.infer<typeof expenseFormSchema>) => {
             if (!householdId) throw new Error('No household');
+            if (!intent.vendor && !intent.categoryKey) {
+                throw new Error('Pick a vendor or type');
+            }
             const cents = parseEurosToCents(values.amount);
             if (cents === null || cents <= 0) throw new Error('Invalid amount');
-            const description = values.description.trim();
+
+            const vendor = intent.vendor.trim();
+            const note = values.note.trim();
+            const description =
+                note || intent.categoryName?.trim() || vendor || 'Expense';
+
+            let categoryId: string | null = null;
+            if (intent.categoryName) {
+                const jarBalance = (balancesQuery.data ?? []).find(j => j.id === values.jarId);
+                categoryId = await resolveCategoryId({
+                    client,
+                    householdId,
+                    jarId: values.jarId,
+                    categoryName: intent.categoryName,
+                    existing: jarBalance?.categories ?? [],
+                });
+            }
 
             if (mode === 'edit' && entityId) {
                 await client.money.transactions.update({
@@ -131,11 +277,15 @@ export function ExpenseForm({
                     householdId,
                     description,
                     amount: -cents,
+                    note: note || null,
+                    counterparty: vendor || null,
+                    categoryId,
                 });
                 return client.money.transactions.sort({
                     householdId,
                     transactionId: entityId,
                     jarId: values.jarId,
+                    categoryId,
                     createRule: false,
                 });
             }
@@ -147,9 +297,9 @@ export function ExpenseForm({
                 bookedOn: todayIsoDate(),
                 jarId: values.jarId,
                 accountId: null,
-                categoryId: null,
-                counterparty: null,
-                note: null,
+                categoryId,
+                counterparty: vendor || null,
+                note: note || null,
             });
         },
         onSuccess: () => {
@@ -160,7 +310,8 @@ export function ExpenseForm({
             showToast(mode === 'edit' ? 'Expense updated' : 'Expense saved', 'success');
             dismiss();
         },
-        onError: () => showToast('Save failed', 'error'),
+        onError: error =>
+            showToast(error instanceof Error ? error.message : 'Save failed', 'error'),
     });
 
     const removeMutation = useMutation({
@@ -179,9 +330,13 @@ export function ExpenseForm({
         onError: () => showToast('Delete failed', 'error'),
     });
 
-    async function onSubmit(values: ExpenseFormValues) {
+    async function onSubmit(values: z.infer<typeof expenseFormSchema>) {
         if (!live) {
             showToast('Sign in to save expenses', 'error');
+            return;
+        }
+        if (!intent.vendor && !intent.categoryKey) {
+            showToast('Pick a vendor or a type first', 'error');
             return;
         }
         await saveMutation.mutateAsync(values);
@@ -191,7 +346,10 @@ export function ExpenseForm({
         form.formState.isSubmitting ||
         saveMutation.isPending ||
         removeMutation.isPending ||
-        (live && jars.length === 0);
+        (live && jars.length === 0) ||
+        (mode === 'edit' && !intentReady);
+
+    const noteValue = form.watch('note');
 
     return (
         <FormCreateEditShell
@@ -225,36 +383,19 @@ export function ExpenseForm({
                     ) : null}
                 </div>
             }>
-            <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                            {mode === 'create' ? (
-                                <PresetNameField
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    placeholder="e.g. groceries"
-                                    options={presetOptions}
-                                    onSelect={opt => {
-                                        const full = presetOptions.find(
-                                            preset => preset.key === opt.key
-                                        );
-                                        if (!full) return;
-                                        const jar = jars.find(j => j.key === full.jarKey);
-                                        if (jar) form.setValue('jarId', jar.id);
-                                    }}
-                                />
-                            ) : (
-                                <Input placeholder="e.g. groceries" {...field} />
-                            )}
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+            <div className="grid gap-2">
+                <p className="font-mono text-[10px] font-semibold tracking-wider text-fg-muted uppercase">
+                    What was it?
+                </p>
+                <ExpenseIntentField
+                    value={intent}
+                    onChange={setIntent}
+                    merchants={merchants}
+                    categories={categories}
+                    categoryIconByKey={categoryIconByKey}
+                    disabled={busy}
+                />
+            </div>
 
             <FormField
                 control={form.control}
@@ -296,6 +437,29 @@ export function ExpenseForm({
                     </FormItem>
                 )}
             />
+
+            {showNote || noteValue ? (
+                <FormField
+                    control={form.control}
+                    name="note"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Note</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Optional — e.g. kids lunch" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            ) : (
+                <button
+                    type="button"
+                    className="justify-self-start font-mono text-xs tracking-wide text-accent uppercase hover:underline"
+                    onClick={() => setShowNote(true)}>
+                    Add note
+                </button>
+            )}
         </FormCreateEditShell>
     );
 }

@@ -11,6 +11,7 @@ interface InboxTransaction {
     readonly id: string;
     readonly description: string;
     readonly counterparty: string | null;
+    readonly note?: string | null;
     readonly amount: number;
     readonly bookedOn: string;
 }
@@ -95,10 +96,21 @@ export function InboxSortCard({
         <div className="grid animate-rise gap-4 rounded-2xl border border-line bg-surface p-5 shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
-                    <p className="text-base font-semibold text-fg">{transaction.description}</p>
+                    <p className="text-base font-semibold text-fg">
+                        {transaction.counterparty?.trim() || transaction.description}
+                    </p>
                     <p className="mt-1 font-mono text-xs tracking-normal text-fg-muted">
-                        {transaction.counterparty ?? 'Unknown counterparty'} ·{' '}
-                        {transaction.bookedOn}
+                        {[
+                            transaction.note?.trim() || null,
+                            !transaction.note?.trim() &&
+                            transaction.counterparty?.trim() &&
+                            transaction.description !== transaction.counterparty.trim()
+                                ? transaction.description
+                                : null,
+                            transaction.bookedOn,
+                        ]
+                            .filter(Boolean)
+                            .join(' · ')}
                     </p>
                 </div>
                 <span

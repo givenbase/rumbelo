@@ -295,18 +295,36 @@ export function TransactionsPageClient() {
                                     const jar = transaction.jarId
                                         ? jarById.get(transaction.jarId)
                                         : undefined;
+                                    const title =
+                                        transaction.counterparty?.trim() ||
+                                        transaction.description;
+                                    const detailParts = [
+                                        transaction.note?.trim() || null,
+                                        !transaction.note?.trim() &&
+                                        transaction.counterparty?.trim() &&
+                                        transaction.description !==
+                                            transaction.counterparty.trim()
+                                            ? transaction.description
+                                            : null,
+                                    ].filter(Boolean);
                                     return (
                                         <button
                                             type="button"
                                             key={transaction.id}
-                                            aria-label={transaction.description}
+                                            aria-label={title}
                                             onClick={() =>
                                                 router.push(updateHref('tx', transaction.id))
                                             }
                                             className="grid w-full gap-1 border-b border-line px-5 py-3.5 text-left last:border-b-0 hover:bg-raised">
                                             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                                                 <span className="min-w-0 flex-1 text-sm text-fg">
-                                                    {transaction.description}
+                                                    {title}
+                                                    {detailParts.length > 0 ? (
+                                                        <span className="text-fg-muted">
+                                                            {' '}
+                                                            · {detailParts.join(' · ')}
+                                                        </span>
+                                                    ) : null}
                                                 </span>
                                                 <span
                                                     className={cn(

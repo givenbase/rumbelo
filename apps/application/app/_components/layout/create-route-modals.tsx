@@ -29,7 +29,7 @@ export function TxCreateModalShell({
         <RouteModalShell
             closeHref={closeHref}
             title="New expense"
-            description="Note what went out and choose the jar.">
+            description="Vendor or type, amount, and jar. Note is optional.">
             <ExpenseCreatePage embedded defaultJarId={defaultJarId} />
         </RouteModalShell>
     );
@@ -40,7 +40,7 @@ export function TxUpdateModalShell({ closeHref, id }: ShellProps & { id: string 
         <RouteModalShell
             closeHref={closeHref}
             title="Edit expense"
-            description="Update amount, description or jar.">
+            description="Update vendor, type, amount or jar.">
             <ExpenseUpdatePage id={id} embedded />
         </RouteModalShell>
     );

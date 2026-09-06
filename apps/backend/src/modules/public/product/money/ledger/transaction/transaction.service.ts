@@ -180,10 +180,16 @@ export class TransactionService {
 
     async update(
         id: string,
-        patch: Partial<Pick<Transaction, 'description' | 'amount' | 'note' | 'status'>>
+        patch: Partial<
+            Pick<Transaction, 'description' | 'amount' | 'note' | 'status' | 'counterparty'>
+        > & { categoryId?: string | null }
     ) {
         const entity = await this.transactions.findOneOrFail({ id });
-        Object.assign(entity, patch);
+        const { categoryId, ...fields } = patch;
+        Object.assign(entity, fields);
+        if (categoryId !== undefined) {
+            entity.category = categoryId ? this.em.getReference(Category, categoryId) : null;
+        }
         await this.em.flush();
         return toDto(entity);
     }
