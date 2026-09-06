@@ -1,18 +1,21 @@
-import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
+import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
 import { PlanKey, type PlanCapabilities } from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../common/database/base.entity';
 import { NativeEnum } from '../../../common/database/native-enum.util';
 import { entityConfig } from '../../../common/database/entity-config.util';
 
+import type { PlanCapability } from './plan-capability.entity';
+
 /**
  * Plan Entity
  *
  * Rumbelo-owned product tiers (Basic / Plus / Max).
  * We write these rows; households only *subscribe* (later) or read for gating.
- * Runtime checks use PLAN_CAPABILITIES from contracts; this row is the catalog mirror.
+ * Runtime checks use PLAN_CAPABILITY_GRANTS from contracts; this row is the catalog mirror.
  * Display / tier order is `sortOrder` only (0 = Basic …).
  *
+ * @see Capability / PlanCapability — normalized grant graph
  * @see product/money/plan — household money split (jars), unrelated
  * @see https://mikro-orm.io/docs/defining-entities
  */
@@ -33,8 +36,8 @@ export class Plan extends BaseEntity {
     sortOrder = 0;
 
     /**
-     * What this tier can do: member ceiling, household kinds, screens, invites.
-     * Mirror of contracts PLAN_CAPABILITIES[key].
+     * Denormalized snapshot of contracts PLAN_CAPABILITIES[key]
+     * (limits + capabilityKeys). Prefer plan_capability rows for joins.
      */
     @Property({ type: 'json' })
     capabilities!: PlanCapabilities;
@@ -47,4 +50,8 @@ export class Plan extends BaseEntity {
     /** Stable tier key — used in gating and billing mapping. */
     @Enum(NativeEnum({ PlanKey, domain: 'backoffice' }))
     key!: PlanKey;
+
+    // ? RELATIONSHIPS
+    @OneToMany('PlanCapability', 'plan')
+    capabilityGrants = new Collection<PlanCapability>(this);
 }

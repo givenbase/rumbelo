@@ -11,14 +11,20 @@ import { cn } from '@rumbelo/utils';
 import { Locale } from '@rumbelo/contracts';
 
 import { signOut } from '@/app/_lib/auth';
-import { BOTTOM_TABS, NAV_GROUPS, TOP_PILL_LABELS } from '@/app/_lib/nav';
-import { isScreenLocked, SCREEN_MIN } from '@/app/_lib/plan';
+import {
+    BOTTOM_TABS,
+    NAV_GROUPS,
+    TOP_PILL_LABELS,
+    resolveNavChildForPath,
+    resolveNavGroupForPath,
+} from '@/app/_lib/nav';
 import { settingsHrefForNavGroup } from '@/app/_lib/settings-tabs';
 import { whyLineFor } from '@/app/_lib/why-lines';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
-import { LockedGate } from '@/components/features/shell/locked-gate';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
+import { CapabilityGate } from '@/components/features/shell/capability-gate';
+import { usePlanCapabilities } from '@/components/features/shell/use-plan-capabilities';
 
 import { PeriodSelector } from './period-selector';
 import { PeriodTravelBanner } from './period-travel-banner';
@@ -84,7 +90,8 @@ function AppShellInner({ children }: { children: ReactNode }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [subOpen, setSubOpen] = useState(false);
     const [signingOut, setSigningOut] = useState(false);
-    const { plan, resetOnboardingFlow, toggleLocale, locale } = useAppShell();
+    const { resetOnboardingFlow, toggleLocale, locale } = useAppShell();
+    const { isCapabilityLocked, accessForPath } = usePlanCapabilities();
     const { session } = useAuth();
 
     const userName = session?.user?.name?.trim() || 'Guest';
@@ -109,23 +116,10 @@ function AppShellInner({ children }: { children: ReactNode }) {
         }
     }
 
-    const activeGroup =
-        NAV_GROUPS.find(group =>
-            group.children.some(child =>
-                child.href === '/'
-                    ? pathname === '/'
-                    : pathname === child.href || pathname.startsWith(`${child.href}/`)
-            )
-        ) ?? null;
-
-    const why = whyLineFor(pathname);
-
-    // Plan-gate: check if the current screen is locked for the active plan.
-    const activeChild = activeGroup?.children.find(
-        child => child.href === pathname || pathname.startsWith(child.href + '/')
-    );
-    const screenIsLocked = isScreenLocked(activeChild?.screenKey ?? null, plan);
-    const requiredPlan = activeChild?.screenKey ? SCREEN_MIN[activeChild.screenKey] : undefined;
+    const activeGroup = resolveNavGroupForPath(pathname);
+    const activeChild = resolveNavChildForPath(pathname);
+    const access = accessForPath(pathname);
+    const why = access.locked ? null : whyLineFor(pathname);
 
     return (
         <div className="min-h-dvh bg-bg bg-(image:--gradient-page) bg-top bg-no-repeat">
@@ -296,10 +290,8 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             {/* Desktop pill strip */}
                             <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
                                 {activeGroup.children.map(child => {
-                                    const active =
-                                        pathname === child.href ||
-                                        pathname.startsWith(child.href + '/');
-                                    const locked = isScreenLocked(child.screenKey, plan);
+                                    const active = activeChild?.href === child.href;
+                                    const locked = isCapabilityLocked(child.capabilityKey);
                                     return (
                                         <Link
                                             key={child.href}
@@ -329,11 +321,12 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                     onClick={() => setSubOpen(previous => !previous)}
                                     className="flex max-w-[min(100%,14rem)] items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
                                     <span className="truncate">
-                                        {activeGroup.children.find(
-                                            child =>
-                                                pathname === child.href ||
-                                                pathname.startsWith(child.href + '/')
-                                        )?.label ?? activeGroup.children[0].label}
+                                        {activeChild &&
+                                        activeGroup.children.some(
+                                            navChild => navChild.href === activeChild.href
+                                        )
+                                            ? activeChild.label
+                                            : activeGroup.children[0].label}
                                     </span>
                                     <span className="shrink-0 text-xs opacity-70" aria-hidden>
                                         ▾
@@ -341,15 +334,26 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                 </button>
                                 {subOpen && (
                                     <div className="absolute top-10 left-0 z-40 grid w-[min(16rem,calc(100vw-2rem))] animate-rise gap-0.5 rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl">
-                                        {activeGroup.children.map(child => (
-                                            <Link
-                                                key={child.href}
-                                                href={child.href}
-                                                onClick={() => setSubOpen(false)}
-                                                className="rounded-lg px-3 py-2.5 text-sm text-fg transition-colors hover:bg-raised">
-                                                {child.label}
-                                            </Link>
-                                        ))}
+                                        {activeGroup.children.map(child => {
+                                            const locked = isCapabilityLocked(child.capabilityKey);
+                                            return (
+                                                <Link
+                                                    key={child.href}
+                                                    href={child.href}
+                                                    onClick={() => setSubOpen(false)}
+                                                    className={cn(
+                                                        'rounded-lg px-3 py-2.5 text-sm text-fg transition-colors hover:bg-raised',
+                                                        locked && 'opacity-55'
+                                                    )}>
+                                                    {locked && (
+                                                        <span aria-hidden className="mr-1 text-xs">
+                                                            🔒
+                                                        </span>
+                                                    )}
+                                                    {child.label}
+                                                </Link>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>
@@ -371,18 +375,14 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
             {/* ── MAIN ─────────────────────────────────────────────────────── */}
             <div className="mx-auto max-w-7xl px-4 py-8 pb-24 md:pb-8">
-                <PeriodTravelBanner />
+                {!access.locked && <PeriodTravelBanner />}
                 {why && (
                     <p className="mb-3.5 max-w-prose font-mono text-xs leading-relaxed font-medium tracking-wide text-fg-faint">
                         ◇ {why}
                     </p>
                 )}
                 <main className="min-w-0">
-                    {screenIsLocked && requiredPlan ? (
-                        <LockedGate requiredPlan={requiredPlan} />
-                    ) : (
-                        children
-                    )}
+                    <CapabilityGate>{children}</CapabilityGate>
                 </main>
             </div>
 

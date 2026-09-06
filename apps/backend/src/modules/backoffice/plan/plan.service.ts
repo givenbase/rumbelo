@@ -9,7 +9,7 @@ import { Plan } from './plan.entity';
  * Plan Service
  *
  * Catalog of product tiers we publish. Households never write these rows.
- * Runtime gating uses PLAN_CAPABILITIES from contracts; this service serves the catalog.
+ * Runtime gating uses PLAN_CAPABILITY_GRANTS from contracts; this service serves the catalog.
  */
 @Injectable()
 export class PlanService {

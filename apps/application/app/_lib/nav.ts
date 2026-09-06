@@ -4,9 +4,10 @@
  * Product routes live under `/product/…` (visible slug).
  * Platform settings stay at `/settings/…`. Auth stays unprefixed.
  *
- * Labels shown in the UI: English by default; Dutch via locale toggle / i18n.
- * screenKey: used by plan-gating (lib/plan.ts → SCREEN_MIN).
+ * `capabilityKey`: plan gating key (`{product}-{feature}` when gated;
+ * free hub routes use a local key that is not in CAPABILITIES).
  */
+import { CAPABILITIES } from './plan';
 import { productPath } from './routes';
 
 export const NAV_GROUPS = [
@@ -16,9 +17,9 @@ export const NAV_GROUPS = [
         icon: '◇',
         href: '/',
         children: [
-            { href: '/', label: 'Overview', screenKey: 'dashboard' },
-            { href: productPath('ritual'), label: 'Coach', screenKey: 'ritual' },
-            { href: productPath('why'), label: 'Why', screenKey: 'why' },
+            { href: '/', label: 'Overview', capabilityKey: 'home-overview' },
+            { href: productPath('ritual'), label: 'Coach', capabilityKey: 'home-ritual' },
+            { href: productPath('why'), label: 'Why', capabilityKey: 'home-why' },
         ],
     },
     {
@@ -27,11 +28,27 @@ export const NAV_GROUPS = [
         icon: '◈',
         href: productPath('money/overview'),
         children: [
-            { href: productPath('money/overview'), label: 'Overview', screenKey: 'overview' },
-            { href: productPath('money/jars'), label: 'Jars', screenKey: 'jars' },
-            { href: productPath('money/transactions'), label: 'Spending', screenKey: 'tx' },
-            { href: productPath('money/debts'), label: 'Debt', screenKey: 'debt' },
-            { href: productPath('money/fixed-costs'), label: 'Fixed', screenKey: 'fixed' },
+            {
+                href: productPath('money/overview'),
+                label: 'Overview',
+                capabilityKey: 'money-overview',
+            },
+            { href: productPath('money/jars'), label: 'Jars', capabilityKey: 'money-jars' },
+            {
+                href: productPath('money/transactions'),
+                label: 'Spending',
+                capabilityKey: 'money-transactions',
+            },
+            {
+                href: productPath('money/debts'),
+                label: 'Debt',
+                capabilityKey: CAPABILITIES.moneyDebt,
+            },
+            {
+                href: productPath('money/fixed-costs'),
+                label: 'Fixed',
+                capabilityKey: 'money-fixed',
+            },
         ],
     },
     {
@@ -40,11 +57,27 @@ export const NAV_GROUPS = [
         icon: '↗',
         href: productPath('growth'),
         children: [
-            { href: productPath('growth'), label: 'Overview', screenKey: 'growth-hub' },
-            { href: productPath('growth/goals'), label: 'Goals', screenKey: 'goals' },
-            { href: productPath('growth/income'), label: 'Income', screenKey: 'income' },
-            { href: productPath('growth/learn'), label: 'Learn', screenKey: 'learn' },
-            { href: productPath('growth/board'), label: 'Net worth', screenKey: 'board' },
+            { href: productPath('growth'), label: 'Overview', capabilityKey: 'growth-overview' },
+            {
+                href: productPath('growth/goals'),
+                label: 'Goals',
+                capabilityKey: CAPABILITIES.growthGoals,
+            },
+            {
+                href: productPath('growth/income'),
+                label: 'Income',
+                capabilityKey: CAPABILITIES.growthIncome,
+            },
+            {
+                href: productPath('growth/learn'),
+                label: 'Learn',
+                capabilityKey: CAPABILITIES.growthLearn,
+            },
+            {
+                href: productPath('growth/board'),
+                label: 'Net worth',
+                capabilityKey: CAPABILITIES.growthBoard,
+            },
         ],
     },
     {
@@ -54,11 +87,15 @@ export const NAV_GROUPS = [
         icon: '✳\uFE0E',
         href: productPath('energy'),
         children: [
-            { href: productPath('energy'), label: 'Overview', screenKey: 'energy-hub' },
-            { href: productPath('energy/week'), label: 'Week', screenKey: 'week' },
-            { href: productPath('energy/sleep'), label: 'Sleep', screenKey: 'sleep' },
-            { href: productPath('energy/train'), label: 'Training', screenKey: 'train' },
-            { href: productPath('energy/food'), label: 'Food', screenKey: 'food' },
+            { href: productPath('energy'), label: 'Overview', capabilityKey: 'energy-overview' },
+            {
+                href: productPath('energy/week'),
+                label: 'Week',
+                capabilityKey: CAPABILITIES.energyWeek,
+            },
+            { href: productPath('energy/sleep'), label: 'Sleep', capabilityKey: 'energy-sleep' },
+            { href: productPath('energy/train'), label: 'Training', capabilityKey: 'energy-train' },
+            { href: productPath('energy/food'), label: 'Food', capabilityKey: 'energy-food' },
         ],
     },
     {
@@ -67,11 +104,19 @@ export const NAV_GROUPS = [
         icon: '✦',
         href: productPath('soul'),
         children: [
-            { href: productPath('soul'), label: 'Overview', screenKey: 'soul-hub' },
-            { href: productPath('soul/mind'), label: 'Stillness', screenKey: 'mind' },
-            { href: productPath('soul/gratitude'), label: 'Thanks', screenKey: 'grat' },
-            { href: productPath('soul/intent'), label: 'Intent', screenKey: 'intent' },
-            { href: productPath('soul/chakra'), label: 'Centres', screenKey: 'chakra' },
+            { href: productPath('soul'), label: 'Overview', capabilityKey: 'soul-overview' },
+            { href: productPath('soul/mind'), label: 'Stillness', capabilityKey: 'soul-mind' },
+            {
+                href: productPath('soul/gratitude'),
+                label: 'Thanks',
+                capabilityKey: 'soul-gratitude',
+            },
+            { href: productPath('soul/intent'), label: 'Intent', capabilityKey: 'soul-intent' },
+            {
+                href: productPath('soul/chakra'),
+                label: 'Centres',
+                capabilityKey: CAPABILITIES.soulChakra,
+            },
         ],
     },
 ] as const;
@@ -96,3 +141,54 @@ export const BOTTOM_TABS = [
     { href: productPath('energy'), label: 'Energy', glyph: '✳\uFE0E' },
     { href: productPath('soul'), label: 'Soul', glyph: '✦' },
 ] as const;
+
+/** True when `pathname` is exactly `href` or a nested route under it. */
+export function pathMatchesNavHref(pathname: string, href: string): boolean {
+    const path = normalizeAppPathname(pathname);
+    if (href === '/') return path === '/';
+    return path === href || path.startsWith(`${href}/`);
+}
+
+/**
+ * Strip locale prefix / trailing slash so gating matches nav hrefs.
+ * Defensive: next/navigation can occasionally disagree with next-intl.
+ */
+export function normalizeAppPathname(pathname: string): string {
+    let path = pathname.split(/[?#]/)[0] || '/';
+    path = path.replace(/^\/(en|nl)(?=\/|$)/, '') || '/';
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+    return path || '/';
+}
+
+/**
+ * Longest-prefix nav child for the current path.
+ * Critical for plan gating: `/product/growth/income` → `growth-income`,
+ * not the shorter Overview hub (`growth-overview`).
+ */
+export function resolveNavChildForPath(pathname: string): NavChild | null {
+    const path = normalizeAppPathname(pathname);
+    const matches: NavChild[] = [];
+    for (const group of NAV_GROUPS) {
+        for (const child of group.children) {
+            if (pathMatchesNavHref(path, child.href)) matches.push(child);
+        }
+    }
+    if (matches.length === 0) return null;
+    return matches.reduce((best, child) => (child.href.length > best.href.length ? child : best));
+}
+
+export function resolveNavGroupForPath(pathname: string): NavGroup | null {
+    const child = resolveNavChildForPath(pathname);
+    if (child) {
+        return (
+            NAV_GROUPS.find(group =>
+                group.children.some(navChild => navChild.href === child.href)
+            ) ?? null
+        );
+    }
+    return (
+        NAV_GROUPS.find(group =>
+            group.children.some(navChild => pathMatchesNavHref(pathname, navChild.href))
+        ) ?? null
+    );
+}

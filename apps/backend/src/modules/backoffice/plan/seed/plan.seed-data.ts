@@ -1,13 +1,12 @@
 import { PlanKey, PLAN_CAPABILITIES } from '@rumbelo/contracts';
 
 /**
- * Canonical product-tier seed — Rumbelo-owned defaults.
- * Loaded into backoffice.plan by PlanSeeder.
+ * Commercial plan rows (Basic / Plus / Max).
  *
- * Capabilities (members, kinds, screens) live in PLAN_CAPABILITIES —
- * this seed mirrors them into the catalog row. Order is sortOrder only.
- *
- * Basic may stay €0 or become a small paid tier later without renaming.
+ * What each plan can *do* is not listed here — see capability.seed-data.ts:
+ *   CAPABILITY_SEED       → all featureKeys
+ *   PLAN_CAPABILITY_SEED  → plan ↔ featureKey links
+ *   PLAN_ACCESS_SEED      → plan → product → featureKeys
  */
 export const PLAN_SEED = [
     {

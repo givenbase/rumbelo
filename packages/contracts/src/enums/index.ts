@@ -9,6 +9,7 @@
  * rename TS enums to `MoneyDebtKind`.
  */
 export * from '../backoffice/plan/enums';
+export * from '../backoffice/plan/capabilities';
 export * from '../common/enums';
 export * from '../public/product/energy/enums';
 export * from '../public/product/money/enums';

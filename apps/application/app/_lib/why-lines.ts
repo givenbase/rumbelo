@@ -1,8 +1,9 @@
 /**
- * The one-line "why this screen" caption shown above every screen's content.
- * English strings from the design (Kluis Finance App.dc.html:3130-3148, EN column),
- * rekeyed by route pathname.
+ * One-line "why this screen" caption above page content.
+ * English strings from the design (Kluis Finance App.dc.html), keyed by route.
  */
+import { normalizeAppPathname } from './nav';
+
 export const WHY_LINES: Record<string, string> = {
     '/': 'One look, one question: do I have the reins this month?',
     '/product/money/jars':
@@ -38,7 +39,7 @@ export const WHY_LINES: Record<string, string> = {
         'One line on your dashboard — not a poster, a check question when a jar gets tight.',
 };
 
-/** Screens with no caption (portal hubs use their own `line`). */
+/** Portal hubs use their own `line`; unknown paths show no caption. */
 export function whyLineFor(pathname: string): string | null {
-    return WHY_LINES[pathname] ?? null;
+    return WHY_LINES[normalizeAppPathname(pathname)] ?? null;
 }

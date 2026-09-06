@@ -101,6 +101,3 @@ export function RouteModalShell({
         </Sheet>
     );
 }
-
-/** @deprecated Prefer RouteModalShell for URL-based create/edit. */
-export { RouteModalShell as FormSheetShell };

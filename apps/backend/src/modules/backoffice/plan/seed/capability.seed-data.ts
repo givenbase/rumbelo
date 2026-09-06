@@ -1,0 +1,61 @@
+import {
+    CAPABILITY_DEFINITIONS,
+    PLAN_ACCESS,
+    PLAN_CAPABILITY_GRANT_ROWS,
+    PlanKey,
+    parseCapabilityKey,
+    type CapabilityKey,
+    type CapabilityProduct,
+} from '@rumbelo/contracts';
+
+/**
+ * Plan / capability seed — readable mirror of contracts.
+ *
+ * featureKey = `{product}-{feature}` (e.g. growth-goals)
+ *
+ * Which plan unlocks what:
+ *
+ *   featureKey          BASIC  PLUS  MAX
+ *   ─────────────────────────────────────
+ *   money-debt                  ✓     ✓
+ *   energy-week                 ✓     ✓
+ *   growth-goals                ✓     ✓
+ *   platform-invite             ✓     ✓
+ *   growth-income                     ✓
+ *   growth-board                      ✓
+ *   growth-learn                      ✓
+ *   soul-chakra                       ✓
+ *
+ * Source of truth: packages/contracts PLAN_ACCESS / CAPABILITY_CATALOG
+ * This file is what PlanSeeder writes into the DB.
+ */
+
+/** Every gated capability (featureKey) with product + feature split. */
+export const CAPABILITY_SEED = CAPABILITY_DEFINITIONS.map(row => {
+    const { product, feature } = parseCapabilityKey(row.key);
+    return {
+        key: row.key as CapabilityKey,
+        product: product as CapabilityProduct,
+        feature,
+        kind: row.kind,
+        name: row.name,
+        description: row.description,
+        sortOrder: row.sortOrder,
+    };
+});
+
+/**
+ * Plan ↔ featureKey links (flat).
+ * Prefer reading PLAN_ACCESS_SEED below for the product grouping.
+ */
+export const PLAN_CAPABILITY_SEED = PLAN_CAPABILITY_GRANT_ROWS;
+
+/**
+ * Same grants nested: plan → product → featureKeys.
+ * Handy when editing what a tier unlocks inside Growth / Money / …
+ */
+export const PLAN_ACCESS_SEED = {
+    [PlanKey.BASIC]: PLAN_ACCESS[PlanKey.BASIC],
+    [PlanKey.PLUS]: PLAN_ACCESS[PlanKey.PLUS],
+    [PlanKey.MAX]: PLAN_ACCESS[PlanKey.MAX],
+} as const;

@@ -7,6 +7,9 @@ import Link from 'next/link';
 import { Button } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
+import { capabilityKeyForPathname } from '@/app/_lib/capability-access';
+import { usePlanCapabilities } from '@/components/features/shell/use-plan-capabilities';
+
 interface HubCard {
     name: string;
     value: string;
@@ -34,6 +37,9 @@ export interface PortalHubProps {
  * Energy and Soul's own overview screen.
  */
 export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: PortalHubProps) {
+    const { isCapabilityLocked } = usePlanCapabilities();
+    const coachLocked = isCapabilityLocked(capabilityKeyForPathname(coach.href));
+
     return (
         <div className="grid animate-rise gap-5">
             <div>
@@ -72,68 +78,76 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
                     </span>
                 </div>
                 <Button as={Link} href={coach.href} size="sm">
-                    {coach.cta}
+                    {coachLocked ? `🔒 ${coach.cta}` : coach.cta}
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-                {cards.map(card => (
-                    <Link
-                        key={card.name}
-                        href={card.href}
-                        className="grid content-start gap-2.5 rounded-2xl border border-t-4 border-line bg-surface p-5 shadow-md transition-all hover:-translate-y-px hover:border-accent-hover"
-                        style={{ borderTopColor: card.color }}>
-                        <span className="flex items-center justify-between gap-2">
-                            <span className="font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">
-                                {card.name}
-                            </span>
-                            {card.locked && <span className="text-xs text-fg-faint">🔒</span>}
-                        </span>
-                        <span className="flex min-h-13 items-end justify-between gap-3">
-                            <span className="font-display text-2xl font-semibold tracking-tight text-fg lg:text-3xl">
-                                {card.value}
-                            </span>
-                            {card.chart.kind === 'bars' ? (
-                                <span className="flex h-11 items-end gap-0.75">
-                                    {card.chart.bars.map(height => (
-                                        <span
-                                            key={`${card.name}-bar-${height}`}
-                                            className="block w-1.5 rounded-sm"
-                                            style={{
-                                                height: `${height}%`,
-                                                minHeight: 4,
-                                                background: card.color,
-                                            }}
-                                        />
-                                    ))}
-                                </span>
-                            ) : (
-                                <RingChart pct={card.chart.pct} color={card.color} />
+                {cards.map(card => {
+                    const locked =
+                        card.locked === true ||
+                        isCapabilityLocked(capabilityKeyForPathname(card.href));
+                    return (
+                        <Link
+                            key={card.name}
+                            href={card.href}
+                            className={cn(
+                                'grid content-start gap-2.5 rounded-2xl border border-t-4 border-line bg-surface p-5 shadow-md transition-all hover:-translate-y-px hover:border-accent-hover',
+                                locked && 'opacity-70'
                             )}
-                        </span>
-                        <span className="text-sm leading-relaxed text-pretty text-fg-muted">
-                            {card.note}
-                        </span>
-                        {card.delta && (
-                            <span className="flex items-center gap-1.5 border-t border-line pt-2.5">
-                                <span
-                                    className={cn(
-                                        'text-xs',
-                                        card.delta.positive ? 'text-success' : 'text-danger'
-                                    )}>
-                                    {card.delta.mark}
+                            style={{ borderTopColor: card.color }}>
+                            <span className="flex items-center justify-between gap-2">
+                                <span className="font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">
+                                    {card.name}
                                 </span>
-                                <span
-                                    className={cn(
-                                        'font-mono text-xs font-medium tracking-normal',
-                                        card.delta.positive ? 'text-success' : 'text-danger'
-                                    )}>
-                                    {card.delta.text}
-                                </span>
+                                {locked && <span className="text-xs text-fg-faint">🔒</span>}
                             </span>
-                        )}
-                    </Link>
-                ))}
+                            <span className="flex min-h-13 items-end justify-between gap-3">
+                                <span className="font-display text-2xl font-semibold tracking-tight text-fg lg:text-3xl">
+                                    {card.value}
+                                </span>
+                                {card.chart.kind === 'bars' ? (
+                                    <span className="flex h-11 items-end gap-0.75">
+                                        {card.chart.bars.map(height => (
+                                            <span
+                                                key={`${card.name}-bar-${height}`}
+                                                className="block w-1.5 rounded-sm"
+                                                style={{
+                                                    height: `${height}%`,
+                                                    minHeight: 4,
+                                                    background: card.color,
+                                                }}
+                                            />
+                                        ))}
+                                    </span>
+                                ) : (
+                                    <RingChart pct={card.chart.pct} color={card.color} />
+                                )}
+                            </span>
+                            <span className="text-sm leading-relaxed text-pretty text-fg-muted">
+                                {card.note}
+                            </span>
+                            {card.delta && (
+                                <span className="flex items-center gap-1.5 border-t border-line pt-2.5">
+                                    <span
+                                        className={cn(
+                                            'text-xs',
+                                            card.delta.positive ? 'text-success' : 'text-danger'
+                                        )}>
+                                        {card.delta.mark}
+                                    </span>
+                                    <span
+                                        className={cn(
+                                            'font-mono text-xs font-medium tracking-normal',
+                                            card.delta.positive ? 'text-success' : 'text-danger'
+                                        )}>
+                                        {card.delta.text}
+                                    </span>
+                                </span>
+                            )}
+                        </Link>
+                    );
+                })}
             </div>
         </div>
     );

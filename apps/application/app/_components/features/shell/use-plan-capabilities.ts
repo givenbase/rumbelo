@@ -1,0 +1,56 @@
+'use client';
+
+import { useMemo } from 'react';
+
+import {
+    CAPABILITIES,
+    PLAN_ACCESS,
+    capabilitiesFor,
+    featuresForProduct,
+    hasCapability,
+    isCapabilityLocked,
+    minPlanForCapability,
+    productsWithGrants,
+} from '@/app/_lib/plan';
+import { capabilityAccessForPath, capabilityKeyForPathname } from '@/app/_lib/capability-access';
+import { useAppShell } from '@/components/features/shell/app-shell-context';
+
+/**
+ * Plan capability checks — plan → product → feature.
+ */
+export function usePlanCapabilities() {
+    const { plan } = useAppShell();
+    const caps = capabilitiesFor(plan);
+
+    return useMemo(
+        () => ({
+            plan,
+            caps,
+            access: PLAN_ACCESS[plan],
+            grantedKeys: caps.capabilityKeys,
+            productsWithGrants: productsWithGrants(plan),
+            featuresForProduct: (product: Parameters<typeof featuresForProduct>[1]) =>
+                featuresForProduct(plan, product),
+            hasCapability: (capabilityKey: string | null | undefined) =>
+                hasCapability(capabilityKey, plan),
+            isCapabilityLocked: (capabilityKey: string | null | undefined) =>
+                isCapabilityLocked(capabilityKey, plan),
+            requiredPlanFor: (capabilityKey: string) => minPlanForCapability(capabilityKey),
+            capabilities: CAPABILITIES,
+            capabilityKeyForPath: capabilityKeyForPathname,
+            accessForPath: (pathname: string) =>
+                capabilityAccessForPath(pathname, plan, isCapabilityLocked),
+        }),
+        [plan, caps]
+    );
+}
+
+export type PlanCapabilitiesApi = ReturnType<typeof usePlanCapabilities>;
+
+/** Map quick-add / create kinds onto gated capability keys. */
+export const CREATE_KIND_CAPABILITY: Partial<Record<string, string>> = {
+    debt: CAPABILITIES.moneyDebt,
+    goal: CAPABILITIES.growthGoals,
+    income: CAPABILITIES.growthIncome,
+    asset: CAPABILITIES.growthBoard,
+};

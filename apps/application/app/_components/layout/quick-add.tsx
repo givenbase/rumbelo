@@ -4,6 +4,10 @@ import Link from 'next/link';
 
 import { CREATE_HREF, type CreateKind } from '@/app/_lib/create-routes';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
+import {
+    CREATE_KIND_CAPABILITY,
+    usePlanCapabilities,
+} from '@/components/features/shell/use-plan-capabilities';
 
 const QUICK_ITEMS: { label: string; kind: CreateKind }[] = [
     { label: 'Expense', kind: 'tx' },
@@ -18,6 +22,7 @@ const QUICK_ITEMS: { label: string; kind: CreateKind }[] = [
 
 export function QuickAddFab() {
     const { quickOpen, toggleQuick, setQuickOpen } = useAppShell();
+    const { isCapabilityLocked } = usePlanCapabilities();
 
     return (
         <>
@@ -28,15 +33,28 @@ export function QuickAddFab() {
                     <p className="mb-1 font-mono text-xs font-semibold tracking-widest text-fg-faint uppercase">
                         Quick add
                     </p>
-                    {QUICK_ITEMS.map(item => (
-                        <Link
-                            key={item.kind}
-                            href={CREATE_HREF[item.kind]}
-                            onClick={() => setQuickOpen(false)}
-                            className="rounded-lg px-3 py-2.5 text-left text-sm text-fg transition-colors hover:bg-raised">
-                            {item.label}
-                        </Link>
-                    ))}
+                    {QUICK_ITEMS.map(item => {
+                        const capabilityKey = CREATE_KIND_CAPABILITY[item.kind];
+                        const locked = capabilityKey ? isCapabilityLocked(capabilityKey) : false;
+                        return (
+                            <Link
+                                key={item.kind}
+                                href={CREATE_HREF[item.kind]}
+                                onClick={() => setQuickOpen(false)}
+                                className={
+                                    locked
+                                        ? 'rounded-lg px-3 py-2.5 text-left text-sm text-fg-muted opacity-55 transition-colors hover:bg-raised'
+                                        : 'rounded-lg px-3 py-2.5 text-left text-sm text-fg transition-colors hover:bg-raised'
+                                }>
+                                {locked && (
+                                    <span aria-hidden className="mr-1 text-xs">
+                                        🔒
+                                    </span>
+                                )}
+                                {item.label}
+                            </Link>
+                        );
+                    })}
                 </div>
             )}
 
@@ -63,6 +81,3 @@ export function QuickAddFab() {
         </>
     );
 }
-
-/** @deprecated use QuickAddFab */
-export const QuickAdd = QuickAddFab;

@@ -2,8 +2,7 @@
  * Canonical map: Landing design section → build status.
  *
  * Source of truth for layout/copy: `design/Kluis Landing.dc.html`
- * Companion app registry: `apps/application/lib/design-screens.ts`
- *   (Finance App: `design/Kluis Finance App.dc.html`)
+ * App product screens: `design/Kluis Finance App.dc.html`
  */
 
 export type LandingSectionStatus = 'shell' | 'partial' | 'missing';

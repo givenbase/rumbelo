@@ -37,7 +37,7 @@ import { cn, formatMoney, formatPercent, toPeriodKey } from '@rumbelo/utils';
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
-import { LOCK_COPY, memberLimitLabel, PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
+import { CAPABILITIES, lockCopyFor, memberLimitLabel, PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
 import { isLiveData } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
@@ -142,7 +142,7 @@ export function AccountSettings() {
     const memberCount = membersQuery.data?.length ?? 0;
     const invitesAllowed = canInviteOnPlan(activePlan);
     const seatOpen = canAddHouseholdMember(activePlan, memberCount);
-    const inviteCopy = LOCK_COPY.invite!;
+    const inviteCopy = lockCopyFor(CAPABILITIES.platformInvite, PlanKey.PLUS);
 
     const currency = settingsQuery.data?.currency ?? householdQuery.data?.currency ?? 'EUR';
     const [currencyDraft, setCurrencyDraft] = useState<string | null>(null);
