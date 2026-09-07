@@ -1,7 +1,7 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
 
-import { HouseholdRole } from '../../enums';
+import { HouseholdRole, PlanKey } from '../../enums';
 import * as schemas from '../../schemas';
 
 /** Platform-level: account prefs, the household itself, and cross-product advisory. */
@@ -46,6 +46,37 @@ export const contract = {
     /** Product tier catalog (Basic / Plus / Max). */
     plans: {
         list: oc.output(z.array(schemas.PlanCatalogItem)),
+    },
+    /** Stripe Checkout for Plus / Max. */
+    billing: {
+        status: oc.input(schemas.HouseholdScoped).output(
+            z.object({
+                stripeEnabled: z.boolean(),
+                previewBypass: z.boolean(),
+                /** Amounts/names from Stripe Price IDs in env (when secret key is set). */
+                prices: z
+                    .object({
+                        PLUS: z.object({
+                            month: schemas.BillingPriceDisplay.nullable(),
+                            year: schemas.BillingPriceDisplay.nullable(),
+                        }),
+                        MAX: z.object({
+                            month: schemas.BillingPriceDisplay.nullable(),
+                            year: schemas.BillingPriceDisplay.nullable(),
+                        }),
+                    })
+                    .nullable(),
+            })
+        ),
+        createCheckoutSession: oc
+            .input(
+                z.object({
+                    householdId: schemas.HouseholdId,
+                    planKey: z.enum([PlanKey.PLUS, PlanKey.MAX]),
+                    interval: z.enum(['month', 'year']),
+                })
+            )
+            .output(z.object({ url: z.url() })),
     },
     coach: {
         feed: oc

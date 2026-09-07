@@ -1,19 +1,13 @@
 import { Module } from '@nestjs/common';
 
+import { BillingModule } from './billing/billing.module';
 import { CoachModule } from './coach/coach.module';
 
 /**
- * Platform plane — shared by every product, owned by no single portal.
- *
- *   coach/  advisory that reads across all four products
- *
- * Household onboarding, members and board settings moved to `modules/auth/household`
- * (they are the GROUP half of identity, next to Better Auth's managed tables).
- *
- * Lives under modules/public (Postgres `public` schema).
+ * Platform Module — cross-product household surfaces (coach, billing).
  */
 @Module({
-    imports: [CoachModule],
-    exports: [CoachModule],
+    imports: [CoachModule, BillingModule],
+    exports: [CoachModule, BillingModule],
 })
 export class PlatformModule {}

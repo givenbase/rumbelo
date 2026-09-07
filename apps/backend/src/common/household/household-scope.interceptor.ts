@@ -93,6 +93,7 @@ function isSystemPublicPath(pathname: string): boolean {
         pathname.startsWith('/api/auth') ||
         pathname.startsWith('/api/docs') ||
         pathname.startsWith('/health') ||
+        pathname.startsWith('/webhooks/') ||
         pathname.startsWith('/access-denied') ||
         pathname.startsWith('/email-preview')
     );

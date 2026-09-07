@@ -63,9 +63,20 @@ const EnvSchema = z.object({
     /** Optional override; wins over EMAIL_DEFAULT_FROM when set. */
     EMAIL_FROM: z.string().optional(),
 
-    // ── Payments (optional until Stripe is wired) ─────────────────────────
+    // ── Payments (optional — Checkout when STRIPE_SECRET_KEY is set) ──────
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SIGNING_SECRET: z.string().optional(),
+    /** Stripe Price IDs — required for Checkout when secret key is set. */
+    /** Stripe Price object ids (`price_…`), not amounts. */
+    STRIPE_PRICE_ID_PLUS_MONTHLY: z.string().optional(),
+    STRIPE_PRICE_ID_PLUS_YEARLY: z.string().optional(),
+    STRIPE_PRICE_ID_MAX_MONTHLY: z.string().optional(),
+    STRIPE_PRICE_ID_MAX_YEARLY: z.string().optional(),
+    /**
+     * When true, allow free planKey changes via updateSettings even if Stripe is configured.
+     * Use with app NEXT_PUBLIC_PREVIEW_MODE for local design / demo (never in production).
+     */
+    BILLING_PREVIEW_BYPASS: boolish(false),
 
     // ── AI / maps (optional) ──────────────────────────────────────────────
     OPENAI_API_KEY: z.string().optional(),
@@ -115,6 +126,10 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
         SENTRY_DSN: blankToUndefined(source.SENTRY_DSN),
         STRIPE_SECRET_KEY: blankToUndefined(source.STRIPE_SECRET_KEY),
         STRIPE_WEBHOOK_SIGNING_SECRET: blankToUndefined(source.STRIPE_WEBHOOK_SIGNING_SECRET),
+        STRIPE_PRICE_ID_PLUS_MONTHLY: blankToUndefined(source.STRIPE_PRICE_ID_PLUS_MONTHLY),
+        STRIPE_PRICE_ID_PLUS_YEARLY: blankToUndefined(source.STRIPE_PRICE_ID_PLUS_YEARLY),
+        STRIPE_PRICE_ID_MAX_MONTHLY: blankToUndefined(source.STRIPE_PRICE_ID_MAX_MONTHLY),
+        STRIPE_PRICE_ID_MAX_YEARLY: blankToUndefined(source.STRIPE_PRICE_ID_MAX_YEARLY),
         OPENAI_API_KEY: blankToUndefined(source.OPENAI_API_KEY),
         OPENAI_MODEL: blankToUndefined(source.OPENAI_MODEL),
         GOOGLE_MAPS_API: blankToUndefined(source.GOOGLE_MAPS_API),

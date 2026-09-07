@@ -3,14 +3,23 @@ import {
     type HouseholdSettings as HouseholdSettingsDto,
     type HouseholdSettingsPatch,
     type PlanKey,
+    PLAN_RANK,
+    PlanKey as PlanKeyEnum,
     canUseHouseholdKind,
     capabilitiesFor,
     householdFitsPlan,
 } from '@rumbelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    ServiceUnavailableException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
+import type { Env } from '../../../../common/config/env.config';
 import { AuthMember } from '../managed/member/auth-member.entity';
 import {
     DEFAULT_FEATURE_SETTINGS,
@@ -37,7 +46,10 @@ export interface CreateHouseholdSettingsInput {
  */
 @Injectable()
 export class HouseholdSettingsService {
-    constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
+    constructor(
+        @Inject(EntityManager) private readonly em: EntityManager,
+        @Inject(ConfigService) private readonly config: ConfigService<Env, true>
+    ) {}
 
     // ====================================================================
     // ? CREATE Operations
@@ -79,7 +91,8 @@ export class HouseholdSettingsService {
 
     async update(
         householdId: string,
-        patch: Omit<HouseholdSettingsPatch, 'householdId'>
+        patch: Omit<HouseholdSettingsPatch, 'householdId'>,
+        opts?: { allowPaidUpgrade?: boolean }
     ): Promise<HouseholdSettingsDto> {
         let row = await this.em.findOne(HouseholdSettings, { householdId });
         if (!row) {
@@ -97,6 +110,9 @@ export class HouseholdSettingsService {
         }
 
         if (patch.planKey !== undefined) {
+            if (!opts?.allowPaidUpgrade) {
+                this.assertClientPlanChangeAllowed(row.planKey, patch.planKey);
+            }
             const memberCount = await this.em.count(AuthMember, { household: householdId });
             if (!householdFitsPlan(patch.planKey, { memberCount, kind: nextKind })) {
                 const caps = capabilitiesFor(patch.planKey);
@@ -127,6 +143,21 @@ export class HouseholdSettingsService {
 
         await this.em.flush();
         return toSettingsDto(row);
+    }
+
+    /**
+     * When Stripe is configured (and not in preview bypass), paid upgrades must
+     * go through Checkout — not a free updateSettings call.
+     */
+    private assertClientPlanChangeAllowed(from: PlanKey, to: PlanKey): void {
+        const bypass = this.config.get('BILLING_PREVIEW_BYPASS', { infer: true });
+        const stripeKey = this.config.get('STRIPE_SECRET_KEY', { infer: true });
+        if (bypass || !stripeKey) return;
+        if (to === PlanKeyEnum.BASIC) return;
+        if (PLAN_RANK[to] <= PLAN_RANK[from]) return;
+        throw new ServiceUnavailableException(
+            'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
+        );
     }
 }
 

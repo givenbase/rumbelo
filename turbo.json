@@ -29,6 +29,11 @@
                 "ENABLE_BANKING_PRIVATE_KEY",
                 "STRIPE_SECRET_KEY",
                 "STRIPE_WEBHOOK_SIGNING_SECRET",
+                "STRIPE_PRICE_ID_PLUS_MONTHLY",
+                "STRIPE_PRICE_ID_PLUS_YEARLY",
+                "STRIPE_PRICE_ID_MAX_MONTHLY",
+                "STRIPE_PRICE_ID_MAX_YEARLY",
+                "BILLING_PREVIEW_BYPASS",
                 "OPENAI_API_KEY",
                 "OPENAI_MODEL",
                 "GOOGLE_MAPS_API",
@@ -42,6 +47,12 @@
             ]
         },
         "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
+        // Watch reuses the same dist/ as build — never race them (ENOENT on unlink).
+        "@rumbelo/contracts#dev": {
+            "cache": false,
+            "persistent": true,
+            "dependsOn": ["build"]
+        },
         "start": { "dependsOn": ["^build"], "cache": false, "persistent": true },
         "lint": {
             "cache": false

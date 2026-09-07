@@ -41,7 +41,7 @@ async function initializeApp(env: Env): Promise<NestFastifyApplication> {
     return NestFactory.create<NestFastifyApplication>(
         AppModule.forRoot(env),
         new FastifyAdapter({ trustProxy: true, bodyLimit: 8 * 1024 * 1024 }),
-        { bufferLogs: true }
+        { bufferLogs: true, rawBody: true }
     );
 }
 

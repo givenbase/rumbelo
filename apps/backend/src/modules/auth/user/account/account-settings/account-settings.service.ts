@@ -1,9 +1,12 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import type { AccountSettings as AccountSettingsDto } from '@rumbelo/contracts';
+import type {
+    AccountSettings as AccountSettingsDto,
+    AccountTourProgress,
+} from '@rumbelo/contracts';
 
-import { Locale, MoneyCharacter, Theme } from '@rumbelo/contracts';
+import { DEFAULT_ACCOUNT_TOUR_PROGRESS, Locale, MoneyCharacter, Theme } from '@rumbelo/contracts';
 import { currentUserId } from '../../../../../common/household/household.context';
 import { Account } from '../account.entity';
 import { AccountSettings } from './account-settings.entity';
@@ -12,6 +15,7 @@ export type AccountSettingsPatch = {
     locale?: Locale;
     theme?: Theme;
     moneyCharacter?: MoneyCharacter;
+    tour?: AccountTourProgress;
 };
 
 /**
@@ -59,6 +63,7 @@ export class AccountSettingsService {
             if (defaults.moneyCharacter !== undefined) {
                 existing.moneyCharacter = defaults.moneyCharacter;
             }
+            if (defaults.tour !== undefined) existing.tourSnapshot = normalizeTour(defaults.tour);
             await this.em.flush();
             return existing;
         }
@@ -118,6 +123,7 @@ export class AccountSettingsService {
         if (patch.locale !== undefined) row.locale = patch.locale;
         if (patch.theme !== undefined) row.theme = patch.theme;
         if (patch.moneyCharacter !== undefined) row.moneyCharacter = patch.moneyCharacter;
+        if (patch.tour !== undefined) row.tourSnapshot = normalizeTour(patch.tour);
         await this.em.flush();
         this.logger.debug(`Updated account settings ${row.id}`);
         return toDto(row);
@@ -165,10 +171,20 @@ export class AccountSettingsService {
             locale: defaults.locale ?? Locale.NL,
             theme: defaults.theme ?? Theme.SYSTEM,
             moneyCharacter: defaults.moneyCharacter ?? MoneyCharacter.UNKNOWN,
+            tourSnapshot: normalizeTour(defaults.tour ?? DEFAULT_ACCOUNT_TOUR_PROGRESS),
         } as never);
         await this.em.persist(settings).flush();
         return settings;
     }
+}
+
+function normalizeTour(tour: AccountTourProgress): AccountTourProgress {
+    return {
+        offer: tour.offer ?? DEFAULT_ACCOUNT_TOUR_PROGRESS.offer,
+        tours: tour.tours ?? {},
+        seriesActive: Boolean(tour.seriesActive),
+        seriesIndex: Math.max(0, Math.floor(tour.seriesIndex ?? 0)),
+    };
 }
 
 function toDto(row: AccountSettings): AccountSettingsDto {
@@ -177,6 +193,7 @@ function toDto(row: AccountSettings): AccountSettingsDto {
         locale: row.locale,
         theme: row.theme,
         moneyCharacter: row.moneyCharacter,
+        tour: normalizeTour(row.tourSnapshot ?? DEFAULT_ACCOUNT_TOUR_PROGRESS),
         onboardedAt: row.onboardedAt ? row.onboardedAt.toISOString() : null,
     };
 }

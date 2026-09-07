@@ -30,11 +30,13 @@ const domainEntries = {
     common: 'src/common/index.ts',
 } as const;
 
-export default defineConfig([
+export default defineConfig(options => [
     {
         ...shared,
         entry: { index: 'src/index.ts', ...domainEntries },
-        clean: true,
+        // Watch must not wipe dist — turbo starts app/backend right after build, and
+        // a concurrent clean races to ENOENT / MODULE_NOT_FOUND.
+        clean: !options.watch,
     },
     {
         ...shared,
