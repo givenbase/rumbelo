@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -79,8 +80,6 @@ export function IncomeForm({
     entityId,
     onSuccess,
 }: IncomeFormProps) {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
@@ -88,7 +87,7 @@ export function IncomeForm({
     const live = isLiveData(householdId);
 
     const presetsQuery = useLiveQuery(
-        api.money.catalogs.incomeSourcePresets.list.queryOptions({
+        apiQuery.money.catalogs.incomeSourcePresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
@@ -127,7 +126,7 @@ export function IncomeForm({
             if (cents === null || cents <= 0) throw new Error('Invalid amount');
             const name = values.name.trim();
             if (mode === 'edit' && entityId) {
-                return client.money.income.update({
+                return api.money.income.update({
                     id: entityId,
                     householdId,
                     name,
@@ -137,7 +136,7 @@ export function IncomeForm({
                     amountEffectiveFrom: values.amountEffectiveFrom?.slice(0, 10) || todayIso(),
                 });
             }
-            return client.money.income.create({
+            return api.money.income.create({
                 householdId,
                 name,
                 amount: cents,
@@ -149,11 +148,13 @@ export function IncomeForm({
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.income.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.projections.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.income.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.goals.list.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.goals.projections.key(),
+            });
             showToast(mode === 'edit' ? 'Income updated' : 'Income saved', 'success');
             dismiss();
         },
@@ -163,13 +164,13 @@ export function IncomeForm({
     const removeMutation = useMutation({
         mutationFn: async () => {
             if (!householdId || !entityId) throw new Error('No household');
-            return client.money.income.remove({ householdId, id: entityId });
+            return api.money.income.remove({ householdId, id: entityId });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.income.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.income.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.goals.list.key() });
             showToast('Income deleted', 'success');
             dismiss();
         },

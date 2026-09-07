@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -61,20 +61,19 @@ function computeFreedomLocal(
 }
 
 export function DebtsPageClient() {
-    const api = useApi();
     const { householdId } = useAuth();
     const router = useRouter();
     const [extra, setExtra] = useState(30_000);
     const live = isLiveData(householdId);
 
     const debtsQuery = useLiveQuery(
-        api.money.debts.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.debts.list.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );
 
     const planQuery = useLiveQuery(
-        api.money.debts.plan.queryOptions({
+        apiQuery.money.debts.plan.queryOptions({
             input: { householdId: householdId! },
         }),
         null as never,

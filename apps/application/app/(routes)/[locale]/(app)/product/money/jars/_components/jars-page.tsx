@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -56,7 +56,6 @@ function isGoalOpen(goal: { saved: number; target: number; status?: string }) {
  * ListToolbar create stays (+ Move money → URL modal). No dashed add CTAs.
  */
 export function JarsPageClient() {
-    const api = useApi();
     const { householdId } = useAuth();
     const { period } = useAppShell();
     const router = useRouter();
@@ -71,7 +70,7 @@ export function JarsPageClient() {
     const [wantOverrideMonths, setWantOverrideMonths] = useState<number | null>(null);
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.balances.queryOptions({
+        apiQuery.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
         [] as never,
@@ -79,13 +78,13 @@ export function JarsPageClient() {
     );
 
     const incomeQuery = useLiveQuery(
-        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
 
     const goalsQuery = useLiveQuery(
-        api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );

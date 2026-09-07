@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -143,8 +144,6 @@ export function ExpenseForm({
     entityId,
     onSuccess,
 }: ExpenseFormProps) {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
@@ -154,20 +153,20 @@ export function ExpenseForm({
     const [intentOverride, setIntentOverride] = useState<ExpenseIntentSelection | null>(null);
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
     const balancesQuery = useLiveQuery(
-        api.money.jars.balances.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.balances.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
 
     const merchantsQuery = useLiveQuery(
-        api.money.catalogs.merchantPresets.list.queryOptions({
+        apiQuery.money.catalogs.merchantPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
@@ -259,7 +258,7 @@ export function ExpenseForm({
                     candidate => candidate.id === values.jarId
                 );
                 categoryId = await resolveCategoryId({
-                    client,
+                    api,
                     householdId,
                     jarId: values.jarId,
                     categoryName: intent.categoryName,
@@ -268,7 +267,7 @@ export function ExpenseForm({
             }
 
             if (mode === 'edit' && entityId) {
-                await client.money.transactions.update({
+                await api.money.transactions.update({
                     id: entityId,
                     householdId,
                     description,
@@ -277,7 +276,7 @@ export function ExpenseForm({
                     counterparty: vendor || null,
                     categoryId,
                 });
-                return client.money.transactions.sort({
+                return api.money.transactions.sort({
                     householdId,
                     transactionId: entityId,
                     jarId: values.jarId,
@@ -286,7 +285,7 @@ export function ExpenseForm({
                 });
             }
 
-            return client.money.transactions.create({
+            return api.money.transactions.create({
                 householdId,
                 description,
                 amount: -cents,
@@ -299,10 +298,14 @@ export function ExpenseForm({
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.inbox.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.list.key(),
+            });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.inbox.key(),
+            });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
             showToast(mode === 'edit' ? 'Expense updated' : 'Expense saved', 'success');
             dismiss();
         },
@@ -313,13 +316,17 @@ export function ExpenseForm({
     const removeMutation = useMutation({
         mutationFn: async () => {
             if (!householdId || !entityId) throw new Error('No household');
-            return client.money.transactions.remove({ householdId, id: entityId });
+            return api.money.transactions.remove({ householdId, id: entityId });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.inbox.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.list.key(),
+            });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.inbox.key(),
+            });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
             showToast('Expense deleted', 'success');
             dismiss();
         },

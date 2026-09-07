@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMemo, useState } from 'react';
 
 import { useLiveQuery } from '@rumbelo/hooks';
@@ -39,13 +39,12 @@ const TREND_CLASS: Record<string, string> = {
 };
 
 export function WeekPageClient() {
-    const api = useApi();
     const { householdId } = useAuth();
     const live = isLiveData(householdId);
     const [steeredHours, setSteeredHours] = useState(DEFAULT_STEERED_HOURS);
 
     const summaryQuery = useLiveQuery(
-        api.energy.logs.summary.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.energy.logs.summary.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );

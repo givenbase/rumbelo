@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -67,8 +68,6 @@ export function GoalForm({
     entityId,
     onSuccess,
 }: GoalFormProps) {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
@@ -76,14 +75,14 @@ export function GoalForm({
     const live = isLiveData(householdId);
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
     const presetsQuery = useLiveQuery(
-        api.money.catalogs.goalPresets.list.queryOptions({
+        apiQuery.money.catalogs.goalPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
@@ -143,7 +142,7 @@ export function GoalForm({
             const jarId = earn ? null : values.jarId || null;
             const why = values.why?.trim() || null;
             if (mode === 'edit' && entityId) {
-                return client.money.goals.update({
+                return api.money.goals.update({
                     id: entityId,
                     householdId,
                     kind: values.kind,
@@ -154,7 +153,7 @@ export function GoalForm({
                     why,
                 });
             }
-            return client.money.goals.create({
+            return api.money.goals.create({
                 householdId,
                 kind: values.kind,
                 jarId,
@@ -168,8 +167,10 @@ export function GoalForm({
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.projections.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.goals.list.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.goals.projections.key(),
+            });
             showToast(mode === 'edit' ? 'Goal updated' : 'Goal saved', 'success');
             dismiss();
         },
@@ -179,11 +180,13 @@ export function GoalForm({
     const removeMutation = useMutation({
         mutationFn: async () => {
             if (!householdId || !entityId) throw new Error('No household');
-            return client.money.goals.remove({ householdId, id: entityId });
+            return api.money.goals.remove({ householdId, id: entityId });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.goals.projections.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.goals.list.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.goals.projections.key(),
+            });
             showToast('Goal deleted', 'success');
             dismiss();
         },

@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 
@@ -13,8 +14,6 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 import { PageContent } from '@/components/layout/page-content';
 
 export function GratitudePageClient() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const live = isLiveData(householdId);
@@ -24,7 +23,7 @@ export function GratitudePageClient() {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const listQuery = useLiveQuery(
-        api.soul.gratitude.list.queryOptions({
+        apiQuery.soul.gratitude.list.queryOptions({
             input: { householdId: householdId!, week: weekKey },
         }),
         [] as never,
@@ -34,11 +33,11 @@ export function GratitudePageClient() {
     const createMutation = useMutation({
         mutationFn: async (newText: string) => {
             if (!householdId) throw new Error('No household');
-            return client.soul.gratitude.create({ householdId, week: weekKey, text: newText });
+            return api.soul.gratitude.create({ householdId, week: weekKey, text: newText });
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({
-                queryKey: api.soul.gratitude.list.key(),
+                queryKey: apiQuery.soul.gratitude.list.key(),
             });
             setText('');
             inputRef.current?.focus();

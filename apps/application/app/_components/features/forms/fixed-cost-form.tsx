@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -68,8 +69,6 @@ export function FixedCostForm({
     entityId,
     onSuccess,
 }: FixedCostFormProps) {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
@@ -81,20 +80,20 @@ export function FixedCostForm({
     );
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
     const jars = useMemo(() => jarsQuery.data ?? [], [jarsQuery.data]);
 
     const balancesQuery = useLiveQuery(
-        api.money.jars.balances.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.balances.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
 
     const presetsQuery = useLiveQuery(
-        api.money.catalogs.fixedCostPresets.list.queryOptions({
+        apiQuery.money.catalogs.fixedCostPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
@@ -177,7 +176,7 @@ export function FixedCostForm({
             if (!categoryId && categoryName) {
                 const jarBalance = (balancesQuery.data ?? []).find(j => j.id === values.jarId);
                 categoryId = await resolveCategoryId({
-                    client,
+                    api,
                     householdId,
                     jarId: values.jarId,
                     categoryName,
@@ -187,7 +186,7 @@ export function FixedCostForm({
             setPendingCategoryTemplateKey(null);
 
             if (mode === 'edit' && entityId) {
-                return client.money.fixedCosts.update({
+                return api.money.fixedCosts.update({
                     id: entityId,
                     householdId,
                     name,
@@ -197,7 +196,7 @@ export function FixedCostForm({
                     dueDay,
                 });
             }
-            return client.money.fixedCosts.create({
+            return api.money.fixedCosts.create({
                 householdId,
                 jarId: values.jarId,
                 categoryId,
@@ -212,9 +211,9 @@ export function FixedCostForm({
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.byJar.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.fixedCosts.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.fixedCosts.byJar.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             showToast(mode === 'edit' ? 'Fixed cost updated' : 'Fixed cost saved', 'success');
             dismiss();
         },
@@ -224,12 +223,12 @@ export function FixedCostForm({
     const removeMutation = useMutation({
         mutationFn: async () => {
             if (!householdId || !entityId) throw new Error('No household');
-            return client.money.fixedCosts.remove({ householdId: householdId, id: entityId });
+            return api.money.fixedCosts.remove({ householdId: householdId, id: entityId });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.byJar.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.fixedCosts.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.fixedCosts.byJar.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             showToast('Fixed cost deleted', 'success');
             dismiss();
         },

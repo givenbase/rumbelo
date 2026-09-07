@@ -1,5 +1,6 @@
 'use client';
 
+import { apiQuery } from '@/app/_lib/api-hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -8,7 +9,6 @@ import { useLiveQuery } from '@rumbelo/hooks';
 import { Card } from '@rumbelo/ui';
 import { cn, formatMoney, monthlyAmount, toPeriodKey } from '@rumbelo/utils';
 
-import { useApi } from '@/app/_lib/api-hooks';
 import { CREATE_HREF, spendFromJarHref, updateHref } from '@/app/_lib/create-routes';
 import { cadenceLabel } from '@/app/_lib/jar-chrome';
 import { JAR_GUIDE, type JarGuideKey } from '@/app/_lib/jar-guide';
@@ -24,7 +24,6 @@ import { useAuth } from '@/components/features/shell/auth-provider';
  * categories, fixed costs, period transactions, guide, and CTAs.
  */
 export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
-    const api = useApi();
     const { householdId } = useAuth();
     const { period } = useAppShell();
     const router = useRouter();
@@ -34,7 +33,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
     const guide = JAR_GUIDE[jarKey as JarGuideKey];
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.balances.queryOptions({
+        apiQuery.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
         [] as never,
@@ -42,7 +41,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
     );
 
     const byJarQuery = useLiveQuery(
-        api.money.fixedCosts.byJar.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.fixedCosts.byJar.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );
@@ -50,7 +49,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
     const jar = (jarsQuery.data ?? []).find(row => row.key === jarKey);
 
     const txQuery = useLiveQuery(
-        api.money.transactions.list.queryOptions({
+        apiQuery.money.transactions.list.queryOptions({
             input: {
                 householdId: householdId!,
                 period: periodKey,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 
@@ -31,19 +31,18 @@ export function ExpenseCreatePage({
 }
 
 export function ExpenseUpdatePage({ id, embedded = false }: { id: string; embedded?: boolean }) {
-    const api = useApi();
     const { householdId } = useAuth();
     const live = isLiveData(householdId);
 
     const listQuery = useLiveQuery(
-        api.money.transactions.list.queryOptions({
+        apiQuery.money.transactions.list.queryOptions({
             input: { householdId: householdId!, limit: 100 },
         }),
         EMPTY_TRANSACTION_PAGE,
         live
     );
     const inboxQuery = useLiveQuery(
-        api.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
         EMPTY_TRANSACTIONS,
         live
     );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 
@@ -14,12 +14,11 @@ export function IncomeCreatePage({ embedded = false }: { embedded?: boolean }) {
 }
 
 export function IncomeUpdatePage({ id, embedded = false }: { id: string; embedded?: boolean }) {
-    const api = useApi();
     const { householdId } = useAuth();
     const live = isLiveData(householdId);
 
     const query = useLiveQuery(
-        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );

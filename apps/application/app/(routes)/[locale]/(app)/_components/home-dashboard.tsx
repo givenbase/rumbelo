@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
@@ -53,8 +54,6 @@ const FALLBACK_RECAP: CoachRecapItem[] = [
 ];
 
 export function HomeDashboardClient() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { period, showToast, openOnboarding } = useAppShell();
@@ -91,7 +90,7 @@ export function HomeDashboardClient() {
     };
 
     const dashboardQuery = useLiveQuery(
-        api.money.dashboard.get.queryOptions({
+        apiQuery.money.dashboard.get.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
         emptyDashboard as never,
@@ -101,10 +100,10 @@ export function HomeDashboardClient() {
     const closeTurnMutation = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return client.money.turn.close({ householdId, period: periodKey });
+            return api.money.turn.close({ householdId, period: periodKey });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
             showToast('Month closed', 'success');
         },
         onError: () => showToast('Close failed', 'error'),

@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMemo } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -30,7 +30,6 @@ function dayBefore(iso: string): string {
 }
 
 export function IncomePageClient() {
-    const api = useApi();
     const { householdId } = useAuth();
     const { period } = useAppShell();
     const router = useRouter();
@@ -38,13 +37,13 @@ export function IncomePageClient() {
     const live = isLiveData(householdId);
 
     const incomeQuery = useLiveQuery(
-        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.balances.queryOptions({
+        apiQuery.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
         [] as never,
@@ -52,7 +51,7 @@ export function IncomePageClient() {
     );
 
     const goalsQuery = useLiveQuery(
-        api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );

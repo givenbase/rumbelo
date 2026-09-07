@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -19,7 +19,6 @@ import { ListToolbar } from '@/components/layout/list-toolbar';
 type Tab = 'ERUIT' | 'ERIN';
 
 export function FixedCostsPageClient() {
-    const api = useApi();
     const { householdId } = useAuth();
     const router = useRouter();
     const [tab, setTab] = useState<Tab>('ERUIT');
@@ -27,13 +26,13 @@ export function FixedCostsPageClient() {
     const live = isLiveData(householdId);
 
     const byJarQuery = useLiveQuery(
-        api.money.fixedCosts.byJar.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.fixedCosts.byJar.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );
 
     const incomeQuery = useLiveQuery(
-        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -45,20 +45,19 @@ function todayIso(): string {
 }
 
 export function GoalsPageClient() {
-    const api = useApi();
     const { householdId } = useAuth();
     const router = useRouter();
     const [tab, setTab] = useState<Tab>('ON_TRACK');
     const live = isLiveData(householdId);
 
     const goalsQuery = useLiveQuery(
-        api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );
 
     const incomeQuery = useLiveQuery(
-        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );

@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
@@ -38,9 +39,10 @@ import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumbel
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import { CAPABILITIES, lockCopyFor, memberLimitLabel, PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
-import { isLiveData } from '@/app/_lib/preview';
+import { isLiveData, PREVIEW_MODE } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
+import { chrome as tourChrome, usePageTour } from '@/components/features/tour';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -100,16 +102,15 @@ function initials(name: string, email: string): string {
 }
 
 export function AccountSettings() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const router = useRouter();
     const { session, householdId, refreshSession } = useAuth();
     const { showToast, locale, toggleLocale, plan } = useAppShell();
+    const { restartFullTour } = usePageTour();
     const live = isLiveData(householdId);
 
     const user = session?.user;
-    const profileQuery = useLiveQuery(api.account.profile.queryOptions(), null, Boolean(user));
+    const profileQuery = useLiveQuery(apiQuery.account.profile.queryOptions(), null, Boolean(user));
     const [editingName, setEditingName] = useState(false);
     const [nameDraft, setNameDraft] = useState(user?.name ?? '');
     const [firstNameDraft, setFirstNameDraft] = useState('');
@@ -122,18 +123,18 @@ export function AccountSettings() {
     const [signingOut, setSigningOut] = useState(false);
 
     const membersQuery = useLiveQuery(
-        api.household.members.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.household.members.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
     const settingsQuery = useLiveQuery(
-        api.household.settings.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.household.settings.queryOptions({ input: { householdId: householdId! } }),
         null,
         live
     );
-    const accountSettingsQuery = useLiveQuery(api.account.settings.queryOptions(), null, live);
+    const accountSettingsQuery = useLiveQuery(apiQuery.account.settings.queryOptions(), null, live);
     const householdQuery = useLiveQuery(
-        api.household.current.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.household.current.queryOptions({ input: { householdId: householdId! } }),
         null,
         live
     );
@@ -155,7 +156,7 @@ export function AccountSettings() {
 
     const saveProfile = useMutation({
         mutationFn: async () => {
-            await client.account.updateProfile({
+            await api.account.updateProfile({
                 displayName: nameDraft.trim(),
                 firstName: firstNameDraft.trim() || null,
                 middleName: middleNameDraft.trim() || null,
@@ -166,7 +167,7 @@ export function AccountSettings() {
         onSuccess: async () => {
             await Promise.all([
                 refreshSession(),
-                queryClient.invalidateQueries({ queryKey: api.account.profile.key() }),
+                queryClient.invalidateQueries({ queryKey: apiQuery.account.profile.key() }),
             ]);
             setEditingName(false);
             showToast('Profile saved', 'success');
@@ -194,7 +195,7 @@ export function AccountSettings() {
     const invite = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return client.household.invite({
+            return api.household.invite({
                 householdId,
                 email: inviteEmail.trim(),
                 role: HouseholdRole.MEMBER,
@@ -202,7 +203,7 @@ export function AccountSettings() {
         },
         onSuccess: () => {
             setInviteEmail('');
-            void queryClient.invalidateQueries({ queryKey: api.household.members.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.members.key() });
             showToast('Invitation sent', 'success');
         },
         onError: () => showToast('Invitation failed', 'error'),
@@ -210,11 +211,11 @@ export function AccountSettings() {
 
     const saveLocale = useMutation({
         mutationFn: async (next: Locale) => {
-            return client.account.updateSettings({ locale: next });
+            return api.account.updateSettings({ locale: next });
         },
         onSuccess: (_data, next) => {
             if (locale !== next) toggleLocale();
-            void queryClient.invalidateQueries({ queryKey: api.account.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.account.settings.key() });
             showToast('Language saved', 'success');
         },
         onError: () => showToast('Language save failed', 'error'),
@@ -223,12 +224,12 @@ export function AccountSettings() {
     const saveCurrency = useMutation({
         mutationFn: async (next: Currency) => {
             if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({ householdId, currency: next });
+            return api.household.updateSettings({ householdId, currency: next });
         },
         onSuccess: () => {
             setCurrencyDraft(null);
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
-            void queryClient.invalidateQueries({ queryKey: api.household.current.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.current.key() });
             showToast('Currency saved', 'success');
         },
         onError: () => showToast('Currency save failed', 'error'),
@@ -237,14 +238,14 @@ export function AccountSettings() {
     const savePeriod = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({
+            return api.household.updateSettings({
                 householdId,
                 money: { periodStartDay: periodDay },
             });
         },
         onSuccess: () => {
             setPeriodDayDraft(null);
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
             showToast('Period saved', 'success');
         },
         onError: () => showToast('Period save failed', 'error'),
@@ -254,20 +255,20 @@ export function AccountSettings() {
         mutationFn: async (next: Theme) => {
             const css = next === Theme.DARK ? 'dark' : next === Theme.SYSTEM ? 'system' : 'light';
             setTheme(css);
-            return client.account.updateSettings({ theme: next });
+            return api.account.updateSettings({ theme: next });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.account.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.account.settings.key() });
         },
         onError: () => showToast('Theme save failed', 'error'),
     });
 
     const saveMoneyCharacter = useMutation({
         mutationFn: async (next: MoneyCharacter) => {
-            return client.account.updateSettings({ moneyCharacter: next });
+            return api.account.updateSettings({ moneyCharacter: next });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.account.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.account.settings.key() });
             showToast('Money style saved', 'success');
         },
         onError: () => showToast('Money style save failed', 'error'),
@@ -276,10 +277,10 @@ export function AccountSettings() {
     const saveIncomeRhythm = useMutation({
         mutationFn: async (next: IncomeRhythm) => {
             if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({ householdId, money: { incomeRhythm: next } });
+            return api.household.updateSettings({ householdId, money: { incomeRhythm: next } });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
             showToast('Income rhythm saved', 'success');
         },
         onError: () => showToast('Income rhythm save failed', 'error'),
@@ -745,6 +746,20 @@ export function AccountSettings() {
                 </SettingsRow>
             </SettingsInkCard>
 
+            <SettingsInkCard
+                eyebrow={tourChrome.settings.eyebrow}
+                blurb={tourChrome.settings.blurb}>
+                <SettingsRow last>
+                    <SettingsRowLabel
+                        title={tourChrome.settings.row_title}
+                        sub={tourChrome.settings.row_sub}
+                    />
+                    <Button type="button" variant="secondary" onClick={restartFullTour}>
+                        {tourChrome.settings.restart}
+                    </Button>
+                </SettingsRow>
+            </SettingsInkCard>
+
             <DangerZone
                 title="Delete account"
                 body="Your household, jars, and full transaction history will be deleted. This cannot be undone — export your data first."
@@ -758,23 +773,21 @@ export function AccountSettings() {
 }
 
 export function JarsSettings() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
     const live = isLiveData(householdId);
 
-    const accountSettingsQuery = useLiveQuery(api.account.settings.queryOptions(), null, live);
+    const accountSettingsQuery = useLiveQuery(apiQuery.account.settings.queryOptions(), null, live);
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
         [] as never,
         live
     );
 
     const accountsQuery = useLiveQuery(
-        api.money.accounts.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.accounts.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
@@ -799,7 +812,7 @@ export function JarsSettings() {
     }, [jars, pct, dismissedTips, accountSettingsQuery.data?.moneyCharacter]);
 
     const incomeQuery = useLiveQuery(
-        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
@@ -808,15 +821,15 @@ export function JarsSettings() {
     const saveSplit = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return client.money.jars.updateSplit({
+            return api.money.jars.updateSplit({
                 householdId,
                 split: Object.entries(pct).map(([jarId, percentage]) => ({ jarId, percentage })),
             });
         },
         onSuccess: () => {
             setPctDraft(null);
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             showToast('Split saved', 'success');
         },
         onError: () => showToast('Split save failed', 'error'),
@@ -994,15 +1007,13 @@ export function JarsSettings() {
 }
 
 export function DebtSettings() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
     const live = isLiveData(householdId);
 
     const settingsQuery = useLiveQuery(
-        api.household.settings.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.household.settings.queryOptions({ input: { householdId: householdId! } }),
         null,
         live
     );
@@ -1012,14 +1023,14 @@ export function DebtSettings() {
     const saveStrategy = useMutation({
         mutationFn: async (next: PayoffStrategy) => {
             if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({
+            return api.household.updateSettings({
                 householdId,
                 money: { payoffStrategy: next },
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.debts.plan.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.debts.plan.key() });
             showToast('Payoff method saved', 'success');
         },
         onError: () => showToast('Payoff method save failed', 'error'),
@@ -1102,15 +1113,13 @@ export function DebtSettings() {
 }
 
 export function BankSettings() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
     const live = isLiveData(householdId);
 
     const accountsQuery = useLiveQuery(
-        api.money.accounts.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.accounts.list.queryOptions({ input: { householdId: householdId! } }),
         [],
         live
     );
@@ -1123,7 +1132,7 @@ export function BankSettings() {
     const createAccount = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return client.money.accounts.create({
+            return api.money.accounts.create({
                 householdId,
                 name: name.trim(),
                 iban: iban.trim() || null,
@@ -1136,7 +1145,7 @@ export function BankSettings() {
             setIban('');
             setKind(AccountKind.CHECKING);
             setAdding(false);
-            void queryClient.invalidateQueries({ queryKey: api.money.accounts.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.accounts.list.key() });
             showToast('Account added', 'success');
         },
         onError: () => showToast('Account add failed', 'error'),
@@ -1380,14 +1389,13 @@ export function SoulSettings() {
 }
 
 export function AutomationSettings() {
-    const api = useApi();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
     const live = isLiveData(householdId);
 
     const householdQuery = useLiveQuery(
-        api.household.current.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.household.current.queryOptions({ input: { householdId: householdId! } }),
         null,
         live
     );
@@ -1410,8 +1418,8 @@ export function AutomationSettings() {
         },
         onSuccess: () => {
             setHhNameDraft(null);
-            void queryClient.invalidateQueries({ queryKey: api.household.current.key() });
-            void queryClient.invalidateQueries({ queryKey: api.household.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.current.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.list.key() });
             showToast('Household updated', 'success');
         },
         onError: () => showToast('Household save failed', 'error'),
@@ -1477,28 +1485,68 @@ export function AutomationSettings() {
 }
 
 export function PlanSettings() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast, plan, setPlan } = useAppShell();
     const [billing, setBilling] = useState<'month' | 'year'>('month');
 
+    const billingStatus = useLiveQuery(
+        apiQuery.billing.status.queryOptions({ input: { householdId: householdId! } }),
+        { stripeEnabled: false, previewBypass: true, prices: null },
+        Boolean(householdId) && !PREVIEW_MODE
+    );
+
+    /** Stripe Checkout required only when backend reports stripeEnabled. */
+    const stripeLive = !PREVIEW_MODE && billingStatus.data?.stripeEnabled === true;
+    const freePlanSwitch = !stripeLive;
+
     const savePlan = useMutation({
         mutationFn: async (next: PlanKey) => {
             if (!householdId) throw new Error('No household');
-            return client.household.updateSettings({ householdId, planKey: next });
+            return api.household.updateSettings({ householdId, planKey: next });
         },
         onSuccess: data => {
             setPlan(data.planKey);
-            void queryClient.invalidateQueries({ queryKey: api.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
             showToast(`${PLAN_LABELS[data.planKey]} selected`, 'success');
         },
         onError: () => showToast('Could not update plan', 'error'),
     });
 
+    const checkout = useMutation({
+        mutationFn: async (next: typeof PlanKey.PLUS | typeof PlanKey.MAX) => {
+            if (!householdId) throw new Error('No household');
+            return api.billing.createCheckoutSession({
+                householdId,
+                planKey: next,
+                interval: billing,
+            });
+        },
+        onSuccess: ({ url }) => {
+            window.location.assign(url);
+        },
+        onError: () => showToast('Could not start Stripe Checkout', 'error'),
+    });
+
+    function choosePlan(next: PlanKey) {
+        if (plan === next) {
+            showToast(`Already on ${PLAN_LABELS[next]}`, 'info');
+            return;
+        }
+        if (next === PlanKey.BASIC || freePlanSwitch) {
+            savePlan.mutate(next);
+            return;
+        }
+        if (next === PlanKey.PLUS || next === PlanKey.MAX) {
+            checkout.mutate(next);
+        }
+    }
+
+    const busy = savePlan.isPending || checkout.isPending || billingStatus.isLoading;
+
     const cards: {
         key: PlanKey;
+        /** Fallback major units when Stripe catalog is unavailable. */
         priceM: number;
         priceY: number;
         tag: string;
@@ -1531,6 +1579,21 @@ export function PlanSettings() {
         },
     ];
 
+    const stripePrices = billingStatus.data?.prices;
+
+    function displayCents(card: (typeof cards)[number], yearly: boolean): number {
+        if (card.key === PlanKey.BASIC) return 0;
+        const slot =
+            card.key === PlanKey.PLUS
+                ? yearly
+                    ? stripePrices?.PLUS.year
+                    : stripePrices?.PLUS.month
+                : yearly
+                  ? stripePrices?.MAX.year
+                  : stripePrices?.MAX.month;
+        if (slot) return slot.amountCents;
+        return (yearly ? card.priceY : card.priceM) * 100;
+    }
     return (
         <SettingsPanel>
             <SettingsInkCard
@@ -1563,10 +1626,8 @@ export function PlanSettings() {
                     {cards.map(card => {
                         const yearly = billing === 'year';
                         const cur = plan === card.key;
-                        const price =
-                            card.priceM === 0
-                                ? '€0'
-                                : formatMoney((yearly ? card.priceY : card.priceM) * 100);
+                        const cents = displayCents(card, yearly);
+                        const price = cents === 0 ? '€0' : formatMoney(cents);
                         return (
                             <div
                                 key={card.key}
@@ -1584,7 +1645,7 @@ export function PlanSettings() {
                                         <span className="font-display text-lg font-semibold tracking-tight text-accent">
                                             {price}
                                         </span>
-                                        {card.priceM > 0 ? (
+                                        {cents > 0 ? (
                                             <span className="font-mono text-[10px] text-fg-muted">
                                                 {yearly ? '/year' : '/month'}
                                             </span>
@@ -1604,36 +1665,37 @@ export function PlanSettings() {
                                     variant={cur ? 'secondary' : 'primary'}
                                     size="sm"
                                     className="shrink-0 rounded-full font-mono text-[10px] tracking-widest uppercase"
-                                    onClick={() => {
-                                        if (cur) {
-                                            showToast(
-                                                `Already on ${PLAN_LABELS[card.key]}`,
-                                                'info'
-                                            );
-                                            return;
-                                        }
-                                        savePlan.mutate(card.key);
-                                    }}>
+                                    disabled={busy}
+                                    onClick={() => choosePlan(card.key)}>
                                     {cur
                                         ? 'Current'
-                                        : savePlan.isPending
+                                        : busy
                                           ? '…'
-                                          : card.priceM === 0
+                                          : card.key === PlanKey.BASIC
                                             ? 'Choose Basic'
-                                            : 'Choose'}
+                                            : freePlanSwitch
+                                              ? 'Choose'
+                                              : 'Upgrade'}
                                 </Button>
                             </div>
                         );
                     })}
                 </div>
             </SettingsInkCard>
-            <StubNotice what="Stripe billing comes later — plan gates already follow Basic / Plus / Max." />
+            <StubNotice
+                what={
+                    PREVIEW_MODE
+                        ? 'Preview mode — plan switches are free (no Stripe).'
+                        : freePlanSwitch
+                          ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY + price IDs to charge.'
+                          : 'Paid upgrades open Stripe Checkout. Plan activates after payment (webhook).'
+                }
+            />
         </SettingsPanel>
     );
 }
 
 export function ExportSettings() {
-    const client = useApiClient();
     const { householdId } = useAuth();
     const { showToast, period } = useAppShell();
     const live = isLiveData(householdId);
@@ -1645,12 +1707,12 @@ export function ExportSettings() {
         setBusy('csv');
         try {
             const periodKey = toPeriodKey(period.year, period.month);
-            const { items } = await client.money.transactions.list({
+            const { items } = await api.money.transactions.list({
                 householdId,
                 limit: 200,
                 ...(periodOnly ? { period: periodKey } : {}),
             });
-            const jars = await client.money.jars.list({ householdId });
+            const jars = await api.money.jars.list({ householdId });
             const jarName = new Map(jars.map(j => [j.id, j.name]));
             const rows = items.map(transaction => ({
                 id: transaction.id,
@@ -1685,13 +1747,13 @@ export function ExportSettings() {
         try {
             const [jars, income, fixedCosts, debts, goals, rules, transactions] = await Promise.all(
                 [
-                    client.money.jars.list({ householdId }),
-                    client.money.income.list({ householdId }),
-                    client.money.fixedCosts.list({ householdId }),
-                    client.money.debts.list({ householdId }),
-                    client.money.goals.list({ householdId }),
-                    client.money.rules.list({ householdId }),
-                    client.money.transactions.list({ householdId, limit: 200 }),
+                    api.money.jars.list({ householdId }),
+                    api.money.income.list({ householdId }),
+                    api.money.fixedCosts.list({ householdId }),
+                    api.money.debts.list({ householdId }),
+                    api.money.goals.list({ householdId }),
+                    api.money.rules.list({ householdId }),
+                    api.money.transactions.list({ householdId, limit: 200 }),
                 ]
             );
             const payload = {

@@ -1,5 +1,6 @@
 'use client';
 
+import { apiQuery } from '@/app/_lib/api-hooks';
 import {
     createContext,
     useCallback,
@@ -14,7 +15,6 @@ import {
 import { Locale, type PlanKey } from '@rumbelo/contracts';
 import { useQuery } from '@tanstack/react-query';
 
-import { useApi } from '@/app/_lib/api-hooks';
 import { DEFAULT_PLAN } from '@/app/_lib/plan';
 import { resolvePreviewPlan } from '@/app/_lib/preview';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -53,7 +53,6 @@ interface AppShellCtx {
 const AppShellContext = createContext<AppShellCtx | null>(null);
 
 export function AppShellProvider({ children }: { children: ReactNode }) {
-    const api = useApi();
     const { householdId } = useAuth();
     const [toast, setToast] = useState<Toast | null>(null);
     const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
@@ -71,7 +70,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
     });
 
     const settingsQuery = useQuery({
-        ...api.household.settings.queryOptions({
+        ...apiQuery.household.settings.queryOptions({
             input: { householdId: householdId! },
         }),
         enabled: Boolean(householdId),

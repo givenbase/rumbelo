@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -58,8 +59,6 @@ function fallbackJarKey(amount: number): JarKey {
 }
 
 export function TransactionsPageClient() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
@@ -68,13 +67,13 @@ export function TransactionsPageClient() {
     const live = isLiveData(householdId);
 
     const inboxQuery = useLiveQuery(
-        api.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.transactions.inbox.queryOptions({ input: { householdId: householdId! } }),
         EMPTY_TRANSACTIONS,
         live
     );
 
     const listQuery = useLiveQuery(
-        api.money.transactions.list.queryOptions({
+        apiQuery.money.transactions.list.queryOptions({
             input: { householdId: householdId!, limit: 50 },
         }),
         EMPTY_TRANSACTION_PAGE,
@@ -82,19 +81,19 @@ export function TransactionsPageClient() {
     );
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
         EMPTY_JARS,
         live
     );
 
     const rulesQuery = useLiveQuery(
-        api.money.rules.list.queryOptions({ input: { householdId: householdId! } }),
+        apiQuery.money.rules.list.queryOptions({ input: { householdId: householdId! } }),
         EMPTY_RULES,
         live
     );
 
     const merchantsQuery = useLiveQuery(
-        api.money.catalogs.merchantPresets.list.queryOptions({
+        apiQuery.money.catalogs.merchantPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         EMPTY_MERCHANTS,
@@ -121,7 +120,7 @@ export function TransactionsPageClient() {
             createRule?: boolean;
         }) => {
             if (!householdId) throw new Error('No household');
-            return client.money.transactions.sort({
+            return api.money.transactions.sort({
                 householdId,
                 transactionId,
                 jarId,
@@ -129,11 +128,15 @@ export function TransactionsPageClient() {
             });
         },
         onSuccess: (_data, vars) => {
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.inbox.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.inbox.key(),
+            });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.list.key(),
+            });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             if (vars.createRule) {
-                void queryClient.invalidateQueries({ queryKey: api.money.rules.list.key() });
+                void queryClient.invalidateQueries({ queryKey: apiQuery.money.rules.list.key() });
                 showToast('Sorted and rule saved', 'success');
             } else {
                 showToast('Transaction sorted', 'success');
@@ -145,13 +148,17 @@ export function TransactionsPageClient() {
     const replayMutation = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return client.money.rules.replay({ householdId });
+            return api.money.rules.replay({ householdId });
         },
         onSuccess: result => {
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.inbox.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.transactions.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.rules.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.inbox.key(),
+            });
+            void queryClient.invalidateQueries({
+                queryKey: apiQuery.money.transactions.list.key(),
+            });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.rules.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             showToast(
                 result.sorted > 0
                     ? `${result.sorted} transaction${result.sorted === 1 ? '' : 's'} sorted by rules`
@@ -165,10 +172,10 @@ export function TransactionsPageClient() {
     const removeRuleMutation = useMutation({
         mutationFn: async (id: string) => {
             if (!householdId) throw new Error('No household');
-            return client.money.rules.remove({ householdId, id });
+            return api.money.rules.remove({ householdId, id });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.rules.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.rules.list.key() });
             showToast('Rule deleted', 'success');
         },
         onError: () => showToast('Delete failed', 'error'),

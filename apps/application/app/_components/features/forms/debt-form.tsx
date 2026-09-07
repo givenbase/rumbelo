@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -75,8 +76,6 @@ export function DebtForm({
     entityId,
     onSuccess,
 }: DebtFormProps) {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { showToast } = useAppShell();
@@ -87,7 +86,7 @@ export function DebtForm({
     const [customLender, setCustomLender] = useState(false);
 
     const debtTypesQuery = useLiveQuery(
-        api.money.catalogs.debtPresets.list.queryOptions({
+        apiQuery.money.catalogs.debtPresets.list.queryOptions({
             input: { householdId: householdId! },
         }),
         [],
@@ -137,7 +136,7 @@ export function DebtForm({
             const name = values.name.trim();
 
             if (mode === 'edit' && entityId) {
-                return client.money.debts.update({
+                return api.money.debts.update({
                     id: entityId,
                     householdId,
                     name,
@@ -147,7 +146,7 @@ export function DebtForm({
                     minimumPayment,
                 });
             }
-            return client.money.debts.create({
+            return api.money.debts.create({
                 householdId,
                 name,
                 kind: values.kind,
@@ -161,8 +160,8 @@ export function DebtForm({
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.debts.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.debts.plan.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.debts.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.debts.plan.key() });
             showToast(mode === 'edit' ? 'Debt updated' : 'Debt saved', 'success');
             dismiss();
         },
@@ -172,11 +171,11 @@ export function DebtForm({
     const removeMutation = useMutation({
         mutationFn: async () => {
             if (!householdId || !entityId) throw new Error('No household');
-            return client.money.debts.remove({ householdId, id: entityId });
+            return api.money.debts.remove({ householdId, id: entityId });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.debts.list.key() });
-            void queryClient.invalidateQueries({ queryKey: api.money.debts.plan.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.debts.list.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.debts.plan.key() });
             showToast('Debt deleted', 'success');
             dismiss();
         },

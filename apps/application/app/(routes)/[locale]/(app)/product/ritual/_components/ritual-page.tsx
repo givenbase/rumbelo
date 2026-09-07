@@ -1,6 +1,7 @@
 'use client';
 
-import { useApi, useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { RitualStage } from '@rumbelo/contracts';
@@ -15,8 +16,6 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 import { PageContent } from '@/components/layout/page-content';
 
 export function RitualPageClient() {
-    const api = useApi();
-    const client = useApiClient();
     const queryClient = useQueryClient();
     const { householdId } = useAuth();
     const { period } = useAppShell();
@@ -25,7 +24,7 @@ export function RitualPageClient() {
     const live = isLiveData(householdId);
 
     const ritualQuery = useLiveQuery(
-        api.money.ritual.current.queryOptions({ input: { householdId: householdId!, week } }),
+        apiQuery.money.ritual.current.queryOptions({ input: { householdId: householdId!, week } }),
         {
             id: '',
             householdId: householdId ?? '',
@@ -40,7 +39,7 @@ export function RitualPageClient() {
     );
 
     const jarsQuery = useLiveQuery(
-        api.money.jars.balances.queryOptions({
+        apiQuery.money.jars.balances.queryOptions({
             input: { householdId: householdId!, period: periodKey },
         }),
         [] as never,
@@ -54,7 +53,7 @@ export function RitualPageClient() {
             allocations?: { jarId: string; amount: number }[];
         }) => {
             if (!householdId) return;
-            return client.money.ritual.advance({
+            return api.money.ritual.advance({
                 householdId,
                 week,
                 stage: payload.stage,
@@ -63,7 +62,7 @@ export function RitualPageClient() {
             });
         },
         onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: api.money.ritual.current.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.money.ritual.current.key() });
         },
     });
 

@@ -16,7 +16,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Joyride, STATUS, type Step, type Styles } from 'react-joyride';
 
 import { api } from '@/app/_lib/api';
-import { apiUtils } from '@/app/_lib/api-hooks';
+import { apiQuery } from '@/app/_lib/api-hooks';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
 import { FULL_TOUR_CHAPTERS, chrome, pathWithoutLocale } from './content';
@@ -99,7 +99,7 @@ export function PageTourProvider({ children }: { children: ReactNode }) {
     const queryClient = useQueryClient();
 
     const settingsQuery = useQuery({
-        ...apiUtils.account.settings.queryOptions(),
+        ...apiQuery.account.settings.queryOptions(),
         enabled: Boolean(userId),
     });
 
@@ -144,7 +144,7 @@ export function PageTourProvider({ children }: { children: ReactNode }) {
                     void api.account
                         .updateSettings({ tour: next })
                         .then(updated => {
-                            queryClient.setQueryData(apiUtils.account.settings.key(), updated);
+                            queryClient.setQueryData(apiQuery.account.settings.key(), updated);
                         })
                         .catch(error => {
                             console.error('tour progress save failed', error);
