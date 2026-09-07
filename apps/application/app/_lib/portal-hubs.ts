@@ -99,7 +99,7 @@ export const growthPortalHub: PortalHubProps = {
             note: 'truly yours',
             color: 'var(--color-jar-ff)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/product/growth/board',
+            href: '/product/growth/net-worth',
         },
     ],
 };
@@ -164,7 +164,7 @@ export const soulPortalHub: PortalHubProps = {
         kind: 'START SMALL',
         text: 'One minute of stillness or one line of gratitude — both protect the jars.',
         cta: 'Open stillness',
-        href: '/product/soul/mind',
+        href: '/product/soul/stillness',
     },
     cards: [
         {
@@ -173,7 +173,7 @@ export const soulPortalHub: PortalHubProps = {
             note: 'days in a row',
             color: 'var(--color-portal-soul)',
             chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-            href: '/product/soul/mind',
+            href: '/product/soul/stillness',
         },
         {
             name: 'Thanks',
@@ -197,7 +197,7 @@ export const soulPortalHub: PortalHubProps = {
             note: 'centres named today',
             color: 'var(--color-jar-edu)',
             chart: { kind: 'ring', pct: 0 },
-            href: '/product/soul/chakra',
+            href: '/product/soul/centres',
         },
     ],
 };

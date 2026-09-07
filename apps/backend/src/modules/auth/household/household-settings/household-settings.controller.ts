@@ -29,7 +29,7 @@ export class HouseholdSettingsController {
     // ? UPDATE Operations
     // ====================================================================
 
-    /** Patch household settings (currency, period, rituals, …). */
+    /** Patch household settings (currency, period, week-check, …). */
     @Implement(contract.household.updateSettings)
     update() {
         return implement(contract.household.updateSettings).handler(({ input }) => {

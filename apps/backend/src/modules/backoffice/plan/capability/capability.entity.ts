@@ -19,7 +19,7 @@ import { PlanFeature } from '../feature/feature.entity';
 @Unique({ properties: ['key'] })
 export class Capability extends BaseEntity {
     // ? PROPERTIES
-    /** Full featureKey — e.g. money-debt, growth-goals (never rename in place). */
+    /** Full featureKey — e.g. money-debt, growth-goals (stable after launch). */
     @Property({ length: 64 })
     key!: string;
 

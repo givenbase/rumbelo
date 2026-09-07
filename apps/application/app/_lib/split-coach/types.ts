@@ -1,6 +1,6 @@
-import { DEFAULT_JAR_SPLIT, MoneyCharacter, type JarKey } from '@rumbelo/contracts';
+import { DEFAULT_JAR_SPLIT, SpendingStyle, type JarKey } from '@rumbelo/contracts';
 
-export { MoneyCharacter };
+export { SpendingStyle };
 
 export type SplitTipSeverity = 'info' | 'warn';
 

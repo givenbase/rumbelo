@@ -12,9 +12,9 @@ import {
     Currency,
     DEFAULT_JAR_SPLIT,
     HouseholdRole,
-    IncomeRhythm,
+    IncomeStability,
     Locale,
-    MoneyCharacter,
+    SpendingStyle,
     PayoffStrategy,
     Theme,
     canAddHouseholdMember,
@@ -272,9 +272,9 @@ export function AccountSettings() {
         onError: () => showToast('Theme save failed', 'error'),
     });
 
-    const saveMoneyCharacter = useMutation({
-        mutationFn: async (next: MoneyCharacter) => {
-            return api.account.updateSettings({ moneyCharacter: next });
+    const saveSpendingStyle = useMutation({
+        mutationFn: async (next: SpendingStyle) => {
+            return api.account.updateSettings({ spendingStyle: next });
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: apiQuery.account.settings.key() });
@@ -283,16 +283,16 @@ export function AccountSettings() {
         onError: () => showToast('Money style save failed', 'error'),
     });
 
-    const saveIncomeRhythm = useMutation({
-        mutationFn: async (next: IncomeRhythm) => {
+    const saveIncomeStability = useMutation({
+        mutationFn: async (next: IncomeStability) => {
             if (!householdId) throw new Error('No household');
-            return api.household.updateSettings({ householdId, money: { incomeRhythm: next } });
+            return api.household.updateSettings({ householdId, money: { incomeStability: next } });
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
-            showToast('Income rhythm saved', 'success');
+            showToast('Income stability saved', 'success');
         },
-        onError: () => showToast('Income rhythm save failed', 'error'),
+        onError: () => showToast('Income stability save failed', 'error'),
     });
 
     function pickLocale(next: Locale) {
@@ -527,36 +527,36 @@ export function AccountSettings() {
                         {(
                             [
                                 {
-                                    key: MoneyCharacter.SPENDER,
+                                    key: SpendingStyle.SPENDER,
                                     label: 'Spender',
                                     sub: 'Joy first',
                                 },
                                 {
-                                    key: MoneyCharacter.SAVER,
+                                    key: SpendingStyle.SAVER,
                                     label: 'Saver',
                                     sub: 'Future first',
                                 },
                                 {
-                                    key: MoneyCharacter.BALANCED,
+                                    key: SpendingStyle.BALANCED,
                                     label: 'Balanced',
                                     sub: 'Both',
                                 },
                                 {
-                                    key: MoneyCharacter.UNKNOWN,
+                                    key: SpendingStyle.UNKNOWN,
                                     label: 'Not sure',
                                     sub: 'Neutral tips',
                                 },
                             ] as const
                         ).map(option => {
                             const on =
-                                (accountSettingsQuery.data?.moneyCharacter ??
-                                    MoneyCharacter.UNKNOWN) === option.key;
+                                (accountSettingsQuery.data?.spendingStyle ??
+                                    SpendingStyle.UNKNOWN) === option.key;
                             return (
                                 <button
                                     key={option.key}
                                     type="button"
                                     onClick={() => {
-                                        if (live) saveMoneyCharacter.mutate(option.key);
+                                        if (live) saveSpendingStyle.mutate(option.key);
                                     }}
                                     className={cn(
                                         'grid min-w-[4.5rem] gap-0.5 rounded-[10px] border px-3 py-2 text-left transition-colors',
@@ -582,24 +582,25 @@ export function AccountSettings() {
                 <SettingsRow last>
                     <SettingsRowLabel
                         title="Income month to month"
-                        sub="Shared board picture — stable or variable"
+                        sub="Shared board picture — steady, uneven, or none right now"
                     />
-                    <div className="flex gap-1 rounded-full border border-line bg-raised p-0.5">
+                    <div className="flex flex-wrap gap-1 rounded-full border border-line bg-raised p-0.5">
                         {(
                             [
-                                { key: IncomeRhythm.STABLE, label: 'Stable' },
-                                { key: IncomeRhythm.VARIABLE, label: 'Variable' },
+                                { key: IncomeStability.STABLE, label: 'Stable' },
+                                { key: IncomeStability.VARIABLE, label: 'Variable' },
+                                { key: IncomeStability.NONE, label: 'None' },
                             ] as const
                         ).map(option => {
                             const on =
-                                (settingsQuery.data?.money?.incomeRhythm ?? IncomeRhythm.STABLE) ===
-                                option.key;
+                                (settingsQuery.data?.money?.incomeStability ??
+                                    IncomeStability.STABLE) === option.key;
                             return (
                                 <button
                                     key={option.key}
                                     type="button"
                                     disabled={!live || !householdId}
-                                    onClick={() => saveIncomeRhythm.mutate(option.key)}
+                                    onClick={() => saveIncomeStability.mutate(option.key)}
                                     className={cn(
                                         'rounded-full px-3.5 py-1.5 font-mono text-[10px] font-medium tracking-[0.12em] uppercase transition-colors',
                                         on
@@ -815,10 +816,10 @@ export function JarsSettings() {
     const balanced = Math.abs(total - 100) < 0.01;
 
     const coachTips = useMemo(() => {
-        const character = accountSettingsQuery.data?.moneyCharacter ?? MoneyCharacter.UNKNOWN;
-        const tips = evaluateSplitCoach(pctByJarKey(jars, pct), character);
+        const spendingStyle = accountSettingsQuery.data?.spendingStyle ?? SpendingStyle.UNKNOWN;
+        const tips = evaluateSplitCoach(pctByJarKey(jars, pct), spendingStyle);
         return tips.filter(tip => !dismissedTips[tip.id]);
-    }, [jars, pct, dismissedTips, accountSettingsQuery.data?.moneyCharacter]);
+    }, [jars, pct, dismissedTips, accountSettingsQuery.data?.spendingStyle]);
 
     const incomeQuery = useLiveQuery(
         apiQuery.money.income.list.queryOptions({ input: { householdId: householdId! } }),

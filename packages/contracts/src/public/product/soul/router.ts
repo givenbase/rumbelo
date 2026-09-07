@@ -18,4 +18,13 @@ export const contract = {
             )
             .output(schemas.Gratitude),
     },
+    weekCheck: {
+        current: oc
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
+            .output(schemas.SoulWeekCheck),
+        history: oc.input(schemas.HouseholdScoped).output(z.array(schemas.SoulWeekCheck)),
+        complete: oc
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey }))
+            .output(schemas.SoulWeekCheck),
+    },
 };

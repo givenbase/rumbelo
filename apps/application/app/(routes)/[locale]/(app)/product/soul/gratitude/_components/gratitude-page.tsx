@@ -105,7 +105,7 @@ export function GratitudePageClient() {
             {/* ── Entries list ── */}
             {empty ? (
                 <p className="text-sm text-fg-muted">
-                    Nothing written yet. The weekly ritual will ask you here.
+                    Nothing written yet. The week check will ask you here.
                 </p>
             ) : (
                 <div className="grid gap-2.5">
@@ -134,8 +134,8 @@ export function GratitudePageClient() {
             <div className="border-t border-line pt-3">
                 <Eyebrow>This week</Eyebrow>
                 <p className="mt-2 text-sm leading-relaxed text-fg-muted">
-                    One line per week during the ritual. No more than that — it is a check-in, not a
-                    journal.
+                    One line per week during the week check. No more than that — it is a check-in,
+                    not a journal.
                 </p>
             </div>
         </PageContent>

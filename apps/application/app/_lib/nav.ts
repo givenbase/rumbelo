@@ -17,7 +17,7 @@ export const NAV_GROUPS = [
         href: '/',
         children: [
             { href: '/', label: 'Overview', capabilityKey: CAPABILITIES.homeOverview },
-            { href: productPath('ritual'), label: 'Coach', capabilityKey: CAPABILITIES.homeRitual },
+            { href: productPath('coach'), label: 'Coach', capabilityKey: CAPABILITIES.homeCoach },
             { href: productPath('why'), label: 'Why', capabilityKey: CAPABILITIES.homeWhy },
         ],
     },
@@ -25,10 +25,10 @@ export const NAV_GROUPS = [
         key: 'money',
         label: 'My money',
         icon: '◈',
-        href: productPath('money/overview'),
+        href: productPath('money'),
         children: [
             {
-                href: productPath('money/overview'),
+                href: productPath('money'),
                 label: 'Overview',
                 capabilityKey: CAPABILITIES.moneyOverview,
             },
@@ -81,9 +81,9 @@ export const NAV_GROUPS = [
                 capabilityKey: CAPABILITIES.growthLearn,
             },
             {
-                href: productPath('growth/board'),
+                href: productPath('growth/net-worth'),
                 label: 'Net worth',
-                capabilityKey: CAPABILITIES.growthBoard,
+                capabilityKey: CAPABILITIES.growthNetWorth,
             },
         ],
     },
@@ -133,9 +133,9 @@ export const NAV_GROUPS = [
                 capabilityKey: CAPABILITIES.soulOverview,
             },
             {
-                href: productPath('soul/mind'),
+                href: productPath('soul/stillness'),
                 label: 'Stillness',
-                capabilityKey: CAPABILITIES.soulMind,
+                capabilityKey: CAPABILITIES.soulStillness,
             },
             {
                 href: productPath('soul/gratitude'),
@@ -148,9 +148,9 @@ export const NAV_GROUPS = [
                 capabilityKey: CAPABILITIES.soulIntent,
             },
             {
-                href: productPath('soul/chakra'),
+                href: productPath('soul/centres'),
                 label: 'Centres',
-                capabilityKey: CAPABILITIES.soulChakra,
+                capabilityKey: CAPABILITIES.soulCentres,
             },
         ],
     },
@@ -171,7 +171,7 @@ export type NavChild = NavGroup['children'][number];
 /** Bottom tabs — design `SHORT` map EN column (home → Start). */
 export const BOTTOM_TABS = [
     { href: '/', label: 'Start', glyph: '◇' },
-    { href: productPath('money/overview'), label: 'Money', glyph: '◈' },
+    { href: productPath('money'), label: 'Money', glyph: '◈' },
     { href: productPath('growth'), label: 'Growth', glyph: '↗' },
     { href: productPath('energy'), label: 'Energy', glyph: '✳\uFE0E' },
     { href: productPath('soul'), label: 'Soul', glyph: '✦' },

@@ -1,4 +1,4 @@
-import { JarKey, MoneyCharacter } from '@rumbelo/contracts';
+import { JarKey, SpendingStyle } from '@rumbelo/contracts';
 
 import {
     DEFAULT_JAR_SPLIT,
@@ -9,12 +9,12 @@ import {
 } from './types';
 
 /**
- * Rule-based split coach (Phase A + B character hooks).
- * Pure — no I/O. Pass declared moneyCharacter from account settings.
+ * Rule-based split coach (Phase A + B spending-style hooks).
+ * Pure — no I/O. Pass declared spendingStyle from account settings.
  */
 export function evaluateSplitCoach(
     pct: SplitPctByKey,
-    character: MoneyCharacter = MoneyCharacter.UNKNOWN
+    spendingStyle: SpendingStyle = SpendingStyle.UNKNOWN
 ): SplitTip[] {
     const tips: SplitTip[] = [];
     const play = pct[JarKey.PLAY] ?? DEFAULT_JAR_SPLIT[JarKey.PLAY];
@@ -34,7 +34,7 @@ export function evaluateSplitCoach(
             severity: 'warn',
             jars: [JarKey.PLAY, JarKey.FINANCIAL_FREEDOM, JarKey.LONG_TERM_SAVINGS],
             message:
-                character === MoneyCharacter.SAVER
+                spendingStyle === SpendingStyle.SAVER
                     ? 'Play above 10% can be healthy if you under-spend joy — just don’t fund it by cutting Financial Freedom.'
                     : 'Play above 10% usually comes from Financial Freedom or Long Term Savings. Those two buy your future; Play spends this month.',
         });
@@ -113,9 +113,9 @@ export function evaluateSplitCoach(
         });
     }
 
-    // Character-specific nudges — works once character ≠ UNKNOWN
+    // Spending-style nudges — works once spendingStyle ≠ UNKNOWN
     if (
-        character === MoneyCharacter.SPENDER &&
+        spendingStyle === SpendingStyle.SPENDER &&
         play >= DEFAULT_JAR_SPLIT[JarKey.PLAY] &&
         ff <= DEFAULT_JAR_SPLIT[JarKey.FINANCIAL_FREEDOM]
     ) {
@@ -128,7 +128,7 @@ export function evaluateSplitCoach(
         });
     }
 
-    if (character === MoneyCharacter.SAVER && play < 5 && ff + lts >= 25) {
+    if (spendingStyle === SpendingStyle.SAVER && play < 5 && ff + lts >= 25) {
         tips.push({
             id: 'saver-play',
             severity: 'info',

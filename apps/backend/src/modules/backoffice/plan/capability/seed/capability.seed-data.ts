@@ -18,8 +18,8 @@ import {
  *   money-debt / bank / import    ✓     ✓
  *   energy-week/train/food        ✓     ✓
  *   platform-invite               ✓     ✓
- *   growth-income/board/learn           ✓
- *   soul-chakra                         ✓
+ *   growth-income/net-worth/learn           ✓
+ *   soul-centres                         ✓
  *
  * Source of truth: packages/contracts PLAN_ACCESS / CAPABILITY_CATALOG
  */

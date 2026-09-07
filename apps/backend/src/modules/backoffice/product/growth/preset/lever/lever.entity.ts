@@ -1,5 +1,5 @@
 import { Entity, Property, Unique } from '@mikro-orm/core';
-import type { MoneyCharacter } from '@rumbelo/contracts';
+import type { SpendingStyle } from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../../../../common/database/base.entity';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
@@ -43,9 +43,9 @@ export class LeverPreset extends BaseEntity {
     @Property({ type: 'json', default: [] })
     forPostureKeys: string[] = [];
 
-    /** Empty = show for every money character. */
+    /** Empty = show for every spending style. */
     @Property({ type: 'json', default: [] })
-    forCharacters: MoneyCharacter[] = [];
+    forSpendingStyles: SpendingStyle[] = [];
 
     /** Lowest wealth stage key that should see this lever. */
     @Property({ length: 64, default: 'BUILDING' })

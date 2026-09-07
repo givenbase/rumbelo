@@ -4,13 +4,13 @@ import { HouseholdSettingsModule } from '../../../../auth/household/household-se
 import { CoachModule } from '../../../platform/coach/coach.module';
 import { TransactionModule } from '../ledger/transaction/transaction.module';
 import { JarModule } from '../plan/jar/jar.module';
-import { TurnModule } from '../rhythm/turn/turn.module';
+import { MonthScoreModule } from '../month-score/month-score.module';
 import { DashboardController } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
 
 /** Depends on the aggregates it composes rather than reaching into their tables. */
 @Module({
-    imports: [JarModule, TurnModule, CoachModule, TransactionModule, HouseholdSettingsModule],
+    imports: [JarModule, MonthScoreModule, CoachModule, TransactionModule, HouseholdSettingsModule],
     controllers: [DashboardController],
     providers: [DashboardService],
 })

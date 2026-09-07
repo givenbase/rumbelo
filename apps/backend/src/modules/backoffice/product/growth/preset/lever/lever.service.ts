@@ -2,7 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-    type MoneyCharacter,
+    type SpendingStyle,
     WEALTH_STAGE_KEYS,
     filterGrowthLeverPresets,
     type GrowthLeverPreset,
@@ -20,7 +20,7 @@ export class LeverPresetService {
 
     async listActive(filters?: {
         postureKey?: string;
-        character?: MoneyCharacter;
+        spendingStyle?: SpendingStyle;
         stageKey?: string;
         stageSortOrder?: number;
     }): Promise<GrowthLeverPreset[]> {
@@ -37,7 +37,7 @@ export class LeverPresetService {
 
         return filterGrowthLeverPresets(mapped, {
             postureKey: filters?.postureKey,
-            character: filters?.character,
+            spendingStyle: filters?.spendingStyle,
             stageKey,
             stageSortOrder,
         });
@@ -52,7 +52,7 @@ function toDto(row: LeverPreset, sortByKey: Map<string, number>): GrowthLeverPre
         summary: row.summary,
         accentColor: row.accentColor,
         forPostureKeys: row.forPostureKeys ?? [],
-        forCharacters: row.forCharacters ?? [],
+        forSpendingStyles: row.forSpendingStyles ?? [],
         minStageKey: row.minStageKey,
         minStageSortOrder: sortByKey.get(row.minStageKey) ?? 0,
     };

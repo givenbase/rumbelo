@@ -11,7 +11,7 @@ export const DATE_FORMATS = {
 
 /**
  * Calendar day as YYYY-MM-DD using local calendar (not UTC `toISOString`),
- * so timezone offsets do not shift the booked_on / ritual day.
+ * so timezone offsets do not shift the booked_on / week-check day.
  */
 export function formatToISODate(date?: Date | null | string): null | string {
     if (!date) return null;

@@ -25,7 +25,7 @@ import { HouseholdBillingService } from '../household-billing/household-billing.
 import {
     DEFAULT_FEATURE_SETTINGS,
     DEFAULT_MONEY_SETTINGS,
-    DEFAULT_RITUAL_SETTINGS,
+    DEFAULT_WEEK_CHECK_SETTINGS,
     HouseholdSettings,
 } from './household-settings.entity';
 
@@ -69,7 +69,7 @@ export class HouseholdSettingsService {
             currency: input.currency,
             why: input.why,
             moneySettings: { ...DEFAULT_MONEY_SETTINGS, ...input.money },
-            ritualSettings: { ...DEFAULT_RITUAL_SETTINGS },
+            weekCheckSettings: { ...DEFAULT_WEEK_CHECK_SETTINGS },
             featureSettings: { ...DEFAULT_FEATURE_SETTINGS },
             answers: {},
             onboardedAt: new Date(),
@@ -148,8 +148,8 @@ export class HouseholdSettingsService {
         if (patch.money) {
             row.moneySettings = { ...row.moneySettings, ...patch.money };
         }
-        if (patch.ritual) {
-            row.ritualSettings = { ...row.ritualSettings, ...patch.ritual };
+        if (patch.weekCheck) {
+            row.weekCheckSettings = { ...row.weekCheckSettings, ...patch.weekCheck };
         }
         if (patch.features) {
             row.featureSettings = { ...row.featureSettings, ...patch.features };
@@ -199,9 +199,9 @@ function toSettingsDto(row: HouseholdSettings, planKey: PlanKey): HouseholdSetti
             ...DEFAULT_MONEY_SETTINGS,
             ...row.moneySettings,
         },
-        ritual: {
-            ...DEFAULT_RITUAL_SETTINGS,
-            ...row.ritualSettings,
+        weekCheck: {
+            ...DEFAULT_WEEK_CHECK_SETTINGS,
+            ...row.weekCheckSettings,
         },
         features: {
             ...DEFAULT_FEATURE_SETTINGS,

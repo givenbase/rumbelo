@@ -2,12 +2,12 @@ import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
 import {
     Currency,
     HouseholdKind,
-    IncomeRhythm,
+    IncomeStability,
     PayoffStrategy,
     type HouseholdAnswers,
     type HouseholdFeatureSettings,
     type HouseholdMoneySettings,
-    type HouseholdRitualSettings,
+    type HouseholdWeekCheckSettings,
 } from '@rumbelo/contracts';
 
 import { entityConfig } from '../../../../common/database/entity-config.util';
@@ -16,11 +16,11 @@ import { NativeEnum } from '../../../../common/database/native-enum.util';
 
 export const DEFAULT_MONEY_SETTINGS: HouseholdMoneySettings = {
     periodStartDay: 1,
-    incomeRhythm: IncomeRhythm.STABLE,
+    incomeStability: IncomeStability.STABLE,
     payoffStrategy: PayoffStrategy.AVALANCHE,
 };
 
-export const DEFAULT_RITUAL_SETTINGS: HouseholdRitualSettings = {
+export const DEFAULT_WEEK_CHECK_SETTINGS: HouseholdWeekCheckSettings = {
     reminderDay: 7,
     reminderAt: '19:00',
 };
@@ -34,7 +34,7 @@ export const DEFAULT_FEATURE_SETTINGS: HouseholdFeatureSettings = {
  * Household Settings Entity
  *
  * Money-board prefs for a household (`auth.household_settings`).
- * Language, appearance, and money character live on `auth.account_settings`
+ * Language, appearance, and spending style live on `auth.account_settings`
  * (person-scoped). Currency and board money style stay here — one accounting
  * currency and one debt order for every member.
  *
@@ -58,17 +58,17 @@ export class HouseholdSettings extends HouseholdEntity {
     why: string | null = null;
 
     /**
-     * Money board: period rollover, income rhythm, debt payoff order.
+     * Money board: period rollover, income stability, debt payoff order.
      * Queried via the settings row — not filtered as SQL columns.
      */
     @Property({ type: 'json' })
     moneySettings: HouseholdMoneySettings = { ...DEFAULT_MONEY_SETTINGS };
 
     /**
-     * Ritual reminder slot (weekday + local HH:mm). Null day/at disables.
+     * Week-check reminder slot (weekday + local HH:mm). Null day/at disables.
      */
     @Property({ type: 'json' })
-    ritualSettings: HouseholdRitualSettings = { ...DEFAULT_RITUAL_SETTINGS };
+    weekCheckSettings: HouseholdWeekCheckSettings = { ...DEFAULT_WEEK_CHECK_SETTINGS };
 
     /** Feature toggles for the board (bank sync, coach, …). */
     @Property({ type: 'json' })

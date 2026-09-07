@@ -244,16 +244,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -316,14 +306,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -345,6 +339,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -364,18 +368,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -386,7 +386,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -502,9 +502,9 @@
           "mappedType": "unknown",
           "nativeEnumName": "auth_theme"
         },
-        "money_character": {
-          "name": "money_character",
-          "type": "money_character",
+        "spending_style": {
+          "name": "spending_style",
+          "type": "money_spending_style",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -522,7 +522,7 @@
             "UNKNOWN"
           ],
           "mappedType": "unknown",
-          "nativeEnumName": "money_character"
+          "nativeEnumName": "money_spending_style"
         },
         "account_id": {
           "name": "account_id",
@@ -680,16 +680,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -752,14 +742,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -781,6 +775,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -800,18 +804,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -822,7 +822,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -1121,16 +1121,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -1193,14 +1183,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -1222,6 +1216,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -1241,18 +1245,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -1263,7 +1263,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -1584,14 +1584,388 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
+        "money_debt_kind": {
+          "name": "money_debt_kind",
+          "schema": "public",
+          "items": [
+            "CREDIT_CARD",
+            "LOAN",
+            "STUDENT",
+            "MORTGAGE",
+            "FAMILY",
+            "OTHER"
+          ]
+        },
+        "money_flow_direction": {
+          "name": "money_flow_direction",
+          "schema": "public",
+          "items": [
+            "IN",
+            "OUT"
+          ]
+        },
+        "money_goal_kind": {
+          "name": "money_goal_kind",
+          "schema": "public",
+          "items": [
+            "SAVE",
+            "EARN"
+          ]
+        },
+        "money_goal_status": {
+          "name": "money_goal_status",
+          "schema": "public",
+          "items": [
+            "ACTIVE",
+            "REACHED",
+            "PAUSED",
+            "ARCHIVED"
+          ]
+        },
+        "money_income_kind": {
+          "name": "money_income_kind",
+          "schema": "public",
+          "items": [
+            "SALARY",
+            "FREELANCE",
+            "BENEFIT",
+            "RENTAL",
+            "DIVIDEND",
+            "OTHER"
+          ]
+        },
+        "money_jar_key": {
+          "name": "money_jar_key",
+          "schema": "public",
+          "items": [
+            "NECESSITIES",
+            "FINANCIAL_FREEDOM",
+            "EDUCATION",
+            "LONG_TERM_SAVINGS",
+            "PLAY",
+            "GIVE"
+          ]
+        },
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
+          "schema": "public",
+          "items": [
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
+          ]
+        },
+        "money_rule_field": {
+          "name": "money_rule_field",
+          "schema": "public",
+          "items": [
+            "DESCRIPTION",
+            "COUNTERPARTY",
+            "AMOUNT"
+          ]
+        },
+        "money_rule_matcher": {
+          "name": "money_rule_matcher",
+          "schema": "public",
+          "items": [
+            "CONTAINS",
+            "EQUALS",
+            "STARTS_WITH",
+            "REGEX"
+          ]
+        },
+        "money_spending_style": {
+          "name": "money_spending_style",
           "schema": "public",
           "items": [
             "SPENDER",
             "SAVER",
             "BALANCED",
             "UNKNOWN"
+          ]
+        },
+        "money_transaction_source": {
+          "name": "money_transaction_source",
+          "schema": "public",
+          "items": [
+            "MANUAL",
+            "CSV",
+            "BANK",
+            "RECURRING"
+          ]
+        },
+        "money_transaction_status": {
+          "name": "money_transaction_status",
+          "schema": "public",
+          "items": [
+            "INBOX",
+            "SORTED",
+            "IGNORED"
+          ]
+        },
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
+          "schema": "public",
+          "items": [
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
+          ]
+        },
+        "platform_coach_kind": {
+          "name": "platform_coach_kind",
+          "schema": "public",
+          "items": [
+            "NUDGE",
+            "WIN",
+            "WARNING",
+            "INSIGHT",
+            "WEEK_CHECK"
+          ]
+        },
+        "platform_currency": {
+          "name": "platform_currency",
+          "schema": "public",
+          "items": [
+            "EUR",
+            "USD",
+            "GBP"
+          ]
+        },
+        "platform_household_kind": {
+          "name": "platform_household_kind",
+          "schema": "public",
+          "items": [
+            "FAMILY",
+            "PARTNERS",
+            "FRIENDS",
+            "SOLO"
+          ]
+        }
+      },
+      "comment": null
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "week": {
+          "name": "week",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "name": "energy_week_check",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "household_id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "energy_week_check_household_id_index",
+          "unique": false,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "household_id",
+            "week"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "energy_week_check_household_id_week_unique",
+          "unique": true,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "energy_week_check_pkey",
+          "unique": true,
+          "primary": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "energy_week_check_household_id_foreign": {
+          "columnNames": [
+            "household_id"
+          ],
+          "constraintName": "energy_week_check_household_id_foreign",
+          "localTableName": "public.energy_week_check",
+          "referencedTableName": "auth.household",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "auth_locale": {
+          "name": "auth_locale",
+          "schema": "public",
+          "items": [
+            "NL",
+            "EN"
+          ]
+        },
+        "auth_theme": {
+          "name": "auth_theme",
+          "schema": "public",
+          "items": [
+            "LIGHT",
+            "DARK",
+            "SYSTEM"
+          ]
+        },
+        "backoffice_capability_kind": {
+          "name": "backoffice_capability_kind",
+          "schema": "public",
+          "items": [
+            "screen",
+            "action"
+          ]
+        },
+        "backoffice_plan_key": {
+          "name": "backoffice_plan_key",
+          "schema": "public",
+          "items": [
+            "BASIC",
+            "PLUS",
+            "MAX"
+          ]
+        },
+        "energy_metric": {
+          "name": "energy_metric",
+          "schema": "public",
+          "items": [
+            "SLEEP",
+            "TRAIN",
+            "FOOD",
+            "MIND"
+          ]
+        },
+        "money_account_kind": {
+          "name": "money_account_kind",
+          "schema": "public",
+          "items": [
+            "CHECKING",
+            "SAVINGS",
+            "CREDIT",
+            "CASH",
+            "INVESTMENT"
+          ]
+        },
+        "money_cadence": {
+          "name": "money_cadence",
+          "schema": "public",
+          "items": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
           ]
         },
         "money_debt_kind": {
@@ -1656,14 +2030,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -1685,6 +2063,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -1704,18 +2092,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -1726,7 +2110,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -1989,16 +2373,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -2061,14 +2435,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -2090,6 +2468,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -2109,18 +2497,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -2131,7 +2515,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -2378,14 +2762,388 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
+        "money_debt_kind": {
+          "name": "money_debt_kind",
+          "schema": "public",
+          "items": [
+            "CREDIT_CARD",
+            "LOAN",
+            "STUDENT",
+            "MORTGAGE",
+            "FAMILY",
+            "OTHER"
+          ]
+        },
+        "money_flow_direction": {
+          "name": "money_flow_direction",
+          "schema": "public",
+          "items": [
+            "IN",
+            "OUT"
+          ]
+        },
+        "money_goal_kind": {
+          "name": "money_goal_kind",
+          "schema": "public",
+          "items": [
+            "SAVE",
+            "EARN"
+          ]
+        },
+        "money_goal_status": {
+          "name": "money_goal_status",
+          "schema": "public",
+          "items": [
+            "ACTIVE",
+            "REACHED",
+            "PAUSED",
+            "ARCHIVED"
+          ]
+        },
+        "money_income_kind": {
+          "name": "money_income_kind",
+          "schema": "public",
+          "items": [
+            "SALARY",
+            "FREELANCE",
+            "BENEFIT",
+            "RENTAL",
+            "DIVIDEND",
+            "OTHER"
+          ]
+        },
+        "money_jar_key": {
+          "name": "money_jar_key",
+          "schema": "public",
+          "items": [
+            "NECESSITIES",
+            "FINANCIAL_FREEDOM",
+            "EDUCATION",
+            "LONG_TERM_SAVINGS",
+            "PLAY",
+            "GIVE"
+          ]
+        },
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
+          "schema": "public",
+          "items": [
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
+          ]
+        },
+        "money_rule_field": {
+          "name": "money_rule_field",
+          "schema": "public",
+          "items": [
+            "DESCRIPTION",
+            "COUNTERPARTY",
+            "AMOUNT"
+          ]
+        },
+        "money_rule_matcher": {
+          "name": "money_rule_matcher",
+          "schema": "public",
+          "items": [
+            "CONTAINS",
+            "EQUALS",
+            "STARTS_WITH",
+            "REGEX"
+          ]
+        },
+        "money_spending_style": {
+          "name": "money_spending_style",
           "schema": "public",
           "items": [
             "SPENDER",
             "SAVER",
             "BALANCED",
             "UNKNOWN"
+          ]
+        },
+        "money_transaction_source": {
+          "name": "money_transaction_source",
+          "schema": "public",
+          "items": [
+            "MANUAL",
+            "CSV",
+            "BANK",
+            "RECURRING"
+          ]
+        },
+        "money_transaction_status": {
+          "name": "money_transaction_status",
+          "schema": "public",
+          "items": [
+            "INBOX",
+            "SORTED",
+            "IGNORED"
+          ]
+        },
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
+          "schema": "public",
+          "items": [
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
+          ]
+        },
+        "platform_coach_kind": {
+          "name": "platform_coach_kind",
+          "schema": "public",
+          "items": [
+            "NUDGE",
+            "WIN",
+            "WARNING",
+            "INSIGHT",
+            "WEEK_CHECK"
+          ]
+        },
+        "platform_currency": {
+          "name": "platform_currency",
+          "schema": "public",
+          "items": [
+            "EUR",
+            "USD",
+            "GBP"
+          ]
+        },
+        "platform_household_kind": {
+          "name": "platform_household_kind",
+          "schema": "public",
+          "items": [
+            "FAMILY",
+            "PARTNERS",
+            "FRIENDS",
+            "SOLO"
+          ]
+        }
+      },
+      "comment": null
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "week": {
+          "name": "week",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "name": "growth_week_check",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "household_id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "growth_week_check_household_id_index",
+          "unique": false,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "household_id",
+            "week"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "growth_week_check_household_id_week_unique",
+          "unique": true,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "growth_week_check_pkey",
+          "unique": true,
+          "primary": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "growth_week_check_household_id_foreign": {
+          "columnNames": [
+            "household_id"
+          ],
+          "constraintName": "growth_week_check_household_id_foreign",
+          "localTableName": "public.growth_week_check",
+          "referencedTableName": "auth.household",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "auth_locale": {
+          "name": "auth_locale",
+          "schema": "public",
+          "items": [
+            "NL",
+            "EN"
+          ]
+        },
+        "auth_theme": {
+          "name": "auth_theme",
+          "schema": "public",
+          "items": [
+            "LIGHT",
+            "DARK",
+            "SYSTEM"
+          ]
+        },
+        "backoffice_capability_kind": {
+          "name": "backoffice_capability_kind",
+          "schema": "public",
+          "items": [
+            "screen",
+            "action"
+          ]
+        },
+        "backoffice_plan_key": {
+          "name": "backoffice_plan_key",
+          "schema": "public",
+          "items": [
+            "BASIC",
+            "PLUS",
+            "MAX"
+          ]
+        },
+        "energy_metric": {
+          "name": "energy_metric",
+          "schema": "public",
+          "items": [
+            "SLEEP",
+            "TRAIN",
+            "FOOD",
+            "MIND"
+          ]
+        },
+        "money_account_kind": {
+          "name": "money_account_kind",
+          "schema": "public",
+          "items": [
+            "CHECKING",
+            "SAVINGS",
+            "CREDIT",
+            "CASH",
+            "INVESTMENT"
+          ]
+        },
+        "money_cadence": {
+          "name": "money_cadence",
+          "schema": "public",
+          "items": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
           ]
         },
         "money_debt_kind": {
@@ -2450,14 +3208,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -2479,6 +3241,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -2498,18 +3270,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -2520,7 +3288,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -2737,16 +3505,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -2809,14 +3567,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -2838,6 +3600,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -2857,18 +3629,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -2879,7 +3647,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -3248,16 +4016,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -3320,14 +4078,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -3349,6 +4111,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -3368,18 +4140,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -3390,7 +4158,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -3465,8 +4233,8 @@
           "enumItems": [],
           "mappedType": "json"
         },
-        "ritual_settings": {
-          "name": "ritual_settings",
+        "week_check_settings": {
+          "name": "week_check_settings",
           "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
@@ -3728,16 +4496,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -3800,14 +4558,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -3829,6 +4591,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -3848,18 +4620,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -3870,7 +4638,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -4136,16 +4904,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -4208,14 +4966,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -4237,6 +4999,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -4256,18 +5028,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -4278,7 +5046,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -4496,16 +5264,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -4568,14 +5326,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -4597,6 +5359,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -4616,18 +5388,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -4638,7 +5406,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -4940,16 +5708,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -5012,14 +5770,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -5041,6 +5803,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -5060,18 +5832,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -5082,7 +5850,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -5358,16 +6126,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -5430,14 +6188,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -5459,6 +6221,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -5478,18 +6250,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -5500,7 +6268,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -5851,16 +6619,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -5923,14 +6681,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -5952,6 +6714,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -5971,18 +6743,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -5993,7 +6761,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -6389,16 +7157,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -6461,14 +7219,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -6490,6 +7252,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -6509,18 +7281,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -6531,7 +7299,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -6929,16 +7697,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -7001,14 +7759,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -7030,6 +7792,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -7049,18 +7821,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -7071,7 +7839,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -7331,16 +8099,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -7403,14 +8161,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -7432,6 +8194,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -7451,18 +8223,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -7473,7 +8241,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -7799,16 +8567,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -7871,14 +8629,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -7900,6 +8662,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -7919,18 +8691,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -7941,7 +8709,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -8271,16 +9039,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -8343,14 +9101,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -8372,6 +9134,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -8391,18 +9163,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -8413,7 +9181,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -8601,7 +9369,7 @@
           "mappedType": "datetime"
         }
       },
-      "name": "money_period_turn",
+      "name": "money_month_score",
       "schema": "public",
       "indexes": [
         {
@@ -8610,7 +9378,7 @@
           ],
           "composite": false,
           "constraint": false,
-          "keyName": "money_period_turn_household_id_index",
+          "keyName": "money_month_score_household_id_index",
           "unique": false,
           "primary": false
         },
@@ -8621,7 +9389,7 @@
           ],
           "composite": true,
           "constraint": true,
-          "keyName": "money_period_turn_household_id_period_unique",
+          "keyName": "money_month_score_household_id_period_unique",
           "unique": true,
           "primary": false
         },
@@ -8631,19 +9399,19 @@
           ],
           "composite": false,
           "constraint": false,
-          "keyName": "money_period_turn_pkey",
+          "keyName": "money_month_score_pkey",
           "unique": true,
           "primary": true
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "money_period_turn_household_id_foreign": {
+        "money_month_score_household_id_foreign": {
           "columnNames": [
             "household_id"
           ],
-          "constraintName": "money_period_turn_household_id_foreign",
-          "localTableName": "public.money_period_turn",
+          "constraintName": "money_month_score_household_id_foreign",
+          "localTableName": "public.money_month_score",
           "referencedTableName": "auth.household",
           "referencedColumnNames": [
             "id"
@@ -8719,16 +9487,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -8791,14 +9549,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -8820,6 +9582,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -8839,18 +9611,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -8861,7 +9629,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -8952,40 +9720,98 @@
           "enumItems": [],
           "mappedType": "uuid"
         },
-        "amount": {
-          "name": "amount",
-          "type": "int8",
+        "period": {
+          "name": "period",
+          "type": "varchar(7)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 7,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
+        "day": {
+          "name": "day",
+          "type": "int4",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "unique": false,
           "length": null,
-          "precision": 64,
+          "precision": 32,
           "scale": 0,
           "default": null,
           "comment": null,
           "enumItems": [],
-          "mappedType": "bigint"
+          "mappedType": "integer"
         },
-        "ritual_id": {
-          "name": "ritual_id",
-          "type": "uuid",
+        "text": {
+          "name": "text",
+          "type": "varchar(240)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "unique": true,
-          "length": null,
+          "unique": false,
+          "length": 240,
           "precision": null,
           "scale": null,
           "default": null,
           "comment": null,
           "enumItems": [],
-          "mappedType": "uuid"
+          "mappedType": "string"
         },
-        "jar_id": {
-          "name": "jar_id",
+        "points": {
+          "name": "points",
+          "type": "int4",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "default": "0",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "kind": {
+          "name": "kind",
+          "type": "money_month_score_event_kind",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
+          ],
+          "mappedType": "unknown",
+          "nativeEnumName": "money_month_score_event_kind"
+        },
+        "month_score_id": {
+          "name": "month_score_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
@@ -9001,7 +9827,7 @@
           "mappedType": "uuid"
         }
       },
-      "name": "money_ritual_allocation",
+      "name": "money_month_score_event",
       "schema": "public",
       "indexes": [
         {
@@ -9010,7 +9836,18 @@
           ],
           "composite": false,
           "constraint": false,
-          "keyName": "money_ritual_allocation_household_id_index",
+          "keyName": "money_month_score_event_household_id_index",
+          "unique": false,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "household_id",
+            "period"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "money_month_score_event_household_id_period_index",
           "unique": false,
           "primary": false
         },
@@ -9020,30 +9857,19 @@
           ],
           "composite": false,
           "constraint": false,
-          "keyName": "money_ritual_allocation_pkey",
+          "keyName": "money_month_score_event_pkey",
           "unique": true,
           "primary": true
-        },
-        {
-          "columnNames": [
-            "ritual_id",
-            "jar_id"
-          ],
-          "composite": true,
-          "constraint": true,
-          "keyName": "money_ritual_allocation_ritual_id_jar_id_unique",
-          "unique": true,
-          "primary": false
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "money_ritual_allocation_household_id_foreign": {
+        "money_month_score_event_household_id_foreign": {
           "columnNames": [
             "household_id"
           ],
-          "constraintName": "money_ritual_allocation_household_id_foreign",
-          "localTableName": "public.money_ritual_allocation",
+          "constraintName": "money_month_score_event_household_id_foreign",
+          "localTableName": "public.money_month_score_event",
           "referencedTableName": "auth.household",
           "referencedColumnNames": [
             "id"
@@ -9051,26 +9877,13 @@
           "updateRule": "cascade",
           "deleteRule": "cascade"
         },
-        "money_ritual_allocation_jar_id_foreign": {
+        "money_month_score_event_month_score_id_foreign": {
           "columnNames": [
-            "jar_id"
+            "month_score_id"
           ],
-          "constraintName": "money_ritual_allocation_jar_id_foreign",
-          "localTableName": "public.money_ritual_allocation",
-          "referencedTableName": "public.money_jar",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "updateRule": "cascade",
-          "deleteRule": "cascade"
-        },
-        "money_ritual_allocation_ritual_id_foreign": {
-          "columnNames": [
-            "ritual_id"
-          ],
-          "constraintName": "money_ritual_allocation_ritual_id_foreign",
-          "localTableName": "public.money_ritual_allocation",
-          "referencedTableName": "public.money_weekly_ritual",
+          "constraintName": "money_month_score_event_month_score_id_foreign",
+          "localTableName": "public.money_month_score_event",
+          "referencedTableName": "public.money_month_score",
           "referencedColumnNames": [
             "id"
           ],
@@ -9145,16 +9958,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -9217,14 +10020,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -9246,6 +10053,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -9265,18 +10082,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -9287,7 +10100,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -9651,16 +10464,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -9723,14 +10526,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -9752,6 +10559,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -9771,18 +10588,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -9793,7 +10606,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -10266,16 +11079,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -10338,14 +11141,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -10367,378 +11174,8 @@
             "REGEX"
           ]
         },
-        "money_transaction_source": {
-          "name": "money_transaction_source",
-          "schema": "public",
-          "items": [
-            "MANUAL",
-            "CSV",
-            "BANK",
-            "RECURRING"
-          ]
-        },
-        "money_transaction_status": {
-          "name": "money_transaction_status",
-          "schema": "public",
-          "items": [
-            "INBOX",
-            "SORTED",
-            "IGNORED"
-          ]
-        },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
-          "schema": "public",
-          "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
-          ]
-        },
-        "platform_coach_kind": {
-          "name": "platform_coach_kind",
-          "schema": "public",
-          "items": [
-            "NUDGE",
-            "WIN",
-            "WARNING",
-            "INSIGHT",
-            "RITUAL"
-          ]
-        },
-        "platform_currency": {
-          "name": "platform_currency",
-          "schema": "public",
-          "items": [
-            "EUR",
-            "USD",
-            "GBP"
-          ]
-        },
-        "platform_household_kind": {
-          "name": "platform_household_kind",
-          "schema": "public",
-          "items": [
-            "FAMILY",
-            "PARTNERS",
-            "FRIENDS",
-            "SOLO"
-          ]
-        }
-      },
-      "comment": null
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": true,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 6,
-          "precision": null,
-          "scale": null,
-          "default": "now()",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(6)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 6,
-          "precision": null,
-          "scale": null,
-          "default": "now()",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "datetime"
-        },
-        "household_id": {
-          "name": "household_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        },
-        "period": {
-          "name": "period",
-          "type": "varchar(7)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 7,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "string"
-        },
-        "day": {
-          "name": "day",
-          "type": "int4",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 32,
-          "scale": 0,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "integer"
-        },
-        "text": {
-          "name": "text",
-          "type": "varchar(240)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 240,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "string"
-        },
-        "points": {
-          "name": "points",
-          "type": "int4",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": 32,
-          "scale": 0,
-          "default": "0",
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "integer"
-        },
-        "kind": {
-          "name": "kind",
-          "type": "money_turn_event_kind",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
-          ],
-          "mappedType": "unknown",
-          "nativeEnumName": "money_turn_event_kind"
-        },
-        "turn_id": {
-          "name": "turn_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "uuid"
-        }
-      },
-      "name": "money_turn_event",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "household_id"
-          ],
-          "composite": false,
-          "constraint": false,
-          "keyName": "money_turn_event_household_id_index",
-          "unique": false,
-          "primary": false
-        },
-        {
-          "columnNames": [
-            "household_id",
-            "period"
-          ],
-          "composite": true,
-          "constraint": false,
-          "keyName": "money_turn_event_household_id_period_index",
-          "unique": false,
-          "primary": false
-        },
-        {
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": false,
-          "keyName": "money_turn_event_pkey",
-          "unique": true,
-          "primary": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "money_turn_event_household_id_foreign": {
-          "columnNames": [
-            "household_id"
-          ],
-          "constraintName": "money_turn_event_household_id_foreign",
-          "localTableName": "public.money_turn_event",
-          "referencedTableName": "auth.household",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "updateRule": "cascade",
-          "deleteRule": "cascade"
-        },
-        "money_turn_event_turn_id_foreign": {
-          "columnNames": [
-            "turn_id"
-          ],
-          "constraintName": "money_turn_event_turn_id_foreign",
-          "localTableName": "public.money_turn_event",
-          "referencedTableName": "public.money_period_turn",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "updateRule": "cascade",
-          "deleteRule": "cascade"
-        }
-      },
-      "nativeEnums": {
-        "auth_locale": {
-          "name": "auth_locale",
-          "schema": "public",
-          "items": [
-            "NL",
-            "EN"
-          ]
-        },
-        "auth_theme": {
-          "name": "auth_theme",
-          "schema": "public",
-          "items": [
-            "LIGHT",
-            "DARK",
-            "SYSTEM"
-          ]
-        },
-        "backoffice_capability_kind": {
-          "name": "backoffice_capability_kind",
-          "schema": "public",
-          "items": [
-            "screen",
-            "action"
-          ]
-        },
-        "backoffice_plan_key": {
-          "name": "backoffice_plan_key",
-          "schema": "public",
-          "items": [
-            "BASIC",
-            "PLUS",
-            "MAX"
-          ]
-        },
-        "energy_metric": {
-          "name": "energy_metric",
-          "schema": "public",
-          "items": [
-            "SLEEP",
-            "TRAIN",
-            "FOOD",
-            "MIND"
-          ]
-        },
-        "money_account_kind": {
-          "name": "money_account_kind",
-          "schema": "public",
-          "items": [
-            "CHECKING",
-            "SAVINGS",
-            "CREDIT",
-            "CASH",
-            "INVESTMENT"
-          ]
-        },
-        "money_cadence": {
-          "name": "money_cadence",
-          "schema": "public",
-          "items": [
-            "WEEKLY",
-            "MONTHLY",
-            "QUARTERLY",
-            "YEARLY",
-            "ONCE"
-          ]
-        },
-        "money_character": {
-          "name": "money_character",
+        "money_spending_style": {
+          "name": "money_spending_style",
           "schema": "public",
           "items": [
             "SPENDER",
@@ -10747,97 +11184,6 @@
             "UNKNOWN"
           ]
         },
-        "money_debt_kind": {
-          "name": "money_debt_kind",
-          "schema": "public",
-          "items": [
-            "CREDIT_CARD",
-            "LOAN",
-            "STUDENT",
-            "MORTGAGE",
-            "FAMILY",
-            "OTHER"
-          ]
-        },
-        "money_flow_direction": {
-          "name": "money_flow_direction",
-          "schema": "public",
-          "items": [
-            "IN",
-            "OUT"
-          ]
-        },
-        "money_goal_kind": {
-          "name": "money_goal_kind",
-          "schema": "public",
-          "items": [
-            "SAVE",
-            "EARN"
-          ]
-        },
-        "money_goal_status": {
-          "name": "money_goal_status",
-          "schema": "public",
-          "items": [
-            "ACTIVE",
-            "REACHED",
-            "PAUSED",
-            "ARCHIVED"
-          ]
-        },
-        "money_income_kind": {
-          "name": "money_income_kind",
-          "schema": "public",
-          "items": [
-            "SALARY",
-            "FREELANCE",
-            "BENEFIT",
-            "RENTAL",
-            "DIVIDEND",
-            "OTHER"
-          ]
-        },
-        "money_jar_key": {
-          "name": "money_jar_key",
-          "schema": "public",
-          "items": [
-            "NECESSITIES",
-            "FINANCIAL_FREEDOM",
-            "EDUCATION",
-            "LONG_TERM_SAVINGS",
-            "PLAY",
-            "GIVE"
-          ]
-        },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
-          "schema": "public",
-          "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
-          ]
-        },
-        "money_rule_field": {
-          "name": "money_rule_field",
-          "schema": "public",
-          "items": [
-            "DESCRIPTION",
-            "COUNTERPARTY",
-            "AMOUNT"
-          ]
-        },
-        "money_rule_matcher": {
-          "name": "money_rule_matcher",
-          "schema": "public",
-          "items": [
-            "CONTAINS",
-            "EQUALS",
-            "STARTS_WITH",
-            "REGEX"
-          ]
-        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -10857,18 +11203,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -10879,7 +11221,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -11036,7 +11378,7 @@
         },
         "stage": {
           "name": "stage",
-          "type": "money_ritual_stage",
+          "type": "money_week_check_stage",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -11054,10 +11396,10 @@
             "DONE"
           ],
           "mappedType": "unknown",
-          "nativeEnumName": "money_ritual_stage"
+          "nativeEnumName": "money_week_check_stage"
         }
       },
-      "name": "money_weekly_ritual",
+      "name": "money_week_check",
       "schema": "public",
       "indexes": [
         {
@@ -11066,7 +11408,7 @@
           ],
           "composite": false,
           "constraint": false,
-          "keyName": "money_weekly_ritual_household_id_index",
+          "keyName": "money_week_check_household_id_index",
           "unique": false,
           "primary": false
         },
@@ -11077,7 +11419,7 @@
           ],
           "composite": true,
           "constraint": true,
-          "keyName": "money_weekly_ritual_household_id_week_unique",
+          "keyName": "money_week_check_household_id_week_unique",
           "unique": true,
           "primary": false
         },
@@ -11087,19 +11429,19 @@
           ],
           "composite": false,
           "constraint": false,
-          "keyName": "money_weekly_ritual_pkey",
+          "keyName": "money_week_check_pkey",
           "unique": true,
           "primary": true
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "money_weekly_ritual_household_id_foreign": {
+        "money_week_check_household_id_foreign": {
           "columnNames": [
             "household_id"
           ],
-          "constraintName": "money_weekly_ritual_household_id_foreign",
-          "localTableName": "public.money_weekly_ritual",
+          "constraintName": "money_week_check_household_id_foreign",
+          "localTableName": "public.money_week_check",
           "referencedTableName": "auth.household",
           "referencedColumnNames": [
             "id"
@@ -11175,14 +11517,430 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
+        "money_debt_kind": {
+          "name": "money_debt_kind",
+          "schema": "public",
+          "items": [
+            "CREDIT_CARD",
+            "LOAN",
+            "STUDENT",
+            "MORTGAGE",
+            "FAMILY",
+            "OTHER"
+          ]
+        },
+        "money_flow_direction": {
+          "name": "money_flow_direction",
+          "schema": "public",
+          "items": [
+            "IN",
+            "OUT"
+          ]
+        },
+        "money_goal_kind": {
+          "name": "money_goal_kind",
+          "schema": "public",
+          "items": [
+            "SAVE",
+            "EARN"
+          ]
+        },
+        "money_goal_status": {
+          "name": "money_goal_status",
+          "schema": "public",
+          "items": [
+            "ACTIVE",
+            "REACHED",
+            "PAUSED",
+            "ARCHIVED"
+          ]
+        },
+        "money_income_kind": {
+          "name": "money_income_kind",
+          "schema": "public",
+          "items": [
+            "SALARY",
+            "FREELANCE",
+            "BENEFIT",
+            "RENTAL",
+            "DIVIDEND",
+            "OTHER"
+          ]
+        },
+        "money_jar_key": {
+          "name": "money_jar_key",
+          "schema": "public",
+          "items": [
+            "NECESSITIES",
+            "FINANCIAL_FREEDOM",
+            "EDUCATION",
+            "LONG_TERM_SAVINGS",
+            "PLAY",
+            "GIVE"
+          ]
+        },
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
+          "schema": "public",
+          "items": [
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
+          ]
+        },
+        "money_rule_field": {
+          "name": "money_rule_field",
+          "schema": "public",
+          "items": [
+            "DESCRIPTION",
+            "COUNTERPARTY",
+            "AMOUNT"
+          ]
+        },
+        "money_rule_matcher": {
+          "name": "money_rule_matcher",
+          "schema": "public",
+          "items": [
+            "CONTAINS",
+            "EQUALS",
+            "STARTS_WITH",
+            "REGEX"
+          ]
+        },
+        "money_spending_style": {
+          "name": "money_spending_style",
           "schema": "public",
           "items": [
             "SPENDER",
             "SAVER",
             "BALANCED",
             "UNKNOWN"
+          ]
+        },
+        "money_transaction_source": {
+          "name": "money_transaction_source",
+          "schema": "public",
+          "items": [
+            "MANUAL",
+            "CSV",
+            "BANK",
+            "RECURRING"
+          ]
+        },
+        "money_transaction_status": {
+          "name": "money_transaction_status",
+          "schema": "public",
+          "items": [
+            "INBOX",
+            "SORTED",
+            "IGNORED"
+          ]
+        },
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
+          "schema": "public",
+          "items": [
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
+          ]
+        },
+        "platform_coach_kind": {
+          "name": "platform_coach_kind",
+          "schema": "public",
+          "items": [
+            "NUDGE",
+            "WIN",
+            "WARNING",
+            "INSIGHT",
+            "WEEK_CHECK"
+          ]
+        },
+        "platform_currency": {
+          "name": "platform_currency",
+          "schema": "public",
+          "items": [
+            "EUR",
+            "USD",
+            "GBP"
+          ]
+        },
+        "platform_household_kind": {
+          "name": "platform_household_kind",
+          "schema": "public",
+          "items": [
+            "FAMILY",
+            "PARTNERS",
+            "FRIENDS",
+            "SOLO"
+          ]
+        }
+      },
+      "comment": null
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "amount": {
+          "name": "amount",
+          "type": "int8",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "bigint"
+        },
+        "week_check_id": {
+          "name": "week_check_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "jar_id": {
+          "name": "jar_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        }
+      },
+      "name": "money_week_check_allocation",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "household_id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "money_week_check_allocation_household_id_index",
+          "unique": false,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "money_week_check_allocation_pkey",
+          "unique": true,
+          "primary": true
+        },
+        {
+          "columnNames": [
+            "week_check_id",
+            "jar_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "money_week_check_allocation_week_check_id_jar_id_unique",
+          "unique": true,
+          "primary": false
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "money_week_check_allocation_household_id_foreign": {
+          "columnNames": [
+            "household_id"
+          ],
+          "constraintName": "money_week_check_allocation_household_id_foreign",
+          "localTableName": "public.money_week_check_allocation",
+          "referencedTableName": "auth.household",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        },
+        "money_week_check_allocation_jar_id_foreign": {
+          "columnNames": [
+            "jar_id"
+          ],
+          "constraintName": "money_week_check_allocation_jar_id_foreign",
+          "localTableName": "public.money_week_check_allocation",
+          "referencedTableName": "public.money_jar",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        },
+        "money_week_check_allocation_week_check_id_foreign": {
+          "columnNames": [
+            "week_check_id"
+          ],
+          "constraintName": "money_week_check_allocation_week_check_id_foreign",
+          "localTableName": "public.money_week_check_allocation",
+          "referencedTableName": "public.money_week_check",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "auth_locale": {
+          "name": "auth_locale",
+          "schema": "public",
+          "items": [
+            "NL",
+            "EN"
+          ]
+        },
+        "auth_theme": {
+          "name": "auth_theme",
+          "schema": "public",
+          "items": [
+            "LIGHT",
+            "DARK",
+            "SYSTEM"
+          ]
+        },
+        "backoffice_capability_kind": {
+          "name": "backoffice_capability_kind",
+          "schema": "public",
+          "items": [
+            "screen",
+            "action"
+          ]
+        },
+        "backoffice_plan_key": {
+          "name": "backoffice_plan_key",
+          "schema": "public",
+          "items": [
+            "BASIC",
+            "PLUS",
+            "MAX"
+          ]
+        },
+        "energy_metric": {
+          "name": "energy_metric",
+          "schema": "public",
+          "items": [
+            "SLEEP",
+            "TRAIN",
+            "FOOD",
+            "MIND"
+          ]
+        },
+        "money_account_kind": {
+          "name": "money_account_kind",
+          "schema": "public",
+          "items": [
+            "CHECKING",
+            "SAVINGS",
+            "CREDIT",
+            "CASH",
+            "INVESTMENT"
+          ]
+        },
+        "money_cadence": {
+          "name": "money_cadence",
+          "schema": "public",
+          "items": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
           ]
         },
         "money_debt_kind": {
@@ -11247,14 +12005,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -11276,6 +12038,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -11295,18 +12067,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -11317,7 +12085,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -11587,16 +12355,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -11659,14 +12417,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -11688,6 +12450,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -11707,18 +12479,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -11729,7 +12497,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -11989,16 +12757,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -12061,14 +12819,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -12090,6 +12852,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -12109,18 +12881,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -12131,7 +12899,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -12411,16 +13179,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -12483,14 +13241,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -12512,6 +13274,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -12531,18 +13303,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -12553,7 +13321,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -12786,16 +13554,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -12858,14 +13616,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -12887,6 +13649,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -12906,18 +13678,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -12928,7 +13696,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -13117,7 +13885,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ],
           "mappedType": "unknown",
           "nativeEnumName": "platform_coach_kind"
@@ -13241,16 +14009,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -13313,14 +14071,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -13342,6 +14104,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -13361,18 +14133,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -13383,7 +14151,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -13732,16 +14500,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -13804,14 +14562,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -13833,6 +14595,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -13852,18 +14624,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -13874,7 +14642,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -14123,16 +14891,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -14195,14 +14953,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -14224,6 +14986,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -14243,18 +15015,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -14265,7 +15033,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -14436,8 +15204,8 @@
           "enumItems": [],
           "mappedType": "json"
         },
-        "for_characters": {
-          "name": "for_characters",
+        "for_spending_styles": {
+          "name": "for_spending_styles",
           "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
@@ -14578,16 +15346,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -14650,14 +15408,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -14679,6 +15441,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -14698,18 +15470,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -14720,7 +15488,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -15001,16 +15769,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -15073,14 +15831,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -15102,6 +15864,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -15121,18 +15893,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -15143,7 +15911,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -15422,16 +16190,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -15494,14 +16252,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -15523,6 +16285,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -15542,18 +16314,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -15564,7 +16332,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -15853,16 +16621,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -15925,14 +16683,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -15954,6 +16716,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -15973,18 +16745,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -15995,7 +16763,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -16349,16 +17117,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -16421,14 +17179,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -16450,6 +17212,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -16469,18 +17241,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -16491,7 +17259,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -16786,16 +17554,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -16858,14 +17616,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -16887,6 +17649,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -16906,18 +17678,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -16928,7 +17696,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -17208,16 +17976,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -17280,14 +18038,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -17309,6 +18071,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -17328,18 +18100,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -17350,7 +18118,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -17655,16 +18423,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -17727,14 +18485,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -17756,6 +18518,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -17775,18 +18547,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -17797,7 +18565,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -18124,16 +18892,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -18196,14 +18954,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -18225,6 +18987,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -18244,18 +19016,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -18266,7 +19034,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -18545,16 +19313,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -18617,14 +19375,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -18646,6 +19408,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -18665,18 +19437,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -18687,7 +19455,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -18958,14 +19726,388 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
+        "money_debt_kind": {
+          "name": "money_debt_kind",
+          "schema": "public",
+          "items": [
+            "CREDIT_CARD",
+            "LOAN",
+            "STUDENT",
+            "MORTGAGE",
+            "FAMILY",
+            "OTHER"
+          ]
+        },
+        "money_flow_direction": {
+          "name": "money_flow_direction",
+          "schema": "public",
+          "items": [
+            "IN",
+            "OUT"
+          ]
+        },
+        "money_goal_kind": {
+          "name": "money_goal_kind",
+          "schema": "public",
+          "items": [
+            "SAVE",
+            "EARN"
+          ]
+        },
+        "money_goal_status": {
+          "name": "money_goal_status",
+          "schema": "public",
+          "items": [
+            "ACTIVE",
+            "REACHED",
+            "PAUSED",
+            "ARCHIVED"
+          ]
+        },
+        "money_income_kind": {
+          "name": "money_income_kind",
+          "schema": "public",
+          "items": [
+            "SALARY",
+            "FREELANCE",
+            "BENEFIT",
+            "RENTAL",
+            "DIVIDEND",
+            "OTHER"
+          ]
+        },
+        "money_jar_key": {
+          "name": "money_jar_key",
+          "schema": "public",
+          "items": [
+            "NECESSITIES",
+            "FINANCIAL_FREEDOM",
+            "EDUCATION",
+            "LONG_TERM_SAVINGS",
+            "PLAY",
+            "GIVE"
+          ]
+        },
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
+          "schema": "public",
+          "items": [
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
+          ]
+        },
+        "money_rule_field": {
+          "name": "money_rule_field",
+          "schema": "public",
+          "items": [
+            "DESCRIPTION",
+            "COUNTERPARTY",
+            "AMOUNT"
+          ]
+        },
+        "money_rule_matcher": {
+          "name": "money_rule_matcher",
+          "schema": "public",
+          "items": [
+            "CONTAINS",
+            "EQUALS",
+            "STARTS_WITH",
+            "REGEX"
+          ]
+        },
+        "money_spending_style": {
+          "name": "money_spending_style",
           "schema": "public",
           "items": [
             "SPENDER",
             "SAVER",
             "BALANCED",
             "UNKNOWN"
+          ]
+        },
+        "money_transaction_source": {
+          "name": "money_transaction_source",
+          "schema": "public",
+          "items": [
+            "MANUAL",
+            "CSV",
+            "BANK",
+            "RECURRING"
+          ]
+        },
+        "money_transaction_status": {
+          "name": "money_transaction_status",
+          "schema": "public",
+          "items": [
+            "INBOX",
+            "SORTED",
+            "IGNORED"
+          ]
+        },
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
+          "schema": "public",
+          "items": [
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
+          ]
+        },
+        "platform_coach_kind": {
+          "name": "platform_coach_kind",
+          "schema": "public",
+          "items": [
+            "NUDGE",
+            "WIN",
+            "WARNING",
+            "INSIGHT",
+            "WEEK_CHECK"
+          ]
+        },
+        "platform_currency": {
+          "name": "platform_currency",
+          "schema": "public",
+          "items": [
+            "EUR",
+            "USD",
+            "GBP"
+          ]
+        },
+        "platform_household_kind": {
+          "name": "platform_household_kind",
+          "schema": "public",
+          "items": [
+            "FAMILY",
+            "PARTNERS",
+            "FRIENDS",
+            "SOLO"
+          ]
+        }
+      },
+      "comment": null
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "week": {
+          "name": "week",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "name": "soul_week_check",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "household_id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "soul_week_check_household_id_index",
+          "unique": false,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "household_id",
+            "week"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "soul_week_check_household_id_week_unique",
+          "unique": true,
+          "primary": false
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "soul_week_check_pkey",
+          "unique": true,
+          "primary": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "soul_week_check_household_id_foreign": {
+          "columnNames": [
+            "household_id"
+          ],
+          "constraintName": "soul_week_check_household_id_foreign",
+          "localTableName": "public.soul_week_check",
+          "referencedTableName": "auth.household",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "auth_locale": {
+          "name": "auth_locale",
+          "schema": "public",
+          "items": [
+            "NL",
+            "EN"
+          ]
+        },
+        "auth_theme": {
+          "name": "auth_theme",
+          "schema": "public",
+          "items": [
+            "LIGHT",
+            "DARK",
+            "SYSTEM"
+          ]
+        },
+        "backoffice_capability_kind": {
+          "name": "backoffice_capability_kind",
+          "schema": "public",
+          "items": [
+            "screen",
+            "action"
+          ]
+        },
+        "backoffice_plan_key": {
+          "name": "backoffice_plan_key",
+          "schema": "public",
+          "items": [
+            "BASIC",
+            "PLUS",
+            "MAX"
+          ]
+        },
+        "energy_metric": {
+          "name": "energy_metric",
+          "schema": "public",
+          "items": [
+            "SLEEP",
+            "TRAIN",
+            "FOOD",
+            "MIND"
+          ]
+        },
+        "money_account_kind": {
+          "name": "money_account_kind",
+          "schema": "public",
+          "items": [
+            "CHECKING",
+            "SAVINGS",
+            "CREDIT",
+            "CASH",
+            "INVESTMENT"
+          ]
+        },
+        "money_cadence": {
+          "name": "money_cadence",
+          "schema": "public",
+          "items": [
+            "WEEKLY",
+            "MONTHLY",
+            "QUARTERLY",
+            "YEARLY",
+            "ONCE"
           ]
         },
         "money_debt_kind": {
@@ -19030,14 +20172,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -19059,6 +20205,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -19078,18 +20234,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -19100,7 +20252,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -19337,16 +20489,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -19409,14 +20551,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -19438,6 +20584,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -19457,18 +20613,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -19479,7 +20631,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -19728,16 +20880,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -19800,14 +20942,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -19829,6 +20975,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -19848,18 +21004,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -19870,7 +21022,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -20077,16 +21229,6 @@
             "ONCE"
           ]
         },
-        "money_character": {
-          "name": "money_character",
-          "schema": "public",
-          "items": [
-            "SPENDER",
-            "SAVER",
-            "BALANCED",
-            "UNKNOWN"
-          ]
-        },
         "money_debt_kind": {
           "name": "money_debt_kind",
           "schema": "public",
@@ -20149,14 +21291,18 @@
             "GIVE"
           ]
         },
-        "money_ritual_stage": {
-          "name": "money_ritual_stage",
+        "money_month_score_event_kind": {
+          "name": "money_month_score_event_kind",
           "schema": "public",
           "items": [
-            "LOOK",
-            "REDIRECT",
-            "INTEND",
-            "DONE"
+            "JAR_HELD",
+            "JAR_OVERSPENT",
+            "INBOX_CLEARED",
+            "WEEK_CHECK_DONE",
+            "GOAL_REACHED",
+            "DEBT_CLEARED",
+            "INCOME_LOGGED",
+            "STREAK_KEPT"
           ]
         },
         "money_rule_field": {
@@ -20178,6 +21324,16 @@
             "REGEX"
           ]
         },
+        "money_spending_style": {
+          "name": "money_spending_style",
+          "schema": "public",
+          "items": [
+            "SPENDER",
+            "SAVER",
+            "BALANCED",
+            "UNKNOWN"
+          ]
+        },
         "money_transaction_source": {
           "name": "money_transaction_source",
           "schema": "public",
@@ -20197,18 +21353,14 @@
             "IGNORED"
           ]
         },
-        "money_turn_event_kind": {
-          "name": "money_turn_event_kind",
+        "money_week_check_stage": {
+          "name": "money_week_check_stage",
           "schema": "public",
           "items": [
-            "JAR_HELD",
-            "JAR_OVERSPENT",
-            "INBOX_CLEARED",
-            "RITUAL_DONE",
-            "GOAL_REACHED",
-            "DEBT_CLEARED",
-            "INCOME_LOGGED",
-            "STREAK_KEPT"
+            "LOOK",
+            "REDIRECT",
+            "INTEND",
+            "DONE"
           ]
         },
         "platform_coach_kind": {
@@ -20219,7 +21371,7 @@
             "WIN",
             "WARNING",
             "INSIGHT",
-            "RITUAL"
+            "WEEK_CHECK"
           ]
         },
         "platform_currency": {
@@ -20312,16 +21464,6 @@
         "ONCE"
       ]
     },
-    "money_character": {
-      "name": "money_character",
-      "schema": "public",
-      "items": [
-        "SPENDER",
-        "SAVER",
-        "BALANCED",
-        "UNKNOWN"
-      ]
-    },
     "money_debt_kind": {
       "name": "money_debt_kind",
       "schema": "public",
@@ -20384,14 +21526,18 @@
         "GIVE"
       ]
     },
-    "money_ritual_stage": {
-      "name": "money_ritual_stage",
+    "money_month_score_event_kind": {
+      "name": "money_month_score_event_kind",
       "schema": "public",
       "items": [
-        "LOOK",
-        "REDIRECT",
-        "INTEND",
-        "DONE"
+        "JAR_HELD",
+        "JAR_OVERSPENT",
+        "INBOX_CLEARED",
+        "WEEK_CHECK_DONE",
+        "GOAL_REACHED",
+        "DEBT_CLEARED",
+        "INCOME_LOGGED",
+        "STREAK_KEPT"
       ]
     },
     "money_rule_field": {
@@ -20413,6 +21559,16 @@
         "REGEX"
       ]
     },
+    "money_spending_style": {
+      "name": "money_spending_style",
+      "schema": "public",
+      "items": [
+        "SPENDER",
+        "SAVER",
+        "BALANCED",
+        "UNKNOWN"
+      ]
+    },
     "money_transaction_source": {
       "name": "money_transaction_source",
       "schema": "public",
@@ -20432,18 +21588,14 @@
         "IGNORED"
       ]
     },
-    "money_turn_event_kind": {
-      "name": "money_turn_event_kind",
+    "money_week_check_stage": {
+      "name": "money_week_check_stage",
       "schema": "public",
       "items": [
-        "JAR_HELD",
-        "JAR_OVERSPENT",
-        "INBOX_CLEARED",
-        "RITUAL_DONE",
-        "GOAL_REACHED",
-        "DEBT_CLEARED",
-        "INCOME_LOGGED",
-        "STREAK_KEPT"
+        "LOOK",
+        "REDIRECT",
+        "INTEND",
+        "DONE"
       ]
     },
     "platform_coach_kind": {
@@ -20454,7 +21606,7 @@
         "WIN",
         "WARNING",
         "INSIGHT",
-        "RITUAL"
+        "WEEK_CHECK"
       ]
     },
     "platform_currency": {

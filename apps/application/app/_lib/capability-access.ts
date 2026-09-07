@@ -1,13 +1,11 @@
 import { normalizeAppPathname, resolveNavChildForPath } from './nav';
-import { CAPABILITIES, minPlanForCapability, type PlanKey } from './plan';
+import { minPlanForCapability, type PlanKey } from './plan';
 
 /**
- * Routes that are not nav children but inherit a gated capability
- * (e.g. asset create flows belong to growth-board).
+ * Routes that are not nav children but inherit a gated capability.
+ * Empty for now — create flows live under their parent nav routes.
  */
-const CAPABILITY_PATH_ALIASES: ReadonlyArray<{ prefix: string; capabilityKey: string }> = [
-    { prefix: '/product/growth/assets', capabilityKey: CAPABILITIES.growthBoard },
-];
+const CAPABILITY_PATH_ALIASES: ReadonlyArray<{ prefix: string; capabilityKey: string }> = [];
 
 /** Resolve the plan-gating capability key for any app pathname. */
 export function capabilityKeyForPathname(pathname: string): string | null {

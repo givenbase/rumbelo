@@ -1,4 +1,4 @@
-/** Money-domain string enums — jars, ledger, targets, rhythm. */
+/** Money-domain string enums — jars, ledger, targets, cadence. */
 
 export enum JarKey {
     NECESSITIES = 'NECESSITIES',
@@ -80,18 +80,18 @@ export enum RuleMatcher {
     REGEX = 'REGEX',
 }
 
-export enum RitualStage {
+export enum WeekCheckStage {
     LOOK = 'LOOK',
     REDIRECT = 'REDIRECT',
     INTEND = 'INTEND',
     DONE = 'DONE',
 }
 
-export enum TurnEventKind {
+export enum MonthScoreEventKind {
     JAR_HELD = 'JAR_HELD',
     JAR_OVERSPENT = 'JAR_OVERSPENT',
     INBOX_CLEARED = 'INBOX_CLEARED',
-    RITUAL_DONE = 'RITUAL_DONE',
+    WEEK_CHECK_DONE = 'WEEK_CHECK_DONE',
     GOAL_REACHED = 'GOAL_REACHED',
     DEBT_CLEARED = 'DEBT_CLEARED',
     INCOME_LOGGED = 'INCOME_LOGGED',

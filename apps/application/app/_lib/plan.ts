@@ -27,7 +27,7 @@ import {
  *
  * Full catalog (26 keys). Basic grants free surfaces + growth goals/income (capped goals).
  * Plus adds debt / bank / import / energy week·train·food / invite.
- * Max adds growth board·learn / soul-chakra.
+ * Max adds growth net-worth·learn / soul-centres.
  */
 
 export {

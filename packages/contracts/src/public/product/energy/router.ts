@@ -18,4 +18,13 @@ export const contract = {
             .output(schemas.EnergyLog),
         summary: oc.input(schemas.HouseholdScoped).output(z.array(schemas.EnergySummary)),
     },
+    weekCheck: {
+        current: oc
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
+            .output(schemas.EnergyWeekCheck),
+        history: oc.input(schemas.HouseholdScoped).output(z.array(schemas.EnergyWeekCheck)),
+        complete: oc
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey }))
+            .output(schemas.EnergyWeekCheck),
+    },
 };

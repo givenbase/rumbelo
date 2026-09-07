@@ -39,12 +39,13 @@ export function capabilityKey<P extends string, F extends string>(
 
 /**
  * Features grouped by product — full inventory (free + paid).
- * Values are stable DB / nav / RequireCapability keys — never rename in place.
+ * Pre-launch we rename keys to match product names (no aliases).
+ * After launch, values are stable DB / nav / RequireCapability keys — do not rename in place.
  */
 export const FEATURES = {
     [CapabilityProduct.HOME]: {
         overview: capabilityKey(CapabilityProduct.HOME, 'overview'),
-        ritual: capabilityKey(CapabilityProduct.HOME, 'ritual'),
+        coach: capabilityKey(CapabilityProduct.HOME, 'coach'),
         why: capabilityKey(CapabilityProduct.HOME, 'why'),
     },
     [CapabilityProduct.MONEY]: {
@@ -60,7 +61,7 @@ export const FEATURES = {
         overview: capabilityKey(CapabilityProduct.GROWTH, 'overview'),
         goals: capabilityKey(CapabilityProduct.GROWTH, 'goals'),
         income: capabilityKey(CapabilityProduct.GROWTH, 'income'),
-        board: capabilityKey(CapabilityProduct.GROWTH, 'board'),
+        netWorth: capabilityKey(CapabilityProduct.GROWTH, 'net-worth'),
         learn: capabilityKey(CapabilityProduct.GROWTH, 'learn'),
     },
     [CapabilityProduct.ENERGY]: {
@@ -72,10 +73,10 @@ export const FEATURES = {
     },
     [CapabilityProduct.SOUL]: {
         overview: capabilityKey(CapabilityProduct.SOUL, 'overview'),
-        mind: capabilityKey(CapabilityProduct.SOUL, 'mind'),
+        stillness: capabilityKey(CapabilityProduct.SOUL, 'stillness'),
         gratitude: capabilityKey(CapabilityProduct.SOUL, 'gratitude'),
         intent: capabilityKey(CapabilityProduct.SOUL, 'intent'),
-        chakra: capabilityKey(CapabilityProduct.SOUL, 'chakra'),
+        centres: capabilityKey(CapabilityProduct.SOUL, 'centres'),
     },
     [CapabilityProduct.PLATFORM]: {
         invite: capabilityKey(CapabilityProduct.PLATFORM, 'invite'),
@@ -85,7 +86,7 @@ export const FEATURES = {
 /** Flat aliases for call sites (`CAPABILITIES.growthGoals`). */
 export const CAPABILITIES = {
     homeOverview: FEATURES.home.overview,
-    homeRitual: FEATURES.home.ritual,
+    homeCoach: FEATURES.home.coach,
     homeWhy: FEATURES.home.why,
     moneyOverview: FEATURES.money.overview,
     moneyJars: FEATURES.money.jars,
@@ -97,7 +98,7 @@ export const CAPABILITIES = {
     growthOverview: FEATURES.growth.overview,
     growthGoals: FEATURES.growth.goals,
     growthIncome: FEATURES.growth.income,
-    growthBoard: FEATURES.growth.board,
+    growthNetWorth: FEATURES.growth.netWorth,
     growthLearn: FEATURES.growth.learn,
     energyOverview: FEATURES.energy.overview,
     energySleep: FEATURES.energy.sleep,
@@ -105,10 +106,10 @@ export const CAPABILITIES = {
     energyTrain: FEATURES.energy.train,
     energyFood: FEATURES.energy.food,
     soulOverview: FEATURES.soul.overview,
-    soulMind: FEATURES.soul.mind,
+    soulStillness: FEATURES.soul.stillness,
     soulGratitude: FEATURES.soul.gratitude,
     soulIntent: FEATURES.soul.intent,
-    soulChakra: FEATURES.soul.chakra,
+    soulCentres: FEATURES.soul.centres,
     platformInvite: FEATURES.platform.invite,
 } as const;
 

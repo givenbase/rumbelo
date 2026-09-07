@@ -17,7 +17,7 @@ import { CapabilityKind, PlanKey } from '../enums';
  *
  * Mental model (read top-down):
  *   plan → product → features
- *   e.g. Max → growth → [goals, income, board, learn]
+ *   e.g. Max → growth → [goals, income, net-worth, learn]
  *
  * Source of truth for nested grants: PLAN_ACCESS.
  * Flat list PLAN_CAPABILITY_GRANTS is derived for simple checks.
@@ -73,11 +73,11 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         description: 'Home overview and daily start.',
         sortOrder: 1,
     },
-    [CAPABILITIES.homeRitual]: {
-        key: CAPABILITIES.homeRitual,
+    [CAPABILITIES.homeCoach]: {
+        key: CAPABILITIES.homeCoach,
         kind: CapabilityKind.SCREEN,
         name: 'Coach',
-        description: 'Weekly ritual and coaching flow.',
+        description: 'Suggestions across products — week check, month score, and next moves.',
         sortOrder: 2,
     },
     [CAPABILITIES.homeWhy]: {
@@ -164,8 +164,8 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         description: 'Books, insights, and what they changed.',
         sortOrder: 23,
     },
-    [CAPABILITIES.growthBoard]: {
-        key: CAPABILITIES.growthBoard,
+    [CAPABILITIES.growthNetWorth]: {
+        key: CAPABILITIES.growthNetWorth,
         kind: CapabilityKind.SCREEN,
         name: 'Net worth',
         description: 'Net worth, returns, and your freedom number.',
@@ -213,11 +213,11 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         description: 'Soul overview.',
         sortOrder: 40,
     },
-    [CAPABILITIES.soulMind]: {
-        key: CAPABILITIES.soulMind,
+    [CAPABILITIES.soulStillness]: {
+        key: CAPABILITIES.soulStillness,
         kind: CapabilityKind.SCREEN,
         name: 'Stillness',
-        description: 'Stillness and mind practice.',
+        description: 'Stillness practice and presence.',
         sortOrder: 41,
     },
     [CAPABILITIES.soulGratitude]: {
@@ -234,8 +234,8 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         description: 'Weekly intent.',
         sortOrder: 43,
     },
-    [CAPABILITIES.soulChakra]: {
-        key: CAPABILITIES.soulChakra,
+    [CAPABILITIES.soulCentres]: {
+        key: CAPABILITIES.soulCentres,
         kind: CapabilityKind.SCREEN,
         name: 'Centres',
         description: 'The seven centres and where energy gets stuck.',
@@ -261,7 +261,7 @@ type ProductFeatureMap = Record<CapabilityProduct, readonly CapabilityKey[]>;
 const BASIC_ACCESS: ProductFeatureMap = {
     [CapabilityProduct.HOME]: [
         CAPABILITIES.homeOverview,
-        CAPABILITIES.homeRitual,
+        CAPABILITIES.homeCoach,
         CAPABILITIES.homeWhy,
     ],
     [CapabilityProduct.MONEY]: [
@@ -278,7 +278,7 @@ const BASIC_ACCESS: ProductFeatureMap = {
     [CapabilityProduct.ENERGY]: [CAPABILITIES.energyOverview, CAPABILITIES.energySleep],
     [CapabilityProduct.SOUL]: [
         CAPABILITIES.soulOverview,
-        CAPABILITIES.soulMind,
+        CAPABILITIES.soulStillness,
         CAPABILITIES.soulGratitude,
         CAPABILITIES.soulIntent,
     ],
@@ -305,9 +305,9 @@ const PLUS_EXTRA: ProductFeatureMap = {
 const MAX_EXTRA: ProductFeatureMap = {
     [CapabilityProduct.HOME]: [],
     [CapabilityProduct.MONEY]: [],
-    [CapabilityProduct.GROWTH]: [CAPABILITIES.growthBoard, CAPABILITIES.growthLearn],
+    [CapabilityProduct.GROWTH]: [CAPABILITIES.growthNetWorth, CAPABILITIES.growthLearn],
     [CapabilityProduct.ENERGY]: [],
-    [CapabilityProduct.SOUL]: [CAPABILITIES.soulChakra],
+    [CapabilityProduct.SOUL]: [CAPABILITIES.soulCentres],
     [CapabilityProduct.PLATFORM]: [],
 };
 

@@ -16,25 +16,27 @@ export const WHY_LINES: Record<string, string> = {
         'Fixed costs are decisions you made once and pay for monthly. Review them like decisions.',
     '/product/growth/goals':
         "A goal turns this month's surplus into something that lasts. With a date and a jar it is a plan.",
-    '/product/growth/board':
+    '/product/growth/net-worth':
         'Money is this month. Net worth is the years. You are wealthy the day it pays for your life.',
     '/product/energy/week':
         'Your hours are your capacity. Divided on purpose, or by whoever asks loudest.',
     '/product/energy/sleep':
         'Sleep is the floor the jars stand on. Cut it and every other number quietly drops.',
-    '/product/soul/mind':
+    '/product/soul/stillness':
         'A calm mind directs money. A restless one spends it and calls that a decision.',
     '/product/soul/gratitude': 'Someone who sees what he already has buys less to fill a hole.',
     '/product/soul/intent': 'An intention is an instruction to yourself. A resolution is a hope.',
-    '/product/soul/chakra': 'Name where it feels stuck, and the next step usually names itself.',
+    '/product/soul/centres': 'Name where it feels stuck, and the next step usually names itself.',
     '/product/growth/income': 'Cutting costs has a floor. Raising income does not.',
     '/product/growth/learn': 'A book you cannot name a use for was Play spending, not Education.',
     '/product/energy/train':
         'Training is the only spend that raises the value of every other hour.',
     '/product/energy/food':
         'Food is fuel for the week your jars divide. Fuel is bought, not willed.',
-    '/product/ritual':
-        'Ten minutes with your coach beats worrying every day. This is the whole practice.',
+    '/product/money/week-check':
+        'Ten minutes a week — look, redirect, set intention. Beats worrying every day.',
+    '/product/coach':
+        'Cross-product tips and next moves. The coach helps; the week check is the weekly practice.',
     '/product/why':
         'One line on your dashboard — not a poster, a check question when a jar gets tight.',
 };

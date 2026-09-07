@@ -6,10 +6,10 @@ import { CoachService } from '../../../platform/coach/coach.service';
 import { HouseholdSettingsService } from '../../../../auth/household/household-settings/household-settings.service';
 import { TransactionService } from '../ledger/transaction/transaction.service';
 import { JarService } from '../plan/jar/jar.service';
-import { TurnService } from '../rhythm/turn/turn.service';
+import { MonthScoreService } from '../month-score/month-score.service';
 
 /**
- * Composition root for the dashboard. The design puts jars, coach, turn and four
+ * Composition root for the dashboard. The design puts jars, coach, month score and four
  * headline figures on one screen; fetching those separately would create a request
  * waterfall on the most-visited route in the product, so they are assembled here.
  */
@@ -17,7 +17,7 @@ import { TurnService } from '../rhythm/turn/turn.service';
 export class DashboardService {
     constructor(
         @Inject(JarService) private readonly jars: JarService,
-        @Inject(TurnService) private readonly turns: TurnService,
+        @Inject(MonthScoreService) private readonly monthScores: MonthScoreService,
         @Inject(CoachService) private readonly coach: CoachService,
         @Inject(TransactionService) private readonly transactions: TransactionService,
         @Inject(HouseholdSettingsService)
@@ -29,9 +29,9 @@ export class DashboardService {
     // ====================================================================
 
     async get(householdId: string, period: string) {
-        const [jars, turn, coach, inboxCount, income, settings] = await Promise.all([
+        const [jars, monthScore, coach, inboxCount, income, settings] = await Promise.all([
             this.jars.balances(period),
-            this.turns.current(period),
+            this.monthScores.current(period),
             this.coach.feed(period),
             this.transactions.countInbox(),
             this.jars.monthlyNetIncome(),
@@ -62,7 +62,7 @@ export class DashboardService {
             inboxCount,
             jars,
             coach,
-            turn,
+            monthScore,
             why: settings.why ?? null,
         };
     }

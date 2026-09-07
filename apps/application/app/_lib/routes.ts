@@ -1,7 +1,7 @@
 /**
  * App route prefixes — visible URL segments.
  *
- * Product → `/product/{money|growth|energy|soul|ritual|why}/…`
+ * Product → `/product/{money|growth|energy|soul|coach|why}/…`
  * Settings → `/settings/…` (folder group `(platform)` is invisible)
  * Auth → unprefixed (`/sign-in`, `/verify`, …)
  *

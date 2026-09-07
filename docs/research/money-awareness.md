@@ -91,8 +91,8 @@ Research above maps to prefs that keep coaching soft and personal:
 
 | Insight | Pref | Scope |
 |---|---|---|
-| Volatility makes “fixed month” advice feel fake | `incomeRhythm` STABLE \| VARIABLE | Household board |
-| Scarcity / ambition → different default tips | `moneyCharacter` SPENDER \| SAVER \| BALANCED \| UNKNOWN | **Person** (partners can differ) |
+| Volatility / no inflow changes coaching tone | `incomeStability` STABLE \| VARIABLE \| NONE | Household board |
+| Scarcity / ambition → different default tips | `spendingStyle` SPENDER \| SAVER \| BALANCED \| UNKNOWN | **Person** (partners can differ) |
 | Debt payoff is a shared list | `payoffStrategy` AVALANCHE \| SNOWBALL | Household board |
 
 Never shame: character is descriptive (“leans spender”), not a verdict.

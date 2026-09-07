@@ -47,13 +47,26 @@ export const CatalogItemBase = z.object({
 });
 export type CatalogItemBase = z.infer<typeof CatalogItemBase>;
 
-/** A budget period is one calendar month, keyed as YYYY-MM. Also the Monopoly "turn". */
+/** A budget period is one calendar month, keyed as YYYY-MM — one month-score window. */
 export const PeriodKey = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Expected YYYY-MM');
 export type PeriodKey = z.infer<typeof PeriodKey>;
 
-/** An ISO week, keyed as YYYY-Www — the unit of the weekly ritual. */
+/** An ISO week, keyed as YYYY-Www — the unit of the weekly week check. */
 export const WeekKey = z.string().regex(/^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/, 'Expected YYYY-Www');
 export type WeekKey = z.infer<typeof WeekKey>;
+
+/**
+ * Minimal per-product week check shell (household + week + completion).
+ * Product-specific fields (money surplus, energy metrics, …) live on each
+ * product's own richer type / columns — not here.
+ */
+export const PortalWeekCheck = z.object({
+    id: Id,
+    householdId: HouseholdId,
+    week: WeekKey,
+    completedAt: z.iso.datetime().nullable(),
+});
+export type PortalWeekCheck = z.infer<typeof PortalWeekCheck>;
 
 export const IsoDate = z.iso.date();
 

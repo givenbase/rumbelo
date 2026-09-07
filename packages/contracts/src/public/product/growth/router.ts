@@ -1,7 +1,7 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
 import * as schemas from '../../../schemas';
-import { MoneyCharacter } from '../../platform/enums';
+import { SpendingStyle } from '../../platform/enums';
 
 /** Product: Groei — raising earning power, not dividing what already arrived. */
 export const contract = {
@@ -10,6 +10,15 @@ export const contract = {
     },
     milestones: {
         list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.IncomeMilestone)),
+    },
+    weekCheck: {
+        current: oc
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
+            .output(schemas.GrowthWeekCheck),
+        history: oc.input(schemas.HouseholdScoped).output(z.array(schemas.GrowthWeekCheck)),
+        complete: oc
+            .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey }))
+            .output(schemas.GrowthWeekCheck),
     },
     catalogs: {
         incomePostures: {
@@ -23,7 +32,7 @@ export const contract = {
                 .input(
                     schemas.HouseholdScoped.extend({
                         postureKey: z.string().max(64).nullish(),
-                        character: z.enum(MoneyCharacter).nullish(),
+                        spendingStyle: z.enum(SpendingStyle).nullish(),
                         stageKey: z.string().max(64).nullish(),
                     })
                 )

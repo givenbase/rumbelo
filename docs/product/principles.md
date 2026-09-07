@@ -9,7 +9,7 @@ Money gets a job **before** it gets spent.
 Split first. Spend second.
 
 ### 2. Tien minuten per week
-The weekly ritual beats daily worry.  
+The weekly week check beats daily worry.  
 The product should reward a short, repeating practice — not constant vigilance.
 
 ### 3. Energie draagt geld

@@ -4,7 +4,7 @@ import { cn } from '@rumbelo/utils';
 
 /** Shared max-widths — always paired with mx-auto so narrow pages center in the shell. */
 const WIDTH = {
-    /** Ritual, gratitude, intent, settings forms (~672px) */
+    /** Week check, gratitude, intent, settings forms (~672px) */
     narrow: 'max-w-2xl',
     /** Why, chakra (~768px) */
     prose: 'max-w-3xl',

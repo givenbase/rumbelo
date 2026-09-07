@@ -17,7 +17,7 @@ import { isLiveData } from '@/app/_lib/preview';
 import { CoachVerdict } from '@/components/features/home/coach-verdict';
 import { HeroKluis } from '@/components/features/home/hero-kluis';
 import { PortalWidget } from '@/components/features/home/portal-widget';
-import { TurnLog } from '@/components/features/home/turn-log';
+import { MonthScoreLog } from '@/components/features/home/month-score-log';
 import { JarDrilldownTable } from '@/components/features/money/jar-drilldown-table';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -79,7 +79,7 @@ export function HomeDashboardClient() {
         why: null as string | null,
     };
 
-    const emptyTurn = {
+    const emptyMonthScore = {
         period: periodKey,
         score: 0,
         maxScore: 100,
@@ -97,10 +97,10 @@ export function HomeDashboardClient() {
         live
     );
 
-    const closeTurnMutation = useMutation({
+    const closeMonthScoreMutation = useMutation({
         mutationFn: async () => {
             if (!householdId) throw new Error('No household');
-            return api.money.turn.close({ householdId, period: periodKey });
+            return api.money.monthScore.close({ householdId, period: periodKey });
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
@@ -112,7 +112,7 @@ export function HomeDashboardClient() {
     const liveData = dashboardQuery.data;
     const dashboard = liveData ?? emptyDashboard;
     const jars = liveData?.jars?.length ? liveData.jars : [];
-    const turn = liveData?.turn ?? emptyTurn;
+    const monthScore = liveData?.monthScore ?? emptyMonthScore;
     const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'en-US');
     const coach: CoachMessage[] =
         live && liveData?.coach?.length
@@ -153,10 +153,10 @@ export function HomeDashboardClient() {
                                   text: dashboard.inboxCount
                                       ? `${dashboard.inboxCount} transaction${dashboard.inboxCount === 1 ? '' : 's'} waiting for a jar.`
                                       : 'All sorted — time for intention.',
-                                  ctaLabel: dashboard.inboxCount ? 'Sort inbox' : 'Weekly ritual',
+                                  ctaLabel: dashboard.inboxCount ? 'Sort inbox' : 'Week check',
                                   ctaHref: dashboard.inboxCount
                                       ? '/product/money/transactions'
-                                      : '/product/ritual',
+                                      : '/product/money/week-check',
                               },
                           ]
                 }
@@ -221,16 +221,20 @@ export function HomeDashboardClient() {
                 />
             </div>
 
-            <TurnLog score={turn.score} daysLeft={turn.daysLeft} events={turn.events} />
+            <MonthScoreLog
+                score={monthScore.score}
+                daysLeft={monthScore.daysLeft}
+                events={monthScore.events}
+            />
 
-            {live && liveData?.turn && !liveData.turn.isClosed && (
+            {live && liveData?.monthScore && !liveData.monthScore.isClosed && (
                 <div className="flex justify-end">
                     <button
                         type="button"
-                        onClick={() => closeTurnMutation.mutate()}
-                        disabled={closeTurnMutation.isPending}
+                        onClick={() => closeMonthScoreMutation.mutate()}
+                        disabled={closeMonthScoreMutation.isPending}
                         className="rounded-full border border-line-strong px-5 py-2.5 font-mono text-xs font-medium tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent disabled:opacity-50">
-                        {closeTurnMutation.isPending ? 'Working…' : 'Close turn'}
+                        {closeMonthScoreMutation.isPending ? 'Working…' : 'Close month'}
                     </button>
                 </div>
             )}

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { LogModule } from './log/log.module';
+import { EnergyWeekCheckModule } from './week-check/week-check.module';
 
 /**
  * Product: Energie. Sleep, training, food and rest — tracked because the product
@@ -8,7 +9,7 @@ import { LogModule } from './log/log.module';
  * Mirrors the Energie portal in the application navigation.
  */
 @Module({
-    imports: [LogModule],
-    exports: [LogModule],
+    imports: [LogModule, EnergyWeekCheckModule],
+    exports: [LogModule, EnergyWeekCheckModule],
 })
 export class EnergyModule {}

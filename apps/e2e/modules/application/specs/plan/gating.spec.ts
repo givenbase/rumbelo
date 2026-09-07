@@ -20,7 +20,7 @@ basicTest.describe('plan gating @plan', () => {
     });
 
     basicTest('Basic sees net worth locked', async ({ personaPage }) => {
-        await personaPage.goto('/product/growth/board');
+        await personaPage.goto('/product/growth/net-worth');
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })
         ).toBeVisible({ timeout: 30_000 });
@@ -53,7 +53,7 @@ plusTest.describe('plan gating @plan', () => {
     });
 
     plusTest('Plus sees Max screens locked', async ({ personaPage }) => {
-        await personaPage.goto('/product/growth/board');
+        await personaPage.goto('/product/growth/net-worth');
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })
         ).toBeVisible({ timeout: 30_000 });
@@ -79,7 +79,7 @@ maxTest.describe('plan gating @plan', () => {
     });
 
     maxTest('Max can open net worth', async ({ personaPage }) => {
-        await personaPage.goto('/product/growth/board');
+        await personaPage.goto('/product/growth/net-worth');
         await expect(personaPage).not.toHaveURL(/sign-in/);
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })

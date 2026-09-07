@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { Locale, MoneyCharacter, Theme } from '../../../enums';
+import { Locale, SpendingStyle, Theme } from '../../../enums';
 import { Id, UserId } from '../../../common/schemas';
 
-export { MoneyCharacter } from '../../../enums';
+export { SpendingStyle } from '../../../enums';
 
 const PersonName = z.string().trim().min(1).max(80);
 const OptionalPersonName = PersonName.nullable().optional();
@@ -40,7 +40,7 @@ export type AccountProfilePatch = z.infer<typeof AccountProfilePatch>;
 
 /**
  * Person UI prefs. Currency is NOT here — the household board has one accounting
- * currency. Theme, locale, and money character can differ between members of the
+ * currency. Theme, locale, and spending style can differ between members of the
  * same household.
  *
  * `onboardedAt` is null until personal setup is finished (locale / character /
@@ -73,7 +73,7 @@ export const AccountSettings = z.object({
     locale: z.enum(Locale),
     theme: z.enum(Theme),
     /** Soft spending style — personalises coach tips for who is looking. */
-    moneyCharacter: z.enum(MoneyCharacter),
+    spendingStyle: z.enum(SpendingStyle),
     /** Guided tour / Help walkthrough progress. */
     tour: AccountTourProgress,
     /** When personal onboarding completed; null = still new. */

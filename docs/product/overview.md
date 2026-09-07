@@ -14,7 +14,7 @@ Rumbelo is not a bookkeeping app. It is a single quiet view of where your money,
 1. **Income lands** and splits into **six jars** the same second.
 2. **Fixed costs** draw from those jars, so you see them coming.
 3. **Transactions** land in an **Inbox** and get sorted — by rule or by hand.
-4. **Once a week**, a ten-minute **ritual** redirects surplus and sets an intention.
+4. **Once a week**, a ten-minute **week check** redirects surplus and sets an intention.
 5. **Once a month**, the **turn** closes with a score and a log.
 
 ---

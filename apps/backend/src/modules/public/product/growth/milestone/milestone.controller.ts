@@ -8,7 +8,7 @@ import { ControllerSwagger } from '../../../../../common/decorators/controller-s
 import { MilestoneService } from './milestone.service';
 
 /** Transport only. Handler order is always CRUD. */
-@RequireCapability(CAPABILITIES.growthBoard)
+@RequireCapability(CAPABILITIES.growthNetWorth)
 @ControllerSwagger('growth/milestones', 'public')
 export class MilestoneController {
     constructor(@Inject(MilestoneService) private readonly milestones: MilestoneService) {}

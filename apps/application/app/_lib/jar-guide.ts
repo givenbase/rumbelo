@@ -51,7 +51,7 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         notAllowed:
             'Never withdraw to buy something. Only the return may leave — and better to leave that in too.',
         links: [
-            { href: '/product/growth/board', label: 'My net worth ›' },
+            { href: '/product/growth/net-worth', label: 'My net worth ›' },
             { href: '/product/growth/goals', label: 'My goals ›' },
         ],
         subs: [

@@ -13,7 +13,7 @@ const METRIC_CAPABILITY = {
     [EnergyMetric.SLEEP]: CAPABILITIES.energySleep,
     [EnergyMetric.TRAIN]: CAPABILITIES.energyTrain,
     [EnergyMetric.FOOD]: CAPABILITIES.energyFood,
-    [EnergyMetric.MIND]: CAPABILITIES.soulMind,
+    [EnergyMetric.MIND]: CAPABILITIES.soulStillness,
 } as const;
 
 @Injectable()

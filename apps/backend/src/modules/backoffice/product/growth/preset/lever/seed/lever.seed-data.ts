@@ -1,6 +1,6 @@
 import {
     INCOME_POSTURE_KEYS,
-    MoneyCharacter,
+    SpendingStyle,
     WEALTH_STAGE_KEYS,
     type GrowthLeverPreset,
 } from '@rumbelo/contracts';
@@ -22,7 +22,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
         summary: 'Every €100 more per day is €2,000 extra per month. One conversation can do it.',
         accentColor: 'var(--color-accent)',
         forPostureKeys: [INCOME_POSTURE_KEYS.SKILL_TRADE, INCOME_POSTURE_KEYS.TIME_TRADE],
-        forCharacters: [],
+        forSpendingStyles: [],
         minStageKey: WEALTH_STAGE_KEYS.BUILDING,
     },
     {
@@ -31,7 +31,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
         summary: 'A second product or service has zero fixed costs once the first is running.',
         accentColor: 'var(--color-jar-lts)',
         forPostureKeys: [INCOME_POSTURE_KEYS.SKILL_TRADE, INCOME_POSTURE_KEYS.SYSTEM],
-        forCharacters: [],
+        forSpendingStyles: [],
         minStageKey: WEALTH_STAGE_KEYS.BUILDING,
     },
     {
@@ -40,7 +40,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
         summary: 'Something made once that keeps working. Starts small, never zero.',
         accentColor: 'var(--color-jar-ff)',
         forPostureKeys: [INCOME_POSTURE_KEYS.ASSETS, INCOME_POSTURE_KEYS.SYSTEM],
-        forCharacters: [MoneyCharacter.SAVER, MoneyCharacter.BALANCED],
+        forSpendingStyles: [SpendingStyle.SAVER, SpendingStyle.BALANCED],
         minStageKey: WEALTH_STAGE_KEYS.SECURE,
     },
     {
@@ -53,7 +53,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
             INCOME_POSTURE_KEYS.SYSTEM,
             INCOME_POSTURE_KEYS.TIME_TRADE,
         ],
-        forCharacters: [],
+        forSpendingStyles: [],
         minStageKey: WEALTH_STAGE_KEYS.BUILDING,
     },
     {
@@ -63,7 +63,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
             'Automate or delegate one recurring task. Freed hours compound into earning capacity.',
         accentColor: 'var(--color-jar-nec)',
         forPostureKeys: [INCOME_POSTURE_KEYS.TIME_TRADE, INCOME_POSTURE_KEYS.SKILL_TRADE],
-        forCharacters: [MoneyCharacter.SPENDER, MoneyCharacter.BALANCED],
+        forSpendingStyles: [SpendingStyle.SPENDER, SpendingStyle.BALANCED],
         minStageKey: WEALTH_STAGE_KEYS.BUILDING,
     },
     {
@@ -72,7 +72,7 @@ export const LEVER_PRESET_SEED: readonly (Omit<
         summary: 'Document the offer that sells. Repeatability beats one more custom project.',
         accentColor: 'var(--color-accent)',
         forPostureKeys: [INCOME_POSTURE_KEYS.SYSTEM, INCOME_POSTURE_KEYS.SKILL_TRADE],
-        forCharacters: [],
+        forSpendingStyles: [],
         minStageKey: WEALTH_STAGE_KEYS.SECURE,
     },
 ] as const;

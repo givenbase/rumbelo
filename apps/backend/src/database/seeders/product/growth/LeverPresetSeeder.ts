@@ -17,7 +17,7 @@ export class LeverPresetSeeder extends Seeder {
                 existing.summary = row.summary;
                 existing.accentColor = row.accentColor;
                 existing.forPostureKeys = [...row.forPostureKeys];
-                existing.forCharacters = [...row.forCharacters];
+                existing.forSpendingStyles = [...row.forSpendingStyles];
                 existing.minStageKey = row.minStageKey;
                 existing.sortOrder = sortOrder;
                 existing.isActive = true;
@@ -29,7 +29,7 @@ export class LeverPresetSeeder extends Seeder {
                 summary: row.summary,
                 accentColor: row.accentColor,
                 forPostureKeys: [...row.forPostureKeys],
-                forCharacters: [...row.forCharacters],
+                forSpendingStyles: [...row.forSpendingStyles],
                 minStageKey: row.minStageKey,
                 sortOrder,
                 isActive: true,

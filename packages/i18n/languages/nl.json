@@ -168,9 +168,9 @@
     },
     "pages": {
         "dashboard": {
-            "close_turn": "Beurt afsluiten",
+            "close_month": "Maand afsluiten",
             "closing": "Bezig…",
-            "turn_closed": "Maand afgesloten",
+            "month_closed": "Maand afgesloten",
             "close_failed": "Afsluiten mislukt"
         },
         "onboarding": {

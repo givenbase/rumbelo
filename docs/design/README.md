@@ -10,7 +10,7 @@ This doc explains **how to use it** so product UI stays aligned with the real ar
 
 **The ~32 screens in `apps/application` were a reconstruction, not the design.**
 
-Domain is correct (six jars, inbox, ritual, turn, four portals). Layouts and visual language must be rebuilt against the real design — not against guessed tag names.
+Domain is correct (six jars, inbox, week check, month score, four portals). Layouts and visual language must be rebuilt against the real design — not against guessed tag names.
 
 Full story and unblock steps: [`HANDOFF.md`](../../HANDOFF.md) §8.
 

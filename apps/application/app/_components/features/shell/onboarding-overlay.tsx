@@ -3,7 +3,7 @@
 import { api } from '@/app/_lib/api';
 import { useEffect, useState } from 'react';
 
-import { Currency, IncomeRhythm, Locale, MoneyCharacter } from '@rumbelo/contracts';
+import { Currency, IncomeStability, Locale, SpendingStyle } from '@rumbelo/contracts';
 import { Button, Field, Input } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
@@ -50,8 +50,8 @@ export function OnboardingOverlay() {
     const [householdName, setHouseholdName] = useState('My household');
     const [monthlyIncome, setMonthlyIncome] = useState('4300');
     const [why, setWhy] = useState('');
-    const [moneyCharacter, setMoneyCharacter] = useState(MoneyCharacter.UNKNOWN);
-    const [incomeRhythm, setIncomeRhythm] = useState(IncomeRhythm.STABLE);
+    const [spendingStyle, setSpendingStyle] = useState(SpendingStyle.UNKNOWN);
+    const [incomeStability, setIncomeStability] = useState(IncomeStability.STABLE);
     const [pending, setPending] = useState(false);
 
     if (!session || householdId) return null;
@@ -69,8 +69,8 @@ export function OnboardingOverlay() {
                 householdName,
                 currency: Currency.EUR,
                 locale: Locale.NL,
-                moneyCharacter,
-                incomeRhythm,
+                spendingStyle,
+                incomeStability,
                 monthlyNetIncome: Number.isFinite(euros) ? euros : 0,
                 split,
                 why: why.trim() || null,
@@ -157,19 +157,19 @@ export function OnboardingOverlay() {
                             <div className="flex flex-wrap gap-1.5">
                                 {(
                                     [
-                                        { key: MoneyCharacter.SPENDER, label: 'Spender' },
-                                        { key: MoneyCharacter.SAVER, label: 'Saver' },
-                                        { key: MoneyCharacter.BALANCED, label: 'Balanced' },
-                                        { key: MoneyCharacter.UNKNOWN, label: 'Not sure' },
+                                        { key: SpendingStyle.SPENDER, label: 'Spender' },
+                                        { key: SpendingStyle.SAVER, label: 'Saver' },
+                                        { key: SpendingStyle.BALANCED, label: 'Balanced' },
+                                        { key: SpendingStyle.UNKNOWN, label: 'Not sure' },
                                     ] as const
                                 ).map(option => (
                                     <button
                                         key={option.key}
                                         type="button"
-                                        onClick={() => setMoneyCharacter(option.key)}
+                                        onClick={() => setSpendingStyle(option.key)}
                                         className={cn(
                                             'rounded-full border px-3 py-1.5 text-xs transition-colors',
-                                            moneyCharacter === option.key
+                                            spendingStyle === option.key
                                                 ? 'border-accent bg-accent-soft text-accent'
                                                 : 'border-line text-fg-muted hover:text-fg'
                                         )}>
@@ -185,17 +185,18 @@ export function OnboardingOverlay() {
                             <div className="flex gap-1.5">
                                 {(
                                     [
-                                        { key: IncomeRhythm.STABLE, label: 'Stable' },
-                                        { key: IncomeRhythm.VARIABLE, label: 'Variable' },
+                                        { key: IncomeStability.STABLE, label: 'Stable' },
+                                        { key: IncomeStability.VARIABLE, label: 'Variable' },
+                                        { key: IncomeStability.NONE, label: 'None' },
                                     ] as const
                                 ).map(option => (
                                     <button
                                         key={option.key}
                                         type="button"
-                                        onClick={() => setIncomeRhythm(option.key)}
+                                        onClick={() => setIncomeStability(option.key)}
                                         className={cn(
                                             'rounded-full border px-3 py-1.5 text-xs transition-colors',
-                                            incomeRhythm === option.key
+                                            incomeStability === option.key
                                                 ? 'border-accent bg-accent-soft text-accent'
                                                 : 'border-line text-fg-muted hover:text-fg'
                                         )}>

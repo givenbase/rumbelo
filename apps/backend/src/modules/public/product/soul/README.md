@@ -4,7 +4,7 @@ Intention, gratitude, and the reason behind the numbers.
 
 | Child | Owns |
 |---|---|
-| `gratitude/` | weekly entries, written during the ritual |
+| `gratitude/` | weekly entries, written during the week check |
 
 The household's stated "why" lives on `HouseholdSettings` because it is a
 property of the household rather than a time-series, and the dashboard reads it

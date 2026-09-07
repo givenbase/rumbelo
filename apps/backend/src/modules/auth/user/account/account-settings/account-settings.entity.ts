@@ -2,7 +2,7 @@ import { Entity, Enum, OneToOne, Property } from '@mikro-orm/core';
 import {
     DEFAULT_ACCOUNT_TOUR_PROGRESS,
     Locale,
-    MoneyCharacter,
+    SpendingStyle,
     Theme,
     type AccountTourProgress,
 } from '@rumbelo/contracts';
@@ -15,11 +15,11 @@ import { Account } from '../account.entity';
 /**
  * Account Settings Entity
  *
- * Person-scoped UI prefs — language, appearance, money character, and tour progress.
+ * Person-scoped UI prefs — language, appearance, spending style, and tour progress.
  * One row per account.
  *
  * Currency and board debt strategy stay on auth.household_settings.
- * Theme, locale, money character, and tour can differ per person in the same household.
+ * Theme, locale, spending style, and tour can differ per person in the same household.
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
@@ -52,12 +52,12 @@ export class AccountSettings extends BaseEntity {
     /** Soft spending style — personalises coach tips for who is looking. */
     @Enum(
         NativeEnum({
-            MoneyCharacter,
-            domain: 'auth',
-            defaultValue: MoneyCharacter.UNKNOWN,
+            SpendingStyle,
+            domain: 'money',
+            defaultValue: SpendingStyle.UNKNOWN,
         })
     )
-    moneyCharacter: MoneyCharacter = MoneyCharacter.UNKNOWN;
+    spendingStyle: SpendingStyle = SpendingStyle.UNKNOWN;
 
     // ? RELATIONSHIPS
     /**

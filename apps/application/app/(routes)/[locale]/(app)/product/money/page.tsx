@@ -1,6 +1,8 @@
-import { redirect } from 'next/navigation';
+import { moneyPortalHub } from '@/app/_lib/portal-hubs';
+import { PortalHub } from '@/components/features/home/portal-hub';
 
-/** `/product/money` is the Geld portal — home dashboard lives at `/`. */
-export default function MoneyIndexPage() {
-    redirect('/product/money/overview');
+export const metadata = { title: 'Money' };
+
+export default function MoneyPage() {
+    return <PortalHub {...moneyPortalHub} />;
 }

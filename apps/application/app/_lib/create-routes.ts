@@ -8,7 +8,7 @@ export const CREATE_HREF = {
     income: productPath('growth/income/create'),
     goal: productPath('growth/goals/create'),
     session: productPath('energy/train/create'),
-    asset: productPath('growth/assets/create'),
+    asset: productPath('growth/net-worth/create'),
     move: productPath('money/jars/move/create'),
 } as const;
 

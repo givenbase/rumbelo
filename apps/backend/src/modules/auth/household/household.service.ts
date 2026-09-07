@@ -5,7 +5,7 @@ import {
     HouseholdKind,
     HouseholdRole,
     IncomeKind,
-    IncomeRhythm,
+    IncomeStability,
     PlanKey,
     type OnboardingInput,
     PayoffStrategy,
@@ -257,14 +257,14 @@ export class HouseholdService {
             currency: input.currency,
             why: input.why,
             money: {
-                incomeRhythm: input.incomeRhythm ?? IncomeRhythm.STABLE,
+                incomeStability: input.incomeStability ?? IncomeStability.STABLE,
                 payoffStrategy: input.payoffStrategy ?? PayoffStrategy.AVALANCHE,
             },
         });
 
         await this.accountSettings.upsertForUser(userId, {
             locale: input.locale as never,
-            moneyCharacter: input.moneyCharacter,
+            spendingStyle: input.spendingStyle,
         });
         await this.accountSettings.markOnboarded(userId);
 

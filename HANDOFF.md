@@ -28,9 +28,9 @@ rebuilt against the real design — see §8, the most important section here.
 
 Income arrives and splits into six jars the same second. Fixed costs draw from
 those jars, so you see them coming. Transactions land in an **Inbox** and get
-sorted, by rule or by hand. Once a week a **ten-minute ritual** redirects the
-surplus and sets an intention. Once a month the **turn** closes with a score and
-a log — the Monopoly framing.
+sorted, by rule or by hand. Once a week a **ten-minute week check** redirects the
+surplus and sets an intention. Once a month the **month score** closes with a
+score and a log — the Monopoly framing.
 
 Four products, which are also the navigation:
 
@@ -50,7 +50,7 @@ and friends; a subscription product if it works.
 ### Principles the product must not violate
 
 1. **Eerst verdelen, dan uitgeven.** Money gets a job before it gets spent.
-2. **Tien minuten per week.** The weekly ritual beats daily worry.
+2. **Tien minuten per week.** The weekly week check beats daily worry.
 3. **Energie draagt geld.** A tired head spends; a rested head steers.
 4. **Informatie, nooit schaamte.** An over-the-line jar is a signal, not a
    verdict. Every warning carries the one move that fixes it.
@@ -135,7 +135,7 @@ The same product tree governs modules, API, routes and database. Learn it once.
 | **Ziel** | `modules/public/product/soul/*` | `contract.soul.*` | `/soul/*` | `public` |
 
 Money's children are the same list in all four places: `jar` `income`
-`fixed-cost` `account` `transaction` `rule` `goal` `debt` `turn` `ritual`
+`fixed-cost` `account` `transaction` `rule` `goal` `debt` `month-score` `week-check`
 `dashboard`.
 
 So `contract.money.jars.list` is served by `modules/public/product/money/plan/jar/jar.controller.ts`,
@@ -193,7 +193,7 @@ in the wrong place.
 
 **Migrations only.** `schema:update` never runs against a database holding money.
 
-**Normalise.** Prefer a table over a `jsonb` column. `ritual_allocation` exists
+**Normalise.** Prefer a table over a `jsonb` column. `week_check_allocation` exists
 for exactly this reason: it needs a real FK to `Jar` and gets summed in
 aggregates.
 
@@ -212,9 +212,9 @@ demo personas seeded for live login and Playwright (`apps/e2e`).
 household is active. Surfaces without APIs yet show empty / “binnenkort”.
 
 **Typed stubs / incomplete:** full onboarding create-household flow; rule replay;
-turn close; ritual stage transitions; Stripe billing.
+month-score close; week-check stage transitions; Stripe billing.
 
-**Not built:** i18n (copy is hardcoded); holdings / mind / chakra / detailed
+**Not built:** i18n (copy is hardcoded); holdings / stillness / centres / detailed
 energy APIs; full CRUD e2e suite.
 
 ---
@@ -226,7 +226,7 @@ energy APIs; full CRUD e2e suite.
 What happened: `DesignSync.get_file` caps at 256 KiB and returned
 `truncated: true` for `Kluis Finance App.dc.html`. The screens were rebuilt from
 `grep` output — `sc-if` conditions, `sc-for` collection names, extracted strings.
-That produced the **domain** correctly (six jars, inbox, ritual, turn, four
+That produced the **domain** correctly (six jars, inbox, week check, month score, four
 portals) but the layouts, components and visual language are invented.
 
 `design/` currently cannot be read: it carries a **`com.apple.macl`** extended
@@ -279,7 +279,7 @@ household scoping, DB schema, build pipeline.
 2. **Stripe billing** for Basic/Plus/Max (gates already use `household_settings.plan_key`).
 3. **i18n with `next-intl`,** before there is more hardcoded copy.
 4. **Expand E2E** beyond smoke/plan gating (`apps/e2e`).
-5. **Turn close and rule replay** — remaining domain logic.
+5. **Month-score close and rule replay** — remaining domain logic.
 6. **Holdings / mind / chakra / detailed energy APIs** — screens show empty states until then.
 
 ---

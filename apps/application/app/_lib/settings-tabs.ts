@@ -96,7 +96,7 @@ export const SETTINGS_SECTIONS: SettingsNavSection[] = [
                 key: 'stillness',
                 label: 'Stillness',
                 sub: 'Minutes a day and reminders',
-                productChild: 'mind',
+                productChild: 'stillness',
             },
         ],
     },

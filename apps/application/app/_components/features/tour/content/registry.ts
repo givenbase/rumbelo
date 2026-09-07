@@ -48,7 +48,7 @@ const HELP_BY_PREFIX: { prefix: string; content: PageHelpContent }[] = [
         },
     },
     {
-        prefix: moneyPath('overview'),
+        prefix: moneyPath(),
         content: {
             title: pages.overview.title,
             sections: sectionsFrom(pages.overview.sections),

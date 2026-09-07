@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { MoneyCharacter } from '../../../platform/enums';
+import { SpendingStyle } from '../../../platform/enums';
 import { CatalogItemBase } from '../../../../common/schemas';
 
 /**
@@ -51,7 +51,7 @@ export const GrowthLeverPreset = CatalogItemBase.extend({
     /** Empty = relevant for every posture. Keys → reference_growth_income_posture.key */
     forPostureKeys: z.array(z.string().min(1).max(64)),
     /** Empty = relevant for every character. */
-    forCharacters: z.array(z.enum(MoneyCharacter)),
+    forSpendingStyles: z.array(z.enum(SpendingStyle)),
     /** Lowest wealth stage key that should see this lever. */
     minStageKey: z.string().min(1).max(64),
     /** Copied from wealth stage.sortOrder at list time for filtering. */
@@ -61,7 +61,7 @@ export type GrowthLeverPreset = z.infer<typeof GrowthLeverPreset>;
 
 export type LeverAudience = {
     postureKey?: string;
-    character?: MoneyCharacter;
+    spendingStyle?: SpendingStyle;
     stageKey?: string;
     /** sortOrder of the audience stage (from wealth stage catalog). */
     stageSortOrder?: number;
@@ -73,7 +73,7 @@ export function filterGrowthLeverPresets(
     audience: LeverAudience = {}
 ): GrowthLeverPreset[] {
     const postureKey = audience.postureKey ?? INCOME_POSTURE_KEYS.UNKNOWN;
-    const character = audience.character ?? MoneyCharacter.UNKNOWN;
+    const spendingStyle = audience.spendingStyle ?? SpendingStyle.UNKNOWN;
     const stageSortOrder = audience.stageSortOrder ?? 0;
 
     return presets.filter(preset => {
@@ -86,9 +86,9 @@ export function filterGrowthLeverPresets(
             return false;
         }
         if (
-            preset.forCharacters.length > 0 &&
-            character !== MoneyCharacter.UNKNOWN &&
-            !preset.forCharacters.includes(character)
+            preset.forSpendingStyles.length > 0 &&
+            spendingStyle !== SpendingStyle.UNKNOWN &&
+            !preset.forSpendingStyles.includes(spendingStyle)
         ) {
             return false;
         }

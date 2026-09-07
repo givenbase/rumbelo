@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Money, PeriodKey } from '../../../../common/schemas';
 import { JarBalance } from './jar';
 import { CoachMessage } from '../../../platform/schemas/coach';
-import { Turn } from './turn';
+import { MonthScore } from './month-score';
 
 /** One aggregated read for the dashboard — avoids a waterfall of round trips. */
 export const Dashboard = z.object({
@@ -18,7 +18,7 @@ export const Dashboard = z.object({
     inboxCount: z.int(),
     jars: z.array(JarBalance),
     coach: z.array(CoachMessage),
-    turn: Turn,
+    monthScore: MonthScore,
     why: z.string().nullable(),
 });
 export type Dashboard = z.infer<typeof Dashboard>;

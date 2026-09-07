@@ -1,8 +1,8 @@
 const dashboard = {
-    close_turn: 'Close turn',
+    close_month: 'Close month',
     closing: 'Closing…',
-    turn_closed: 'Month closed',
-    close_failed: 'Could not close turn',
+    month_closed: 'Month closed',
+    close_failed: 'Could not close month',
 } as const;
 
 export default dashboard;

@@ -1,9 +1,9 @@
 /**
- * Period and week keys. Defined once here because the turn engine, the ritual
- * engine and every dashboard query must agree on what "this month" means.
+ * Period and week keys. Defined once here because the month-score engine, the
+ * week-check engine and every dashboard query must agree on what "this month" means.
  */
 
-/** Budget period key, YYYY-MM. One period is one Monopoly turn. */
+/** Budget period key, YYYY-MM. One period is one month-score window. */
 export function currentPeriod(date = new Date()): string {
     return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
 }
@@ -18,7 +18,7 @@ export function daysInPeriod(period: string): number {
     return new Date(Date.UTC(year, month, 0)).getUTCDate();
 }
 
-/** ISO week key, YYYY-Www. The unit of the weekly ritual. */
+/** ISO week key, YYYY-Www. The unit of the weekly week check. */
 export function currentWeek(date = new Date()): string {
     const thursday = new Date(
         Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())

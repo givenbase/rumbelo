@@ -18,15 +18,15 @@ Override is always allowed — tips are coaching, not rules.
 
 **Code:** `evaluate.ts`, `types.ts`. UI dismisses tips per session; Save still works.
 
-### B — Money character (shipped)
+### B — Spending style (shipped)
 
-Person-scoped `MoneyCharacter` on `account_settings` (`SPENDER` | `SAVER` | `BALANCED` | `UNKNOWN`):
+Person-scoped `SpendingStyle` on `account_settings` (`SPENDER` | `SAVER` | `BALANCED` | `UNKNOWN`):
 
 - Self-declare on onboarding (“I tend to…”) and Settings → Account
 - Passed into `evaluateSplitCoach` for the **current user**
-- Household board also stores `incomeRhythm` (STABLE | VARIABLE) and `payoffStrategy` (AVALANCHE | SNOWBALL) — shared decisions, not personality
+- Household board also stores `incomeStability` (STABLE | VARIABLE | NONE) and `payoffStrategy` (AVALANCHE | SNOWBALL) — shared decisions, not personality
 
-Character is descriptive, never judgmental — “leans spender”, never “bad with money”.
+Spending style is descriptive, never judgmental — “leans spender”, never “bad with money”.
 
 ### B2 — Infer from behaviour (later)
 
@@ -42,16 +42,16 @@ One card on Home / Jars — one tip, one CTA, at most once per week per tip id.
 2. **Soft** — warn / info only; no hard validation on save.
 3. **Priority language** — Freedom and Long Term before Play/Give when there’s a conflict.
 4. **English, short** — one thought per tip.
-5. **Person vs board** — personality on the person; debt order and income rhythm on the household.
+5. **Person vs board** — spending style on the person; debt order and income stability on the household.
 
 ## API surface
 
 ```ts
-evaluateSplitCoach(pctByKey, character?: MoneyCharacter): SplitTip[]
+evaluateSplitCoach(pctByKey, spendingStyle?: SpendingStyle): SplitTip[]
 pctByJarKey(jars, pctById): SplitPctByKey
 ```
 
-`MoneyCharacter` lives in `@rumbelo/contracts`.
+`SpendingStyle` lives in `@rumbelo/contracts`.
 
 ## Out of scope (for now)
 

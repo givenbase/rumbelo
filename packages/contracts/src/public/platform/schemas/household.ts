@@ -4,15 +4,15 @@ import {
     Currency,
     HouseholdKind,
     HouseholdRole,
-    IncomeRhythm,
+    IncomeStability,
     Locale,
-    MoneyCharacter,
+    SpendingStyle,
     PayoffStrategy,
     PlanKey,
 } from '../../../enums';
 import { HouseholdId, MemberId, UserId, Id } from '../../../common/schemas';
 
-export { HouseholdKind, HouseholdRole, IncomeRhythm, MoneyCharacter } from '../../../enums';
+export { HouseholdKind, HouseholdRole, IncomeStability, SpendingStyle } from '../../../enums';
 
 /**
  * Household is the isolation boundary. Every financial row carries householdId and
@@ -52,15 +52,15 @@ export const HouseholdMember = z.object({
 export const HouseholdMoneySettings = z.object({
     /** Budget rollover day. 1 for most, 25 for salary-day budgeters. */
     periodStartDay: z.int().min(1).max(28),
-    /** Stable vs variable household income picture. */
-    incomeRhythm: z.enum(IncomeRhythm),
+    /** How steady household inflow is — stable, variable, or none (~€0). */
+    incomeStability: z.enum(IncomeStability),
     /** Avalanche / snowball — one order for the shared debt list. */
     payoffStrategy: z.enum(PayoffStrategy),
 });
 export type HouseholdMoneySettings = z.infer<typeof HouseholdMoneySettings>;
 
-/** Weekly ritual reminder — null day/at disables the nudge. */
-export const HouseholdRitualSettings = z.object({
+/** Week-check reminder — null day/at disables the nudge. */
+export const HouseholdWeekCheckSettings = z.object({
     /** ISO weekday, 1 = Monday. */
     reminderDay: z.int().min(1).max(7).nullable(),
     /** Local time HH:mm. */
@@ -69,7 +69,7 @@ export const HouseholdRitualSettings = z.object({
         .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
         .nullable(),
 });
-export type HouseholdRitualSettings = z.infer<typeof HouseholdRitualSettings>;
+export type HouseholdWeekCheckSettings = z.infer<typeof HouseholdWeekCheckSettings>;
 
 /** Product feature toggles for the board. */
 export const HouseholdFeatureSettings = z.object({
@@ -89,10 +89,10 @@ export const HouseholdAnswers = z.record(
 export type HouseholdAnswers = z.infer<typeof HouseholdAnswers>;
 
 /**
- * Money-board prefs for the household. Language, appearance, and money character
+ * Money-board prefs for the household. Language, appearance, and spending style
  * live on AccountSettings — they can differ per person in the same household.
  *
- * Grouped: general identity → product → money / ritual / features bags → answers.
+ * Grouped: general identity → product → money / weekCheck / features bags → answers.
  * `onboardedAt` is set when `household.onboard` finishes (board + jars seeded).
  */
 export const HouseholdSettings = z.object({
@@ -107,7 +107,7 @@ export const HouseholdSettings = z.object({
      */
     planKey: z.enum(PlanKey),
     money: HouseholdMoneySettings,
-    ritual: HouseholdRitualSettings,
+    weekCheck: HouseholdWeekCheckSettings,
     features: HouseholdFeatureSettings,
     answers: HouseholdAnswers,
     /** When household board setup completed; null = incomplete. */
@@ -123,7 +123,7 @@ export const HouseholdSettingsPatch = z.object({
     currency: z.enum(Currency).optional(),
     planKey: z.enum(PlanKey).optional(),
     money: HouseholdMoneySettings.partial().optional(),
-    ritual: HouseholdRitualSettings.partial().optional(),
+    weekCheck: HouseholdWeekCheckSettings.partial().optional(),
     features: HouseholdFeatureSettings.partial().optional(),
     answers: HouseholdAnswers.optional(),
 });
@@ -137,9 +137,9 @@ export const OnboardingInput = z.object({
     /** Creator's language — stored on their AccountSettings, not the board. */
     locale: z.enum(Locale).default(Locale.NL),
     /** Creator's money style — person-scoped AccountSettings. */
-    moneyCharacter: z.enum(MoneyCharacter).default(MoneyCharacter.UNKNOWN),
-    /** Board income volatility. */
-    incomeRhythm: z.enum(IncomeRhythm).default(IncomeRhythm.STABLE),
+    spendingStyle: z.enum(SpendingStyle).default(SpendingStyle.UNKNOWN),
+    /** Board income volatility (stable vs variable). */
+    incomeStability: z.enum(IncomeStability).default(IncomeStability.STABLE),
     /** Board debt payoff default (optional at onboard). */
     payoffStrategy: z.enum(PayoffStrategy).default(PayoffStrategy.AVALANCHE),
     monthlyNetIncome: z.int().min(0),

@@ -28,7 +28,7 @@ with its `*.entity.ts`, service, controller and module as flat siblings.
 | `auth/household/` | `managed/` (`household` `member` `invitation`) · `household-settings/` |
 | `public/platform/` | `coach` |
 | `public/product/` | `money/` (Geld) · `growth/` (Groei) · `energy/` (Energie) · `soul/` (Ziel) |
-| `public/product/money/` | `plan/` (`jar` `income` `fixed-cost` `catalogs`) · `ledger/` · `targets/` · `rhythm/` · `dashboard` |
+| `public/product/money/` | `plan/` (`jar` `income` `fixed-cost` `catalogs`) · `ledger/` · `targets/` · `month-score/` · `week-check/` · `dashboard` |
 | `public/product/growth/` | `lever` `milestone` `catalogs` |
 | `public/product/energy/` | `log` |
 | `public/product/soul/` | `gratitude` |
@@ -75,7 +75,7 @@ auth/
   household/               GROUP
     managed/{household,member,invitation}/                     ← library writes
     household.*            ← ours: onboard, invite, list, members, current
-    household-settings/    ← ours: board prefs (currency, plan, rituals)
+    household-settings/    ← ours: board prefs (currency, plan, week-check)
 ```
 
 - `auth/engine/` — config only, no tables
@@ -248,7 +248,7 @@ Managed entities: mutate properties, then `await this.em.flush()`.
 
 - `auth/engine/` — Better Auth config; `auth/*/managed/` — better-auth owns writes; we map read entities
 - `auth/user/account/` — Rumbelo-owned person rows (`account`, `account-settings`)
-- Board prefs (currency, period, ritual, kind) → `auth/household/household-settings`
+- Board prefs (currency, period, week-check, kind) → `auth/household/household-settings`
 - Person prefs (theme, locale) → `account-settings`
 - better-auth credential store table is `provider`, not `account`
 

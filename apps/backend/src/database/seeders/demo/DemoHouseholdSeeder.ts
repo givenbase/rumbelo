@@ -8,9 +8,9 @@ import {
     DebtKind,
     FlowDirection,
     IncomeKind,
-    IncomeRhythm,
+    IncomeStability,
     Locale,
-    MoneyCharacter,
+    SpendingStyle,
     PayoffStrategy,
     Theme,
     TransactionSource,
@@ -92,17 +92,17 @@ export class DemoHouseholdSeeder extends Seeder {
         if (!rumbeloAccount) {
             rumbeloAccount = em.create(Account, { user } as never);
             em.persist(rumbeloAccount);
-            const moneyCharacter =
+            const spendingStyle =
                 demo.persona === 'max'
-                    ? MoneyCharacter.SAVER
+                    ? SpendingStyle.SAVER
                     : demo.persona === 'plus'
-                      ? MoneyCharacter.BALANCED
-                      : MoneyCharacter.SPENDER;
+                      ? SpendingStyle.BALANCED
+                      : SpendingStyle.SPENDER;
             em.create(AccountSettings, {
                 account: rumbeloAccount,
                 locale: Locale.NL,
                 theme: Theme.SYSTEM,
-                moneyCharacter,
+                spendingStyle,
             } as never);
         }
 
@@ -133,8 +133,10 @@ export class DemoHouseholdSeeder extends Seeder {
                 why: demo.why,
                 moneySettings: {
                     periodStartDay: 1,
-                    incomeRhythm:
-                        demo.persona === 'basic' ? IncomeRhythm.STABLE : IncomeRhythm.VARIABLE,
+                    incomeStability:
+                        demo.persona === 'basic'
+                            ? IncomeStability.STABLE
+                            : IncomeStability.VARIABLE,
                     payoffStrategy: PayoffStrategy.AVALANCHE,
                 },
             } as never);
@@ -143,8 +145,8 @@ export class DemoHouseholdSeeder extends Seeder {
             settings.why = demo.why;
             settings.moneySettings = {
                 ...settings.moneySettings,
-                incomeRhythm:
-                    demo.persona === 'basic' ? IncomeRhythm.STABLE : IncomeRhythm.VARIABLE,
+                incomeStability:
+                    demo.persona === 'basic' ? IncomeStability.STABLE : IncomeStability.VARIABLE,
             };
         }
 

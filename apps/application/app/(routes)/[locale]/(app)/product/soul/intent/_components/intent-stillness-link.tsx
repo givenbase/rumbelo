@@ -8,7 +8,7 @@ export function IntentStillnessLink() {
     return (
         <Button
             as={Link}
-            href="/product/soul/mind"
+            href="/product/soul/stillness"
             variant="ghost"
             size="sm"
             className="justify-self-start">

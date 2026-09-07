@@ -13,7 +13,7 @@ energy and time go — so intention leads, and life doesn’t decide first.
 
 Income arrives and splits into six jars the same second. Fixed costs draw from
 those jars, so you see them coming. Transactions land in an Inbox and get sorted —
-by rule or by hand. Once a week, a ten-minute ritual redirects the surplus and
+by rule or by hand. Once a week, a ten-minute week check redirects the surplus and
 sets an intention. Once a month, the turn closes with a score and a log.
 
 ## Stack
@@ -71,7 +71,7 @@ database. Learn it once and it holds everywhere.
 | **Ziel** | `modules/public/product/soul/*` | `contract.soul.*` | `/soul` | `public` |
 
 Money's children are the same list in all four places: `jars` `income`
-`fixed-costs` `accounts` `transactions` `rules` `goals` `debts` `turn` `ritual`
+`fixed-costs` `accounts` `transactions` `rules` `goals` `debts` `month-score` `week-check`
 `dashboard`. So `contract.money.jars.list` is served by
 `modules/public/product/money/plan/jar/jar.controller.ts`, reads `public.jar`, and backs `/money/jars`.
 

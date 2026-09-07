@@ -52,7 +52,7 @@ The same product tree governs modules, API, routes, and database.
 
 **Add anything in all four places or not at all.**
 
-Money children (same list everywhere): `jar` `income` `fixed-cost` `account` `transaction` `rule` `goal` `debt` `turn` `ritual` `dashboard`.
+Money children (same list everywhere): `jar` `income` `fixed-cost` `account` `transaction` `rule` `goal` `debt` `month-score` `week-check` `dashboard`.
 
 ---
 

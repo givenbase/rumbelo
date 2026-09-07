@@ -7,7 +7,7 @@ import {
     IncomeKind,
     JarKey,
     PayoffStrategy,
-    RitualStage,
+    WeekCheckStage,
 } from '../../../enums';
 import * as schemas from '../../../schemas';
 
@@ -181,36 +181,36 @@ export const contract = {
             .output(schemas.DebtPlan),
     },
 
-    turn: {
+    monthScore: {
         current: oc
             .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey.nullish() }))
-            .output(schemas.Turn),
+            .output(schemas.MonthScore),
         levels: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Level)),
         recap: oc
             .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey }))
             .output(schemas.PeriodRecap),
-        /** Idempotent: closing an already-closed turn returns the existing recap. */
+        /** Idempotent: closing an already-closed month score returns the existing recap. */
         close: oc
             .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey }))
             .output(schemas.PeriodRecap),
     },
 
-    ritual: {
+    weekCheck: {
         current: oc
             .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
-            .output(schemas.WeeklyRitual),
+            .output(schemas.WeekCheck),
         advance: oc
             .input(
                 z.object({
                     householdId: schemas.HouseholdId,
                     week: schemas.WeekKey,
-                    stage: z.enum(RitualStage),
-                    allocations: z.array(schemas.SurplusAllocation).nullish(),
+                    stage: z.enum(WeekCheckStage),
+                    allocations: z.array(schemas.WeekCheckAllocation).nullish(),
                     intention: z.string().max(280).nullish(),
                 })
             )
-            .output(schemas.WeeklyRitual),
-        history: oc.input(schemas.HouseholdScoped).output(z.array(schemas.WeeklyRitual)),
+            .output(schemas.WeekCheck),
+        history: oc.input(schemas.HouseholdScoped).output(z.array(schemas.WeekCheck)),
     },
 
     dashboard: {

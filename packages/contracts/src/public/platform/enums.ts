@@ -18,22 +18,26 @@ export enum CoachKind {
     WIN = 'WIN',
     WARNING = 'WARNING',
     INSIGHT = 'INSIGHT',
-    RITUAL = 'RITUAL',
+    WEEK_CHECK = 'WEEK_CHECK',
 }
 
 /**
- * Soft self-declared money style — person-scoped.
+ * Soft self-declared spending style — person-scoped.
  * Descriptive, never judgmental (“leans spender”).
  */
-export enum MoneyCharacter {
+export enum SpendingStyle {
     SPENDER = 'SPENDER',
     SAVER = 'SAVER',
     BALANCED = 'BALANCED',
     UNKNOWN = 'UNKNOWN',
 }
 
-/** Board-level income volatility — shared cash-flow picture. */
-export enum IncomeRhythm {
+/**
+ * Board-level income volatility — shared cash-flow picture for coaching.
+ * NONE = no recurring inflow right now (same coaching case as ~€0 net).
+ */
+export enum IncomeStability {
     STABLE = 'STABLE',
     VARIABLE = 'VARIABLE',
+    NONE = 'NONE',
 }

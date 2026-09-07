@@ -30,11 +30,13 @@ Enums come from `@rumbelo/contracts` + `NativeEnum({ … })` — never `export e
 
 | Domain | Example PG type |
 |--------|-----------------|
-| `money` | `money_debt_kind`, `money_cadence` |
+| `money` | `money_debt_kind`, `money_cadence`, `money_spending_style`, `money_month_score_event_kind` |
 | `platform` | `platform_household_kind`, `platform_currency` |
-| `auth` | `auth_locale`, `auth_money_character` |
+| `auth` | `auth_locale`, `auth_theme` |
 | `backoffice` | `backoffice_plan_key` |
 | `energy` / `growth` / `soul` | `energy_metric`, … |
+
+`SpendingStyle` is a money-domain enum even though the column lives on `auth.account_settings` — use `domain: 'money'` → `money_spending_style`.
 
 Shared TS enums (`Cadence` in `enums/common.ts`) still take the domain of the table that stores them (`domain: 'money'` on income/fixed-cost). Do not invent a second PG type by using another domain for the same concept.
 
@@ -82,7 +84,7 @@ Names should make the **shape** obvious without reading the decorator or the col
 | **Enum** | noun for kind/status (never a yes/no) | `kind`, `status`, `payoffStrategy` | booleans pretending to be enums |
 | **Instant** | `*At` → `timestamptz` | `createdAt`, `closedAt`, `publishedAt` | `closed`, `timestamp`, `closedDate` for an instant |
 | **Calendar date** | `*On` → Postgres `date` | `startedOn`, `endsOn`, `publishedOn` | `*At` for date-only; `*Day` for a full date |
-| **Day ordinal** | `*Day` → `int` / `smallint` (1–31 or weekday 1–7) | `dueDay`, `expectedDay`, `periodStartDay`, `ritualReminderDay` | `dueDate` / `expectedDate` when the value is **not** a full date |
+| **Day ordinal** | `*Day` → `int` / `smallint` (1–31 or weekday 1–7) | `dueDay`, `expectedDay`, `periodStartDay`, `weekCheckReminderDay` | `dueDate` / `expectedDate` when the value is **not** a full date |
 | **FK / id** | `*Id` for plain scalar FKs; relation noun for `@ManyToOne`/`@OneToOne` (`mapToPk`) | `jarId` (plain scalar); `household`, `account` (mapToPk relations) | bare `householdId`/`accountId` on entity fields — use `household`/`account` and map at API boundary |
 | **Money / count** | plain noun | `amount`, `balance`, `percentage`, `rate` | encoding the type in the name (`amountCents`) unless dual units exist |
 | **JSON array** | plural noun | `aliases`, `unlocks`, `audienceTags` | `aliasList`, `unlockJson` when plural is enough |
@@ -98,9 +100,9 @@ This is the #1 naming footgun in money apps:
 |------|--------|------|-----------------|
 | `dueDay` | **Day of month** | `int` 1–28/31 | “Rent is due on the **25th** every month” |
 | `expectedDay` | **Day of month** | `int` | “Salary lands on the **1st**” |
-| `ritualReminderDay` | **Weekday** | `int` 1–7 | “Ritual on **Sunday**” |
+| `weekCheckReminderDay` | **Weekday** | `int` 1–7 | “Week check on **Sunday**” |
 | `startedOn` / `endsOn` | **Calendar date** | `date` | “Contract ends on **2026-12-31**” |
-| `closedAt` | **Instant** | `timestamptz` | “Turn closed at **14:03:22Z**” |
+| `closedAt` | **Instant** | `timestamptz` | “Month score closed at **14:03:22Z**” |
 
 **Do not** rename `dueDay` → `dueDate` or `expectedDay` → `expectedDate`. Those values are not dates; they are ordinals that repeat every period. Calling them `*Date` lies about the type and breaks sorting/validation assumptions.
 
@@ -108,7 +110,7 @@ Rumbelo calendar-date suffix is **`*On`** (Rails-style). Prefer `startedOn` / `e
 
 ### JSON — when and how to name it
 
-1. **Prefer a normalised child table** when you filter, join, sum, or cascade on elements (see `ritual-allocation` — allocations are rows, not jsonb on the ritual).
+1. **Prefer a normalised child table** when you filter, join, sum, or cascade on elements (see `week-check-allocation` — allocations are rows, not jsonb on the week-check).
 2. **Use jsonb** for opaque bags, small string lists, or snapshots that are always read/written as a whole.
 3. **Name the bag by contents**, not by storage:
    - Arrays → plural (`aliases`, `unlocks`)
@@ -128,7 +130,7 @@ When a “flag” needs more than two values later, use an **enum** (`status`) i
 | Household-owned money rows | `HouseholdEntity` + `household` relation (`mapToPk` string — row-level isolation) |
 | Person attribution on household rows | `account` relation (`@ManyToOne` + `mapToPk`) → `auth.account` — **not** Better Auth `userId`; DTO maps as `accountId: row.account` |
 | Catalog we publish | `backoffice.*` templates/presets — households **copy**, do not FK live money to mutable catalog rows except stable template keys |
-| Repeating child lines you query | Child entity + FK (`RitualAllocation`) |
+| Repeating child lines you query | Child entity + FK (`WeekCheckAllocation`) |
 | Opaque config / match needles | jsonb with a clear plural / bag name |
 | Soft delete / disable | `isActive` / `isArchived` — do not invent parallel “status enums” for on/off |
 

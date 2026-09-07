@@ -12,8 +12,8 @@ The money loop. Children map one-to-one onto the Geld navigation.
 | `rule/` | auto-sort engine; first match wins, in priority order |
 | `goal/` | targets with a monthly rate and a straight-line projection |
 | `debt/` | balances plus avalanche/snowball ordering |
-| `turn/` | the monthly Monopoly turn — score, level, event log |
-| `ritual/` | the ten-minute weekly ritual and its surplus allocations |
+| `month-score/` | the monthly score — points, level, event log |
+| `week-check/` | the ten-minute weekly week check and its surplus allocations |
 | `dashboard/` | composition root; one aggregated read for the main screen |
 
 Client-side soft coaching when editing the split (tips only, never blocks save):
