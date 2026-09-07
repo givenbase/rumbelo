@@ -38,18 +38,18 @@ export const NAV_GROUPS = [
                 capabilityKey: CAPABILITIES.moneyJars,
             },
             {
-                href: productPath('money/transactions'),
+                href: productPath('money/spending'),
                 label: 'Spending',
-                capabilityKey: CAPABILITIES.moneyTransactions,
+                capabilityKey: CAPABILITIES.moneySpending,
             },
             {
-                href: productPath('money/debts'),
+                href: productPath('money/debt'),
                 label: 'Debt',
                 capabilityKey: CAPABILITIES.moneyDebt,
             },
             {
                 href: productPath('money/fixed-costs'),
-                label: 'Fixed',
+                label: 'Fixed costs',
                 capabilityKey: CAPABILITIES.moneyFixedCosts,
             },
         ],
@@ -110,9 +110,9 @@ export const NAV_GROUPS = [
                 capabilityKey: CAPABILITIES.energySleep,
             },
             {
-                href: productPath('energy/train'),
+                href: productPath('energy/training'),
                 label: 'Training',
-                capabilityKey: CAPABILITIES.energyTrain,
+                capabilityKey: CAPABILITIES.energyTraining,
             },
             {
                 href: productPath('energy/food'),
@@ -139,7 +139,7 @@ export const NAV_GROUPS = [
             },
             {
                 href: productPath('soul/gratitude'),
-                label: 'Thanks',
+                label: 'Gratitude',
                 capabilityKey: CAPABILITIES.soulGratitude,
             },
             {

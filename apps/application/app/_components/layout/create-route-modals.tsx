@@ -5,7 +5,7 @@ import {
     IncomeCreatePage,
     IncomeUpdatePage,
 } from '@/product/growth/income/_components/income-pages';
-import { DebtCreatePage, DebtUpdatePage } from '@/product/money/debts/_components/debt-pages';
+import { DebtCreatePage, DebtUpdatePage } from '@/product/money/debt/_components/debt-pages';
 import {
     FixedCostCreatePage,
     FixedCostUpdatePage,
@@ -13,7 +13,7 @@ import {
 import {
     ExpenseCreatePage,
     ExpenseUpdatePage,
-} from '@/product/money/transactions/_components/expense-pages';
+} from '@/product/money/spending/_components/expense-pages';
 import { SheetStubForm } from '@/components/features/forms/sheet-stub-form';
 import { RouteModalShell } from '@/components/layout/route-modal-shell';
 

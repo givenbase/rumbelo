@@ -64,7 +64,7 @@ export function EnergyPortalHubClient() {
                 note: 'sessions this week',
                 color: 'var(--color-jar-ff)',
                 chart: { kind: 'ring', pct: Math.min(100, sessions * 25) },
-                href: '/product/energy/train',
+                href: '/product/energy/training',
             },
             {
                 name: 'Food',

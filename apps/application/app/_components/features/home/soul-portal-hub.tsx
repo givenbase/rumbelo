@@ -48,7 +48,7 @@ export function SoulPortalHubClient() {
                 href: '/product/soul/stillness',
             },
             {
-                name: 'Thanks',
+                name: 'Gratitude',
                 value: String(thanks),
                 note: 'things noted this week',
                 color: 'var(--color-jar-give)',

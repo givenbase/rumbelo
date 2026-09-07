@@ -16,7 +16,7 @@ import {
  *   home-* / free money / …
  *   growth-goals            ✓     ✓     ✓
  *   money-debt / bank / import    ✓     ✓
- *   energy-week/train/food        ✓     ✓
+ *   energy-week/training/food        ✓     ✓
  *   platform-invite               ✓     ✓
  *   growth-income/net-worth/learn           ✓
  *   soul-centres                         ✓

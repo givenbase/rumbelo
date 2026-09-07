@@ -2,12 +2,12 @@ import { productPath } from './routes';
 
 /** Canonical create/update paths for money + growth entities (Meltizo shape). */
 export const CREATE_HREF = {
-    tx: productPath('money/transactions/create'),
+    tx: productPath('money/spending/create'),
     fixed: productPath('money/fixed-costs/create'),
-    debt: productPath('money/debts/create'),
+    debt: productPath('money/debt/create'),
     income: productPath('growth/income/create'),
     goal: productPath('growth/goals/create'),
-    session: productPath('energy/train/create'),
+    session: productPath('energy/training/create'),
     asset: productPath('growth/net-worth/create'),
     move: productPath('money/jars/move/create'),
 } as const;
@@ -22,11 +22,11 @@ export function spendFromJarHref(jarId: string) {
 export function updateHref(kind: Exclude<CreateKind, 'session' | 'asset' | 'move'>, id: string) {
     switch (kind) {
         case 'tx':
-            return productPath(`money/transactions/update/${id}`);
+            return productPath(`money/spending/update/${id}`);
         case 'fixed':
             return productPath(`money/fixed-costs/update/${id}`);
         case 'debt':
-            return productPath(`money/debts/update/${id}`);
+            return productPath(`money/debt/update/${id}`);
         case 'income':
             return productPath(`growth/income/update/${id}`);
         case 'goal':

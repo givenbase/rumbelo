@@ -28,7 +28,7 @@ const FALLBACK_RECAP: CoachRecapItem[] = [
         value: '—',
         what: 'spent this week',
         tint: 'var(--color-jar-give)',
-        href: '/product/money/transactions',
+        href: '/product/money/spending',
     },
     {
         portal: 'Growth',
@@ -160,7 +160,7 @@ export function HomeDashboardClient() {
                                       : 'All sorted — time for intention.',
                                   ctaLabel: dashboard.inboxCount ? 'Sort inbox' : 'Week check',
                                   ctaHref: dashboard.inboxCount
-                                      ? '/product/money/transactions'
+                                      ? '/product/money/spending'
                                       : '/product/money/week-check',
                               },
                           ]

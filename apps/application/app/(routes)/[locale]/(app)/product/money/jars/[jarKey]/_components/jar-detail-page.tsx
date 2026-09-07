@@ -212,7 +212,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                         ✦ This period
                     </h2>
                     <Link
-                        href="/product/money/transactions"
+                        href="/product/money/spending"
                         className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase hover:text-accent">
                         All spending ›
                     </Link>

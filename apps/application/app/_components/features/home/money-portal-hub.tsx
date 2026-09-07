@@ -63,7 +63,7 @@ export function MoneyPortalHubClient() {
                 note: 'booked this month',
                 color: 'var(--color-jar-play)',
                 chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-                href: '/product/money/transactions',
+                href: '/product/money/spending',
             },
             {
                 name: 'Debt',
@@ -74,10 +74,10 @@ export function MoneyPortalHubClient() {
                         : 'the month you are free',
                 color: 'var(--color-danger)',
                 chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-                href: '/product/money/debts',
+                href: '/product/money/debt',
             },
             {
-                name: 'Fixed',
+                name: 'Fixed costs',
                 value: formatMoney(fixed),
                 note: 'fixed costs per month',
                 color: 'var(--color-jar-nec)',

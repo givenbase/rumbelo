@@ -35,8 +35,8 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         notAllowed: 'Not for eating out, clothes or fun — that is Play.',
         links: [
             { href: '/product/money/fixed-costs', label: 'Fixed costs ›' },
-            { href: '/product/money/debts', label: 'Debt ›' },
-            { href: '/product/money/transactions', label: 'Spending ›' },
+            { href: '/product/money/debt', label: 'Debt ›' },
+            { href: '/product/money/spending', label: 'Spending ›' },
         ],
     },
     FINANCIAL_FREEDOM: {
@@ -74,7 +74,7 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
         notAllowed:
             'Only if it raises your earning power. A course you never finish belongs in Play.',
         links: [
-            { href: '/product/money/transactions', label: 'Spending ›' },
+            { href: '/product/money/spending', label: 'Spending ›' },
             { href: '/product/growth/goals', label: 'My goals ›' },
         ],
     },
@@ -91,7 +91,7 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
             'Known, planned, not urgent. Urgent and unexpected? That is exactly what the emergency fund is for.',
         links: [
             { href: '/product/growth/goals', label: 'My goals ›' },
-            { href: '/product/money/transactions', label: 'Spending ›' },
+            { href: '/product/money/spending', label: 'Spending ›' },
         ],
     },
     PLAY: {
@@ -104,7 +104,7 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
             'Gifts to yourself',
         ],
         notAllowed: 'No brakes, no guilt — but no top-up from another jar when it is empty either.',
-        links: [{ href: '/product/money/transactions', label: 'Spending ›' }],
+        links: [{ href: '/product/money/spending', label: 'Spending ›' }],
     },
     GIVE: {
         note: 'Giving keeps money a tool and not a master. Transferred automatically.',
@@ -115,6 +115,6 @@ export const JAR_GUIDE: Record<JarGuideKey, JarGuide> = {
             'Helping someone who needs it',
         ],
         notAllowed: 'No favours expected, no tax-deduction thinking. Giving keeps money a tool.',
-        links: [{ href: '/product/money/transactions', label: 'Spending ›' }],
+        links: [{ href: '/product/money/spending', label: 'Spending ›' }],
     },
 };

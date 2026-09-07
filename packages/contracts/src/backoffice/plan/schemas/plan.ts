@@ -101,8 +101,8 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         description: 'The six jars — core money model.',
         sortOrder: 11,
     },
-    [CAPABILITIES.moneyTransactions]: {
-        key: CAPABILITIES.moneyTransactions,
+    [CAPABILITIES.moneySpending]: {
+        key: CAPABILITIES.moneySpending,
         kind: CapabilityKind.SCREEN,
         name: 'Spending',
         description: 'Manual spending and sorting.',
@@ -111,7 +111,7 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
     [CAPABILITIES.moneyFixedCosts]: {
         key: CAPABILITIES.moneyFixedCosts,
         kind: CapabilityKind.SCREEN,
-        name: 'Fixed',
+        name: 'Fixed costs',
         description: 'Recurring fixed costs.',
         sortOrder: 13,
     },
@@ -192,8 +192,8 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         description: 'Divide 168 hours — sleep, training, and food.',
         sortOrder: 32,
     },
-    [CAPABILITIES.energyTrain]: {
-        key: CAPABILITIES.energyTrain,
+    [CAPABILITIES.energyTraining]: {
+        key: CAPABILITIES.energyTraining,
         kind: CapabilityKind.SCREEN,
         name: 'Training',
         description: 'Training sessions and load.',
@@ -223,7 +223,7 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
     [CAPABILITIES.soulGratitude]: {
         key: CAPABILITIES.soulGratitude,
         kind: CapabilityKind.SCREEN,
-        name: 'Thanks',
+        name: 'Gratitude',
         description: 'Gratitude practice.',
         sortOrder: 42,
     },
@@ -267,7 +267,7 @@ const BASIC_ACCESS: ProductFeatureMap = {
     [CapabilityProduct.MONEY]: [
         CAPABILITIES.moneyOverview,
         CAPABILITIES.moneyJars,
-        CAPABILITIES.moneyTransactions,
+        CAPABILITIES.moneySpending,
         CAPABILITIES.moneyFixedCosts,
     ],
     [CapabilityProduct.GROWTH]: [
@@ -295,7 +295,7 @@ const PLUS_EXTRA: ProductFeatureMap = {
     [CapabilityProduct.GROWTH]: [],
     [CapabilityProduct.ENERGY]: [
         CAPABILITIES.energyWeek,
-        CAPABILITIES.energyTrain,
+        CAPABILITIES.energyTraining,
         CAPABILITIES.energyFood,
     ],
     [CapabilityProduct.SOUL]: [],

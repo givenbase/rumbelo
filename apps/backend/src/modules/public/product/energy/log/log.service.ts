@@ -11,7 +11,7 @@ import { EnergyLog } from './energy-log.entity';
 
 const METRIC_CAPABILITY = {
     [EnergyMetric.SLEEP]: CAPABILITIES.energySleep,
-    [EnergyMetric.TRAIN]: CAPABILITIES.energyTrain,
+    [EnergyMetric.TRAIN]: CAPABILITIES.energyTraining,
     [EnergyMetric.FOOD]: CAPABILITIES.energyFood,
     [EnergyMetric.MIND]: CAPABILITIES.soulStillness,
 } as const;

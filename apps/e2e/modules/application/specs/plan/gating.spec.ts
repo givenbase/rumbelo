@@ -4,7 +4,7 @@ const LOCKED_COPY = /Available in the (Plus|Max) plan|Upgrade to (Plus|Max)|belo
 
 basicTest.describe('plan gating @plan', () => {
     basicTest('Basic sees debt locked', async ({ personaPage }) => {
-        await personaPage.goto('/product/money/debts');
+        await personaPage.goto('/product/money/debt');
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })
         ).toBeVisible({ timeout: 30_000 });
@@ -36,7 +36,7 @@ basicTest.describe('plan gating @plan', () => {
     });
 
     basicTest('Basic sees training locked', async ({ personaPage }) => {
-        await personaPage.goto('/product/energy/train');
+        await personaPage.goto('/product/energy/training');
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })
         ).toBeVisible({ timeout: 30_000 });
@@ -45,7 +45,7 @@ basicTest.describe('plan gating @plan', () => {
 
 plusTest.describe('plan gating @plan', () => {
     plusTest('Plus can open debts', async ({ personaPage }) => {
-        await personaPage.goto('/product/money/debts');
+        await personaPage.goto('/product/money/debt');
         await expect(personaPage).not.toHaveURL(/sign-in/);
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })

@@ -60,14 +60,14 @@ function isoWeekDateSet(weekKey: string): Set<string> {
     const week = Number(match[2]);
     // ISO week 1 Thursday algorithm → Monday of that week
     const jan4 = new Date(Date.UTC(year, 0, 4));
-    const day = jan4.getUTCDay() || 7;
+    const weekday = jan4.getUTCDay() || 7;
     const monday = new Date(jan4);
-    monday.setUTCDate(jan4.getUTCDate() - day + 1 + (week - 1) * 7);
+    monday.setUTCDate(jan4.getUTCDate() - weekday + 1 + (week - 1) * 7);
     const dates = new Set<string>();
     for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
-        const day = new Date(monday);
-        day.setUTCDate(monday.getUTCDate() + dayOffset);
-        dates.add(day.toISOString().slice(0, 10));
+        const date = new Date(monday);
+        date.setUTCDate(monday.getUTCDate() + dayOffset);
+        dates.add(date.toISOString().slice(0, 10));
     }
     return dates;
 }

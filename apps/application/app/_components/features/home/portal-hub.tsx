@@ -108,17 +108,31 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
                                 </span>
                                 {card.chart.kind === 'bars' ? (
                                     <span className="flex h-11 items-end gap-0.75">
-                                        {card.chart.bars.map((height, day) => (
-                                            <span
-                                                key={`${card.name}-day-${day}-h-${height}`}
-                                                className="block w-1.5 rounded-sm"
-                                                style={{
-                                                    height: `${height}%`,
-                                                    minHeight: 4,
-                                                    background: card.color,
-                                                }}
-                                            />
-                                        ))}
+                                        {card.chart.bars.map((height, barIndex) => {
+                                            const weekday =
+                                                (
+                                                    [
+                                                        'mon',
+                                                        'tue',
+                                                        'wed',
+                                                        'thu',
+                                                        'fri',
+                                                        'sat',
+                                                        'sun',
+                                                    ] as const
+                                                )[barIndex] ?? `b${barIndex}`;
+                                            return (
+                                                <span
+                                                    key={`${card.name}-${weekday}`}
+                                                    className="block w-1.5 rounded-sm"
+                                                    style={{
+                                                        height: `${height}%`,
+                                                        minHeight: 4,
+                                                        background: card.color,
+                                                    }}
+                                                />
+                                            );
+                                        })}
                                     </span>
                                 ) : (
                                     <RingChart pct={card.chart.pct} color={card.color} />
