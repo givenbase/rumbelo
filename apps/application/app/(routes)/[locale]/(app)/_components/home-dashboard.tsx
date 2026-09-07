@@ -76,6 +76,11 @@ export function HomeDashboardClient() {
         safePerDay: 0,
         playLeft: 0,
         inboxCount: 0,
+        jarsOnTrack: 0,
+        jarsTotal: 0,
+        fixedCostsMonthly: 0,
+        debtFreeOn: null as string | null,
+        debtMonthsRemaining: null as number | null,
         why: null as string | null,
     };
 

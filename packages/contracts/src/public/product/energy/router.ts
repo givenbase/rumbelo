@@ -18,6 +18,9 @@ export const contract = {
             .output(schemas.EnergyLog),
         summary: oc.input(schemas.HouseholdScoped).output(z.array(schemas.EnergySummary)),
     },
+    dashboard: {
+        get: oc.input(schemas.HouseholdScoped).output(schemas.EnergyDashboard),
+    },
     weekCheck: {
         current: oc
             .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))

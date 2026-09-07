@@ -108,9 +108,9 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
                                 </span>
                                 {card.chart.kind === 'bars' ? (
                                     <span className="flex h-11 items-end gap-0.75">
-                                        {card.chart.bars.map(height => (
+                                        {card.chart.bars.map((height, day) => (
                                             <span
-                                                key={`${card.name}-bar-${height}`}
+                                                key={`${card.name}-day-${day}-h-${height}`}
                                                 className="block w-1.5 rounded-sm"
                                                 style={{
                                                     height: `${height}%`,

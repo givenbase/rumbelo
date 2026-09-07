@@ -5,7 +5,9 @@ import { daysInPeriod } from '../../../../../common/utils/period.util';
 import { CoachService } from '../../../platform/coach/coach.service';
 import { HouseholdSettingsService } from '../../../../auth/household/household-settings/household-settings.service';
 import { TransactionService } from '../ledger/transaction/transaction.service';
+import { FixedCostService } from '../plan/fixed-cost/fixed-cost.service';
 import { JarService } from '../plan/jar/jar.service';
+import { DebtService } from '../targets/debt/debt.service';
 import { MonthScoreService } from '../month-score/month-score.service';
 
 /**
@@ -21,7 +23,9 @@ export class DashboardService {
         @Inject(CoachService) private readonly coach: CoachService,
         @Inject(TransactionService) private readonly transactions: TransactionService,
         @Inject(HouseholdSettingsService)
-        private readonly householdSettings: HouseholdSettingsService
+        private readonly householdSettings: HouseholdSettingsService,
+        @Inject(FixedCostService) private readonly fixedCosts: FixedCostService,
+        @Inject(DebtService) private readonly debts: DebtService
     ) {}
 
     // ====================================================================
@@ -29,18 +33,23 @@ export class DashboardService {
     // ====================================================================
 
     async get(householdId: string, period: string) {
-        const [jars, monthScore, coach, inboxCount, income, settings] = await Promise.all([
-            this.jars.balances(period),
-            this.monthScores.current(period),
-            this.coach.feed(period),
-            this.transactions.countInbox(),
-            this.jars.monthlyNetIncome(),
-            this.householdSettings.get(householdId),
-        ]);
+        const [jars, monthScore, coach, inboxCount, income, settings, byJar, debtPlan] =
+            await Promise.all([
+                this.jars.balances(period),
+                this.monthScores.current(period),
+                this.coach.feed(period),
+                this.transactions.countInbox(),
+                this.jars.monthlyNetIncome(),
+                this.householdSettings.get(householdId),
+                this.fixedCosts.byJar(),
+                this.debts.plan(),
+            ]);
 
         const allocatedTotal = sum(jars.map(jar => jar.allocated));
         const spentTotal = sum(jars.map(jar => jar.spent));
         const play = jars.find(jar => jar.key === 'PLAY');
+        const jarsOnTrack = jars.filter(jar => !jar.overspent).length;
+        const fixedCostsMonthly = sum(byJar.map(group => group.total));
 
         // Safe to spend / play left use available (after fixed commitments).
         const daysLeft = Math.max(1, daysInPeriod(period) - new Date().getUTCDate());
@@ -60,6 +69,11 @@ export class DashboardService {
             safePerDay: Math.floor(spendableRemaining / daysLeft),
             playLeft: play?.available ?? 0,
             inboxCount,
+            jarsOnTrack,
+            jarsTotal: jars.length,
+            fixedCostsMonthly,
+            debtFreeOn: debtPlan.debtFreeOn,
+            debtMonthsRemaining: debtPlan.monthsRemaining,
             jars,
             coach,
             monthScore,

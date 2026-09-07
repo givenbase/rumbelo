@@ -11,6 +11,9 @@ export const contract = {
     milestones: {
         list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.IncomeMilestone)),
     },
+    dashboard: {
+        get: oc.input(schemas.HouseholdScoped).output(schemas.GrowthDashboard),
+    },
     weekCheck: {
         current: oc
             .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Money, PeriodKey } from '../../../../common/schemas';
+import { IsoDate, Money, PeriodKey } from '../../../../common/schemas';
 import { JarBalance } from './jar';
 import { CoachMessage } from '../../../platform/schemas/coach';
 import { MonthScore } from './month-score';
@@ -16,6 +16,14 @@ export const Dashboard = z.object({
     safePerDay: Money,
     playLeft: Money,
     inboxCount: z.int(),
+    /** Jars that are not overspent this period. */
+    jarsOnTrack: z.int(),
+    jarsTotal: z.int(),
+    /** Monthly-normalised active fixed OUT across all jars. */
+    fixedCostsMonthly: Money,
+    /** Estimated debt-free month (YYYY-MM-DD), null when no debts or no payment pool. */
+    debtFreeOn: IsoDate.nullable(),
+    debtMonthsRemaining: z.int().nullable(),
     jars: z.array(JarBalance),
     coach: z.array(CoachMessage),
     monthScore: MonthScore,

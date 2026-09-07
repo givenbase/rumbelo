@@ -18,6 +18,9 @@ export const contract = {
             )
             .output(schemas.Gratitude),
     },
+    dashboard: {
+        get: oc.input(schemas.HouseholdScoped).output(schemas.SoulDashboard),
+    },
     weekCheck: {
         current: oc
             .input(schemas.HouseholdScoped.extend({ week: schemas.WeekKey.nullish() }))
