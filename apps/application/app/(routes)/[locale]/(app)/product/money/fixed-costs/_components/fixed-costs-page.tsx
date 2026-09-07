@@ -101,48 +101,50 @@ export function FixedCostsPageClient() {
                 </h1>
             </div>
 
-            <ListToolbar
-                createLabel={tab === 'ERUIT' ? '+ Add' : '+ Income source'}
-                onCreate={() =>
-                    router.push(tab === 'ERUIT' ? CREATE_HREF.fixed : CREATE_HREF.income)
-                }
-                secondary={
-                    <span
-                        className={cn(
-                            'font-mono text-xs font-medium',
-                            leftover >= 0 ? 'text-success' : 'text-danger'
-                        )}>
-                        {leftover >= 0 ? '+ ' : ''}
-                        {formatMoney(leftover)} left after costs
-                    </span>
-                }>
-                {(['ERUIT', 'ERIN'] as const).map(tabKey => (
-                    <button
-                        key={tabKey}
-                        type="button"
-                        onClick={() => setTab(tabKey)}
-                        className={cn(
-                            'flex items-center gap-2.5 rounded-full border px-4 py-2 font-mono text-xs font-medium tracking-wide uppercase transition-all duration-200',
-                            tab === tabKey
-                                ? 'border-accent/40 bg-accent-soft text-accent'
-                                : 'border-line text-fg-muted hover:border-line-strong hover:text-fg'
-                        )}>
-                        {tabKey === 'ERUIT' ? 'Out' : 'In'}
+            <div data-tour="fixed-tabs">
+                <ListToolbar
+                    createLabel={tab === 'ERUIT' ? '+ Add' : '+ Income source'}
+                    onCreate={() =>
+                        router.push(tab === 'ERUIT' ? CREATE_HREF.fixed : CREATE_HREF.income)
+                    }
+                    secondary={
                         <span
                             className={cn(
-                                'rounded-full px-2 py-0.5 font-mono text-xs',
-                                tab === tabKey
-                                    ? 'bg-accent/10 text-accent'
-                                    : 'bg-raised text-fg-faint'
+                                'font-mono text-xs font-medium',
+                                leftover >= 0 ? 'text-success' : 'text-danger'
                             )}>
-                            {tabKey === 'ERUIT' ? formatMoney(outTotal) : formatMoney(NET)}
+                            {leftover >= 0 ? '+ ' : ''}
+                            {formatMoney(leftover)} left after costs
                         </span>
-                    </button>
-                ))}
-            </ListToolbar>
+                    }>
+                    {(['ERUIT', 'ERIN'] as const).map(tabKey => (
+                        <button
+                            key={tabKey}
+                            type="button"
+                            onClick={() => setTab(tabKey)}
+                            className={cn(
+                                'flex items-center gap-2.5 rounded-full border px-4 py-2 font-mono text-xs font-medium tracking-wide uppercase transition-all duration-200',
+                                tab === tabKey
+                                    ? 'border-accent/40 bg-accent-soft text-accent'
+                                    : 'border-line text-fg-muted hover:border-line-strong hover:text-fg'
+                            )}>
+                            {tabKey === 'ERUIT' ? 'Out' : 'In'}
+                            <span
+                                className={cn(
+                                    'rounded-full px-2 py-0.5 font-mono text-xs',
+                                    tab === tabKey
+                                        ? 'bg-accent/10 text-accent'
+                                        : 'bg-raised text-fg-faint'
+                                )}>
+                                {tabKey === 'ERUIT' ? formatMoney(outTotal) : formatMoney(NET)}
+                            </span>
+                        </button>
+                    ))}
+                </ListToolbar>
+            </div>
 
             {tab === 'ERUIT' && (
-                <div className="grid items-start gap-5 sm:grid-cols-2">
+                <div data-tour="fixed-list" className="grid items-start gap-5 sm:grid-cols-2">
                     <Card className="p-0">
                         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
                             <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
@@ -257,7 +259,7 @@ export function FixedCostsPageClient() {
             )}
 
             {tab === 'ERIN' && (
-                <div className="grid items-start gap-5 sm:grid-cols-2">
+                <div data-tour="fixed-list" className="grid items-start gap-5 sm:grid-cols-2">
                     <Card className="p-0">
                         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
                             <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">

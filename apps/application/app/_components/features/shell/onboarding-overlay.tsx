@@ -1,6 +1,6 @@
 'use client';
 
-import { useApiClient } from '@/app/_lib/api-hooks';
+import { api } from '@/app/_lib/api';
 import { useEffect, useState } from 'react';
 
 import { Currency, IncomeRhythm, Locale, MoneyCharacter } from '@rumbelo/contracts';
@@ -8,6 +8,7 @@ import { Button, Field, Input } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
 import { JAR_META } from '@/app/_lib/jar-meta';
+import { usePageTour } from '@/components/features/tour';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -26,7 +27,6 @@ const STEPS = [
 ];
 
 export function OnboardingOverlay() {
-    const client = useApiClient();
     const { session, householdId, isPending, setActiveHousehold, refreshSession } = useAuth();
     const {
         onboardingOpen,
@@ -36,6 +36,7 @@ export function OnboardingOverlay() {
         showToast,
         openOnboarding,
     } = useAppShell();
+    const { requestTourOffer } = usePageTour();
 
     useEffect(() => {
         if (isPending) return;
@@ -64,7 +65,7 @@ export function OnboardingOverlay() {
         try {
             const euros = Math.round(parseFloat(monthlyIncome.replace(',', '.')) * 100);
             const split = JAR_META.map(jar => ({ key: jar.key, percentage: jar.pct }));
-            const household = await client.household.onboard({
+            const household = await api.household.onboard({
                 householdName,
                 currency: Currency.EUR,
                 locale: Locale.NL,
@@ -77,6 +78,7 @@ export function OnboardingOverlay() {
             await setActiveHousehold(household.id);
             await refreshSession();
             closeOnboarding(true);
+            requestTourOffer();
             showToast('Household created', 'success');
         } catch (error) {
             console.error('onboard failed', error);

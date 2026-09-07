@@ -179,43 +179,45 @@ export function JarsPageClient() {
                 </p>
             </div>
 
-            <ListToolbar
-                createLabel="+ Move money"
-                onCreate={() => router.push(CREATE_HREF.move)}
-                secondary={
-                    tab === 'JARS' ? (
-                        <span className="font-mono text-xs font-medium text-fg-faint">
-                            {onTarget} / {jars.length} on track
-                        </span>
-                    ) : net > 0 ? (
-                        <span className="font-mono text-xs font-medium text-fg-faint">
-                            Income {formatMoney(net)}/mo
-                        </span>
-                    ) : null
-                }>
-                {(['JARS', 'SIMULATOR'] as const).map(tabKey => (
-                    <ListToolbarTab
-                        key={tabKey}
-                        active={tab === tabKey}
-                        onClick={() => setTab(tabKey)}>
-                        {tabKey === 'JARS' ? 'Jars' : 'Simulator'}
-                        {tabKey === 'JARS' && (
-                            <span
-                                className={cn(
-                                    'rounded-full px-2 py-0.5 font-mono text-xs',
-                                    tab === tabKey
-                                        ? 'bg-accent/10 text-accent'
-                                        : 'bg-raised text-fg-faint'
-                                )}>
-                                {Math.round(totalPct * 10) / 10}%
+            <div data-tour="jars-tabs">
+                <ListToolbar
+                    createLabel="+ Move money"
+                    onCreate={() => router.push(CREATE_HREF.move)}
+                    secondary={
+                        tab === 'JARS' ? (
+                            <span className="font-mono text-xs font-medium text-fg-faint">
+                                {onTarget} / {jars.length} on track
                             </span>
-                        )}
-                    </ListToolbarTab>
-                ))}
-            </ListToolbar>
+                        ) : net > 0 ? (
+                            <span className="font-mono text-xs font-medium text-fg-faint">
+                                Income {formatMoney(net)}/mo
+                            </span>
+                        ) : null
+                    }>
+                    {(['JARS', 'SIMULATOR'] as const).map(tabKey => (
+                        <ListToolbarTab
+                            key={tabKey}
+                            active={tab === tabKey}
+                            onClick={() => setTab(tabKey)}>
+                            {tabKey === 'JARS' ? 'Jars' : 'Simulator'}
+                            {tabKey === 'JARS' && (
+                                <span
+                                    className={cn(
+                                        'rounded-full px-2 py-0.5 font-mono text-xs',
+                                        tab === tabKey
+                                            ? 'bg-accent/10 text-accent'
+                                            : 'bg-raised text-fg-faint'
+                                    )}>
+                                    {Math.round(totalPct * 10) / 10}%
+                                </span>
+                            )}
+                        </ListToolbarTab>
+                    ))}
+                </ListToolbar>
+            </div>
 
             {tab === 'JARS' && (
-                <>
+                <div data-tour="jars-list">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="rounded-full border border-accent/30 bg-accent-soft px-4 py-2 font-mono text-xs font-medium tracking-wide text-accent uppercase">
                             {jars.length} jars · {Math.round(totalPct * 10) / 10}% allocated
@@ -225,7 +227,7 @@ export function JarsPageClient() {
                         </span>
                     </div>
 
-                    <div className="grid gap-2">
+                    <div className="mt-4 grid gap-2">
                         {jars.map(jar => {
                             const meta = JAR_META.find(entry => entry.key === jar.key);
                             return (
@@ -251,10 +253,10 @@ export function JarsPageClient() {
                         })}
                     </div>
 
-                    <p className="font-mono text-xs text-fg-faint">
+                    <p className="mt-4 font-mono text-xs text-fg-faint">
                         {onTarget} / {jars.length} jars on track this period
                     </p>
-                </>
+                </div>
             )}
 
             {tab === 'SIMULATOR' && (

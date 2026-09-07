@@ -1,7 +1,10 @@
 /**
  * Design / demo preview switches (app only — NEXT_PUBLIC_*).
  *
- * PREVIEW_MODE  — force empty fallbacks (no live API) even when a household exists
+ * Unset / empty = off (`emptyStringAsUndefined` in get-env).
+ * Only the literal string `"true"` turns PREVIEW_MODE on.
+ *
+ * PREVIEW_MODE  — fixtures / no live API; free plan switches (bypass Stripe)
  * PREVIEW_PLAN  — override plan gating (BASIC | PLUS | MAX | ALL | FULL)
  *
  * Production / normal local: leave both unset so household planKey drives gating.

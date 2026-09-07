@@ -45,12 +45,36 @@ export type AccountProfilePatch = z.infer<typeof AccountProfilePatch>;
  * `onboardedAt` is null until personal setup is finished (locale / character /
  * first household flow for the creator). Separate from Better Auth emailVerified.
  */
+export const AccountTourChapterStatus = z.enum(['completed', 'skipped']);
+export type AccountTourChapterStatus = z.infer<typeof AccountTourChapterStatus>;
+
+export const AccountTourOfferStatus = z.enum(['idle', 'pending', 'accepted', 'dismissed']);
+export type AccountTourOfferStatus = z.infer<typeof AccountTourOfferStatus>;
+
+/** Joyride progress — person-scoped so partners don’t overwrite each other. */
+export const AccountTourProgress = z.object({
+    offer: AccountTourOfferStatus,
+    tours: z.record(z.string(), AccountTourChapterStatus),
+    seriesActive: z.boolean(),
+    seriesIndex: z.number().int().min(0),
+});
+export type AccountTourProgress = z.infer<typeof AccountTourProgress>;
+
+export const DEFAULT_ACCOUNT_TOUR_PROGRESS: AccountTourProgress = {
+    offer: 'idle',
+    tours: {},
+    seriesActive: false,
+    seriesIndex: 0,
+};
+
 export const AccountSettings = z.object({
     accountId: Id,
     locale: z.enum(Locale),
     theme: z.enum(Theme),
     /** Soft spending style — personalises coach tips for who is looking. */
     moneyCharacter: z.enum(MoneyCharacter),
+    /** Guided tour / Help walkthrough progress. */
+    tour: AccountTourProgress,
     /** When personal onboarding completed; null = still new. */
     onboardedAt: z.iso.datetime().nullable(),
 });

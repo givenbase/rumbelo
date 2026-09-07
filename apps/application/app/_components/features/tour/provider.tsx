@@ -1,0 +1,387 @@
+'use client';
+
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    type ReactNode,
+} from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Joyride, STATUS, type Step, type Styles } from 'react-joyride';
+
+import { api } from '@/app/_lib/api';
+import { apiUtils } from '@/app/_lib/api-hooks';
+import { useAuth } from '@/components/features/shell/auth-provider';
+
+import { FULL_TOUR_CHAPTERS, chrome, pathWithoutLocale } from './content';
+import { TourOfferDialog } from './offer-dialog';
+import {
+    defaultTourProgress,
+    isTourDone,
+    normalizeTourProgress,
+    type TourChapterStatus,
+    type TourProgressState,
+} from './progress';
+import type { PageTourId, PageTourStep } from './types';
+
+type PageTourContextValue = {
+    progress: TourProgressState;
+    startTour: (tourId: PageTourId, steps: PageTourStep[]) => void;
+    requestTourOffer: () => void;
+    acceptTourOffer: () => void;
+    dismissTourOffer: () => void;
+    /** Settings / Help — clear series progress and run the full tour again. */
+    restartFullTour: () => void;
+    isTourDone: (tourId: string) => boolean;
+};
+
+const PageTourContext = createContext<PageTourContextValue | null>(null);
+
+const JOYRIDE_STYLES: Partial<Styles> = {
+    tooltip: {
+        borderRadius: 12,
+        padding: 16,
+    },
+    tooltipTitle: {
+        fontSize: 14,
+        fontWeight: 600,
+        margin: '0 0 6px',
+    },
+    tooltipContent: {
+        fontSize: 13,
+        lineHeight: 1.5,
+        padding: 0,
+    },
+    buttonPrimary: {
+        borderRadius: 999,
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: '0.04em',
+        padding: '8px 14px',
+        textTransform: 'uppercase' as const,
+    },
+    buttonBack: {
+        color: 'var(--color-fg-muted)',
+        fontSize: 12,
+        marginRight: 8,
+    },
+    buttonSkip: {
+        color: 'var(--color-fg-faint)',
+        fontSize: 12,
+    },
+};
+
+function toJoyrideSteps(steps: PageTourStep[]): Step[] {
+    return steps.map(step => ({
+        target: step.target,
+        title: step.title,
+        content: step.content,
+        skipBeacon: true,
+        placement: 'auto',
+    }));
+}
+
+function pathMatchesChapter(pathname: string, href: string): boolean {
+    const path = pathWithoutLocale(pathname);
+    return path === href || path.startsWith(`${href}/`);
+}
+
+export function PageTourProvider({ children }: { children: ReactNode }) {
+    const router = useRouter();
+    const pathname = usePathname() ?? '/';
+    const { userId } = useAuth();
+    const queryClient = useQueryClient();
+
+    const settingsQuery = useQuery({
+        ...apiUtils.account.settings.queryOptions(),
+        enabled: Boolean(userId),
+    });
+
+    const [progress, setProgress] = useState<TourProgressState>(defaultTourProgress);
+    const [hydrated, setHydrated] = useState(false);
+    const [run, setRun] = useState(false);
+    const [steps, setSteps] = useState<Step[]>([]);
+    const [hydratedUserId, setHydratedUserId] = useState<string | null>(null);
+
+    const activeTourIdRef = useRef<PageTourId | null>(null);
+    const seriesModeRef = useRef(false);
+    const seriesIndexRef = useRef(0);
+    const resumeHrefRef = useRef<string | null>(null);
+    const startingRef = useRef(false);
+
+    // Hydrate from account.settings when the signed-in user (and their prefs) are ready.
+    if (!userId && hydratedUserId !== null) {
+        setHydratedUserId(null);
+        setProgress(defaultTourProgress());
+        setHydrated(false);
+    } else if (
+        userId &&
+        settingsQuery.isSuccess &&
+        settingsQuery.data &&
+        hydratedUserId !== userId
+    ) {
+        setHydratedUserId(userId);
+        setProgress(normalizeTourProgress(settingsQuery.data.tour));
+        setHydrated(true);
+    }
+
+    useEffect(() => {
+        seriesIndexRef.current = progress.seriesIndex;
+    }, [progress.seriesIndex]);
+
+    const persist = useCallback(
+        (updater: (previous: TourProgressState) => TourProgressState) => {
+            setProgress(previous => {
+                const next = updater(previous);
+                seriesIndexRef.current = next.seriesIndex;
+                if (userId) {
+                    void api.account
+                        .updateSettings({ tour: next })
+                        .then(updated => {
+                            queryClient.setQueryData(apiUtils.account.settings.key(), updated);
+                        })
+                        .catch(error => {
+                            console.error('tour progress save failed', error);
+                        });
+                }
+                return next;
+            });
+        },
+        [queryClient, userId]
+    );
+
+    const launchSteps = useCallback(
+        (tourId: PageTourId, tourSteps: PageTourStep[], series: boolean) => {
+            if (tourSteps.length === 0) return;
+            startingRef.current = true;
+            activeTourIdRef.current = tourId;
+            seriesModeRef.current = series;
+            setSteps(toJoyrideSteps(tourSteps));
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setRun(true);
+                    startingRef.current = false;
+                });
+            });
+        },
+        []
+    );
+
+    const startTour = useCallback(
+        (tourId: PageTourId, tourSteps: PageTourStep[]) => {
+            resumeHrefRef.current = null;
+            launchSteps(tourId, tourSteps, false);
+        },
+        [launchSteps]
+    );
+
+    const requestTourOffer = useCallback(() => {
+        persist(previous => {
+            if (previous.offer === 'accepted' || previous.offer === 'dismissed') {
+                return previous;
+            }
+            return { ...previous, offer: 'pending' };
+        });
+    }, [persist]);
+
+    const dismissTourOffer = useCallback(() => {
+        resumeHrefRef.current = null;
+        seriesModeRef.current = false;
+        persist(previous => ({
+            ...previous,
+            offer: 'dismissed',
+            seriesActive: false,
+            seriesIndex: 0,
+        }));
+    }, [persist]);
+
+    const goToSeriesIndex = useCallback(
+        (index: number) => {
+            const chapter = FULL_TOUR_CHAPTERS[index];
+            if (!chapter) {
+                resumeHrefRef.current = null;
+                seriesModeRef.current = false;
+                persist(previous => ({
+                    ...previous,
+                    seriesActive: false,
+                    seriesIndex: 0,
+                }));
+                return;
+            }
+
+            persist(previous => ({
+                ...previous,
+                offer: 'accepted',
+                seriesActive: true,
+                seriesIndex: index,
+            }));
+
+            if (pathMatchesChapter(pathname, chapter.href)) {
+                resumeHrefRef.current = null;
+                launchSteps(chapter.id, chapter.steps, true);
+            } else {
+                resumeHrefRef.current = chapter.href;
+                seriesModeRef.current = true;
+                router.push(chapter.href);
+            }
+        },
+        [launchSteps, pathname, persist, router]
+    );
+
+    const acceptTourOffer = useCallback(() => {
+        goToSeriesIndex(0);
+    }, [goToSeriesIndex]);
+
+    const restartFullTour = useCallback(() => {
+        resumeHrefRef.current = null;
+        seriesModeRef.current = false;
+        setRun(false);
+        setSteps([]);
+        activeTourIdRef.current = null;
+
+        const seriesIds = new Set(FULL_TOUR_CHAPTERS.map(chapter => chapter.id));
+        persist(previous => {
+            const tours = { ...previous.tours };
+            for (const id of seriesIds) {
+                delete tours[id];
+            }
+            return {
+                ...previous,
+                offer: 'accepted',
+                tours,
+                seriesActive: false,
+                seriesIndex: 0,
+            };
+        });
+        requestAnimationFrame(() => goToSeriesIndex(0));
+    }, [goToSeriesIndex, persist]);
+
+    useEffect(() => {
+        if (!hydrated || !progress.seriesActive || run || startingRef.current) return;
+        const expected = resumeHrefRef.current;
+        if (!expected) return;
+        const chapter = FULL_TOUR_CHAPTERS[progress.seriesIndex];
+        if (!chapter || chapter.href !== expected) return;
+        if (!pathMatchesChapter(pathname, chapter.href)) return;
+
+        const timer = window.setTimeout(() => {
+            resumeHrefRef.current = null;
+            launchSteps(chapter.id, chapter.steps, true);
+        }, 280);
+        return () => window.clearTimeout(timer);
+    }, [hydrated, progress.seriesActive, progress.seriesIndex, pathname, run, launchSteps]);
+
+    const value = useMemo<PageTourContextValue>(
+        () => ({
+            progress,
+            startTour,
+            requestTourOffer,
+            acceptTourOffer,
+            dismissTourOffer,
+            restartFullTour,
+            isTourDone: (tourId: string) => isTourDone(progress, tourId),
+        }),
+        [progress, startTour, requestTourOffer, acceptTourOffer, dismissTourOffer, restartFullTour]
+    );
+
+    return (
+        <PageTourContext.Provider value={value}>
+            {children}
+            {hydrated && progress.offer === 'pending' ? (
+                <TourOfferDialog onAccept={acceptTourOffer} onDismiss={dismissTourOffer} />
+            ) : null}
+            {steps.length > 0 ? (
+                <Joyride
+                    continuous
+                    run={run}
+                    steps={steps}
+                    scrollToFirstStep
+                    options={{
+                        zIndex: 10_000,
+                        primaryColor: 'var(--color-accent)',
+                        textColor: 'var(--color-fg)',
+                        backgroundColor: 'var(--color-raised)',
+                        arrowColor: 'var(--color-raised)',
+                        overlayColor: 'rgba(0, 0, 0, 0.55)',
+                        showProgress: true,
+                        buttons: ['back', 'close', 'primary', 'skip'],
+                        skipBeacon: true,
+                    }}
+                    styles={JOYRIDE_STYLES}
+                    locale={{
+                        back: chrome.joyride.back,
+                        close: chrome.joyride.close,
+                        last: chrome.joyride.last,
+                        next: chrome.joyride.next,
+                        skip: chrome.joyride.skip,
+                    }}
+                    onEvent={data => {
+                        const finished =
+                            data.type === 'tour:end' ||
+                            data.status === STATUS.FINISHED ||
+                            data.status === STATUS.SKIPPED;
+                        if (!finished) return;
+
+                        const tourId = activeTourIdRef.current;
+                        const wasSeries = seriesModeRef.current;
+                        const skipped = data.status === STATUS.SKIPPED;
+                        const fromIndex = seriesIndexRef.current;
+
+                        setRun(false);
+                        setSteps([]);
+                        activeTourIdRef.current = null;
+
+                        const status: TourChapterStatus = skipped ? 'skipped' : 'completed';
+
+                        if (skipped) {
+                            resumeHrefRef.current = null;
+                            seriesModeRef.current = false;
+                            persist(previous => ({
+                                ...previous,
+                                ...(tourId
+                                    ? { tours: { ...previous.tours, [tourId]: status } }
+                                    : {}),
+                                seriesActive: false,
+                                seriesIndex: 0,
+                            }));
+                            return;
+                        }
+
+                        if (wasSeries) {
+                            const nextIndex = fromIndex + 1;
+                            persist(previous => ({
+                                ...previous,
+                                ...(tourId
+                                    ? { tours: { ...previous.tours, [tourId]: status } }
+                                    : {}),
+                            }));
+                            requestAnimationFrame(() => goToSeriesIndex(nextIndex));
+                        } else {
+                            seriesModeRef.current = false;
+                            if (tourId) {
+                                persist(previous => ({
+                                    ...previous,
+                                    tours: { ...previous.tours, [tourId]: status },
+                                }));
+                            }
+                        }
+                    }}
+                />
+            ) : null}
+        </PageTourContext.Provider>
+    );
+}
+
+export function usePageTour() {
+    const ctx = useContext(PageTourContext);
+    if (!ctx) {
+        throw new Error('usePageTour must be used within PageTourProvider');
+    }
+    return ctx;
+}

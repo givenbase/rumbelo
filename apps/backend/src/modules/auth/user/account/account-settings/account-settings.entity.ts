@@ -1,5 +1,11 @@
 import { Entity, Enum, OneToOne, Property } from '@mikro-orm/core';
-import { Locale, MoneyCharacter, Theme } from '@rumbelo/contracts';
+import {
+    DEFAULT_ACCOUNT_TOUR_PROGRESS,
+    Locale,
+    MoneyCharacter,
+    Theme,
+    type AccountTourProgress,
+} from '@rumbelo/contracts';
 
 import { BaseEntity } from '../../../../../common/database/base.entity';
 import { entityConfig } from '../../../../../common/database/entity-config.util';
@@ -9,17 +15,24 @@ import { Account } from '../account.entity';
 /**
  * Account Settings Entity
  *
- * Person-scoped UI prefs — language, appearance, and money character.
+ * Person-scoped UI prefs — language, appearance, money character, and tour progress.
  * One row per account.
  *
  * Currency and board debt strategy stay on auth.household_settings.
- * Theme, locale, and money character can differ per person in the same household.
+ * Theme, locale, money character, and tour can differ per person in the same household.
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'auth', domain: 'account', tableName: 'settings' }))
 export class AccountSettings extends BaseEntity {
     // ? PROPERTIES
+    /**
+     * Guided tour / Help walkthrough progress (offer + per-chapter status).
+     * Column `tour` — API DTO field is also `tour`.
+     */
+    @Property({ type: 'json', fieldName: 'tour' })
+    tourSnapshot: AccountTourProgress = { ...DEFAULT_ACCOUNT_TOUR_PROGRESS, tours: {} };
+
     /**
      * When personal onboarding finished. Null = still new at person level.
      * Separate from Better Auth `email_verified`.

@@ -555,6 +555,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "datetime"
+        },
+        "tour": {
+          "name": "tour",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'{\"offer\": \"idle\", \"tours\": {}, \"seriesIndex\": 0, \"seriesActive\": false}'",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "json"
         }
       },
       "name": "account_settings",
@@ -6510,8 +6526,8 @@
           "enumItems": [],
           "mappedType": "bigint"
         },
-        "effective_from": {
-          "name": "effective_from",
+        "effective_on": {
+          "name": "effective_on",
           "type": "date",
           "unsigned": false,
           "autoincrement": false,

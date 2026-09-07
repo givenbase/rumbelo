@@ -1,17 +1,13 @@
 'use client';
 
 import { useApi } from '@/app/_lib/api-hooks';
+import { useMemo } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import {
-    INCOME_POSTURE_KEYS,
-    MoneyCharacter,
-    WEALTH_STAGE_KEYS,
-    type GrowthLeverPreset,
-} from '@rumbelo/contracts';
+import { GoalKind, GoalStatus } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
-import { AccentCard, Card, Eyebrow } from '@rumbelo/ui';
+import { AccentCard, Button, Card, Eyebrow } from '@rumbelo/ui';
 import { formatMoney, incomeDelta, monthlyNetAsOf, sumMonthly, toPeriodKey } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
@@ -19,9 +15,9 @@ import { isLiveData } from '@/app/_lib/preview';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
-import { ListToolbar } from '@/components/layout/list-toolbar';
 
-const TARGET = 600_000;
+/** Demo fallback when no ACTIVE EARN goal is set. */
+const FALLBACK_TARGET = 600_000;
 
 function todayIso(): string {
     return new Date().toISOString().slice(0, 10);
@@ -55,27 +51,30 @@ export function IncomePageClient() {
         live
     );
 
-    const accountSettingsQuery = useLiveQuery(api.account.settings.queryOptions(), null, live);
-
-    const leversQuery = useLiveQuery(
-        api.growth.catalogs.leverPresets.list.queryOptions({
-            input: {
-                householdId: householdId!,
-                character: accountSettingsQuery.data?.moneyCharacter ?? MoneyCharacter.UNKNOWN,
-                postureKey: INCOME_POSTURE_KEYS.UNKNOWN,
-                stageKey: WEALTH_STAGE_KEYS.BUILDING,
-            },
-        }),
-        [] as GrowthLeverPreset[],
+    const goalsQuery = useLiveQuery(
+        api.money.goals.list.queryOptions({ input: { householdId: householdId! } }),
+        [] as never,
         live
     );
 
     const allSources = incomeQuery.data ?? [];
     const NET = sumMonthly(allSources);
-    const GAP = TARGET - NET;
     const jars = jarsQuery.data ?? [];
     const sources = allSources.filter(source => source.isActive);
-    const levers = leversQuery.data ?? [];
+
+    const target = useMemo(() => {
+        const earnTargets = (goalsQuery.data ?? [])
+            .filter(
+                goal =>
+                    goal.kind === GoalKind.EARN &&
+                    goal.status === GoalStatus.ACTIVE &&
+                    goal.target > 0
+            )
+            .map(goal => goal.target);
+        return earnTargets.length > 0 ? Math.max(...earnTargets) : FALLBACK_TARGET;
+    }, [goalsQuery.data]);
+
+    const gap = target - NET;
 
     const newestEffective = sources
         .flatMap(source => source.periods ?? [])
@@ -91,162 +90,143 @@ export function IncomePageClient() {
             : null;
 
     return (
-        <div className="grid animate-rise gap-8">
-            <div>
-                <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                    ✦ MY INCOME
-                </span>
-                <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg lg:text-4xl">
-                    Spending cuts have a floor. Earning doesn't.
-                </h1>
-            </div>
-
-            <ListToolbar createLabel="+ Add" onCreate={() => router.push(CREATE_HREF.income)}>
-                <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                    ✦ Income sources
-                </span>
-            </ListToolbar>
-
-            <div className="flex flex-col items-stretch gap-5 md:flex-row md:flex-wrap md:items-start">
-                <AccentCard
-                    tint="var(--color-accent)"
-                    className="grid w-full min-w-0 flex-1 gap-5 md:basis-80">
-                    <div className="flex flex-wrap gap-6">
-                        <div className="grid gap-1.5">
-                            <Eyebrow>Now, per month</Eyebrow>
-                            <p className="font-display text-2xl leading-none font-semibold tracking-tight text-fg sm:text-3xl lg:text-4xl">
-                                {formatMoney(NET)}
-                            </p>
-                            <p className="font-mono text-xs text-fg-muted">
-                                {formatMoney(NET * 12)} per year
-                                {delta && delta.absolute !== 0 ? (
-                                    <>
-                                        {' '}
-                                        ·{' '}
-                                        <span
-                                            className={
-                                                delta.absolute > 0 ? 'text-success' : 'text-warning'
-                                            }>
-                                            {delta.absolute > 0 ? '+' : ''}
-                                            {formatMoney(delta.absolute)} vs prior
-                                        </span>
-                                    </>
-                                ) : null}
-                            </p>
-                        </div>
-                        <div className="grid gap-1.5">
-                            <Eyebrow>Target</Eyebrow>
-                            <p
-                                className="font-display text-2xl leading-none font-semibold tracking-tight sm:text-3xl lg:text-4xl"
-                                style={{
-                                    background: 'var(--gradient-accent)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                }}>
-                                {formatMoney(TARGET)}
-                            </p>
-                        </div>
-                        <div className="grid gap-1.5">
-                            <Eyebrow>Gap</Eyebrow>
-                            <p className="font-display text-2xl leading-none font-semibold tracking-tight text-warning sm:text-3xl lg:text-4xl">
-                                {formatMoney(GAP)}
-                            </p>
-                        </div>
-                    </div>
-                </AccentCard>
-
-                <Card className="grid w-full min-w-0 flex-1 content-start gap-4 md:basis-72">
+        <div className="grid animate-rise gap-6">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
                     <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                        ✦ What that does to each jar
+                        ✦ MY INCOME
                     </span>
-                    <div>
-                        {JAR_META.map(j => {
-                            const jar = jars.find(mj => mj.key === j.key);
-                            const now = jar?.allocated ?? 0;
-                            const then = Math.round((TARGET * j.pct) / 100);
-                            return (
-                                <div
-                                    key={j.key}
-                                    className="flex items-center gap-2.5 border-b border-line py-2.5 last:border-b-0">
-                                    <span className="shrink-0">{j.icon}</span>
-                                    <span className="min-w-0 flex-1 truncate text-sm text-fg-secondary">
-                                        {j.name}
-                                    </span>
-                                    <span className="shrink-0 font-mono text-xs whitespace-nowrap text-fg-muted">
-                                        {formatMoney(now)} →
-                                    </span>
-                                    <span className="shrink-0 font-mono text-sm whitespace-nowrap text-success">
-                                        {formatMoney(then)}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </Card>
-            </div>
-
-            <Card className="p-0">
-                <div className="border-b border-line px-5 py-3.5">
-                    <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                        ✦ Income sources
-                    </span>
+                    <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
+                        Spending cuts have a floor. Earning doesn't.
+                    </h1>
                 </div>
-                {sources.length === 0 ? (
-                    <p className="px-5 py-4 text-sm text-fg-muted">
-                        {live
-                            ? 'No income sources yet — add one to feed your jars.'
-                            : 'Sign in to manage income sources.'}
-                    </p>
-                ) : (
-                    <div className="grid gap-px">
-                        {sources.map(source => (
-                            <button
-                                type="button"
-                                key={source.id}
-                                onClick={() => router.push(updateHref('income', source.id))}
-                                className="flex w-full items-center justify-between gap-3 border-b border-line px-5 py-3 text-left last:border-b-0 hover:bg-raised">
-                                <div>
-                                    <div className="text-sm text-fg">{source.name}</div>
-                                    <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                        {source.kind}
-                                    </div>
-                                </div>
-                                <span className="font-mono text-sm text-success">
-                                    {formatMoney(source.amount)}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </Card>
+                <Button size="sm" onClick={() => router.push(CREATE_HREF.income)}>
+                    + Add
+                </Button>
+            </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {levers.length === 0 ? (
-                    <p className="text-sm text-fg-muted sm:col-span-2 lg:col-span-3">
-                        {live
-                            ? 'No growth methods for your profile yet — check back after seeding catalogs.'
-                            : 'Sign in to see earning methods matched to your profile.'}
-                    </p>
-                ) : (
-                    levers.map((lever, index) => (
-                        <AccentCard
-                            key={lever.key}
-                            tint={lever.accentColor}
-                            className="grid content-start gap-2.5">
-                            <span
-                                className="font-mono text-xs font-medium tracking-widest uppercase"
-                                style={{ color: lever.accentColor }}>
-                                Method {index + 1}
-                            </span>
-                            <h3 className="font-display text-xl leading-snug font-semibold tracking-tight text-fg">
-                                {lever.name}
-                            </h3>
-                            <p className="text-sm leading-relaxed text-pretty text-fg-muted">
-                                {lever.summary}
-                            </p>
-                        </AccentCard>
-                    ))
-                )}
+            <div className="grid gap-4 md:grid-cols-2 md:items-stretch">
+                <div data-tour="income-summary" className="min-w-0">
+                    <AccentCard
+                        tint="var(--color-accent)"
+                        className="grid h-full content-center gap-4 p-4 sm:p-5">
+                        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                            <div className="grid gap-1">
+                                <Eyebrow>Now</Eyebrow>
+                                <p className="font-display text-2xl leading-none font-semibold tracking-tight text-fg sm:text-3xl">
+                                    {formatMoney(NET)}
+                                </p>
+                                <p className="font-mono text-[11px] leading-snug text-fg-muted">
+                                    {formatMoney(NET * 12)}/yr
+                                    {delta && delta.absolute !== 0 ? (
+                                        <>
+                                            <br />
+                                            <span
+                                                className={
+                                                    delta.absolute > 0
+                                                        ? 'text-success'
+                                                        : 'text-warning'
+                                                }>
+                                                {delta.absolute > 0 ? '+' : ''}
+                                                {formatMoney(delta.absolute)}
+                                            </span>
+                                        </>
+                                    ) : null}
+                                </p>
+                            </div>
+                            <div className="grid gap-1">
+                                <Eyebrow>Target</Eyebrow>
+                                <p
+                                    className="font-display text-2xl leading-none font-semibold tracking-tight sm:text-3xl"
+                                    style={{
+                                        background: 'var(--gradient-accent)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                    }}>
+                                    {formatMoney(target)}
+                                </p>
+                                <p className="font-mono text-[11px] text-fg-muted">/mo net</p>
+                            </div>
+                            <div className="grid gap-1">
+                                <Eyebrow>Gap</Eyebrow>
+                                <p className="font-display text-2xl leading-none font-semibold tracking-tight text-warning sm:text-3xl">
+                                    {formatMoney(Math.max(0, gap))}
+                                </p>
+                                <p className="font-mono text-[11px] text-fg-muted">
+                                    {gap <= 0 ? 'met' : 'to go'}
+                                </p>
+                            </div>
+                        </div>
+                    </AccentCard>
+                </div>
+
+                <div data-tour="income-jars" className="min-w-0">
+                    <Card className="grid h-full content-start gap-2 p-4 sm:p-5">
+                        <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
+                            ✦ At target, each jar
+                        </span>
+                        <div>
+                            {JAR_META.map(j => {
+                                const jar = jars.find(mj => mj.key === j.key);
+                                const now = jar?.allocated ?? 0;
+                                const then = Math.round((target * j.pct) / 100);
+                                return (
+                                    <div
+                                        key={j.key}
+                                        className="flex items-center gap-2 border-b border-line py-2 last:border-b-0">
+                                        <span className="shrink-0 text-sm">{j.icon}</span>
+                                        <span className="min-w-0 flex-1 truncate text-sm text-fg-secondary">
+                                            {j.name}
+                                        </span>
+                                        <span className="shrink-0 font-mono text-xs whitespace-nowrap text-fg-muted">
+                                            {formatMoney(now)} →
+                                        </span>
+                                        <span className="shrink-0 font-mono text-sm whitespace-nowrap text-success">
+                                            {formatMoney(then)}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </Card>
+                </div>
+            </div>
+
+            <div data-tour="income-sources">
+                <Card className="p-0">
+                    <div className="border-b border-line px-4 py-2.5 sm:px-5">
+                        <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
+                            ✦ Income sources
+                        </span>
+                    </div>
+                    {sources.length === 0 ? (
+                        <p className="px-4 py-3.5 text-sm text-fg-muted sm:px-5">
+                            {live
+                                ? 'No income sources yet — add one to feed your jars.'
+                                : 'Sign in to manage income sources.'}
+                        </p>
+                    ) : (
+                        <div className="grid gap-px">
+                            {sources.map(source => (
+                                <button
+                                    type="button"
+                                    key={source.id}
+                                    onClick={() => router.push(updateHref('income', source.id))}
+                                    className="flex w-full items-center justify-between gap-3 border-b border-line px-4 py-2.5 text-left last:border-b-0 hover:bg-raised sm:px-5 sm:py-3">
+                                    <div>
+                                        <div className="text-sm text-fg">{source.name}</div>
+                                        <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
+                                            {source.kind}
+                                        </div>
+                                    </div>
+                                    <span className="font-mono text-sm text-success">
+                                        {formatMoney(source.amount)}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </Card>
             </div>
         </div>
     );

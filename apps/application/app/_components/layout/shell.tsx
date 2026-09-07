@@ -28,6 +28,7 @@ import { usePlanCapabilities } from '@/components/features/shell/use-plan-capabi
 
 import { PeriodSelector } from './period-selector';
 import { PeriodTravelBanner } from './period-travel-banner';
+import { PageHelpButton, PageTourProvider } from '@/components/features/tour';
 import { QuickAddFab } from './quick-add';
 import { ToastPill } from './toast';
 // ── Menu items ───────────────────────────────────────────────────────────────
@@ -122,297 +123,314 @@ function AppShellInner({ children }: { children: ReactNode }) {
     const why = access.locked ? null : whyLineFor(pathname);
 
     return (
-        <div className="min-h-dvh bg-bg bg-(image:--gradient-page) bg-top bg-no-repeat">
-            {/* ── HEADER ──────────────────────────────────────────────────── */}
-            <header className="sticky top-0 z-40 bg-chrome backdrop-blur-md">
-                <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
-                    {/* Wordmark */}
-                    <Link href="/" className="flex shrink-0 items-baseline gap-2.5">
-                        <span className="font-display text-lg font-semibold tracking-tight text-fg">
-                            Rumbelo
-                        </span>
-                        <span className="hidden font-mono text-xs font-medium tracking-wide text-fg-faint xl:inline">
-                            {BRAND_TAGLINE}
-                        </span>
-                    </Link>
+        <PageTourProvider>
+            <div className="min-h-dvh bg-bg bg-(image:--gradient-page) bg-top bg-no-repeat">
+                {/* ── HEADER ──────────────────────────────────────────────────── */}
+                <header className="sticky top-0 z-40 bg-chrome backdrop-blur-md">
+                    <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
+                        {/* Wordmark */}
+                        <Link
+                            href="/"
+                            className="flex shrink-0 items-baseline gap-2.5"
+                            data-tour="shell-brand">
+                            <span className="font-display text-lg font-semibold tracking-tight text-fg">
+                                Rumbelo
+                            </span>
+                            <span className="hidden font-mono text-xs font-medium tracking-wide text-fg-faint xl:inline">
+                                {BRAND_TAGLINE}
+                            </span>
+                        </Link>
 
-                    {/* Portal pill bar (desktop) */}
-                    <nav
-                        className="hidden flex-1 justify-center md:flex"
-                        aria-label="Main navigation">
-                        <div className="flex items-center gap-0.5 rounded-full border border-line bg-sunken p-1 shadow-md">
-                            {NAV_GROUPS.map(group => {
-                                const active = group === activeGroup;
-                                return (
-                                    <Link
-                                        key={group.key}
-                                        href={group.href}
-                                        className={cn(
-                                            'flex items-center gap-1.5 rounded-full px-4 py-2 font-mono text-xs font-semibold tracking-widest uppercase transition-colors',
-                                            active
-                                                ? 'bg-accent text-on-accent'
-                                                : 'text-fg-secondary hover:text-accent'
-                                        )}>
-                                        <span aria-hidden>{group.icon}</span>
-                                        {TOP_PILL_LABELS[group.key] ?? group.label}
-                                    </Link>
-                                );
-                            })}
-                        </div>
-                    </nav>
-
-                    {/* Right side: lang toggle, theme + avatar */}
-                    <div className="relative ml-auto flex items-center gap-2 md:ml-0">
-                        {/* Lang toggle */}
-                        <button
-                            type="button"
-                            onClick={toggleLocale}
-                            title={locale === Locale.NL ? 'Switch to English' : 'Switch to Dutch'}
-                            className="flex h-8 items-center rounded-full border border-line px-2.5 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent sm:px-3">
-                            {locale === Locale.NL ? 'NL' : 'EN'}
-                        </button>
-
-                        <ThemeToggle />
-
-                        <button
-                            type="button"
-                            onClick={() => setMenuOpen(previous => !previous)}
-                            aria-label="User menu"
-                            aria-expanded={menuOpen}
-                            className="grid size-9 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent transition hover:brightness-110 active:scale-95">
-                            {userInitials}
-                        </button>
-
-                        {menuOpen && (
-                            <>
-                                <button
-                                    type="button"
-                                    aria-label="Close menu"
-                                    onClick={() => setMenuOpen(false)}
-                                    className="fixed inset-0 z-30 cursor-default"
-                                />
-                                <div className="absolute top-11 right-0 z-40 w-[min(18rem,calc(100vw-2rem))] animate-rise overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-xl">
-                                    {/* User row */}
-                                    <div className="flex items-center gap-3 border-b border-line px-4.5 py-4">
-                                        <div className="grid size-9.5 shrink-0 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent">
-                                            {userInitials}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-sm font-medium text-fg">
-                                                {userName}
-                                            </p>
-                                            <p className="truncate font-mono text-xs text-fg-faint">
-                                                {userEmail || '—'}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid gap-0.5 p-2">
-                                        {MENU_ITEMS.map(item => {
-                                            const isOnboarding = item.onboardingTrigger === true;
-
-                                            const inner = (
-                                                <>
-                                                    <span
-                                                        className={cn(
-                                                            'text-sm',
-                                                            item.danger ? 'text-danger' : 'text-fg'
-                                                        )}>
-                                                        {item.label}
-                                                    </span>
-                                                    <span className="text-xs leading-tight text-fg-faint">
-                                                        {item.sub}
-                                                    </span>
-                                                </>
-                                            );
-
-                                            if (isOnboarding) {
-                                                return (
-                                                    <button
-                                                        key={item.label}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setMenuOpen(false);
-                                                            resetOnboardingFlow();
-                                                        }}
-                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
-                                                        {inner}
-                                                    </button>
-                                                );
-                                            }
-
-                                            if (item.href) {
-                                                return (
-                                                    <Link
-                                                        key={item.label}
-                                                        href={item.href}
-                                                        onClick={() => setMenuOpen(false)}
-                                                        className="grid gap-0.5 rounded-lg px-3 py-2.5 transition-colors hover:bg-raised">
-                                                        {inner}
-                                                    </Link>
-                                                );
-                                            }
-
-                                            if (item.danger) {
-                                                return (
-                                                    <button
-                                                        key={item.label}
-                                                        type="button"
-                                                        disabled={signingOut}
-                                                        onClick={() => void handleSignOut()}
-                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
-                                                        {inner}
-                                                    </button>
-                                                );
-                                            }
-
-                                            return (
-                                                <button
-                                                    key={item.label}
-                                                    type="button"
-                                                    onClick={() => setMenuOpen(false)}
-                                                    className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
-                                                    {inner}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-
-                {/* Subnav (portal children) */}
-                {activeGroup && (
-                    <div className={cn('border-t-2 bg-bg-app', SUBNAV_TINT[activeGroup.key])}>
-                        <div className="mx-auto flex max-w-7xl items-center gap-1.5 px-4 py-2.5">
-                            {/* Desktop pill strip */}
-                            <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
-                                {activeGroup.children.map(child => {
-                                    const active = activeChild?.href === child.href;
-                                    const locked = isCapabilityLocked(child.capabilityKey);
+                        {/* Portal pill bar (desktop) */}
+                        <nav
+                            className="hidden flex-1 justify-center md:flex"
+                            aria-label="Main navigation">
+                            <div className="flex items-center gap-0.5 rounded-full border border-line bg-sunken p-1 shadow-md">
+                                {NAV_GROUPS.map(group => {
+                                    const active = group === activeGroup;
                                     return (
                                         <Link
-                                            key={child.href}
-                                            href={child.href}
+                                            key={group.key}
+                                            href={group.href}
                                             className={cn(
-                                                'rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide uppercase transition-colors',
+                                                'flex items-center gap-1.5 rounded-full px-4 py-2 font-mono text-xs font-semibold tracking-widest uppercase transition-colors',
                                                 active
-                                                    ? 'border-accent-hover bg-accent-soft text-accent'
-                                                    : 'border-line text-fg-muted hover:border-accent-hover hover:text-accent',
-                                                locked && !active && 'opacity-55'
+                                                    ? 'bg-accent text-on-accent'
+                                                    : 'text-fg-secondary hover:text-accent'
                                             )}>
-                                            {locked && (
-                                                <span aria-hidden className="mr-1 text-xs">
-                                                    🔒
-                                                </span>
-                                            )}
-                                            {child.label}
+                                            <span aria-hidden>{group.icon}</span>
+                                            {TOP_PILL_LABELS[group.key] ?? group.label}
                                         </Link>
                                     );
                                 })}
                             </div>
+                        </nav>
 
-                            {/* Mobile dropdown */}
-                            <div className="relative min-w-0 sm:hidden">
-                                <button
-                                    type="button"
-                                    onClick={() => setSubOpen(previous => !previous)}
-                                    className="flex max-w-[min(100%,14rem)] items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
-                                    <span className="truncate">
-                                        {activeChild &&
-                                        activeGroup.children.some(
-                                            navChild => navChild.href === activeChild.href
-                                        )
-                                            ? activeChild.label
-                                            : activeGroup.children[0].label}
-                                    </span>
-                                    <span className="shrink-0 text-xs opacity-70" aria-hidden>
-                                        ▾
-                                    </span>
-                                </button>
-                                {subOpen && (
-                                    <div className="absolute top-10 left-0 z-40 grid w-[min(16rem,calc(100vw-2rem))] animate-rise gap-0.5 rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl">
-                                        {activeGroup.children.map(child => {
-                                            const locked = isCapabilityLocked(child.capabilityKey);
-                                            return (
-                                                <Link
-                                                    key={child.href}
-                                                    href={child.href}
-                                                    onClick={() => setSubOpen(false)}
-                                                    className={cn(
-                                                        'rounded-lg px-3 py-2.5 text-sm text-fg transition-colors hover:bg-raised',
-                                                        locked && 'opacity-55'
-                                                    )}>
-                                                    {locked && (
-                                                        <span aria-hidden className="mr-1 text-xs">
-                                                            🔒
+                        {/* Right side: lang toggle, theme + avatar */}
+                        <div className="relative ml-auto flex items-center gap-2 md:ml-0">
+                            {/* Lang toggle */}
+                            <button
+                                type="button"
+                                onClick={toggleLocale}
+                                title={
+                                    locale === Locale.NL ? 'Switch to English' : 'Switch to Dutch'
+                                }
+                                className="flex h-8 items-center rounded-full border border-line px-2.5 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent sm:px-3">
+                                {locale === Locale.NL ? 'NL' : 'EN'}
+                            </button>
+
+                            <ThemeToggle />
+
+                            <button
+                                type="button"
+                                onClick={() => setMenuOpen(previous => !previous)}
+                                aria-label="User menu"
+                                aria-expanded={menuOpen}
+                                className="grid size-9 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent transition hover:brightness-110 active:scale-95">
+                                {userInitials}
+                            </button>
+
+                            {menuOpen && (
+                                <>
+                                    <button
+                                        type="button"
+                                        aria-label="Close menu"
+                                        onClick={() => setMenuOpen(false)}
+                                        className="fixed inset-0 z-30 cursor-default"
+                                    />
+                                    <div className="absolute top-11 right-0 z-40 w-[min(18rem,calc(100vw-2rem))] animate-rise overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-xl">
+                                        {/* User row */}
+                                        <div className="flex items-center gap-3 border-b border-line px-4.5 py-4">
+                                            <div className="grid size-9.5 shrink-0 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent">
+                                                {userInitials}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-sm font-medium text-fg">
+                                                    {userName}
+                                                </p>
+                                                <p className="truncate font-mono text-xs text-fg-faint">
+                                                    {userEmail || '—'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid gap-0.5 p-2">
+                                            {MENU_ITEMS.map(item => {
+                                                const isOnboarding =
+                                                    item.onboardingTrigger === true;
+
+                                                const inner = (
+                                                    <>
+                                                        <span
+                                                            className={cn(
+                                                                'text-sm',
+                                                                item.danger
+                                                                    ? 'text-danger'
+                                                                    : 'text-fg'
+                                                            )}>
+                                                            {item.label}
                                                         </span>
-                                                    )}
-                                                    {child.label}
-                                                </Link>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-                            </div>
+                                                        <span className="text-xs leading-tight text-fg-faint">
+                                                            {item.sub}
+                                                        </span>
+                                                    </>
+                                                );
 
-                            {/* Period selector + Settings */}
-                            <div className="ml-auto flex shrink-0 items-center gap-2">
-                                <PeriodSelector />
-                                <Link
-                                    href={settingsHrefForNavGroup(activeGroup?.key)}
-                                    className="hidden items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:border-accent-hover hover:text-accent sm:flex">
-                                    <span aria-hidden>◇</span>
-                                    Settings
-                                </Link>
-                            </div>
+                                                if (isOnboarding) {
+                                                    return (
+                                                        <button
+                                                            key={item.label}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setMenuOpen(false);
+                                                                resetOnboardingFlow();
+                                                            }}
+                                                            className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                            {inner}
+                                                        </button>
+                                                    );
+                                                }
+
+                                                if (item.href) {
+                                                    return (
+                                                        <Link
+                                                            key={item.label}
+                                                            href={item.href}
+                                                            onClick={() => setMenuOpen(false)}
+                                                            className="grid gap-0.5 rounded-lg px-3 py-2.5 transition-colors hover:bg-raised">
+                                                            {inner}
+                                                        </Link>
+                                                    );
+                                                }
+
+                                                if (item.danger) {
+                                                    return (
+                                                        <button
+                                                            key={item.label}
+                                                            type="button"
+                                                            disabled={signingOut}
+                                                            onClick={() => void handleSignOut()}
+                                                            className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                            {inner}
+                                                        </button>
+                                                    );
+                                                }
+
+                                                return (
+                                                    <button
+                                                        key={item.label}
+                                                        type="button"
+                                                        onClick={() => setMenuOpen(false)}
+                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                        {inner}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
-                )}
-            </header>
 
-            {/* ── MAIN ─────────────────────────────────────────────────────── */}
-            <div className="mx-auto max-w-7xl px-4 py-8 pb-24 md:pb-8">
-                {!access.locked && <PeriodTravelBanner />}
-                {why && (
-                    <p className="mb-3.5 max-w-prose font-mono text-xs leading-relaxed font-medium tracking-wide text-fg-faint">
-                        ◇ {why}
-                    </p>
-                )}
-                <main className="min-w-0">
-                    <CapabilityGate>{children}</CapabilityGate>
-                </main>
+                    {/* Subnav (portal children) */}
+                    {activeGroup && (
+                        <div className={cn('border-t-2 bg-bg-app', SUBNAV_TINT[activeGroup.key])}>
+                            <div className="mx-auto flex max-w-7xl items-center gap-1.5 px-4 py-2.5">
+                                {/* Desktop pill strip */}
+                                <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
+                                    {activeGroup.children.map(child => {
+                                        const active = activeChild?.href === child.href;
+                                        const locked = isCapabilityLocked(child.capabilityKey);
+                                        return (
+                                            <Link
+                                                key={child.href}
+                                                href={child.href}
+                                                className={cn(
+                                                    'rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide uppercase transition-colors',
+                                                    active
+                                                        ? 'border-accent-hover bg-accent-soft text-accent'
+                                                        : 'border-line text-fg-muted hover:border-accent-hover hover:text-accent',
+                                                    locked && !active && 'opacity-55'
+                                                )}>
+                                                {locked && (
+                                                    <span aria-hidden className="mr-1 text-xs">
+                                                        🔒
+                                                    </span>
+                                                )}
+                                                {child.label}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Mobile dropdown */}
+                                <div className="relative min-w-0 sm:hidden">
+                                    <button
+                                        type="button"
+                                        onClick={() => setSubOpen(previous => !previous)}
+                                        className="flex max-w-[min(100%,14rem)] items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
+                                        <span className="truncate">
+                                            {activeChild &&
+                                            activeGroup.children.some(
+                                                navChild => navChild.href === activeChild.href
+                                            )
+                                                ? activeChild.label
+                                                : activeGroup.children[0].label}
+                                        </span>
+                                        <span className="shrink-0 text-xs opacity-70" aria-hidden>
+                                            ▾
+                                        </span>
+                                    </button>
+                                    {subOpen && (
+                                        <div className="absolute top-10 left-0 z-40 grid w-[min(16rem,calc(100vw-2rem))] animate-rise gap-0.5 rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl">
+                                            {activeGroup.children.map(child => {
+                                                const locked = isCapabilityLocked(
+                                                    child.capabilityKey
+                                                );
+                                                return (
+                                                    <Link
+                                                        key={child.href}
+                                                        href={child.href}
+                                                        onClick={() => setSubOpen(false)}
+                                                        className={cn(
+                                                            'rounded-lg px-3 py-2.5 text-sm text-fg transition-colors hover:bg-raised',
+                                                            locked && 'opacity-55'
+                                                        )}>
+                                                        {locked && (
+                                                            <span
+                                                                aria-hidden
+                                                                className="mr-1 text-xs">
+                                                                🔒
+                                                            </span>
+                                                        )}
+                                                        {child.label}
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Period selector + Help + Settings */}
+                                <div className="ml-auto flex shrink-0 items-center gap-2">
+                                    <div data-tour="shell-period">
+                                        <PeriodSelector />
+                                    </div>
+                                    <PageHelpButton />
+                                    <Link
+                                        href={settingsHrefForNavGroup(activeGroup?.key)}
+                                        className="hidden items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:border-accent-hover hover:text-accent sm:flex">
+                                        <span aria-hidden>◇</span>
+                                        Settings
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </header>
+
+                {/* ── MAIN ─────────────────────────────────────────────────────── */}
+                <div className="mx-auto max-w-7xl px-4 py-8 pb-24 md:pb-8">
+                    {!access.locked && <PeriodTravelBanner />}
+                    {why && (
+                        <p className="mb-3.5 max-w-prose font-mono text-xs leading-relaxed font-medium tracking-wide text-fg-faint">
+                            ◇ {why}
+                        </p>
+                    )}
+                    <main className="min-w-0">
+                        <CapabilityGate>{children}</CapabilityGate>
+                    </main>
+                </div>
+
+                {/* ── BOTTOM NAV (mobile) ───────────────────────────────────────── */}
+                <nav
+                    className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t border-line bg-chrome pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
+                    aria-label="Mobile navigation">
+                    {BOTTOM_TABS.map((tab, i) => {
+                        const active = NAV_GROUPS[i] === activeGroup;
+                        return (
+                            <Link
+                                key={tab.href}
+                                href={tab.href}
+                                className={cn(
+                                    'flex flex-col items-center gap-0.5 py-2.5 text-xs font-medium',
+                                    active ? 'text-accent' : 'text-fg-muted'
+                                )}>
+                                <span aria-hidden className="text-base">
+                                    {tab.glyph}
+                                </span>
+                                {tab.label}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                {/* ── OVERLAYS ─────────────────────────────────────────────────── */}
+                <QuickAddFab />
+                <ToastPill />
+                <OnboardingOverlay />
             </div>
-
-            {/* ── BOTTOM NAV (mobile) ───────────────────────────────────────── */}
-            <nav
-                className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t border-line bg-chrome pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
-                aria-label="Mobile navigation">
-                {BOTTOM_TABS.map((tab, i) => {
-                    const active = NAV_GROUPS[i] === activeGroup;
-                    return (
-                        <Link
-                            key={tab.href}
-                            href={tab.href}
-                            className={cn(
-                                'flex flex-col items-center gap-0.5 py-2.5 text-xs font-medium',
-                                active ? 'text-accent' : 'text-fg-muted'
-                            )}>
-                            <span aria-hidden className="text-base">
-                                {tab.glyph}
-                            </span>
-                            {tab.label}
-                        </Link>
-                    );
-                })}
-            </nav>
-
-            {/* ── OVERLAYS ─────────────────────────────────────────────────── */}
-            <QuickAddFab />
-            <ToastPill />
-            <OnboardingOverlay />
-        </div>
+        </PageTourProvider>
     );
 }
