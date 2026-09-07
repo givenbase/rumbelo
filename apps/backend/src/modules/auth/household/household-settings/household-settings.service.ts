@@ -92,7 +92,7 @@ export class HouseholdSettingsService {
     async update(
         householdId: string,
         patch: Omit<HouseholdSettingsPatch, 'householdId'>,
-        opts?: { allowPaidUpgrade?: boolean }
+        opts?: { allowPaidUpgrade?: boolean; allowStripeBillingSync?: boolean }
     ): Promise<HouseholdSettingsDto> {
         let row = await this.em.findOne(HouseholdSettings, { householdId });
         if (!row) {
@@ -110,17 +110,21 @@ export class HouseholdSettingsService {
         }
 
         if (patch.planKey !== undefined) {
-            if (!opts?.allowPaidUpgrade) {
+            if (!opts?.allowPaidUpgrade && !opts?.allowStripeBillingSync) {
                 this.assertClientPlanChangeAllowed(row.planKey, patch.planKey);
             }
-            const memberCount = await this.em.count(AuthMember, { household: householdId });
-            if (!householdFitsPlan(patch.planKey, { memberCount, kind: nextKind })) {
-                const caps = capabilitiesFor(patch.planKey);
-                throw new BadRequestException(
-                    caps.maxMembers !== null && memberCount > caps.maxMembers
-                        ? `Cannot switch to ${patch.planKey}: household has ${memberCount} members (max ${caps.maxMembers})`
-                        : `Cannot switch to ${patch.planKey}: household kind ${nextKind} is not allowed`
-                );
+            // Stripe is billing source of truth — skip seat/kind fit on cancel/sync
+            // so multi-member households can downgrade to Basic without blocking the webhook.
+            if (!opts?.allowStripeBillingSync) {
+                const memberCount = await this.em.count(AuthMember, { household: householdId });
+                if (!householdFitsPlan(patch.planKey, { memberCount, kind: nextKind })) {
+                    const caps = capabilitiesFor(patch.planKey);
+                    throw new BadRequestException(
+                        caps.maxMembers !== null && memberCount > caps.maxMembers
+                            ? `Cannot switch to ${patch.planKey}: household has ${memberCount} members (max ${caps.maxMembers})`
+                            : `Cannot switch to ${patch.planKey}: household kind ${nextKind} is not allowed`
+                    );
+                }
             }
         }
 
@@ -143,6 +147,43 @@ export class HouseholdSettingsService {
 
         await this.em.flush();
         return toSettingsDto(row);
+    }
+
+    /** Internal — Stripe webhook / Checkout sync (not exposed on public DTO). */
+    async applyStripeBilling(
+        householdId: string,
+        input: {
+            planKey: PlanKey;
+            stripeCustomerId?: string | null;
+            stripeSubscriptionId?: string | null;
+        }
+    ): Promise<void> {
+        let row = await this.em.findOne(HouseholdSettings, { householdId });
+        if (!row) {
+            row = this.em.create(HouseholdSettings, { householdId } as never);
+            this.em.persist(row);
+        }
+
+        row.planKey = input.planKey;
+        if (input.stripeCustomerId !== undefined) {
+            row.stripeCustomerId = input.stripeCustomerId;
+        }
+        if (input.stripeSubscriptionId !== undefined) {
+            row.stripeSubscriptionId = input.stripeSubscriptionId;
+        }
+        await this.em.flush();
+    }
+
+    async findHouseholdIdByStripeSubscriptionId(
+        stripeSubscriptionId: string
+    ): Promise<string | null> {
+        const row = await this.em.findOne(HouseholdSettings, { stripeSubscriptionId });
+        return row?.householdId ?? null;
+    }
+
+    async getStripeCustomerId(householdId: string): Promise<string | null> {
+        const row = await this.em.findOne(HouseholdSettings, { householdId });
+        return row?.stripeCustomerId ?? null;
     }
 
     /**

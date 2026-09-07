@@ -48,3 +48,16 @@ export const STRIPE_PLAN_CATALOG: Record<
 export function stripeLookupKey(planKey: PaidPlanKey, interval: BillingInterval): string {
     return STRIPE_PLAN_LOOKUP_KEYS[planKey][interval];
 }
+
+const LOOKUP_TO_PLAN: Record<string, PaidPlanKey> = {
+    [STRIPE_PLAN_LOOKUP_KEYS[PlanKey.PLUS].month]: PlanKey.PLUS,
+    [STRIPE_PLAN_LOOKUP_KEYS[PlanKey.PLUS].year]: PlanKey.PLUS,
+    [STRIPE_PLAN_LOOKUP_KEYS[PlanKey.MAX].month]: PlanKey.MAX,
+    [STRIPE_PLAN_LOOKUP_KEYS[PlanKey.MAX].year]: PlanKey.MAX,
+};
+
+/** Map a Stripe Price `lookup_key` → Plus / Max (null if unknown). */
+export function planKeyFromStripeLookupKey(lookupKey: string | null | undefined): PaidPlanKey | null {
+    if (!lookupKey) return null;
+    return LOOKUP_TO_PLAN[lookupKey] ?? null;
+}

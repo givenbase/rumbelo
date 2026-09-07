@@ -11,9 +11,15 @@ import {
     type BillingInterval,
     type PaidPlanKey,
 } from './config/stripe-plans.config';
+import {
+    customerIdFromStripe,
+    isActiveSubscriptionStatus,
+    planKeyFromSubscription,
+    subscriptionIdFromCheckout,
+} from './stripe-subscription.util';
 
 /**
- * Stripe Checkout for Plus / Max.
+ * Stripe Checkout for Plus / Max + webhook sync of planKey.
  * Prices resolve via stable lookup keys (seed with `pnpm stripe:seed-plans`).
  * When the secret key is unset (or BILLING_PREVIEW_BYPASS), plan changes stay free.
  */
@@ -142,6 +148,7 @@ export class BillingService {
 
         const appOrigin = this.config.get('DOMAIN_APP', { infer: true });
         const userId = currentUserId();
+        const existingCustomer = await this.settings.getStripeCustomerId(input.householdId);
 
         const session = await this.stripe.checkout.sessions.create({
             mode: 'subscription',
@@ -149,6 +156,7 @@ export class BillingService {
             success_url: `${appOrigin}/settings/general/plan?checkout=success`,
             cancel_url: `${appOrigin}/settings/general/plan?checkout=cancel`,
             client_reference_id: input.householdId,
+            ...(existingCustomer ? { customer: existingCustomer } : {}),
             metadata: {
                 householdId: input.householdId,
                 planKey: input.planKey,
@@ -182,22 +190,116 @@ export class BillingService {
 
         const event = this.stripe.webhooks.constructEvent(rawBody, signature, secret);
 
-        if (event.type === 'checkout.session.completed') {
-            const session = event.data.object as Stripe.Checkout.Session;
-            const householdId =
-                session.metadata?.householdId ?? session.client_reference_id ?? null;
-            const planKey = session.metadata?.planKey as PlanKey | undefined;
-            if (!householdId || !planKey) {
-                this.logger.warn('checkout.session.completed missing householdId/planKey metadata');
-                return;
-            }
-            if (planKey !== PlanKey.PLUS && planKey !== PlanKey.MAX) {
-                this.logger.warn(`Ignoring checkout for unexpected planKey=${planKey}`);
-                return;
-            }
-            await this.settings.update(householdId, { planKey }, { allowPaidUpgrade: true });
-            this.logger.log(`Plan ${planKey} applied for household ${householdId} via Stripe`);
+        switch (event.type) {
+            case 'checkout.session.completed':
+                await this.onCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+                break;
+            case 'customer.subscription.updated':
+                await this.onSubscriptionUpdated(event.data.object as Stripe.Subscription);
+                break;
+            case 'customer.subscription.deleted':
+                await this.onSubscriptionDeleted(event.data.object as Stripe.Subscription);
+                break;
+            default:
+                this.logger.debug(`Ignoring Stripe event ${event.type}`);
         }
+    }
+
+    private async onCheckoutCompleted(session: Stripe.Checkout.Session): Promise<void> {
+        if (!this.stripe) return;
+
+        const householdId =
+            session.metadata?.householdId ?? session.client_reference_id ?? null;
+        if (!householdId) {
+            this.logger.warn('checkout.session.completed missing householdId');
+            return;
+        }
+
+        const subscriptionId = subscriptionIdFromCheckout(session.subscription);
+        const customerId = customerIdFromStripe(session.customer);
+
+        let planKey: PaidPlanKey | null = null;
+        if (subscriptionId) {
+            const subscription = await this.stripe.subscriptions.retrieve(subscriptionId, {
+                expand: ['items.data.price'],
+            });
+            planKey = planKeyFromSubscription(subscription);
+        }
+
+        if (!planKey) {
+            const meta = session.metadata?.planKey;
+            if (meta === PlanKey.PLUS || meta === PlanKey.MAX) planKey = meta;
+        }
+
+        if (!planKey) {
+            this.logger.warn(
+                `checkout.session.completed could not resolve planKey for household ${householdId}`
+            );
+            return;
+        }
+
+        await this.settings.applyStripeBilling(householdId, {
+            planKey,
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: subscriptionId,
+        });
+        this.logger.log(`Plan ${planKey} applied for household ${householdId} via Checkout`);
+    }
+
+    private async onSubscriptionUpdated(subscription: Stripe.Subscription): Promise<void> {
+        if (!isActiveSubscriptionStatus(subscription.status)) {
+            // past_due / unpaid / incomplete — keep current plan until deleted
+            this.logger.debug(
+                `subscription.updated ${subscription.id} status=${subscription.status} — no plan change`
+            );
+            return;
+        }
+
+        const householdId = await this.resolveHouseholdId(subscription);
+        if (!householdId) {
+            this.logger.warn(
+                `subscription.updated ${subscription.id} — no household (metadata or DB)`
+            );
+            return;
+        }
+
+        const planKey = planKeyFromSubscription(subscription);
+        if (!planKey) {
+            this.logger.warn(
+                `subscription.updated ${subscription.id} — unknown price lookup_key / metadata`
+            );
+            return;
+        }
+
+        await this.settings.applyStripeBilling(householdId, {
+            planKey,
+            stripeCustomerId: customerIdFromStripe(subscription.customer),
+            stripeSubscriptionId: subscription.id,
+        });
+        this.logger.log(`Plan ${planKey} synced for household ${householdId} via subscription.updated`);
+    }
+
+    private async onSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
+        const householdId = await this.resolveHouseholdId(subscription);
+        if (!householdId) {
+            this.logger.warn(
+                `subscription.deleted ${subscription.id} — no household (metadata or DB)`
+            );
+            return;
+        }
+
+        await this.settings.applyStripeBilling(householdId, {
+            planKey: PlanKey.BASIC,
+            stripeCustomerId: customerIdFromStripe(subscription.customer),
+            stripeSubscriptionId: null,
+        });
+        this.logger.log(`Plan BASIC applied for household ${householdId} via subscription.deleted`);
+    }
+
+    private async resolveHouseholdId(subscription: Stripe.Subscription): Promise<string | null> {
+        const fromMeta = subscription.metadata?.householdId?.trim();
+        if (fromMeta) return fromMeta;
+        return this.settings.findHouseholdIdByStripeSubscriptionId(subscription.id);
     }
 
     /** Resolve `price_…` via lookup key (Meltizo-style). */
