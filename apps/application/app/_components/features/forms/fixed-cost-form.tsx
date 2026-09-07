@@ -2,8 +2,8 @@
 
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
@@ -75,7 +75,10 @@ export function FixedCostForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
-    const pendingCategoryName = useRef<string | null>(null);
+    /** Preset category template key — resolved to a household category on save. */
+    const [pendingCategoryTemplateKey, setPendingCategoryTemplateKey] = useState<string | null>(
+        null
+    );
 
     const jarsQuery = useLiveQuery(
         api.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
@@ -95,9 +98,9 @@ export function FixedCostForm({
             input: { householdId: householdId! },
         }),
         [],
-        live && mode === 'create'
+        live
     );
-    const categoriesQuery = useCategoryTemplates(live && mode === 'create');
+    const categoriesQuery = useCategoryTemplates(live);
 
     const categoryByKey = useMemo(() => {
         const map = new Map<string, { name: string; icon: string | null }>();
@@ -135,6 +138,13 @@ export function FixedCostForm({
         resolver: zodResolver(fixedCostFormSchema),
     });
 
+    const selectedJarId = useWatch({ control: form.control, name: 'jarId' });
+
+    const jarCategories = useMemo(() => {
+        const jar = (balancesQuery.data ?? []).find(row => row.id === selectedJarId);
+        return (jar?.categories ?? []).filter(category => !category.isArchived);
+    }, [balancesQuery.data, selectedJarId]);
+
     useEffect(() => {
         if (jars[0]?.id && !form.getValues('jarId')) {
             form.setValue('jarId', jars[0].id);
@@ -155,17 +165,26 @@ export function FixedCostForm({
             const name = values.name.trim();
 
             let categoryId = values.categoryId ?? null;
-            if (pendingCategoryName.current) {
+            const templateKey =
+                pendingCategoryTemplateKey ??
+                presetOptions.find(preset => preset.name.toLowerCase() === name.toLowerCase())
+                    ?.categoryTemplateKey ??
+                null;
+            const categoryName = templateKey
+                ? (categoryByKey.get(templateKey)?.name ?? null)
+                : null;
+
+            if (!categoryId && categoryName) {
                 const jarBalance = (balancesQuery.data ?? []).find(j => j.id === values.jarId);
                 categoryId = await resolveCategoryId({
                     client,
                     householdId,
                     jarId: values.jarId,
-                    categoryName: pendingCategoryName.current,
+                    categoryName,
                     existing: jarBalance?.categories ?? [],
                 });
-                pendingCategoryName.current = null;
             }
+            setPendingCategoryTemplateKey(null);
 
             if (mode === 'edit' && entityId) {
                 return client.money.fixedCosts.update({
@@ -205,11 +224,12 @@ export function FixedCostForm({
     const removeMutation = useMutation({
         mutationFn: async () => {
             if (!householdId || !entityId) throw new Error('No household');
-            return client.money.fixedCosts.remove({ householdId, id: entityId });
+            return client.money.fixedCosts.remove({ householdId: householdId, id: entityId });
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.list.key() });
             void queryClient.invalidateQueries({ queryKey: api.money.fixedCosts.byJar.key() });
+            void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
             showToast('Fixed cost deleted', 'success');
             dismiss();
         },
@@ -229,6 +249,10 @@ export function FixedCostForm({
         saveMutation.isPending ||
         removeMutation.isPending ||
         (live && jars.length === 0);
+
+    const pendingLabel = pendingCategoryTemplateKey
+        ? categoryByKey.get(pendingCategoryTemplateKey)?.name
+        : null;
 
     return (
         <FormCreateEditShell
@@ -285,9 +309,7 @@ export function FixedCostForm({
                                         if (full.suggestedDueDay !== null) {
                                             form.setValue('dueDay', String(full.suggestedDueDay));
                                         }
-                                        pendingCategoryName.current =
-                                            categoryByKey.get(full.categoryTemplateKey)?.name ??
-                                            null;
+                                        setPendingCategoryTemplateKey(full.categoryTemplateKey);
                                         form.setValue('categoryId', null);
                                     }}
                                 />
@@ -323,7 +345,11 @@ export function FixedCostForm({
                         <FormControl>
                             <select
                                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
-                                {...field}>
+                                {...field}
+                                onChange={event => {
+                                    field.onChange(event);
+                                    form.setValue('categoryId', null);
+                                }}>
                                 {jars.length === 0 ? (
                                     <option value="">No jars — complete setup first</option>
                                 ) : (
@@ -334,6 +360,37 @@ export function FixedCostForm({
                                         </option>
                                     ))
                                 )}
+                            </select>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Category</FormLabel>
+                        <FormControl>
+                            <select
+                                className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
+                                value={field.value ?? ''}
+                                onChange={event => {
+                                    setPendingCategoryTemplateKey(null);
+                                    field.onChange(event.target.value || null);
+                                }}>
+                                <option value="">
+                                    {pendingLabel
+                                        ? `From preset (${pendingLabel})`
+                                        : 'Auto from name / preset'}
+                                </option>
+                                {jarCategories.map(category => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.name}
+                                    </option>
+                                ))}
                             </select>
                         </FormControl>
                         <FormMessage />

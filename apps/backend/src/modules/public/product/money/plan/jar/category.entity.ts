@@ -5,7 +5,9 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
 import { Jar } from './jar.entity';
 
 /**
- * A spending line inside a jar. Budget is planned; actuals come from transactions.
+ * A spending line inside a jar.
+ * Stored `budgeted` is a manual envelope; JarBalance.budgeted adds monthly fixed OUT.
+ * Actuals on balances come from sorted OUT transactions in the period.
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */

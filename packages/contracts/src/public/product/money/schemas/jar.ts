@@ -71,7 +71,12 @@ export const Category = z.object({
     id: Id,
     jarId: Id,
     name: z.string().min(1).max(80),
+    /**
+     * On JarBalance: manual envelope + monthly-normalised active fixed OUT for this category.
+     * On Category CRUD: the stored manual envelope only.
+     */
     budgeted: Money,
+    /** On JarBalance: sorted OUT transactions in the period for this category. */
     actual: Money,
     isArchived: z.boolean().default(false),
 });

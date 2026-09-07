@@ -182,7 +182,14 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                     ✦ Categories this month
                 </h2>
                 <Card className="p-4">
-                    <JarCategoryTable categories={jar.categories ?? []} />
+                    <JarCategoryTable
+                        categories={[...(jar.categories ?? [])]
+                            .filter(category => !category.isArchived)
+                            .sort(
+                                (left, right) =>
+                                    right.budgeted - left.budgeted || right.actual - left.actual
+                            )}
+                    />
                 </Card>
             </section>
 
