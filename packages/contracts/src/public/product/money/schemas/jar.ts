@@ -105,7 +105,7 @@ export const JarBalance = Jar.extend({
     committedOut: Money,
     /** allocated − spent (transactions only; ignores fixed commitments). */
     remaining: Money,
-    /** allocated − spent − committedOut — what is left after plan + spend. */
+    /** allocated − spent − committedOut — what is left after plan + spend (UI primary). */
     available: Money,
     /** available/allocated, clamped 0..1; null when nothing was allocated. */
     progress: z.number().min(0).max(1).nullable(),

@@ -11,7 +11,7 @@ interface WizardJar {
     key: string;
     name: string;
     icon: string;
-    remaining: number;
+    available: number;
     overspent: boolean;
 }
 
@@ -36,7 +36,7 @@ const STEPS = [
 /**
  * Three-step WEEKTELLING wizard (design: `ritual`).
  *
- * Step 1 — Kijken: show week recap per jar (remaining vs allocated).
+ * Step 1 — Kijken: show week recap per jar (available vs plan).
  * Step 2 — Richten: show surplus amount and let user redirect it to jars.
  * Step 3 — Intentie: free-text intention for the coming week.
  *
@@ -161,7 +161,7 @@ export function RitualWizard({
                                             'font-mono text-sm',
                                             jar.overspent ? 'text-danger' : 'text-success'
                                         )}>
-                                        {formatMoney(jar.remaining, { signed: true })}
+                                        {formatMoney(jar.available, { signed: true })}
                                     </span>
                                 </div>
                             ))}

@@ -109,7 +109,6 @@ export class TurnService {
         const income = await this.jars.monthlyNetIncome();
         const allocated = sum(jarRows.map(jar => jar.allocated));
         const spent = sum(jarRows.map(jar => jar.spent));
-        const leftOver = allocated - spent;
 
         const spendable = jarRows.filter(jar => jar.capabilities?.canSpend);
         const held = spendable.filter(jar => !jar.overspent).length;
@@ -117,19 +116,20 @@ export class TurnService {
             turn?.score ?? (spendable.length ? Math.round((held / spendable.length) * 100) : 0);
 
         const best = jarRows.reduce(
-            (left, right) => (left.remaining >= right.remaining ? left : right),
+            (left, right) => (left.available >= right.available ? left : right),
             jarRows[0]!
         );
         const worst =
             jarRows.find(jar => jar.overspent) ??
             jarRows.reduce(
-                (left, right) => (left.remaining <= right.remaining ? left : right),
+                (left, right) => (left.available <= right.available ? left : right),
                 jarRows[0]!
             );
 
+        const availableTotal = sum(jarRows.map(jar => jar.available));
         const headline =
-            leftOver >= 0
-                ? `${formatEuro(leftOver)} over deze periode`
+            availableTotal >= 0
+                ? `${formatEuro(availableTotal)} over deze periode`
                 : 'Eén of meer potten zijn overschreden';
 
         return {
@@ -137,7 +137,7 @@ export class TurnService {
             income,
             allocated,
             spent,
-            leftOver,
+            leftOver: availableTotal,
             score,
             bestJar: best?.name ?? null,
             worstJar: worst?.overspent ? worst.name : null,

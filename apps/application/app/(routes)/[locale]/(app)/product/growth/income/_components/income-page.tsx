@@ -12,7 +12,7 @@ import {
 } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { AccentCard, Card, Eyebrow } from '@rumbelo/ui';
-import { formatMoney, toPeriodKey } from '@rumbelo/utils';
+import { formatMoney, sumMonthly, toPeriodKey } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
@@ -60,9 +60,7 @@ export function IncomePageClient() {
         live
     );
 
-    const NET = (incomeQuery.data ?? [])
-        .filter(source => source.isActive)
-        .reduce((total, i) => total + i.amount, 0);
+    const NET = sumMonthly(incomeQuery.data ?? []);
     const GAP = TARGET - NET;
     const jars = jarsQuery.data ?? [];
     const sources = (incomeQuery.data ?? []).filter(source => source.isActive);

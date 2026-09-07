@@ -42,12 +42,12 @@ export class DashboardService {
         const spentTotal = sum(jars.map(jar => jar.spent));
         const play = jars.find(jar => jar.key === 'PLAY');
 
-        // What is safe to spend today without pushing any spendable jar over its line.
+        // Safe to spend / play left use available (after fixed commitments).
         const daysLeft = Math.max(1, daysInPeriod(period) - new Date().getUTCDate());
         const spendableRemaining = sum(
             jars
                 .filter(jar => jar.capabilities?.countsTowardSafeToSpend)
-                .map(jar => Math.max(0, jar.remaining))
+                .map(jar => Math.max(0, jar.available))
         );
 
         return {
@@ -56,9 +56,9 @@ export class DashboardService {
             allocatedTotal,
             incomeTotal: income,
             spentTotal,
-            avgLeftOver: allocatedTotal - spentTotal,
+            avgLeftOver: sum(jars.map(jar => jar.available)),
             safePerDay: Math.floor(spendableRemaining / daysLeft),
-            playLeft: play?.remaining ?? 0,
+            playLeft: play?.available ?? 0,
             inboxCount,
             jars,
             coach,

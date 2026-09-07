@@ -1,8 +1,14 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { type Jar as ContractJar, CADENCE_TO_MONTHLY, type Cadence } from '@rumbelo/contracts';
-import { jarCoverage, monthlyAmount } from '@rumbelo/utils';
+import { type Jar as ContractJar, type Cadence } from '@rumbelo/contracts';
+import {
+    allocateByPercentage,
+    categoryEnvelope,
+    jarCoverage,
+    monthlyAmount,
+    sumMonthly,
+} from '@rumbelo/utils';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
@@ -43,6 +49,7 @@ export class JarService {
             jarId: jar.id,
             name: cat.name,
             budgeted: Number(cat.budgeted),
+            /** Period actual only exists on JarBalance — CRUD has no period. */
             actual: 0,
             isArchived: false,
         };
@@ -58,21 +65,24 @@ export class JarService {
     }
 
     async balances(period: string) {
-        await this.ensureFixedCostCategoryLinks();
-
         const jars = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
         const spentByJar = await this.spentByJar(period);
         const spentByCategory = await this.spentByCategory(period);
         const committedByJar = await this.committedOutByJar();
         const committedByCategory = await this.committedOutByCategory();
         const income = await this.monthlyNetIncome();
+        const allocations = new Map(
+            allocateByPercentage(
+                income,
+                jars.map(jar => ({ id: jar.id, percentage: Number(jar.percentage) }))
+            ).map(row => [row.id, row.amount])
+        );
 
         return Promise.all(
             jars.map(async jar => {
-                const allocated = Math.round((income * Number(jar.percentage)) / 100);
+                const allocated = allocations.get(jar.id) ?? 0;
                 const spent = spentByJar.get(jar.id) ?? 0;
                 const committedOut = committedByJar.get(jar.id) ?? 0;
-                const remaining = allocated - spent;
                 const coverage = jarCoverage({ allocated, spent, committedOut });
                 const cats = await this.categories.find({ jar: jar.id });
                 return {
@@ -81,7 +91,7 @@ export class JarService {
                     allocated,
                     spent,
                     committedOut,
-                    remaining,
+                    remaining: coverage.remaining,
                     available: coverage.available,
                     progress: coverage.progress,
                     overspent: coverage.overspent,
@@ -91,8 +101,7 @@ export class JarService {
                             id: category.id,
                             jarId: jar.id,
                             name: category.name,
-                            /** Manual envelope + monthly fixed OUT linked to this category. */
-                            budgeted: Number(category.budgeted) + fixed,
+                            budgeted: categoryEnvelope(Number(category.budgeted), fixed),
                             actual: spentByCategory.get(category.id) ?? 0,
                             isArchived: category.isArchived,
                         };
@@ -110,80 +119,14 @@ export class JarService {
                 `SELECT amount::text, cadence FROM money_income_source WHERE household_id = ? AND is_active = true`,
                 [currentHouseholdId()]
             );
-        return Math.round(
-            rows.reduce(
-                (sum, row) => sum + Number(row.amount) * (CADENCE_TO_MONTHLY[row.cadence] ?? 0),
-                0
-            )
-        );
+        return sumMonthly(rows.map(row => ({ amount: Number(row.amount), cadence: row.cadence })));
     }
-
-    // ====================================================================
-    // ? UPDATE Operations
-    // ====================================================================
 
     /**
-     * A split that does not total 100 silently loses or invents money, so this is
-     * rejected rather than normalised.
+     * Link active fixed costs that have no category by matching English preset names.
+     * Call from fixed-cost writes — not from balances reads.
      */
-    async updateSplit(split: { jarId: string; percentage: number }[]): Promise<JarDto[]> {
-        const total = split.reduce((sum, entry) => sum + entry.percentage, 0);
-        if (Math.abs(total - 100) > 0.01) {
-            throw new Error(`Jar split must total 100%, received ${total}%`);
-        }
-        const jars = await Promise.all(
-            split.map(({ jarId }) => this.jars.findOneOrFail({ id: jarId }))
-        );
-        for (const [index, jar] of jars.entries()) {
-            jar.percentage = split[index]!.percentage.toFixed(2);
-        }
-        await this.em.flush();
-        return this.list();
-    }
-
-    async update(
-        id: string,
-        patch: Partial<Pick<Jar, 'name' | 'subtitle' | 'icon'>>
-    ): Promise<JarDto> {
-        const jar = await this.jars.findOneOrFail({ id });
-        Object.assign(jar, patch);
-        await this.em.flush();
-        return toJarDto(jar);
-    }
-
-    async updateCategory(
-        id: string,
-        patch: Partial<{ name: string; budgeted: number; isArchived: boolean }>
-    ) {
-        const cat = await this.categories.findOneOrFail({ id });
-        Object.assign(cat, patch);
-        await this.em.flush();
-        return {
-            id: cat.id,
-            jarId: cat.jar.id,
-            name: cat.name,
-            budgeted: Number(cat.budgeted),
-            actual: 0,
-            isArchived: cat.isArchived,
-        };
-    }
-
-    // ====================================================================
-    // ? DELETE Operations
-    // ====================================================================
-
-    async deleteCategory(id: string) {
-        const cat = await this.categories.findOneOrFail({ id });
-        await this.em.remove(cat).flush();
-    }
-
-    // Private
-
-    /**
-     * Heal fixed costs saved without a category by matching the English preset name
-     * and creating/linking the household category under that jar.
-     */
-    private async ensureFixedCostCategoryLinks(): Promise<void> {
+    async reconcileFixedCostCategories(): Promise<void> {
         const rows = await this.em.getConnection().execute<
             {
                 id: string;
@@ -263,6 +206,68 @@ export class JarService {
             )
         );
     }
+
+    // ====================================================================
+    // ? UPDATE Operations
+    // ====================================================================
+
+    /**
+     * A split that does not total 100 silently loses or invents money, so this is
+     * rejected rather than normalised.
+     */
+    async updateSplit(split: { jarId: string; percentage: number }[]): Promise<JarDto[]> {
+        const total = split.reduce((sum, entry) => sum + entry.percentage, 0);
+        if (Math.abs(total - 100) > 0.01) {
+            throw new Error(`Jar split must total 100%, received ${total}%`);
+        }
+        const jars = await Promise.all(
+            split.map(({ jarId }) => this.jars.findOneOrFail({ id: jarId }))
+        );
+        for (const [index, jar] of jars.entries()) {
+            jar.percentage = split[index]!.percentage.toFixed(2);
+        }
+        await this.em.flush();
+        return this.list();
+    }
+
+    async update(
+        id: string,
+        patch: Partial<Pick<Jar, 'name' | 'subtitle' | 'icon'>>
+    ): Promise<JarDto> {
+        const jar = await this.jars.findOneOrFail({ id });
+        Object.assign(jar, patch);
+        await this.em.flush();
+        return toJarDto(jar);
+    }
+
+    async updateCategory(
+        id: string,
+        patch: Partial<{ name: string; budgeted: number; isArchived: boolean }>
+    ) {
+        const cat = await this.categories.findOneOrFail({ id });
+        Object.assign(cat, patch);
+        await this.em.flush();
+        return {
+            id: cat.id,
+            jarId: cat.jar.id,
+            name: cat.name,
+            budgeted: Number(cat.budgeted),
+            /** Period actual only exists on JarBalance — CRUD has no period. */
+            actual: 0,
+            isArchived: cat.isArchived,
+        };
+    }
+
+    // ====================================================================
+    // ? DELETE Operations
+    // ====================================================================
+
+    async deleteCategory(id: string) {
+        const cat = await this.categories.findOneOrFail({ id });
+        await this.em.remove(cat).flush();
+    }
+
+    // Private
 
     /** One grouped query rather than a per-jar round trip. */
     private async spentByJar(period: string): Promise<Map<string, number>> {

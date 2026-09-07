@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 
+import { JarModule } from '../jar/jar.module';
 import { FixedCostController } from './fixed-cost.controller';
 import { FixedCostService } from './fixed-cost.service';
 
 @Module({
+    imports: [JarModule],
     controllers: [FixedCostController],
     providers: [FixedCostService],
     exports: [FixedCostService],

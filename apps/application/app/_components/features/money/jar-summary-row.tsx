@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 
-import { cn, formatMoney } from '@rumbelo/utils';
+import { cn, formatMoney, jarCoverage } from '@rumbelo/utils';
 
 import { jarKeyToSlug } from '@/app/_lib/jar-slug';
+
+import { JarProgressBar } from './jar-progress-bar';
 
 export type JarSummaryModel = {
     id: string;
@@ -26,10 +28,11 @@ export type JarSummaryModel = {
  * Compact tappable jar row for the jars list — opens /product/money/jars/{slug}.
  */
 export function JarSummaryRow({ jar }: { jar: JarSummaryModel }) {
-    const usedPct =
-        jar.allocated > 0
-            ? Math.min(100, Math.round(((jar.allocated - jar.available) / jar.allocated) * 100))
-            : 0;
+    const coverage = jarCoverage({
+        allocated: jar.allocated,
+        spent: jar.spent,
+        committedOut: jar.committedOut,
+    });
     const activity =
         jar.committedOut > 0 || jar.spent > 0
             ? [
@@ -64,9 +67,9 @@ export function JarSummaryRow({ jar }: { jar: JarSummaryModel }) {
                     <span
                         className={cn(
                             'block font-mono text-sm',
-                            jar.overspent ? 'text-danger' : 'text-fg'
+                            coverage.overspent ? 'text-danger' : 'text-fg'
                         )}>
-                        {formatMoney(jar.available)}
+                        {formatMoney(coverage.available)}
                     </span>
                     <span className="font-mono text-xs text-fg-faint">
                         of {formatMoney(jar.allocated)}
@@ -77,15 +80,12 @@ export function JarSummaryRow({ jar }: { jar: JarSummaryModel }) {
                 </span>
             </span>
 
-            <span className="h-1.5 overflow-hidden rounded-full bg-sunken">
-                <span
-                    className={cn(
-                        'block h-full rounded-full transition-all duration-500 ease-out',
-                        jar.overspent ? 'bg-danger' : jar.color
-                    )}
-                    style={{ width: `${jar.overspent ? 100 : usedPct}%` }}
-                />
-            </span>
+            <JarProgressBar
+                allocated={jar.allocated}
+                spent={jar.spent}
+                committedOut={jar.committedOut}
+                colorClass={jar.color}
+            />
 
             <span className="font-mono text-xs text-fg-faint">{activity}</span>
         </Link>

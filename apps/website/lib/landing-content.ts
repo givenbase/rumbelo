@@ -1,3 +1,5 @@
+import { DEFAULT_JAR_SPLIT, JarKey } from '@rumbelo/contracts';
+
 export type IconName =
     | 'home'
     | 'trend'
@@ -64,7 +66,7 @@ export const JARS: Jar[] = [
     {
         key: 'nec',
         name: 'Necessity',
-        pct: 55,
+        pct: DEFAULT_JAR_SPLIT[JarKey.NECESSITIES],
         colorVar: 'var(--color-jar-nec)',
         line: 'Rent, energy, insurance, groceries, transport. The things that arrive whether you like it or not.',
         not: 'Not for eating out or clothes — that is Play.',
@@ -73,7 +75,7 @@ export const JARS: Jar[] = [
     {
         key: 'ff',
         name: 'Financial Freedom',
-        pct: 10,
+        pct: DEFAULT_JAR_SPLIT[JarKey.FINANCIAL_FREEDOM],
         colorVar: 'var(--color-jar-ff)',
         line: 'Index funds, stocks, a property deposit, your own company. This jar buys things that pay you back.',
         not: 'Never spent. Only invested.',
@@ -82,7 +84,7 @@ export const JARS: Jar[] = [
     {
         key: 'edu',
         name: 'Education',
-        pct: 10,
+        pct: DEFAULT_JAR_SPLIT[JarKey.EDUCATION],
         colorVar: '#0891B2',
         line: 'Books, courses, tools, a mentor. The only jar where spending makes you worth more.',
         not: 'Not for gadgets you call research.',
@@ -91,7 +93,7 @@ export const JARS: Jar[] = [
     {
         key: 'lts',
         name: 'Long Term Savings',
-        pct: 10,
+        pct: DEFAULT_JAR_SPLIT[JarKey.LONG_TERM_SAVINGS],
         colorVar: '#0369A1',
         line: 'Emergency fund first, then the car, the deposit, the tax bill you know is coming.',
         not: 'Not for anything you want this month.',
@@ -100,7 +102,7 @@ export const JARS: Jar[] = [
     {
         key: 'play',
         name: 'Play',
-        pct: 10,
+        pct: DEFAULT_JAR_SPLIT[JarKey.PLAY],
         colorVar: '#B45309',
         line: 'Dinner out, concerts, clothes, something spontaneous. Spend it without asking permission.',
         not: 'Must be empty by month end. That is the point.',
@@ -109,7 +111,7 @@ export const JARS: Jar[] = [
     {
         key: 'give',
         name: 'Give',
-        pct: 5,
+        pct: DEFAULT_JAR_SPLIT[JarKey.GIVE],
         colorVar: '#15803D',
         line: 'Your foundation, a charity, helping someone who needs it. Generosity as a habit, not a mood.',
         not: 'Not a tip you already left.',

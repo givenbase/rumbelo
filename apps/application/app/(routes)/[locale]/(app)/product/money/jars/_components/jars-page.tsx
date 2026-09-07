@@ -5,12 +5,12 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { CADENCE_TO_MONTHLY } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Card, Eyebrow } from '@rumbelo/ui';
-import { formatMoney, toPeriodKey, cn } from '@rumbelo/utils';
+import { formatMoney, toPeriodKey, cn, sumMonthly } from '@rumbelo/utils';
 
 import { CREATE_HREF } from '@/app/_lib/create-routes';
+import { bgClassToCssVar } from '@/app/_lib/jar-chrome';
 import { isLiveData } from '@/app/_lib/preview';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { JarSummaryRow } from '@/components/features/money/jar-summary-row';
@@ -31,10 +31,6 @@ const SIM_MIN_RATIO = 0.5;
 const SIM_MAX_RATIO = 2;
 /** Used only when the household has no active income yet. */
 const SIM_FALLBACK_RANGE_EUROS = { min: 500, max: 8_000, value: 4_300 } as const;
-
-function toCssVar(bgClass: string) {
-    return bgClass.replace('bg-', 'var(--color-') + ')';
-}
 
 function roundToStep(euros: number) {
     return Math.round(euros / SIM_STEP_EUROS) * SIM_STEP_EUROS;
@@ -94,16 +90,7 @@ export function JarsPageClient() {
 
     const jars = jarsQuery.data ?? [];
     const goals = goalsQuery.data ?? [];
-    // Monthly-normalised, same rule as JarService.monthlyNetIncome() on the backend.
-    const net = Math.round(
-        (incomeQuery.data ?? [])
-            .filter(source => source.isActive)
-            .reduce(
-                (total, source) =>
-                    total + source.amount * (CADENCE_TO_MONTHLY[source.cadence] ?? 0),
-                0
-            )
-    );
+    const net = sumMonthly(incomeQuery.data ?? []);
     const totalPct = jars.reduce((total, j) => total + j.percentage, 0);
     const onTarget = jars.filter(j => !j.overspent).length;
 
@@ -336,7 +323,7 @@ export function JarsPageClient() {
                                     className="rounded-xl border border-line bg-raised p-3.5">
                                     <div
                                         className="font-mono text-xs font-medium tracking-wide uppercase"
-                                        style={{ color: toCssVar(color) }}>
+                                        style={{ color: bgClassToCssVar(color) }}>
                                         {j.name}
                                     </div>
                                     <div className="mt-2 font-mono text-lg text-fg">

@@ -7,12 +7,16 @@ import { HouseholdScopedRepository } from '../../../../../../common/household/ho
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from '../jar/category.entity';
 import { Jar } from '../jar/jar.entity';
+import { JarService } from '../jar/jar.service';
 import { FixedCost } from './fixed-cost.entity';
 
 @Injectable()
 export class FixedCostService {
     private readonly repo: HouseholdScopedRepository<FixedCost>;
-    constructor(@Inject(EntityManager) private readonly em: EntityManager) {
+    constructor(
+        @Inject(EntityManager) private readonly em: EntityManager,
+        @Inject(JarService) private readonly jars: JarService
+    ) {
         this.repo = new HouseholdScopedRepository(em, FixedCost);
     }
 
@@ -46,6 +50,10 @@ export class FixedCostService {
             note: input.note ?? null,
         } as never);
         await this.em.persist(entity).flush();
+        if (!input.categoryId) {
+            await this.jars.reconcileFixedCostCategories();
+            await this.em.refresh(entity, { populate: ['jar', 'category'] });
+        }
         return toDto(entity);
     }
 
@@ -124,6 +132,10 @@ export class FixedCostService {
         if (patch.endsOn !== undefined) entity.endsOn = patch.endsOn;
         if (patch.note !== undefined) entity.note = patch.note;
         await this.em.flush();
+        if (entity.category === null) {
+            await this.jars.reconcileFixedCostCategories();
+            await this.em.refresh(entity, { populate: ['jar', 'category'] });
+        }
         return toDto(entity);
     }
 

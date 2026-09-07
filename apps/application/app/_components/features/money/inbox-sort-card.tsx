@@ -5,6 +5,8 @@ import { useMemo, useState } from 'react';
 import { Button } from '@rumbelo/ui';
 import { cn, formatMoney } from '@rumbelo/utils';
 
+import { bgClassToCssVar } from '@/app/_lib/jar-chrome';
+
 import { JAR_META } from '@/app/_lib/jar-meta';
 
 interface InboxTransaction {
@@ -32,8 +34,6 @@ function suggestJarKey(amount: number): string {
 function metaForKey(key: string) {
     return JAR_META.find(j => j.key === key) ?? JAR_META[0]!;
 }
-
-const toVar = (bgClass: string) => bgClass.replace('bg-', 'var(--color-') + ')';
 
 function resolveInitialJarId(
     jars: readonly InboxJarOption[],
@@ -132,7 +132,7 @@ export function InboxSortCard({
                     </span>
                     <span
                         className="size-2 shrink-0 rounded-sm"
-                        style={{ background: toVar(meta.color) }}
+                        style={{ background: bgClassToCssVar(meta.color) }}
                     />
                     <span className="text-sm text-fg">{selected?.name ?? meta.name}</span>
                     {selected?.subtitle ? (
@@ -168,7 +168,7 @@ export function InboxSortCard({
                                     )}>
                                     <span
                                         className="size-1.5 rounded-sm"
-                                        style={{ background: toVar(jarMeta.color) }}
+                                        style={{ background: bgClassToCssVar(jarMeta.color) }}
                                     />
                                     {jar.name}
                                 </button>

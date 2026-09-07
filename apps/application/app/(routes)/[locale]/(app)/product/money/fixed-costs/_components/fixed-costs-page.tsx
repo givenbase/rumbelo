@@ -7,25 +7,16 @@ import { useRouter } from 'next/navigation';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Card } from '@rumbelo/ui';
-import { cn, formatMoney, monthlyAmount, sumMonthly, sumMonthlyFixedOut } from '@rumbelo/utils';
+import { cn, formatMoney, monthlyAmount, fixedOutNetSummary } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
+import { bgClassToCssVar, cadenceLabel } from '@/app/_lib/jar-chrome';
 import { isLiveData } from '@/app/_lib/preview';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 type Tab = 'ERUIT' | 'ERIN';
-
-const toVar = (bgClass: string) => bgClass.replace('bg-', 'var(--color-') + ')';
-
-const CADENCE_LABEL: Record<string, string> = {
-    WEEKLY: 'Weekly',
-    MONTHLY: 'Monthly',
-    QUARTERLY: 'Quarterly',
-    YEARLY: 'Yearly',
-    ONCE: 'Once',
-};
 
 export function FixedCostsPageClient() {
     const api = useApi();
@@ -81,11 +72,13 @@ export function FixedCostsPageClient() {
                   }))
             : [];
 
-    const NET = sumMonthly(
+    const {
+        net: NET,
+        outTotal,
+        leftover,
+        commitmentRatio,
+    } = fixedOutNetSummary(
         incomeSources.map(source => ({ amount: source.amount, cadence: source.cadence })),
-        { activeOnly: false }
-    );
-    const outTotal = sumMonthlyFixedOut(
         fixedCosts.map(item => ({
             amount: item.amount,
             cadence: item.cadence,
@@ -93,8 +86,6 @@ export function FixedCostsPageClient() {
         })),
         { activeOnly: false }
     );
-    const leftover = NET - outTotal;
-    const commitmentRatio = NET > 0 ? Math.round((outTotal / NET) * 100) : 0;
     const visibleFixedCosts = jarFilter
         ? fixedCosts.filter(fixedCost => fixedCost.jarKey === jarFilter)
         : fixedCosts;
@@ -185,7 +176,11 @@ export function FixedCostsPageClient() {
                                                     {jar && (
                                                         <span
                                                             className="size-1.75 shrink-0 rounded-sm"
-                                                            style={{ background: toVar(jar.color) }}
+                                                            style={{
+                                                                background: bgClassToCssVar(
+                                                                    jar.color
+                                                                ),
+                                                            }}
                                                         />
                                                     )}
                                                     <span className="text-sm text-fg">
@@ -198,8 +193,7 @@ export function FixedCostsPageClient() {
                                                     )}
                                                 </div>
                                                 <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                                    {CADENCE_LABEL[fixedCost.cadence] ??
-                                                        fixedCost.cadence}
+                                                    {cadenceLabel(fixedCost.cadence)}
                                                     {fixedCost.dueDay !== null
                                                         ? ` · day ${fixedCost.dueDay}`
                                                         : ''}
@@ -240,7 +234,7 @@ export function FixedCostsPageClient() {
                                         )}>
                                         <span
                                             className="size-1.75 rounded-sm"
-                                            style={{ background: toVar(j.color) }}
+                                            style={{ background: bgClassToCssVar(j.color) }}
                                         />
                                         {j.name}
                                     </button>
@@ -290,7 +284,7 @@ export function FixedCostsPageClient() {
                                     <div>
                                         <div className="text-sm text-fg">{source.label}</div>
                                         <div className="mt-0.5 font-mono text-xs tracking-normal text-fg-faint">
-                                            {CADENCE_LABEL[source.cadence] ?? source.cadence}
+                                            {cadenceLabel(source.cadence)}
                                             {source.dueDay !== null
                                                 ? ` · pay day ${source.dueDay}`
                                                 : ' · pay day'}
@@ -317,7 +311,7 @@ export function FixedCostsPageClient() {
                                         className="flex items-center gap-1.5 rounded-full border border-line bg-raised px-3 py-1.5 font-mono text-xs text-fg-secondary">
                                         <span
                                             className="size-1.75 rounded-sm"
-                                            style={{ background: toVar(j.color) }}
+                                            style={{ background: bgClassToCssVar(j.color) }}
                                         />
                                         {j.name}
                                         <span className="text-fg-faint">{j.pct}%</span>

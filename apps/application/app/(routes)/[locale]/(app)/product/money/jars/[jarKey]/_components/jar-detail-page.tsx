@@ -10,20 +10,14 @@ import { cn, formatMoney, monthlyAmount, toPeriodKey } from '@rumbelo/utils';
 
 import { useApi } from '@/app/_lib/api-hooks';
 import { CREATE_HREF, spendFromJarHref, updateHref } from '@/app/_lib/create-routes';
+import { cadenceLabel } from '@/app/_lib/jar-chrome';
 import { JAR_GUIDE, type JarGuideKey } from '@/app/_lib/jar-guide';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { isLiveData } from '@/app/_lib/preview';
+import { JarCoverageStrip } from '@/components/features/money/jar-coverage-strip';
 import { JarCategoryTable } from '@/components/features/money/jar-drilldown-parts';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
-
-const CADENCE_LABEL: Record<string, string> = {
-    WEEKLY: 'Weekly',
-    MONTHLY: 'Monthly',
-    QUARTERLY: 'Quarterly',
-    YEARLY: 'Yearly',
-    ONCE: 'Once',
-};
 
 /**
  * Per-jar detail — coverage (allocated / committed / spent / available),
@@ -90,11 +84,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
         );
     }
 
-    const usedPct =
-        jar.allocated > 0
-            ? Math.min(100, Math.round(((jar.allocated - jar.available) / jar.allocated) * 100))
-            : 0;
-    const accent = (meta?.color ?? 'bg-jar-nec').replace('bg-', 'var(--color-') + ')';
+    const colorClass = meta?.color ?? 'bg-jar-nec';
 
     return (
         <div className="grid animate-rise gap-8">
@@ -137,44 +127,12 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
             </div>
 
             {/* Coverage strip */}
-            <div
-                className="rounded-2xl border border-t-[3px] border-line bg-card"
-                style={{ borderTopColor: accent }}>
-                <div className="grid gap-4 p-5">
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <span
-                            className={cn(
-                                'font-display text-3xl font-semibold tracking-tight',
-                                jar.overspent ? 'text-danger' : 'text-fg'
-                            )}>
-                            {formatMoney(jar.available)}
-                        </span>
-                        <span className="font-mono text-xs font-medium text-fg-faint">
-                            available of {formatMoney(jar.allocated)} allocated
-                        </span>
-                    </div>
-
-                    <div className="h-2 overflow-hidden rounded-full bg-sunken">
-                        <div
-                            className={cn(
-                                'h-full rounded-full',
-                                jar.overspent ? 'bg-danger' : (meta?.color ?? 'bg-jar-nec')
-                            )}
-                            style={{ width: `${jar.overspent ? 100 : usedPct}%` }}
-                        />
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-3">
-                        <CoverageStat label="Allocated" value={jar.allocated} />
-                        <CoverageStat label="Fixed (committed)" value={jar.committedOut} />
-                        <CoverageStat label="Spent" value={jar.spent} />
-                    </div>
-                    <p className="font-mono text-xs leading-relaxed text-fg-faint">
-                        Available = allocated − spent − fixed. Booking the same bill as a
-                        transaction and a fixed cost will count twice until payments are linked.
-                    </p>
-                </div>
-            </div>
+            <JarCoverageStrip
+                allocated={jar.allocated}
+                spent={jar.spent}
+                committedOut={jar.committedOut}
+                colorClass={colorClass}
+            />
 
             {/* Categories */}
             <section className="grid gap-3">
@@ -227,7 +185,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                                                     {item.name}
                                                 </span>
                                                 <span className="mt-0.5 block font-mono text-xs text-fg-faint">
-                                                    {CADENCE_LABEL[item.cadence] ?? item.cadence}
+                                                    {cadenceLabel(item.cadence)}
                                                     {item.dueDay !== null
                                                         ? ` · day ${item.dueDay}`
                                                         : ''}
@@ -374,15 +332,6 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                     </Card>
                 </section>
             )}
-        </div>
-    );
-}
-
-function CoverageStat({ label, value }: { label: string; value: number }) {
-    return (
-        <div className="rounded-lg border border-line bg-raised px-3 py-2.5">
-            <p className="font-mono text-xs tracking-wide text-fg-faint uppercase">{label}</p>
-            <p className="mt-1 font-mono text-sm text-fg tabular-nums">{formatMoney(value)}</p>
         </div>
     );
 }

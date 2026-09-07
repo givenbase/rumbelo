@@ -1,4 +1,6 @@
-import { cn, formatMoney } from '@rumbelo/utils';
+import { cn, categoryVariance, formatMoney } from '@rumbelo/utils';
+
+import { JarProgressBar } from './jar-progress-bar';
 
 export interface JarCategory {
     id: string;
@@ -14,7 +16,10 @@ export interface JarDrilldownItem {
     icon: string;
     color: string;
     allocated: number;
-    remaining: number;
+    /** Primary leftover after spend + fixed commitments. */
+    available: number;
+    spent?: number;
+    committedOut?: number;
     overspent: boolean;
     categories: JarCategory[];
 }
@@ -28,10 +33,8 @@ export function JarDrilldownTrigger({
     open: boolean;
     onToggle: () => void;
 }) {
-    const usedPct =
-        jar.allocated > 0
-            ? Math.min(100, Math.round(((jar.allocated - jar.remaining) / jar.allocated) * 100))
-            : 0;
+    const spent = jar.spent ?? 0;
+    const committedOut = jar.committedOut ?? Math.max(0, jar.allocated - spent - jar.available);
 
     return (
         <button
@@ -53,15 +56,14 @@ export function JarDrilldownTrigger({
                     </span>
                 </span>
 
-                <span className="hidden h-2 overflow-hidden rounded-full bg-sunken sm:block">
-                    <span
-                        className={cn(
-                            'block h-full rounded-full transition-all duration-500 ease-out',
-                            jar.color
-                        )}
-                        style={{ width: `${usedPct}%` }}
-                    />
-                </span>
+                <JarProgressBar
+                    allocated={jar.allocated}
+                    spent={spent}
+                    committedOut={committedOut}
+                    colorClass={jar.color}
+                    className="hidden sm:block"
+                    trackClassName="h-2"
+                />
 
                 <span className="shrink-0 text-right tabular-nums">
                     <div
@@ -69,7 +71,7 @@ export function JarDrilldownTrigger({
                             'font-mono text-sm',
                             jar.overspent ? 'text-danger' : 'text-fg'
                         )}>
-                        {formatMoney(jar.remaining)}
+                        {formatMoney(jar.available)}
                     </div>
                     <div className="font-mono text-xs text-fg-faint">
                         of {formatMoney(jar.allocated)}
@@ -85,15 +87,14 @@ export function JarDrilldownTrigger({
                 </span>
             </span>
 
-            <span className="h-2 overflow-hidden rounded-full bg-sunken sm:hidden">
-                <span
-                    className={cn(
-                        'block h-full rounded-full transition-all duration-500 ease-out',
-                        jar.color
-                    )}
-                    style={{ width: `${usedPct}%` }}
-                />
-            </span>
+            <JarProgressBar
+                allocated={jar.allocated}
+                spent={spent}
+                committedOut={committedOut}
+                colorClass={jar.color}
+                className="sm:hidden"
+                trackClassName="h-2"
+            />
         </button>
     );
 }
@@ -107,10 +108,9 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
 
     return (
         <>
-            {/* Mobile: stacked cards */}
             <ul className="grid gap-2 border-t border-line pt-2 sm:hidden">
                 {categories.map(category => {
-                    const diff = category.budgeted - category.actual;
+                    const { diff, over } = categoryVariance(category.budgeted, category.actual);
                     return (
                         <li
                             key={category.id}
@@ -123,7 +123,7 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
                                 <span className="text-fg">
                                     Spent {formatMoney(category.actual)}
                                 </span>
-                                <span className={diff < 0 ? 'text-danger' : 'text-success'}>
+                                <span className={over ? 'text-danger' : 'text-success'}>
                                     {formatMoney(diff, { signed: true })}
                                 </span>
                             </span>
@@ -132,7 +132,6 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
                 })}
             </ul>
 
-            {/* Desktop: table */}
             <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full min-w-0 border-collapse">
                     <thead>
@@ -145,7 +144,10 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
                     </thead>
                     <tbody>
                         {categories.map(category => {
-                            const diff = category.budgeted - category.actual;
+                            const { diff, over } = categoryVariance(
+                                category.budgeted,
+                                category.actual
+                            );
                             return (
                                 <tr key={category.id} className="border-t border-line">
                                     <td className="py-1.5 text-sm text-fg-secondary">
@@ -160,7 +162,7 @@ export function JarCategoryTable({ categories }: { categories: JarCategory[] }) 
                                     <td
                                         className={cn(
                                             'py-1.5 text-right font-mono text-sm tabular-nums',
-                                            diff < 0 ? 'text-danger' : 'text-success'
+                                            over ? 'text-danger' : 'text-success'
                                         )}>
                                         {formatMoney(diff, { signed: true })}
                                     </td>

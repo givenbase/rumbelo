@@ -72,8 +72,8 @@ export function RitualPageClient() {
         key: j.key,
         name: j.name,
         icon: j.icon ?? '✦',
-        remaining: 'remaining' in j ? (j.remaining as number) : 0,
-        overspent: 'overspent' in j ? Boolean(j.overspent) : false,
+        available: j.available,
+        overspent: j.overspent,
     }));
 
     const surplus = ritualQuery.data?.surplus ?? 0;

@@ -11,10 +11,17 @@ export {
 export {
     monthlyAmount,
     jarCoverage,
+    usedPctDisplay,
+    allocateByPercentage,
+    categoryEnvelope,
+    categoryVariance,
     sumMonthlyFixedOut,
     sumMonthly,
+    fixedOutNetSummary,
     type JarCoverage,
     type JarCoverageInput,
+    type CategoryVariance,
+    type FixedOutNetSummary,
 } from './money-plan';
 export {
     createBetterAuthRouteHandlers,

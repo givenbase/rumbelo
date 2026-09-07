@@ -33,7 +33,7 @@ import {
     Toggle,
     useTheme,
 } from '@rumbelo/ui';
-import { cn, formatMoney, formatPercent, toPeriodKey } from '@rumbelo/utils';
+import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumbelo/utils';
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
@@ -803,11 +803,7 @@ export function JarsSettings() {
         [],
         live
     );
-    const monthlyNet = useMemo(() => {
-        return (incomeQuery.data ?? [])
-            .filter(source => source.isActive)
-            .reduce((sum, source) => sum + source.amount, 0);
-    }, [incomeQuery.data]);
+    const monthlyNet = useMemo(() => sumMonthly(incomeQuery.data ?? []), [incomeQuery.data]);
 
     const saveSplit = useMutation({
         mutationFn: async () => {
