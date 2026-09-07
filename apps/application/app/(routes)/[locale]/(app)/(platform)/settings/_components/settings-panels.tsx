@@ -38,7 +38,7 @@ import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumbel
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
-import { CAPABILITIES, lockCopyFor, memberLimitLabel, PLAN_LABELS, PlanKey } from '@/app/_lib/plan';
+import { CAPABILITIES, diffPlans, lockCopyFor, memberLimitLabel, PLAN_LABELS, PLAN_RANK, PlanKey } from '@/app/_lib/plan';
 import { isLiveData, PREVIEW_MODE } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
@@ -53,6 +53,7 @@ import {
     SettingsRow,
     SettingsRowLabel,
 } from './settings-chrome';
+import { PlanChangeDialog } from './plan-change-dialog';
 
 const JAR_COLOR: Record<string, string> = Object.fromEntries(JAR_META.map(j => [j.key, j.color]));
 
@@ -1489,6 +1490,7 @@ export function PlanSettings() {
     const { householdId } = useAuth();
     const { showToast, plan, setPlan } = useAppShell();
     const [billing, setBilling] = useState<'month' | 'year'>('month');
+    const [pendingPlan, setPendingPlan] = useState<PlanKey | null>(null);
 
     const billingStatus = useLiveQuery(
         apiQuery.billing.status.queryOptions({ input: { householdId: householdId! } }),
@@ -1499,6 +1501,12 @@ export function PlanSettings() {
     /** Stripe Checkout required only when backend reports stripeEnabled. */
     const stripeLive = !PREVIEW_MODE && billingStatus.data?.stripeEnabled === true;
     const freePlanSwitch = !stripeLive;
+    const pendingDiff = pendingPlan ? diffPlans(plan, pendingPlan) : null;
+    const pendingNeedsCheckout =
+        Boolean(pendingPlan) &&
+        pendingPlan !== PlanKey.BASIC &&
+        !freePlanSwitch &&
+        pendingDiff?.direction === 'upgrade';
 
     const savePlan = useMutation({
         mutationFn: async (next: PlanKey) => {
@@ -1507,6 +1515,7 @@ export function PlanSettings() {
         },
         onSuccess: data => {
             setPlan(data.planKey);
+            setPendingPlan(null);
             void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
             showToast(`${PLAN_LABELS[data.planKey]} selected`, 'success');
         },
@@ -1533,13 +1542,19 @@ export function PlanSettings() {
             showToast(`Already on ${PLAN_LABELS[next]}`, 'info');
             return;
         }
-        if (next === PlanKey.BASIC || freePlanSwitch) {
-            savePlan.mutate(next);
+        setPendingPlan(next);
+    }
+
+    function confirmPlanChange() {
+        if (!pendingPlan || !pendingDiff) return;
+        if (
+            pendingNeedsCheckout &&
+            (pendingPlan === PlanKey.PLUS || pendingPlan === PlanKey.MAX)
+        ) {
+            checkout.mutate(pendingPlan);
             return;
         }
-        if (next === PlanKey.PLUS || next === PlanKey.MAX) {
-            checkout.mutate(next);
-        }
+        savePlan.mutate(pendingPlan);
     }
 
     const busy = savePlan.isPending || checkout.isPending || billingStatus.isLoading;
@@ -1671,10 +1686,10 @@ export function PlanSettings() {
                                         ? 'Current'
                                         : busy
                                           ? '…'
-                                          : card.key === PlanKey.BASIC
-                                            ? 'Choose Basic'
-                                            : freePlanSwitch
-                                              ? 'Choose'
+                                          : PLAN_RANK[card.key] < PLAN_RANK[plan]
+                                            ? 'Downgrade'
+                                            : card.key === PlanKey.BASIC
+                                              ? 'Choose Basic'
                                               : 'Upgrade'}
                                 </Button>
                             </div>
@@ -1682,12 +1697,22 @@ export function PlanSettings() {
                     })}
                 </div>
             </SettingsInkCard>
+            <PlanChangeDialog
+                open={pendingPlan !== null}
+                diff={pendingDiff}
+                busy={busy}
+                stripeCheckout={pendingNeedsCheckout}
+                onOpenChange={open => {
+                    if (!open) setPendingPlan(null);
+                }}
+                onConfirm={confirmPlanChange}
+            />
             <StubNotice
                 what={
                     PREVIEW_MODE
                         ? 'Preview mode — plan switches are free (no Stripe).'
                         : freePlanSwitch
-                          ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY + price IDs to charge.'
+                          ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY and run pnpm stripe:seed-plans to charge.'
                           : 'Paid upgrades open Stripe Checkout. Plan activates after payment (webhook).'
                 }
             />

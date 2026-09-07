@@ -6,18 +6,23 @@ import Stripe from 'stripe';
 import type { Env } from '../../../../common/config/env.config';
 import { currentUserId } from '../../../../common/household/household.context';
 import { HouseholdSettingsService } from '../../../auth/household/household-settings/household-settings.service';
-
-type PaidPlanKey = typeof PlanKey.PLUS | typeof PlanKey.MAX;
-type BillingInterval = 'month' | 'year';
+import {
+    stripeLookupKey,
+    type BillingInterval,
+    type PaidPlanKey,
+} from './config/stripe-plans.config';
 
 /**
  * Stripe Checkout for Plus / Max.
+ * Prices resolve via stable lookup keys (seed with `pnpm stripe:seed-plans`).
  * When the secret key is unset (or BILLING_PREVIEW_BYPASS), plan changes stay free.
  */
 @Injectable()
 export class BillingService {
     private readonly logger = new Logger(BillingService.name);
     private readonly stripe: Stripe | null;
+    /** Cache lookup_key → price_… for this process. */
+    private readonly priceIdCache = new Map<string, string>();
 
     constructor(
         @Inject(ConfigService) private readonly config: ConfigService<Env, true>,
@@ -47,7 +52,7 @@ export class BillingService {
     }
 
     /**
-     * Resolve env Price IDs → amount / currency / label from Stripe.
+     * Resolve lookup keys → amount / currency / label from Stripe.
      * Returns null when the secret key is unset.
      */
     private async loadPriceCatalog() {
@@ -62,7 +67,7 @@ export class BillingService {
 
         const resolved = await Promise.all(
             slots.map(async ({ plan, interval }) => {
-                const priceId = this.priceIdFor(plan, interval);
+                const priceId = await this.priceIdFor(plan, interval);
                 if (!priceId) return { plan, interval, display: null };
                 try {
                     const price = await this.stripe!.prices.retrieve(priceId, {
@@ -128,10 +133,10 @@ export class BillingService {
             );
         }
 
-        const priceId = this.priceIdFor(input.planKey, input.interval);
+        const priceId = await this.priceIdFor(input.planKey, input.interval);
         if (!priceId) {
             throw new ServiceUnavailableException(
-                `Missing Stripe price for ${input.planKey} / ${input.interval}`
+                `Missing Stripe price for ${input.planKey} / ${input.interval} — run pnpm stripe:seed-plans`
             );
         }
 
@@ -195,17 +200,30 @@ export class BillingService {
         }
     }
 
-    private priceIdFor(planKey: PaidPlanKey, interval: BillingInterval): string | undefined {
-        const map = {
-            [PlanKey.PLUS]: {
-                month: this.config.get('STRIPE_PRICE_ID_PLUS_MONTHLY', { infer: true }),
-                year: this.config.get('STRIPE_PRICE_ID_PLUS_YEARLY', { infer: true }),
-            },
-            [PlanKey.MAX]: {
-                month: this.config.get('STRIPE_PRICE_ID_MAX_MONTHLY', { infer: true }),
-                year: this.config.get('STRIPE_PRICE_ID_MAX_YEARLY', { infer: true }),
-            },
-        } as const;
-        return map[planKey][interval];
+    /** Resolve `price_…` via lookup key (Meltizo-style). */
+    private async priceIdFor(
+        planKey: PaidPlanKey,
+        interval: BillingInterval
+    ): Promise<string | undefined> {
+        if (!this.stripe) return undefined;
+
+        const lookupKey = stripeLookupKey(planKey, interval);
+        const cached = this.priceIdCache.get(lookupKey);
+        if (cached) return cached;
+
+        const listed = await this.stripe.prices.list({
+            lookup_keys: [lookupKey],
+            active: true,
+            limit: 1,
+        });
+        const priceId = listed.data[0]?.id;
+        if (!priceId) {
+            this.logger.warn(
+                `No active Stripe price for lookup_key=${lookupKey} — run pnpm stripe:seed-plans`
+            );
+            return undefined;
+        }
+        this.priceIdCache.set(lookupKey, priceId);
+        return priceId;
     }
 }
