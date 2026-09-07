@@ -4,8 +4,7 @@
  * Product routes live under `/product/…` (visible slug).
  * Platform settings stay at `/settings/…`. Auth stays unprefixed.
  *
- * `capabilityKey`: plan gating key (`{product}-{feature}` when gated;
- * free hub routes use a local key that is not in CAPABILITIES).
+ * `capabilityKey`: always a catalog key from CAPABILITIES (`{product}-{feature}`).
  */
 import { CAPABILITIES } from './plan';
 import { productPath } from './routes';
@@ -17,9 +16,9 @@ export const NAV_GROUPS = [
         icon: '◇',
         href: '/',
         children: [
-            { href: '/', label: 'Overview', capabilityKey: 'home-overview' },
-            { href: productPath('ritual'), label: 'Coach', capabilityKey: 'home-ritual' },
-            { href: productPath('why'), label: 'Why', capabilityKey: 'home-why' },
+            { href: '/', label: 'Overview', capabilityKey: CAPABILITIES.homeOverview },
+            { href: productPath('ritual'), label: 'Coach', capabilityKey: CAPABILITIES.homeRitual },
+            { href: productPath('why'), label: 'Why', capabilityKey: CAPABILITIES.homeWhy },
         ],
     },
     {
@@ -31,13 +30,17 @@ export const NAV_GROUPS = [
             {
                 href: productPath('money/overview'),
                 label: 'Overview',
-                capabilityKey: 'money-overview',
+                capabilityKey: CAPABILITIES.moneyOverview,
             },
-            { href: productPath('money/jars'), label: 'Jars', capabilityKey: 'money-jars' },
+            {
+                href: productPath('money/jars'),
+                label: 'Jars',
+                capabilityKey: CAPABILITIES.moneyJars,
+            },
             {
                 href: productPath('money/transactions'),
                 label: 'Spending',
-                capabilityKey: 'money-transactions',
+                capabilityKey: CAPABILITIES.moneyTransactions,
             },
             {
                 href: productPath('money/debts'),
@@ -47,7 +50,7 @@ export const NAV_GROUPS = [
             {
                 href: productPath('money/fixed-costs'),
                 label: 'Fixed',
-                capabilityKey: 'money-fixed',
+                capabilityKey: CAPABILITIES.moneyFixedCosts,
             },
         ],
     },
@@ -57,7 +60,11 @@ export const NAV_GROUPS = [
         icon: '↗',
         href: productPath('growth'),
         children: [
-            { href: productPath('growth'), label: 'Overview', capabilityKey: 'growth-overview' },
+            {
+                href: productPath('growth'),
+                label: 'Overview',
+                capabilityKey: CAPABILITIES.growthOverview,
+            },
             {
                 href: productPath('growth/goals'),
                 label: 'Goals',
@@ -87,15 +94,31 @@ export const NAV_GROUPS = [
         icon: '✳\uFE0E',
         href: productPath('energy'),
         children: [
-            { href: productPath('energy'), label: 'Overview', capabilityKey: 'energy-overview' },
+            {
+                href: productPath('energy'),
+                label: 'Overview',
+                capabilityKey: CAPABILITIES.energyOverview,
+            },
             {
                 href: productPath('energy/week'),
                 label: 'Week',
                 capabilityKey: CAPABILITIES.energyWeek,
             },
-            { href: productPath('energy/sleep'), label: 'Sleep', capabilityKey: 'energy-sleep' },
-            { href: productPath('energy/train'), label: 'Training', capabilityKey: 'energy-train' },
-            { href: productPath('energy/food'), label: 'Food', capabilityKey: 'energy-food' },
+            {
+                href: productPath('energy/sleep'),
+                label: 'Sleep',
+                capabilityKey: CAPABILITIES.energySleep,
+            },
+            {
+                href: productPath('energy/train'),
+                label: 'Training',
+                capabilityKey: CAPABILITIES.energyTrain,
+            },
+            {
+                href: productPath('energy/food'),
+                label: 'Food',
+                capabilityKey: CAPABILITIES.energyFood,
+            },
         ],
     },
     {
@@ -104,14 +127,26 @@ export const NAV_GROUPS = [
         icon: '✦',
         href: productPath('soul'),
         children: [
-            { href: productPath('soul'), label: 'Overview', capabilityKey: 'soul-overview' },
-            { href: productPath('soul/mind'), label: 'Stillness', capabilityKey: 'soul-mind' },
+            {
+                href: productPath('soul'),
+                label: 'Overview',
+                capabilityKey: CAPABILITIES.soulOverview,
+            },
+            {
+                href: productPath('soul/mind'),
+                label: 'Stillness',
+                capabilityKey: CAPABILITIES.soulMind,
+            },
             {
                 href: productPath('soul/gratitude'),
                 label: 'Thanks',
-                capabilityKey: 'soul-gratitude',
+                capabilityKey: CAPABILITIES.soulGratitude,
             },
-            { href: productPath('soul/intent'), label: 'Intent', capabilityKey: 'soul-intent' },
+            {
+                href: productPath('soul/intent'),
+                label: 'Intent',
+                capabilityKey: CAPABILITIES.soulIntent,
+            },
             {
                 href: productPath('soul/chakra'),
                 label: 'Centres',

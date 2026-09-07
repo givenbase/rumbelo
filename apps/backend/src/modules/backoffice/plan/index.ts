@@ -1,6 +1,8 @@
 export { PlanKey } from '@rumbelo/contracts';
-export { Capability } from './capability.entity';
+export { Capability } from './capability';
+export { PlanFeature } from './feature';
 export { Plan } from './plan.entity';
-export { PlanCapability } from './plan-capability.entity';
+export { PlanCapability } from './plan-capability';
 export { PlanModule } from './plan.module';
+export { PlanProduct } from './product';
 export { PlanService } from './plan.service';

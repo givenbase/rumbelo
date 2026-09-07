@@ -5,7 +5,7 @@ import { BaseEntity } from '../../../common/database/base.entity';
 import { NativeEnum } from '../../../common/database/native-enum.util';
 import { entityConfig } from '../../../common/database/entity-config.util';
 
-import type { PlanCapability } from './plan-capability.entity';
+import type { PlanCapability } from './plan-capability/plan-capability.entity';
 
 /**
  * Plan Entity

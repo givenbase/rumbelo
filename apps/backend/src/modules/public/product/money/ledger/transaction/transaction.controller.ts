@@ -1,8 +1,9 @@
-import { contract } from '@rumbelo/contracts';
+import { CAPABILITIES, contract } from '@rumbelo/contracts';
 
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
+import { RequireCapability } from '../../../../../../common/capability';
 import { ControllerSwagger } from '../../../../../../common/decorators/controller-swagger.decorators';
 import { TransactionService } from './transaction.service';
 
@@ -24,6 +25,7 @@ export class TransactionController {
     }
 
     /** Bulk-import transactions from a bank statement CSV. */
+    @RequireCapability(CAPABILITIES.moneyImport)
     @Implement(contract.money.transactions.importCsv)
     importCsv() {
         return implement(contract.money.transactions.importCsv).handler(({ input }) =>

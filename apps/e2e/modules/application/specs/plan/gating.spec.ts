@@ -26,6 +26,21 @@ basicTest.describe('plan gating @plan', () => {
         ).toBeVisible({ timeout: 30_000 });
         await expect(personaPage.getByRole('button', { name: /\+ Add asset/i })).toHaveCount(0);
     });
+
+    basicTest('Basic can open goals', async ({ personaPage }) => {
+        await personaPage.goto('/product/growth/goals');
+        await expect(personaPage).not.toHaveURL(/sign-in/);
+        await expect(
+            personaPage.getByRole('region', { name: /plan upgrade required/i })
+        ).toHaveCount(0);
+    });
+
+    basicTest('Basic sees training locked', async ({ personaPage }) => {
+        await personaPage.goto('/product/energy/train');
+        await expect(
+            personaPage.getByRole('region', { name: /plan upgrade required/i })
+        ).toBeVisible({ timeout: 30_000 });
+    });
 });
 
 plusTest.describe('plan gating @plan', () => {

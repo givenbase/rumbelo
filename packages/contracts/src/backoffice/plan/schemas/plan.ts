@@ -23,9 +23,29 @@ import { CapabilityKind, PlanKey } from '../enums';
  * Flat list PLAN_CAPABILITY_GRANTS is derived for simple checks.
  */
 
+/** Named capacity ceilings — null = unlimited. */
+export const PlanLimits = z.object({
+    maxMembers: z.number().int().positive().nullable(),
+    maxGoals: z.number().int().positive().nullable(),
+    maxAssets: z.number().int().positive().nullable(),
+    maxIncomeStreams: z.number().int().positive().nullable(),
+    maxLearnEntries: z.number().int().positive().nullable(),
+});
+export type PlanLimits = z.infer<typeof PlanLimits>;
+
+export type PlanLimitKey = keyof PlanLimits;
+
 export const PlanCapabilities = z.object({
     /** Ceiling on household members (owner included). null = unlimited. */
     maxMembers: z.number().int().positive().nullable(),
+    /** Goals create ceiling. null = unlimited. */
+    maxGoals: z.number().int().positive().nullable(),
+    /** Net-worth assets ceiling. null = unlimited. */
+    maxAssets: z.number().int().positive().nullable(),
+    /** Growth income/lever streams ceiling. null = unlimited. */
+    maxIncomeStreams: z.number().int().positive().nullable(),
+    /** Learn entries ceiling. null = unlimited. */
+    maxLearnEntries: z.number().int().positive().nullable(),
     /** Household shapes this tier may use. Basic = solo only. */
     householdKinds: z.array(z.enum(HouseholdKind)).min(1),
     /** Flat capability keys granted on this tier (derived from PLAN_ACCESS). */
@@ -46,18 +66,81 @@ export const CapabilityDefinition = z.object({
 export type CapabilityDefinition = z.infer<typeof CapabilityDefinition>;
 
 export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
+    [CAPABILITIES.homeOverview]: {
+        key: CAPABILITIES.homeOverview,
+        kind: CapabilityKind.SCREEN,
+        name: 'Overview',
+        description: 'Home overview and daily start.',
+        sortOrder: 1,
+    },
+    [CAPABILITIES.homeRitual]: {
+        key: CAPABILITIES.homeRitual,
+        kind: CapabilityKind.SCREEN,
+        name: 'Coach',
+        description: 'Weekly ritual and coaching flow.',
+        sortOrder: 2,
+    },
+    [CAPABILITIES.homeWhy]: {
+        key: CAPABILITIES.homeWhy,
+        kind: CapabilityKind.SCREEN,
+        name: 'Why',
+        description: 'Why this practice matters.',
+        sortOrder: 3,
+    },
+    [CAPABILITIES.moneyOverview]: {
+        key: CAPABILITIES.moneyOverview,
+        kind: CapabilityKind.SCREEN,
+        name: 'Overview',
+        description: 'Money overview and jar pulse.',
+        sortOrder: 10,
+    },
+    [CAPABILITIES.moneyJars]: {
+        key: CAPABILITIES.moneyJars,
+        kind: CapabilityKind.SCREEN,
+        name: 'Jars',
+        description: 'The six jars — core money model.',
+        sortOrder: 11,
+    },
+    [CAPABILITIES.moneyTransactions]: {
+        key: CAPABILITIES.moneyTransactions,
+        kind: CapabilityKind.SCREEN,
+        name: 'Spending',
+        description: 'Manual spending and sorting.',
+        sortOrder: 12,
+    },
+    [CAPABILITIES.moneyFixedCosts]: {
+        key: CAPABILITIES.moneyFixedCosts,
+        kind: CapabilityKind.SCREEN,
+        name: 'Fixed',
+        description: 'Recurring fixed costs.',
+        sortOrder: 13,
+    },
     [CAPABILITIES.moneyDebt]: {
         key: CAPABILITIES.moneyDebt,
         kind: CapabilityKind.SCREEN,
         name: 'Debt',
         description: 'Debt plan with interest, payoff order, and freedom date.',
-        sortOrder: 10,
+        sortOrder: 14,
     },
-    [CAPABILITIES.energyWeek]: {
-        key: CAPABILITIES.energyWeek,
+    [CAPABILITIES.moneyBank]: {
+        key: CAPABILITIES.moneyBank,
         kind: CapabilityKind.SCREEN,
-        name: 'Week',
-        description: 'Divide 168 hours — sleep, training, and food.',
+        name: 'Bank',
+        description: 'Connect bank accounts via PSD2.',
+        sortOrder: 15,
+    },
+    [CAPABILITIES.moneyImport]: {
+        key: CAPABILITIES.moneyImport,
+        kind: CapabilityKind.ACTION,
+        name: 'Import',
+        description: 'Upload bankafschriften (CSV statement import).',
+        sortOrder: 16,
+    },
+    [CAPABILITIES.growthOverview]: {
+        key: CAPABILITIES.growthOverview,
+        kind: CapabilityKind.SCREEN,
+        name: 'Overview',
+        description: 'Growth overview.',
         sortOrder: 20,
     },
     [CAPABILITIES.growthGoals]: {
@@ -65,42 +148,105 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         kind: CapabilityKind.SCREEN,
         name: 'Goals',
         description: 'Goals with a date, jar, and progress.',
-        sortOrder: 30,
+        sortOrder: 21,
     },
     [CAPABILITIES.growthIncome]: {
         key: CAPABILITIES.growthIncome,
         kind: CapabilityKind.SCREEN,
         name: 'Income',
         description: 'Income curve, levers, and growth targets.',
-        sortOrder: 40,
-    },
-    [CAPABILITIES.growthBoard]: {
-        key: CAPABILITIES.growthBoard,
-        kind: CapabilityKind.SCREEN,
-        name: 'Net worth',
-        description: 'Net worth, returns, and your freedom number.',
-        sortOrder: 50,
+        sortOrder: 22,
     },
     [CAPABILITIES.growthLearn]: {
         key: CAPABILITIES.growthLearn,
         kind: CapabilityKind.SCREEN,
         name: 'Learn',
         description: 'Books, insights, and what they changed.',
-        sortOrder: 60,
+        sortOrder: 23,
+    },
+    [CAPABILITIES.growthBoard]: {
+        key: CAPABILITIES.growthBoard,
+        kind: CapabilityKind.SCREEN,
+        name: 'Net worth',
+        description: 'Net worth, returns, and your freedom number.',
+        sortOrder: 24,
+    },
+    [CAPABILITIES.energyOverview]: {
+        key: CAPABILITIES.energyOverview,
+        kind: CapabilityKind.SCREEN,
+        name: 'Overview',
+        description: 'Energy overview.',
+        sortOrder: 30,
+    },
+    [CAPABILITIES.energySleep]: {
+        key: CAPABILITIES.energySleep,
+        kind: CapabilityKind.SCREEN,
+        name: 'Sleep',
+        description: 'Sleep tracking.',
+        sortOrder: 31,
+    },
+    [CAPABILITIES.energyWeek]: {
+        key: CAPABILITIES.energyWeek,
+        kind: CapabilityKind.SCREEN,
+        name: 'Week',
+        description: 'Divide 168 hours — sleep, training, and food.',
+        sortOrder: 32,
+    },
+    [CAPABILITIES.energyTrain]: {
+        key: CAPABILITIES.energyTrain,
+        kind: CapabilityKind.SCREEN,
+        name: 'Training',
+        description: 'Training sessions and load.',
+        sortOrder: 33,
+    },
+    [CAPABILITIES.energyFood]: {
+        key: CAPABILITIES.energyFood,
+        kind: CapabilityKind.SCREEN,
+        name: 'Food',
+        description: 'Food and fuel logging.',
+        sortOrder: 34,
+    },
+    [CAPABILITIES.soulOverview]: {
+        key: CAPABILITIES.soulOverview,
+        kind: CapabilityKind.SCREEN,
+        name: 'Overview',
+        description: 'Soul overview.',
+        sortOrder: 40,
+    },
+    [CAPABILITIES.soulMind]: {
+        key: CAPABILITIES.soulMind,
+        kind: CapabilityKind.SCREEN,
+        name: 'Stillness',
+        description: 'Stillness and mind practice.',
+        sortOrder: 41,
+    },
+    [CAPABILITIES.soulGratitude]: {
+        key: CAPABILITIES.soulGratitude,
+        kind: CapabilityKind.SCREEN,
+        name: 'Thanks',
+        description: 'Gratitude practice.',
+        sortOrder: 42,
+    },
+    [CAPABILITIES.soulIntent]: {
+        key: CAPABILITIES.soulIntent,
+        kind: CapabilityKind.SCREEN,
+        name: 'Intent',
+        description: 'Weekly intent.',
+        sortOrder: 43,
     },
     [CAPABILITIES.soulChakra]: {
         key: CAPABILITIES.soulChakra,
         kind: CapabilityKind.SCREEN,
         name: 'Centres',
         description: 'The seven centres and where energy gets stuck.',
-        sortOrder: 70,
+        sortOrder: 44,
     },
     [CAPABILITIES.platformInvite]: {
         key: CAPABILITIES.platformInvite,
         kind: CapabilityKind.ACTION,
         name: 'Invite',
         description: 'Invite a partner, family, or friend to the household.',
-        sortOrder: 80,
+        sortOrder: 50,
     },
 };
 
@@ -111,43 +257,86 @@ export const CAPABILITY_DEFINITIONS: readonly CapabilityDefinition[] = Object.va
 
 type ProductFeatureMap = Record<CapabilityProduct, readonly CapabilityKey[]>;
 
+/** Free + Basic-granted features on every tier. */
+const BASIC_ACCESS: ProductFeatureMap = {
+    [CapabilityProduct.HOME]: [
+        CAPABILITIES.homeOverview,
+        CAPABILITIES.homeRitual,
+        CAPABILITIES.homeWhy,
+    ],
+    [CapabilityProduct.MONEY]: [
+        CAPABILITIES.moneyOverview,
+        CAPABILITIES.moneyJars,
+        CAPABILITIES.moneyTransactions,
+        CAPABILITIES.moneyFixedCosts,
+    ],
+    [CapabilityProduct.GROWTH]: [CAPABILITIES.growthOverview, CAPABILITIES.growthGoals],
+    [CapabilityProduct.ENERGY]: [CAPABILITIES.energyOverview, CAPABILITIES.energySleep],
+    [CapabilityProduct.SOUL]: [
+        CAPABILITIES.soulOverview,
+        CAPABILITIES.soulMind,
+        CAPABILITIES.soulGratitude,
+        CAPABILITIES.soulIntent,
+    ],
+    [CapabilityProduct.PLATFORM]: [],
+};
+
+const PLUS_EXTRA: ProductFeatureMap = {
+    [CapabilityProduct.HOME]: [],
+    [CapabilityProduct.MONEY]: [
+        CAPABILITIES.moneyDebt,
+        CAPABILITIES.moneyBank,
+        CAPABILITIES.moneyImport,
+    ],
+    [CapabilityProduct.GROWTH]: [],
+    [CapabilityProduct.ENERGY]: [
+        CAPABILITIES.energyWeek,
+        CAPABILITIES.energyTrain,
+        CAPABILITIES.energyFood,
+    ],
+    [CapabilityProduct.SOUL]: [],
+    [CapabilityProduct.PLATFORM]: [CAPABILITIES.platformInvite],
+};
+
+const MAX_EXTRA: ProductFeatureMap = {
+    [CapabilityProduct.HOME]: [],
+    [CapabilityProduct.MONEY]: [],
+    [CapabilityProduct.GROWTH]: [
+        CAPABILITIES.growthIncome,
+        CAPABILITIES.growthBoard,
+        CAPABILITIES.growthLearn,
+    ],
+    [CapabilityProduct.ENERGY]: [],
+    [CapabilityProduct.SOUL]: [CAPABILITIES.soulChakra],
+    [CapabilityProduct.PLATFORM]: [],
+};
+
+function mergeAccess(...maps: ProductFeatureMap[]): ProductFeatureMap {
+    const result = {} as Record<CapabilityProduct, CapabilityKey[]>;
+    for (const product of CAPABILITY_PRODUCTS) {
+        const seen = new Set<CapabilityKey>();
+        const keys: CapabilityKey[] = [];
+        for (const map of maps) {
+            for (const key of map[product]) {
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    keys.push(key);
+                }
+            }
+        }
+        result[product] = keys;
+    }
+    return result as ProductFeatureMap;
+}
+
 /**
- * Plan → product → features.
- *
- * This is the readable grant table. Example:
- *   Plus → growth → [growth-goals]
- *   Max  → growth → [growth-goals, growth-income, growth-board, growth-learn]
- *
- * Portal hubs (money/growth/energy/soul overviews) stay open on every plan;
- * only listed features are gated.
+ * Plan → product → features (full catalog grants).
+ * Every registered featureKey appears on at least one plan.
  */
 export const PLAN_ACCESS: Record<PlanKey, ProductFeatureMap> = {
-    [PlanKey.BASIC]: {
-        [CapabilityProduct.MONEY]: [],
-        [CapabilityProduct.GROWTH]: [],
-        [CapabilityProduct.ENERGY]: [],
-        [CapabilityProduct.SOUL]: [],
-        [CapabilityProduct.PLATFORM]: [],
-    },
-    [PlanKey.PLUS]: {
-        [CapabilityProduct.MONEY]: [CAPABILITIES.moneyDebt],
-        [CapabilityProduct.GROWTH]: [CAPABILITIES.growthGoals],
-        [CapabilityProduct.ENERGY]: [CAPABILITIES.energyWeek],
-        [CapabilityProduct.SOUL]: [],
-        [CapabilityProduct.PLATFORM]: [CAPABILITIES.platformInvite],
-    },
-    [PlanKey.MAX]: {
-        [CapabilityProduct.MONEY]: [CAPABILITIES.moneyDebt],
-        [CapabilityProduct.GROWTH]: [
-            CAPABILITIES.growthGoals,
-            CAPABILITIES.growthIncome,
-            CAPABILITIES.growthBoard,
-            CAPABILITIES.growthLearn,
-        ],
-        [CapabilityProduct.ENERGY]: [CAPABILITIES.energyWeek],
-        [CapabilityProduct.SOUL]: [CAPABILITIES.soulChakra],
-        [CapabilityProduct.PLATFORM]: [CAPABILITIES.platformInvite],
-    },
+    [PlanKey.BASIC]: BASIC_ACCESS,
+    [PlanKey.PLUS]: mergeAccess(BASIC_ACCESS, PLUS_EXTRA),
+    [PlanKey.MAX]: mergeAccess(BASIC_ACCESS, PLUS_EXTRA, MAX_EXTRA),
 };
 
 /** Flat grant list derived from PLAN_ACCESS — used by hasCapability / seeders. */
@@ -169,7 +358,7 @@ export function featuresForProduct(
     return PLAN_ACCESS[plan][product];
 }
 
-/** Products that have at least one granted (gated) feature on this plan. */
+/** Products that have at least one granted feature on this plan. */
 export function productsWithGrants(plan: PlanKey): CapabilityProduct[] {
     return CAPABILITY_PRODUCTS.filter(product => PLAN_ACCESS[plan][product].length > 0);
 }
@@ -190,14 +379,40 @@ const ALL_KINDS = [
     HouseholdKind.FRIENDS,
 ] as const;
 
+/** Capacity ceilings per plan — Basic never uses null (unlimited). */
+export const PLAN_LIMITS: Record<PlanKey, PlanLimits> = {
+    [PlanKey.BASIC]: {
+        maxMembers: 1,
+        maxGoals: 1,
+        maxAssets: null,
+        maxIncomeStreams: null,
+        maxLearnEntries: null,
+    },
+    [PlanKey.PLUS]: {
+        maxMembers: 5,
+        maxGoals: 5,
+        maxAssets: null,
+        maxIncomeStreams: null,
+        maxLearnEntries: null,
+    },
+    [PlanKey.MAX]: {
+        maxMembers: null,
+        maxGoals: null,
+        maxAssets: null,
+        maxIncomeStreams: null,
+        maxLearnEntries: null,
+    },
+};
+
 function buildPlanCapabilities(
     plan: PlanKey,
-    limits: { maxMembers: number | null; householdKinds: readonly HouseholdKind[] }
+    householdKinds: readonly HouseholdKind[]
 ): PlanCapabilities {
+    const limits = PLAN_LIMITS[plan];
     const capabilityKeys = [...PLAN_CAPABILITY_GRANTS[plan]];
     return {
-        maxMembers: limits.maxMembers,
-        householdKinds: [...limits.householdKinds],
+        ...limits,
+        householdKinds: [...householdKinds],
         capabilityKeys,
         canInvite: capabilityKeys.includes(CAPABILITIES.platformInvite),
     };
@@ -208,18 +423,9 @@ function buildPlanCapabilities(
  * Seed / DB catalog mirrors this; runtime checks import from here.
  */
 export const PLAN_CAPABILITIES: Record<PlanKey, PlanCapabilities> = {
-    [PlanKey.BASIC]: buildPlanCapabilities(PlanKey.BASIC, {
-        maxMembers: 1,
-        householdKinds: [HouseholdKind.SOLO],
-    }),
-    [PlanKey.PLUS]: buildPlanCapabilities(PlanKey.PLUS, {
-        maxMembers: 5,
-        householdKinds: ALL_KINDS,
-    }),
-    [PlanKey.MAX]: buildPlanCapabilities(PlanKey.MAX, {
-        maxMembers: null,
-        householdKinds: ALL_KINDS,
-    }),
+    [PlanKey.BASIC]: buildPlanCapabilities(PlanKey.BASIC, [HouseholdKind.SOLO]),
+    [PlanKey.PLUS]: buildPlanCapabilities(PlanKey.PLUS, ALL_KINDS),
+    [PlanKey.MAX]: buildPlanCapabilities(PlanKey.MAX, ALL_KINDS),
 };
 
 /** Tier order for comparisons — mirrors catalog sortOrder (BASIC=0 < PLUS < MAX). */
@@ -237,14 +443,26 @@ export function grantsFor(plan: PlanKey): readonly CapabilityKey[] {
     return PLAN_CAPABILITY_GRANTS[plan];
 }
 
-/** All keys that require a paid/higher tier somewhere in the catalog. */
-const GATED_CAPABILITIES = new Set(Object.values(PLAN_CAPABILITY_GRANTS).flatMap(keys => keys));
+export function limitsFor(plan: PlanKey): PlanLimits {
+    return PLAN_LIMITS[plan];
+}
 
-/** True when `plan` grants this capability key (unknown / ungated keys always open). */
+/** Ceiling for a named limit key — null = unlimited. */
+export function limitFor(plan: PlanKey, key: PlanLimitKey): number | null {
+    return PLAN_LIMITS[plan][key];
+}
+
+/** True when occupied count is still under the plan ceiling (or unlimited). */
+export function withinLimit(plan: PlanKey, key: PlanLimitKey, occupied: number): boolean {
+    const max = limitFor(plan, key);
+    if (max === null) return true;
+    return occupied < max;
+}
+
+/** True when `plan` grants this capability key (unknown keys stay open). */
 export function hasCapability(capabilityKey: string | null | undefined, plan: PlanKey): boolean {
     if (!capabilityKey) return true;
     if (!isCapabilityKey(capabilityKey)) return true;
-    if (!GATED_CAPABILITIES.has(capabilityKey)) return true;
     return grantsFor(plan).includes(capabilityKey);
 }
 
@@ -257,7 +475,7 @@ export function isCapabilityLocked(
 
 /** Lowest plan that grants a capability — used for upgrade CTAs. */
 export function minPlanForCapability(capabilityKey: string): PlanKey | null {
-    if (!isCapabilityKey(capabilityKey) || !GATED_CAPABILITIES.has(capabilityKey)) return null;
+    if (!isCapabilityKey(capabilityKey)) return null;
     const ordered = [PlanKey.BASIC, PlanKey.PLUS, PlanKey.MAX] as const;
     for (const plan of ordered) {
         if (PLAN_CAPABILITY_GRANTS[plan].includes(capabilityKey)) return plan;
@@ -276,8 +494,7 @@ export function canInviteOnPlan(plan: PlanKey): boolean {
 export function canAddHouseholdMember(plan: PlanKey, occupiedSeats: number): boolean {
     const caps = capabilitiesFor(plan);
     if (!caps.canInvite) return false;
-    if (caps.maxMembers === null) return true;
-    return occupiedSeats < caps.maxMembers;
+    return withinLimit(plan, 'maxMembers', occupiedSeats);
 }
 
 export function canUseHouseholdKind(plan: PlanKey, kind: HouseholdKind): boolean {

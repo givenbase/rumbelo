@@ -9,8 +9,11 @@ import {
     featuresForProduct,
     hasCapability,
     isCapabilityLocked,
+    limitFor,
     minPlanForCapability,
     productsWithGrants,
+    withinLimit,
+    type PlanLimitKey,
 } from '@/app/_lib/plan';
 import { capabilityAccessForPath, capabilityKeyForPathname } from '@/app/_lib/capability-access';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
@@ -36,6 +39,8 @@ export function usePlanCapabilities() {
             isCapabilityLocked: (capabilityKey: string | null | undefined) =>
                 isCapabilityLocked(capabilityKey, plan),
             requiredPlanFor: (capabilityKey: string) => minPlanForCapability(capabilityKey),
+            limitFor: (key: PlanLimitKey) => limitFor(plan, key),
+            withinLimit: (key: PlanLimitKey, occupied: number) => withinLimit(plan, key, occupied),
             capabilities: CAPABILITIES,
             capabilityKeyForPath: capabilityKeyForPathname,
             accessForPath: (pathname: string) =>

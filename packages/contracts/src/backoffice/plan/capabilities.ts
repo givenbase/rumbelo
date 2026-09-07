@@ -4,10 +4,10 @@ import { type CapabilityKind } from './enums';
  * Capability model — expandable `{product}-{feature}` constants.
  *
  * Mental model:
- *   plan  →  product (money | growth | energy | soul | platform)
+ *   plan  →  product (home | money | growth | energy | soul | platform)
  *         →  features inside that product (debt, goals, …)
  *
- * To add a gated feature:
+ * To add a feature:
  *   1. Add it under FEATURES[product]
  *   2. Grant it under PLAN_ACCESS[plan][product] (schemas/plan.ts)
  *   3. Add catalog copy in CAPABILITY_CATALOG
@@ -15,6 +15,7 @@ import { type CapabilityKind } from './enums';
 
 /** Product prefixes used in capability keys. */
 export const CapabilityProduct = {
+    HOME: 'home',
     MONEY: 'money',
     GROWTH: 'growth',
     ENERGY: 'energy',
@@ -37,23 +38,43 @@ export function capabilityKey<P extends string, F extends string>(
 }
 
 /**
- * Features grouped by product — this is what you expand.
+ * Features grouped by product — full inventory (free + paid).
  * Values are stable DB / nav / RequireCapability keys — never rename in place.
  */
 export const FEATURES = {
+    [CapabilityProduct.HOME]: {
+        overview: capabilityKey(CapabilityProduct.HOME, 'overview'),
+        ritual: capabilityKey(CapabilityProduct.HOME, 'ritual'),
+        why: capabilityKey(CapabilityProduct.HOME, 'why'),
+    },
     [CapabilityProduct.MONEY]: {
+        overview: capabilityKey(CapabilityProduct.MONEY, 'overview'),
+        jars: capabilityKey(CapabilityProduct.MONEY, 'jars'),
+        transactions: capabilityKey(CapabilityProduct.MONEY, 'transactions'),
+        fixedCosts: capabilityKey(CapabilityProduct.MONEY, 'fixed-costs'),
         debt: capabilityKey(CapabilityProduct.MONEY, 'debt'),
+        bank: capabilityKey(CapabilityProduct.MONEY, 'bank'),
+        import: capabilityKey(CapabilityProduct.MONEY, 'import'),
     },
     [CapabilityProduct.GROWTH]: {
+        overview: capabilityKey(CapabilityProduct.GROWTH, 'overview'),
         goals: capabilityKey(CapabilityProduct.GROWTH, 'goals'),
         income: capabilityKey(CapabilityProduct.GROWTH, 'income'),
         board: capabilityKey(CapabilityProduct.GROWTH, 'board'),
         learn: capabilityKey(CapabilityProduct.GROWTH, 'learn'),
     },
     [CapabilityProduct.ENERGY]: {
+        overview: capabilityKey(CapabilityProduct.ENERGY, 'overview'),
+        sleep: capabilityKey(CapabilityProduct.ENERGY, 'sleep'),
         week: capabilityKey(CapabilityProduct.ENERGY, 'week'),
+        train: capabilityKey(CapabilityProduct.ENERGY, 'train'),
+        food: capabilityKey(CapabilityProduct.ENERGY, 'food'),
     },
     [CapabilityProduct.SOUL]: {
+        overview: capabilityKey(CapabilityProduct.SOUL, 'overview'),
+        mind: capabilityKey(CapabilityProduct.SOUL, 'mind'),
+        gratitude: capabilityKey(CapabilityProduct.SOUL, 'gratitude'),
+        intent: capabilityKey(CapabilityProduct.SOUL, 'intent'),
         chakra: capabilityKey(CapabilityProduct.SOUL, 'chakra'),
     },
     [CapabilityProduct.PLATFORM]: {
@@ -63,12 +84,30 @@ export const FEATURES = {
 
 /** Flat aliases for call sites (`CAPABILITIES.growthGoals`). */
 export const CAPABILITIES = {
+    homeOverview: FEATURES.home.overview,
+    homeRitual: FEATURES.home.ritual,
+    homeWhy: FEATURES.home.why,
+    moneyOverview: FEATURES.money.overview,
+    moneyJars: FEATURES.money.jars,
+    moneyTransactions: FEATURES.money.transactions,
+    moneyFixedCosts: FEATURES.money.fixedCosts,
     moneyDebt: FEATURES.money.debt,
+    moneyBank: FEATURES.money.bank,
+    moneyImport: FEATURES.money.import,
+    growthOverview: FEATURES.growth.overview,
     growthGoals: FEATURES.growth.goals,
     growthIncome: FEATURES.growth.income,
     growthBoard: FEATURES.growth.board,
     growthLearn: FEATURES.growth.learn,
+    energyOverview: FEATURES.energy.overview,
+    energySleep: FEATURES.energy.sleep,
     energyWeek: FEATURES.energy.week,
+    energyTrain: FEATURES.energy.train,
+    energyFood: FEATURES.energy.food,
+    soulOverview: FEATURES.soul.overview,
+    soulMind: FEATURES.soul.mind,
+    soulGratitude: FEATURES.soul.gratitude,
+    soulIntent: FEATURES.soul.intent,
     soulChakra: FEATURES.soul.chakra,
     platformInvite: FEATURES.platform.invite,
 } as const;

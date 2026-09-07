@@ -1,16 +1,16 @@
-import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
+import { Collection, Entity, Enum, ManyToOne, OneToMany, Property, Unique } from '@mikro-orm/core';
 import { CapabilityKind } from '@rumbelo/contracts';
 
-import { BaseEntity } from '../../../common/database/base.entity';
-import { NativeEnum } from '../../../common/database/native-enum.util';
-import { entityConfig } from '../../../common/database/entity-config.util';
+import { BaseEntity } from '../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../common/database/native-enum.util';
+import { entityConfig } from '../../../../common/database/entity-config.util';
 
-import type { PlanCapability } from './plan-capability.entity';
+import type { PlanCapability } from '../plan-capability/plan-capability.entity';
+import { PlanFeature } from '../feature/feature.entity';
 
 /**
  * Capability catalog — one row per featureKey (`{product}-{feature}`).
  * Source of truth: contracts CAPABILITIES + CAPABILITY_CATALOG.
- * Seed: seed/capability.seed-data.ts
  *
  * @see PlanCapability — which plans grant this key
  * @see https://mikro-orm.io/docs/defining-entities
@@ -31,14 +31,6 @@ export class Capability extends BaseEntity {
     @Property({ type: 'text' })
     description!: string;
 
-    /** Product segment of the key — money | growth | energy | soul | platform. */
-    @Property({ length: 32 })
-    product!: string;
-
-    /** Feature segment of the key — debt | goals | invite | …. */
-    @Property({ length: 64 })
-    feature!: string;
-
     /** Display / seed order. */
     @Property({ default: 0 })
     sortOrder = 0;
@@ -48,11 +40,14 @@ export class Capability extends BaseEntity {
     isActive = true;
 
     // ? ENUMS
-    /** screen = route area; action = discrete verb (invite, …). */
+    /** screen = route area; action = discrete verb (invite, import, …). */
     @Enum(NativeEnum({ CapabilityKind, domain: 'backoffice' }))
     kind!: CapabilityKind;
 
     // ? RELATIONSHIPS
+    @ManyToOne(() => PlanFeature, { deleteRule: 'cascade' })
+    feature!: PlanFeature;
+
     @OneToMany('PlanCapability', 'capability')
     planGrants = new Collection<PlanCapability>(this);
 }

@@ -1,8 +1,9 @@
-import { contract } from '@rumbelo/contracts';
+import { CAPABILITIES, contract } from '@rumbelo/contracts';
 
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
+import { RequireCapability } from '../../../../../../common/capability';
 import { ControllerSwagger } from '../../../../../../common/decorators/controller-swagger.decorators';
 import { AccountService } from './account.service';
 
@@ -16,6 +17,7 @@ export class AccountController {
     // ====================================================================
 
     /** Register a new bank account for this household. */
+    @RequireCapability(CAPABILITIES.moneyBank)
     @Implement(contract.money.accounts.create)
     create() {
         return implement(contract.money.accounts.create).handler(({ input }) =>

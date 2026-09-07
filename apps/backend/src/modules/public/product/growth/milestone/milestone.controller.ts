@@ -1,12 +1,14 @@
-import { contract } from '@rumbelo/contracts';
+import { CAPABILITIES, contract } from '@rumbelo/contracts';
 
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
+import { RequireCapability } from '../../../../../common/capability';
 import { ControllerSwagger } from '../../../../../common/decorators/controller-swagger.decorators';
 import { MilestoneService } from './milestone.service';
 
 /** Transport only. Handler order is always CRUD. */
+@RequireCapability(CAPABILITIES.growthBoard)
 @ControllerSwagger('growth/milestones', 'public')
 export class MilestoneController {
     constructor(@Inject(MilestoneService) private readonly milestones: MilestoneService) {}

@@ -1,8 +1,9 @@
-import { contract } from '@rumbelo/contracts';
+import { CAPABILITIES, contract } from '@rumbelo/contracts';
 
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
 
+import { RequireCapability } from '../../../common/capability';
 import { ControllerSwagger } from '../../../common/decorators/controller-swagger.decorators';
 import { HouseholdService } from './household.service';
 
@@ -27,6 +28,7 @@ export class HouseholdController {
     }
 
     /** Send a membership invitation to an e-mail address. */
+    @RequireCapability(CAPABILITIES.platformInvite)
     @Implement(contract.household.invite)
     invite() {
         return implement(contract.household.invite).handler(({ input }) =>

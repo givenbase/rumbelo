@@ -12,6 +12,7 @@ import type { Env } from './common/config/env.config';
 import ormConfig from '../mikro-orm.config';
 import { OrpcErrorFilter } from './common/filters/orpc-error.filter';
 import { HouseholdContextModule } from './common/household/household-context.module';
+import { CapabilityAccessModule } from './common/capability';
 import { MarkErrorsDefinedPlugin } from './common/plugins/mark-errors-defined.plugin';
 import { RedisModule } from './common/redis';
 import { mapDatabaseConstraintErrorInterceptor } from './common/utils/database-constraint-error.util';
@@ -36,6 +37,7 @@ export class AppModule {
                     plugins: [new MarkErrorsDefinedPlugin() as never],
                 }),
                 HouseholdContextModule,
+                CapabilityAccessModule,
                 PagesModule,
                 ...FeatureModules,
             ],

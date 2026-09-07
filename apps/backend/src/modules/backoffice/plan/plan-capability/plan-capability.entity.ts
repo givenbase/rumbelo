@@ -1,12 +1,12 @@
 import { Entity, Enum, ManyToOne, Unique } from '@mikro-orm/core';
 import { PlanKey } from '@rumbelo/contracts';
 
-import { BaseEntity } from '../../../common/database/base.entity';
-import { NativeEnum } from '../../../common/database/native-enum.util';
-import { entityConfig } from '../../../common/database/entity-config.util';
+import { BaseEntity } from '../../../../common/database/base.entity';
+import { NativeEnum } from '../../../../common/database/native-enum.util';
+import { entityConfig } from '../../../../common/database/entity-config.util';
 
-import { Capability } from './capability.entity';
-import { Plan } from './plan.entity';
+import { Capability } from '../capability/capability.entity';
+import { Plan } from '../plan.entity';
 
 /**
  * Plan ↔ Capability grant — which tier unlocks which capability key.

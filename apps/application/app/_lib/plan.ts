@@ -5,6 +5,7 @@ import {
     PLAN_ACCESS,
     PLAN_CAPABILITIES,
     PLAN_CAPABILITY_GRANTS,
+    PLAN_LIMITS,
     PLAN_RANK,
     PlanKey,
     capabilitiesFor,
@@ -12,17 +13,21 @@ import {
     hasCapability,
     isCapabilityLocked,
     isCapabilityKey,
+    limitFor,
+    limitsFor,
     minPlanForCapability,
     productsWithGrants,
+    withinLimit,
     type CapabilityKey,
+    type PlanLimitKey,
 } from '@rumbelo/contracts';
 
 /**
  * Plan gating — plan → product → feature (`{product}-{feature}`).
  *
- *   BASIC → portals open, no gated features
- *   PLUS  → money-debt, energy-week, growth-goals, platform-invite
- *   MAX   → Plus + growth-income/board/learn, soul-chakra
+ * Full catalog (26 keys). Basic grants free surfaces + growth-goals (capped).
+ * Plus adds debt / bank / import / energy week·train·food / invite.
+ * Max adds growth income·board·learn / soul-chakra.
  */
 
 export {
@@ -31,15 +36,20 @@ export {
     PLAN_ACCESS,
     PLAN_CAPABILITIES,
     PLAN_CAPABILITY_GRANTS,
+    PLAN_LIMITS,
     PLAN_RANK,
     PlanKey,
     capabilitiesFor,
     featuresForProduct,
     hasCapability,
     isCapabilityLocked,
+    limitFor,
+    limitsFor,
     minPlanForCapability,
     productsWithGrants,
+    withinLimit,
     type CapabilityKey,
+    type PlanLimitKey,
 };
 
 /** Human-readable plan labels (product names). */

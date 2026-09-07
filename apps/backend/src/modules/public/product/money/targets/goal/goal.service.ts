@@ -1,17 +1,21 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
+import { CAPABILITIES, GoalStatus } from '@rumbelo/contracts';
 
+import { PlanAccessService } from '../../../../../../common/capability';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Jar } from '../../plan/jar/jar.entity';
-import { GoalStatus } from '@rumbelo/contracts';
 
 import { Goal } from './goal.entity';
 
 @Injectable()
 export class GoalService {
     private readonly repo: HouseholdScopedRepository<Goal>;
-    constructor(@Inject(EntityManager) private readonly em: EntityManager) {
+    constructor(
+        @Inject(EntityManager) private readonly em: EntityManager,
+        @Inject(PlanAccessService) private readonly planAccess: PlanAccessService
+    ) {
         this.repo = new HouseholdScopedRepository(em, Goal);
     }
 
@@ -29,6 +33,10 @@ export class GoalService {
         status?: string;
         why?: string | null;
     }) {
+        await this.planAccess.assertCapability(CAPABILITIES.growthGoals);
+        const occupied = await this.repo.count({ status: GoalStatus.ACTIVE });
+        await this.planAccess.assertWithinLimit('maxGoals', occupied);
+
         const entity = this.em.create(Goal, {
             householdId: currentHouseholdId(),
             jar: input.jarId ? this.em.getReference(Jar, input.jarId) : null,

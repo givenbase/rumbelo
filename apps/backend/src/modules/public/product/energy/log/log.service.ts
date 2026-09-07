@@ -1,19 +1,30 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
+import { CAPABILITIES, EnergyMetric, EnergyTrend } from '@rumbelo/contracts';
 
+import { PlanAccessService } from '../../../../../common/capability';
 import { HouseholdScopedRepository } from '../../../../../common/household/household-scoped.repository';
 import {
     currentHouseholdId,
     currentUserId,
 } from '../../../../../common/household/household.context';
-import { EnergyMetric, EnergyTrend } from '@rumbelo/contracts';
 
 import { EnergyLog } from './energy-log.entity';
+
+const METRIC_CAPABILITY = {
+    [EnergyMetric.SLEEP]: CAPABILITIES.energySleep,
+    [EnergyMetric.TRAIN]: CAPABILITIES.energyTrain,
+    [EnergyMetric.FOOD]: CAPABILITIES.energyFood,
+    [EnergyMetric.MIND]: CAPABILITIES.soulMind,
+} as const;
 
 @Injectable()
 export class LogService {
     private readonly repo: HouseholdScopedRepository<EnergyLog>;
-    constructor(@Inject(EntityManager) private readonly em: EntityManager) {
+    constructor(
+        @Inject(EntityManager) private readonly em: EntityManager,
+        @Inject(PlanAccessService) private readonly planAccess: PlanAccessService
+    ) {
         this.repo = new HouseholdScopedRepository(em, EnergyLog);
     }
 
@@ -28,11 +39,17 @@ export class LogService {
         value: number;
         note?: string | null;
     }) {
+        const metric = input.metric as EnergyMetric;
+        const capabilityKey = METRIC_CAPABILITY[metric];
+        if (capabilityKey) {
+            await this.planAccess.assertCapability(capabilityKey);
+        }
+
         const userId = currentUserId();
         let row = await this.repo.findOne({
             userId,
             loggedOn: input.on,
-            metric: input.metric as EnergyMetric,
+            metric,
         });
         if (row) {
             row.value = String(input.value);

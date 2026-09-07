@@ -43,6 +43,10 @@ export const contract = {
             )
             .output(z.object({ invitationId: schemas.AuthId })),
     },
+    /** Product tier catalog (Basic / Plus / Max). */
+    plans: {
+        list: oc.output(z.array(schemas.PlanCatalogItem)),
+    },
     coach: {
         feed: oc
             .input(schemas.HouseholdScoped.extend({ period: schemas.PeriodKey.nullish() }))
