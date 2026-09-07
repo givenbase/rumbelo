@@ -57,7 +57,8 @@ function ChangeList({
                 }>
                 {title}
             </p>
-            <ul className="grid gap-1.5">
+            {/* Two columns on desktop so Plus/Max unlock lists fit without scrolling. */}
+            <ul className="grid gap-1 sm:grid-cols-2 sm:gap-1.5">
                 {items.map(item => (
                     <li
                         key={item.name + item.description}
@@ -101,7 +102,7 @@ export function PlanChangeDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[min(90vh,40rem)] overflow-y-auto sm:max-w-md">
+            <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-h-none sm:overflow-visible sm:max-w-xl">
                 <DialogHeader>
                     <DialogTitle>
                         {upgrading ? `Upgrade to ${toLabel}?` : `Downgrade to ${toLabel}?`}
@@ -117,7 +118,7 @@ export function PlanChangeDialog({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="grid gap-4 py-1">
+                <div className="grid gap-3 py-1 sm:gap-4">
                     <ChangeList title="You unlock" tone="gain" items={diff.gained} />
                     <ChangeList
                         title={

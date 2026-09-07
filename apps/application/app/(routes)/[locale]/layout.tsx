@@ -16,7 +16,7 @@ import '../../globals.css';
  * routes under `[locale]` ("Could not resolve param value for segment: locale").
  * The app is auth-gated and fine as dynamic.
  *
- * Locale comes from `next/root-params` via `i18n/request.ts` (not `setRequestLocale`).
+ * Locale comes from next-intl `requestLocale` via `i18n/request.ts` (not `setRequestLocale`).
  */
 const display = Bricolage_Grotesque({
     subsets: ['latin'],

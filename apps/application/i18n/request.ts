@@ -1,12 +1,18 @@
 import { LocalesEnum, locales, type Locale } from '@rumbelo/i18n';
 import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
-import * as rootParams from 'next/root-params';
 
-export default getRequestConfig(async ({ locale }) => {
-    // Prefer an explicit override (Server Actions / Route Handlers); else root `[locale]`.
+/**
+ * Resolve locale for Server Components / next-intl APIs.
+ *
+ * Uses `requestLocale` (middleware / segment), not `next/root-params`:
+ * root-params has no exports in the proxy/middleware graph and breaks
+ * `createNavigation` when `@rumbelo/i18n` is imported from `proxy.ts`.
+ */
+export default getRequestConfig(async ({ locale, requestLocale }) => {
+    // Prefer an explicit override (Server Actions / Route Handlers).
     if (!locale) {
-        const paramValue = await rootParams.locale();
+        const paramValue = await requestLocale;
         locale = hasLocale(locales, paramValue) ? paramValue : LocalesEnum.Dutch;
     } else if (!locales.includes(locale as Locale)) {
         locale = LocalesEnum.Dutch;
