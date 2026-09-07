@@ -25,6 +25,7 @@ import { currentUserId, currentAuthHeaders } from '../../../common/household/hou
 import { mapToOrpcClientError } from '../../../common/utils/database-constraint-error.util';
 import { EmailService } from '../../backoffice/communication/email';
 import { JarTemplateService } from '../../backoffice/product/money/template/jar/jar.service';
+import { IncomeAmountPeriod } from '../../public/product/money/plan/income/income-amount-period.entity';
 import { IncomeSource } from '../../public/product/money/plan/income/income-source.entity';
 import { Jar } from '../../public/product/money/plan/jar/jar.entity';
 import { AccountSettingsService } from '../user/account/account-settings/account-settings.service';
@@ -259,12 +260,20 @@ export class HouseholdService {
         await this.accountSettings.markOnboarded(userId);
 
         if (input.monthlyNetIncome > 0) {
-            this.em.create(IncomeSource, {
+            const startedOn = new Date().toISOString().slice(0, 10);
+            const source = this.em.create(IncomeSource, {
                 householdId: org.id,
                 name: 'Netto inkomen',
                 kind: IncomeKind.SALARY,
                 amount: input.monthlyNetIncome,
                 isActive: true,
+                startedOn,
+            } as never);
+            this.em.create(IncomeAmountPeriod, {
+                householdId: org.id,
+                incomeSource: source,
+                amount: input.monthlyNetIncome,
+                effectiveOn: startedOn,
             } as never);
         }
 

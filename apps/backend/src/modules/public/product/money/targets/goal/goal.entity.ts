@@ -1,5 +1,5 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
-import { GoalStatus } from '@rumbelo/contracts';
+import { GoalKind, GoalStatus } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';
@@ -7,7 +7,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
 import { Jar } from '../../plan/jar/jar.entity';
 
 /**
- * Goal Entity
+ * Goal Entity — SAVE (jar savings) or EARN (monthly net-income desire).
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
@@ -33,9 +33,15 @@ export class Goal extends HouseholdEntity {
     monthlyContribution = 0;
 
     @Property({ type: 'date', nullable: true })
+    fulfilledOn: string | null = null;
+
+    @Property({ type: 'date', nullable: true })
     targetOn: string | null = null;
 
     // ? ENUMS
+    @Enum(NativeEnum({ GoalKind, domain: 'money', defaultValue: GoalKind.SAVE }))
+    kind: GoalKind = GoalKind.SAVE;
+
     @Enum(NativeEnum({ GoalStatus, domain: 'money', defaultValue: GoalStatus.ACTIVE }))
     status: GoalStatus = GoalStatus.ACTIVE;
 

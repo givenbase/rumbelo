@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 
+import { GoalModule } from '../../targets/goal/goal.module';
 import { JarModule } from '../jar/jar.module';
 import { IncomeController } from './income.controller';
 import { IncomeService } from './income.service';
 
 @Module({
-    imports: [JarModule],
+    imports: [JarModule, forwardRef(() => GoalModule)],
     controllers: [IncomeController],
     providers: [IncomeService],
     exports: [IncomeService],

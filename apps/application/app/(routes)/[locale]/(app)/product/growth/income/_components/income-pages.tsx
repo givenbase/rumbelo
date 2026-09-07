@@ -37,6 +37,7 @@ export function IncomeUpdatePage({ id, embedded = false }: { id: string; embedde
             mode="edit"
             entityId={row.id}
             embedded={embedded}
+            periods={row.periods ?? []}
             defaultValues={{
                 name: row.name,
                 amount: centsToEurosInput(row.amount),

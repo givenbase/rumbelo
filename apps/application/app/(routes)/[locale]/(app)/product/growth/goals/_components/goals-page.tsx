@@ -1,13 +1,14 @@
 'use client';
 
 import { useApi } from '@/app/_lib/api-hooks';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { GoalKind, GoalStatus } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { AccentCard, EmptyState, Meter } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { cn, earnGoalProgress, formatMoney, monthlyNetAsOf } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
@@ -39,6 +40,10 @@ function eta(saved: number, target: number, monthlyContribution: number): string
     return `${EN_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 }
 
+function todayIso(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
 export function GoalsPageClient() {
     const api = useApi();
     const { householdId } = useAuth();
@@ -52,8 +57,20 @@ export function GoalsPageClient() {
         live
     );
 
+    const incomeQuery = useLiveQuery(
+        api.money.income.list.queryOptions({ input: { householdId: householdId! } }),
+        [],
+        live
+    );
+
+    const currentNet = useMemo(
+        () => monthlyNetAsOf(incomeQuery.data ?? [], todayIso()),
+        [incomeQuery.data]
+    );
+
     const goals = (goalsQuery.data ?? []) as ReadonlyArray<{
         id: string;
+        kind?: string;
         name: string;
         icon: string | null;
         target: number;
@@ -62,12 +79,23 @@ export function GoalsPageClient() {
         jarId?: string | null;
         why?: string | null;
         status?: string;
+        fulfilledOn?: string | null;
     }>;
 
-    const active = goals.filter(
-        goal => goal.saved < goal.target && goal.status !== 'REACHED' && goal.status !== 'ARCHIVED'
-    );
-    const reached = goals.filter(goal => goal.saved >= goal.target || goal.status === 'REACHED');
+    const active = goals.filter(goal => {
+        if (goal.status === GoalStatus.ARCHIVED || goal.status === GoalStatus.REACHED) return false;
+        if (goal.kind === GoalKind.EARN) {
+            return !earnGoalProgress({ target: goal.target, currentNet }).reached;
+        }
+        return goal.saved < goal.target;
+    });
+    const reached = goals.filter(goal => {
+        if (goal.status === GoalStatus.REACHED) return true;
+        if (goal.kind === GoalKind.EARN) {
+            return earnGoalProgress({ target: goal.target, currentNet }).reached;
+        }
+        return goal.saved >= goal.target;
+    });
     const shown = tab === 'ON_TRACK' ? active : reached;
 
     return (
@@ -80,8 +108,8 @@ export function GoalsPageClient() {
                     Every goal is a decision you've already made.
                 </h1>
                 <p className="mt-2 max-w-prose text-base text-pretty text-fg-muted">
-                    A goal without a monthly amount is a wish. Every goal below has a pace — that is
-                    the difference.
+                    Save into a jar, or set the monthly net you want to earn — when income hits it,
+                    the goal marks itself reached.
                 </p>
             </div>
 
@@ -119,14 +147,26 @@ export function GoalsPageClient() {
                     />
                 ) : (
                     shown.map(goal => {
-                        const progress = goal.target > 0 ? goal.saved / goal.target : 0;
+                        const isEarn = goal.kind === GoalKind.EARN;
+                        const earn = isEarn
+                            ? earnGoalProgress({ target: goal.target, currentNet })
+                            : null;
+                        const progress = isEarn
+                            ? goal.target > 0
+                                ? Math.min(1, earn!.current / goal.target)
+                                : 0
+                            : goal.target > 0
+                              ? goal.saved / goal.target
+                              : 0;
+
                         return (
                             <AccentCard
                                 key={goal.id}
-                                tint="var(--color-jar-lts)"
+                                tint={isEarn ? 'var(--color-accent)' : 'var(--color-jar-lts)'}
                                 className="cursor-pointer transition-colors hover:border-accent-hover">
                                 <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-line bg-raised px-2.5 py-1 font-mono text-xs tracking-widest text-fg-secondary uppercase">
-                                    {goal.icon ?? '🎯'} Long term ›
+                                    {goal.icon ?? (isEarn ? '📈' : '🎯')}{' '}
+                                    {isEarn ? 'Earn net ›' : 'Long term ›'}
                                 </div>
 
                                 <h3 className="font-display text-2xl leading-tight font-semibold tracking-tight text-fg">
@@ -135,18 +175,24 @@ export function GoalsPageClient() {
 
                                 <div className="mt-3 flex items-baseline gap-2">
                                     <span className="font-mono text-2xl text-accent">
-                                        {formatMoney(goal.saved)}
+                                        {formatMoney(isEarn ? earn!.current : goal.saved)}
                                     </span>
                                     <span className="font-mono text-xs text-fg-muted">
                                         of {formatMoney(goal.target)}
+                                        {isEarn ? ' /mo' : ''}
                                     </span>
                                 </div>
 
                                 <Meter value={progress} className="mt-3.5" />
 
                                 <p className="mt-3 text-sm text-fg-muted">
-                                    ◇ {formatMoney(goal.monthlyContribution)} p/m · done by{' '}
-                                    {eta(goal.saved, goal.target, goal.monthlyContribution)}
+                                    {isEarn
+                                        ? tab === 'REACHED' && goal.fulfilledOn
+                                            ? `◇ Reached ${goal.fulfilledOn}`
+                                            : earn!.reached
+                                              ? '◇ Target met'
+                                              : `◇ ${formatMoney(earn!.remaining)} to go`
+                                        : `◇ ${formatMoney(goal.monthlyContribution)} p/m · done by ${eta(goal.saved, goal.target, goal.monthlyContribution)}`}
                                 </p>
 
                                 <button

@@ -18,10 +18,17 @@ export {
     sumMonthlyFixedOut,
     sumMonthly,
     fixedOutNetSummary,
+    monthlyNetAsOf,
+    incomeDelta,
+    earnGoalProgress,
     type JarCoverage,
     type JarCoverageInput,
     type CategoryVariance,
     type FixedOutNetSummary,
+    type IncomeDelta,
+    type EarnGoalProgress,
+    type IncomeSourceForNet,
+    type IncomePeriodLike,
 } from './money-plan';
 export {
     createBetterAuthRouteHandlers,

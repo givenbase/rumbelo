@@ -19,6 +19,7 @@ import {
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Cadence, IncomeKind } from '@rumbelo/contracts';
+import { formatMoney } from '@rumbelo/utils';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';
@@ -44,20 +45,35 @@ const incomeFormSchema = z.object({
         ),
     kind: z.enum(IncomeKind),
     cadence: z.enum(Cadence),
+    amountEffectiveFrom: z.string().optional(),
 });
 
 export type IncomeFormValues = z.infer<typeof incomeFormSchema>;
 
+type IncomePeriod = {
+    id: string;
+    amount: number;
+    effectiveOn: string;
+};
+
 type IncomeFormProps = {
     defaultValues?: Partial<IncomeFormValues>;
+    periods?: IncomePeriod[];
     embedded?: boolean;
     mode?: 'create' | 'edit';
     entityId?: string;
     onSuccess?: () => void;
 };
 
+const EMPTY_PERIODS: IncomePeriod[] = [];
+
+function todayIso(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
 export function IncomeForm({
     defaultValues,
+    periods = EMPTY_PERIODS,
     embedded = true,
     mode = 'create',
     entityId,
@@ -95,6 +111,7 @@ export function IncomeForm({
             amount: defaultValues?.amount ?? '',
             kind: defaultValues?.kind ?? IncomeKind.SALARY,
             cadence: defaultValues?.cadence ?? Cadence.MONTHLY,
+            amountEffectiveFrom: defaultValues?.amountEffectiveFrom ?? todayIso(),
         },
         resolver: zodResolver(incomeFormSchema),
     });
@@ -117,6 +134,7 @@ export function IncomeForm({
                     amount: cents,
                     kind: values.kind,
                     cadence: values.cadence,
+                    amountEffectiveFrom: values.amountEffectiveFrom?.slice(0, 10) || todayIso(),
                 });
             }
             return client.money.income.create({
@@ -134,6 +152,8 @@ export function IncomeForm({
             void queryClient.invalidateQueries({ queryKey: api.money.income.list.key() });
             void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
             void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
+            void queryClient.invalidateQueries({ queryKey: api.money.goals.projections.key() });
             showToast(mode === 'edit' ? 'Income updated' : 'Income saved', 'success');
             dismiss();
         },
@@ -149,6 +169,7 @@ export function IncomeForm({
             void queryClient.invalidateQueries({ queryKey: api.money.income.list.key() });
             void queryClient.invalidateQueries({ queryKey: api.money.jars.balances.key() });
             void queryClient.invalidateQueries({ queryKey: api.money.dashboard.get.key() });
+            void queryClient.invalidateQueries({ queryKey: api.money.goals.list.key() });
             showToast('Income deleted', 'success');
             dismiss();
         },
@@ -229,7 +250,7 @@ export function IncomeForm({
                 name="amount"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Amount (€)</FormLabel>
+                        <FormLabel>{mode === 'edit' ? 'New amount (€)' : 'Amount (€)'}</FormLabel>
                         <FormControl>
                             <Input inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
@@ -237,6 +258,22 @@ export function IncomeForm({
                     </FormItem>
                 )}
             />
+
+            {mode === 'edit' ? (
+                <FormField
+                    control={form.control}
+                    name="amountEffectiveFrom"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Effective from</FormLabel>
+                            <FormControl>
+                                <Input type="date" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            ) : null}
 
             <FormField
                 control={form.control}
@@ -282,6 +319,28 @@ export function IncomeForm({
                     </FormItem>
                 )}
             />
+
+            {mode === 'edit' && periods.length > 0 ? (
+                <div className="grid gap-2 border-t border-line pt-4">
+                    <p className="font-mono text-xs font-medium tracking-widest text-fg-muted uppercase">
+                        Amount history
+                    </p>
+                    <ul className="grid gap-1.5">
+                        {periods.map(period => (
+                            <li
+                                key={period.id}
+                                className="flex items-baseline justify-between gap-3 text-sm">
+                                <span className="font-mono text-xs text-fg-muted">
+                                    {period.effectiveOn}
+                                </span>
+                                <span className="font-mono text-fg">
+                                    {formatMoney(period.amount)}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ) : null}
         </FormCreateEditShell>
     );
 }

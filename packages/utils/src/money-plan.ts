@@ -148,3 +148,61 @@ export function fixedOutNetSummary(
         commitmentRatio: net > 0 ? Math.round((outTotal / net) * 100) : 0,
     };
 }
+
+export type IncomePeriodLike = {
+    amount: number;
+    effectiveOn: string;
+};
+
+export type IncomeSourceForNet = {
+    amount: number;
+    cadence: Cadence | string;
+    isActive?: boolean;
+    periods?: readonly IncomePeriodLike[];
+};
+
+/**
+ * Household monthly net as of a date.
+ * Per active source: period with max effectiveOn <= asOf, else cached amount.
+ */
+export function monthlyNetAsOf(sources: readonly IncomeSourceForNet[], asOfDate: string): number {
+    const asOf = asOfDate.slice(0, 10);
+    return sources.reduce((total, source) => {
+        if (source.isActive === false) return total;
+        const periods = source.periods ?? [];
+        const applicable = periods
+            .filter(period => period.effectiveOn.slice(0, 10) <= asOf)
+            .sort((left, right) => right.effectiveOn.localeCompare(left.effectiveOn));
+        const amount = applicable[0]?.amount ?? source.amount;
+        return total + monthlyAmount(amount, source.cadence);
+    }, 0);
+}
+
+export type IncomeDelta = {
+    absolute: number;
+    /** later/earlier − 1 when earlier > 0; otherwise null. */
+    ratio: number | null;
+};
+
+export function incomeDelta(earlierNet: number, laterNet: number): IncomeDelta {
+    const absolute = laterNet - earlierNet;
+    return {
+        absolute,
+        ratio: earlierNet > 0 ? laterNet / earlierNet - 1 : null,
+    };
+}
+
+export type EarnGoalProgress = {
+    current: number;
+    remaining: number;
+    reached: boolean;
+};
+
+export function earnGoalProgress(input: { target: number; currentNet: number }): EarnGoalProgress {
+    const remaining = Math.max(0, input.target - input.currentNet);
+    return {
+        current: input.currentNet,
+        remaining,
+        reached: input.currentNet >= input.target,
+    };
+}

@@ -12,7 +12,7 @@ import {
 } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { AccentCard, Card, Eyebrow } from '@rumbelo/ui';
-import { formatMoney, sumMonthly, toPeriodKey } from '@rumbelo/utils';
+import { formatMoney, incomeDelta, monthlyNetAsOf, sumMonthly, toPeriodKey } from '@rumbelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
@@ -22,6 +22,16 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 const TARGET = 600_000;
+
+function todayIso(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
+function dayBefore(iso: string): string {
+    const date = new Date(`${iso.slice(0, 10)}T12:00:00Z`);
+    date.setUTCDate(date.getUTCDate() - 1);
+    return date.toISOString().slice(0, 10);
+}
 
 export function IncomePageClient() {
     const api = useApi();
@@ -60,11 +70,25 @@ export function IncomePageClient() {
         live
     );
 
-    const NET = sumMonthly(incomeQuery.data ?? []);
+    const allSources = incomeQuery.data ?? [];
+    const NET = sumMonthly(allSources);
     const GAP = TARGET - NET;
     const jars = jarsQuery.data ?? [];
-    const sources = (incomeQuery.data ?? []).filter(source => source.isActive);
+    const sources = allSources.filter(source => source.isActive);
     const levers = leversQuery.data ?? [];
+
+    const newestEffective = sources
+        .flatMap(source => source.periods ?? [])
+        .map(amountPeriod => amountPeriod.effectiveOn.slice(0, 10))
+        .sort()
+        .at(-1);
+    const delta =
+        newestEffective !== undefined
+            ? incomeDelta(
+                  monthlyNetAsOf(sources, dayBefore(newestEffective)),
+                  monthlyNetAsOf(sources, todayIso())
+              )
+            : null;
 
     return (
         <div className="grid animate-rise gap-8">
@@ -95,6 +119,19 @@ export function IncomePageClient() {
                             </p>
                             <p className="font-mono text-xs text-fg-muted">
                                 {formatMoney(NET * 12)} per year
+                                {delta && delta.absolute !== 0 ? (
+                                    <>
+                                        {' '}
+                                        ·{' '}
+                                        <span
+                                            className={
+                                                delta.absolute > 0 ? 'text-success' : 'text-warning'
+                                            }>
+                                            {delta.absolute > 0 ? '+' : ''}
+                                            {formatMoney(delta.absolute)} vs prior
+                                        </span>
+                                    </>
+                                ) : null}
                             </p>
                         </div>
                         <div className="grid gap-1.5">

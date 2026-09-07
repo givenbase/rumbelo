@@ -3,7 +3,7 @@
 import { useApi, useApiClient } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 import {
@@ -18,7 +18,7 @@ import {
 } from '@rumbelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GoalStatus } from '@rumbelo/contracts';
+import { GoalKind, GoalStatus } from '@rumbelo/contracts';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';
@@ -42,6 +42,7 @@ const euros = z
     );
 
 const goalFormSchema = z.object({
+    kind: z.enum(GoalKind),
     name: z.string().min(1, 'Name is required').max(120),
     target: euros,
     monthlyContribution: z.string().optional(),
@@ -102,6 +103,7 @@ export function GoalForm({
 
     const form = useForm<GoalFormValues>({
         defaultValues: {
+            kind: defaultValues?.kind ?? GoalKind.SAVE,
             name: defaultValues?.name ?? '',
             target: defaultValues?.target ?? '',
             monthlyContribution: defaultValues?.monthlyContribution ?? '',
@@ -111,12 +113,16 @@ export function GoalForm({
         resolver: zodResolver(goalFormSchema),
     });
 
+    const kind = useWatch({ control: form.control, name: 'kind' });
+    const isEarn = kind === GoalKind.EARN;
+
     useEffect(() => {
+        if (isEarn) return;
         if (!form.getValues('jarId') && jars.length > 0) {
             const lts = jars.find(j => j.key === 'LONG_TERM_SAVINGS');
             form.setValue('jarId', lts?.id ?? jars[0]!.id);
         }
-    }, [jars, form]);
+    }, [jars, form, isEarn]);
 
     const onError = createFormInvalidHandler(({ title, description }) => {
         showToast(description ?? title, 'error');
@@ -127,16 +133,20 @@ export function GoalForm({
             if (!householdId) throw new Error('No household');
             const target = parseEurosToCents(values.target);
             if (target === null || target <= 0) throw new Error('Invalid target');
-            const monthly = values.monthlyContribution?.trim()
-                ? (parseEurosToCents(values.monthlyContribution) ?? 0)
-                : 0;
+            const earn = values.kind === GoalKind.EARN;
+            const monthly = earn
+                ? 0
+                : values.monthlyContribution?.trim()
+                  ? (parseEurosToCents(values.monthlyContribution) ?? 0)
+                  : 0;
             const name = values.name.trim();
-            const jarId = values.jarId || null;
+            const jarId = earn ? null : values.jarId || null;
             const why = values.why?.trim() || null;
             if (mode === 'edit' && entityId) {
                 return client.money.goals.update({
                     id: entityId,
                     householdId,
+                    kind: values.kind,
                     name,
                     target,
                     monthlyContribution: monthly,
@@ -146,6 +156,7 @@ export function GoalForm({
             }
             return client.money.goals.create({
                 householdId,
+                kind: values.kind,
                 jarId,
                 name,
                 icon: selectedIcon.current,
@@ -219,19 +230,37 @@ export function GoalForm({
             }>
             <FormField
                 control={form.control}
+                name="kind"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Goal type</FormLabel>
+                        <FormControl>
+                            <select
+                                className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
+                                {...field}>
+                                <option value={GoalKind.SAVE}>Save into a jar</option>
+                                <option value={GoalKind.EARN}>Earn monthly net</option>
+                            </select>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={form.control}
                 name="name"
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                            {mode === 'create' ? (
+                            {mode === 'create' && !isEarn ? (
                                 <PresetNameField
                                     value={field.value}
                                     placeholder="e.g. emergency fund"
                                     options={presetOptions}
                                     onChange={value => {
                                         field.onChange(value);
-                                        // Free-typed names drop the preset icon.
                                         if (
                                             !presetOptions.some(
                                                 preset =>
@@ -253,7 +282,12 @@ export function GoalForm({
                                     }}
                                 />
                             ) : (
-                                <Input placeholder="e.g. emergency fund" {...field} />
+                                <Input
+                                    placeholder={
+                                        isEarn ? 'e.g. €5k net income' : 'e.g. emergency fund'
+                                    }
+                                    {...field}
+                                />
                             )}
                         </FormControl>
                         <FormMessage />
@@ -266,7 +300,7 @@ export function GoalForm({
                 name="target"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Target amount (€)</FormLabel>
+                        <FormLabel>{isEarn ? 'Monthly net (€)' : 'Target amount (€)'}</FormLabel>
                         <FormControl>
                             <Input inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
@@ -275,42 +309,46 @@ export function GoalForm({
                 )}
             />
 
-            <FormField
-                control={form.control}
-                name="monthlyContribution"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Monthly contribution (€)</FormLabel>
-                        <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+            {!isEarn ? (
+                <>
+                    <FormField
+                        control={form.control}
+                        name="monthlyContribution"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Monthly contribution (€)</FormLabel>
+                                <FormControl>
+                                    <Input inputMode="decimal" placeholder="0,00" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-            <FormField
-                control={form.control}
-                name="jarId"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Jar</FormLabel>
-                        <FormControl>
-                            <select
-                                className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
-                                {...field}>
-                                {jars.map(jar => (
-                                    <option key={jar.id} value={jar.id}>
-                                        {jar.icon ? `${jar.icon} ` : ''}
-                                        {jar.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                    <FormField
+                        control={form.control}
+                        name="jarId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Jar</FormLabel>
+                                <FormControl>
+                                    <select
+                                        className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
+                                        {...field}>
+                                        {jars.map(jar => (
+                                            <option key={jar.id} value={jar.id}>
+                                                {jar.icon ? `${jar.icon} ` : ''}
+                                                {jar.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </>
+            ) : null}
 
             <FormField
                 control={form.control}

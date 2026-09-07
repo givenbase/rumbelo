@@ -4,6 +4,7 @@ import { useApi } from '@/app/_lib/api-hooks';
 
 import { useLiveQuery } from '@rumbelo/hooks';
 
+import { GoalKind } from '@rumbelo/contracts';
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';
 import { GoalForm } from '@/components/features/forms/goal-form';
@@ -26,6 +27,7 @@ export function GoalUpdatePage({ id, embedded = false }: { id: string; embedded?
     const row = (query.data ?? []).find(goal => goal.id === id) as
         | {
               id: string;
+              kind?: string;
               name: string;
               target: number;
               monthlyContribution: number;
@@ -47,6 +49,7 @@ export function GoalUpdatePage({ id, embedded = false }: { id: string; embedded?
             entityId={row.id}
             embedded={embedded}
             defaultValues={{
+                kind: (row.kind as GoalKind | undefined) ?? GoalKind.SAVE,
                 name: row.name,
                 target: centsToEurosInput(row.target),
                 monthlyContribution: centsToEurosInput(row.monthlyContribution),

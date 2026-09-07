@@ -40,6 +40,12 @@ export enum GoalStatus {
     ARCHIVED = 'ARCHIVED',
 }
 
+/** SAVE = fund a jar target; EARN = reach a monthly net-income desire. */
+export enum GoalKind {
+    SAVE = 'SAVE',
+    EARN = 'EARN',
+}
+
 export enum AccountKind {
     CHECKING = 'CHECKING',
     SAVINGS = 'SAVINGS',

@@ -54,12 +54,16 @@ export const contract = {
 
     income: {
         list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.IncomeSource)),
-        create: oc.input(schemas.IncomeSource.omit({ id: true })).output(schemas.IncomeSource),
+        create: oc
+            .input(schemas.IncomeSource.omit({ id: true, periods: true }))
+            .output(schemas.IncomeSource),
         update: oc
             .input(
-                schemas.IncomeSource.partial().extend({
+                schemas.IncomeSource.partial().omit({ periods: true }).extend({
                     id: schemas.Id,
                     householdId: schemas.HouseholdId,
+                    /** When amount changes: date the new amount takes effect (default today). */
+                    amountEffectiveFrom: schemas.IsoDate.nullish(),
                 })
             )
             .output(schemas.IncomeSource),
@@ -147,7 +151,9 @@ export const contract = {
 
     goals: {
         list: oc.input(schemas.HouseholdScoped).output(z.array(schemas.Goal)),
-        create: oc.input(schemas.Goal.omit({ id: true, saved: true })).output(schemas.Goal),
+        create: oc
+            .input(schemas.Goal.omit({ id: true, saved: true, fulfilledOn: true }))
+            .output(schemas.Goal),
         update: oc
             .input(
                 schemas.Goal.partial().extend({ id: schemas.Id, householdId: schemas.HouseholdId })

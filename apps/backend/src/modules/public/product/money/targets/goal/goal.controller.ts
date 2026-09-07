@@ -22,6 +22,7 @@ export class GoalController {
     create() {
         return implement(contract.money.goals.create).handler(({ input }) =>
             this.goals.create({
+                kind: input.kind,
                 jarId: input.jarId,
                 name: input.name,
                 icon: input.icon,

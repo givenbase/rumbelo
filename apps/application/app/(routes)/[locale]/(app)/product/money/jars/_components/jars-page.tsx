@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { GoalKind } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
 import { Card, Eyebrow } from '@rumbelo/ui';
 import { formatMoney, toPeriodKey, cn, sumMonthly } from '@rumbelo/utils';
@@ -45,7 +46,8 @@ function simRange(netMonthlyCents: number) {
     return { min, max, value: Math.min(max, Math.max(min, current)) };
 }
 
-function isGoalOpen(goal: { saved: number; target: number }) {
+function isGoalOpen(goal: { saved: number; target: number; status?: string }) {
+    if (goal.status === 'REACHED' || goal.status === 'ARCHIVED') return false;
     return goal.saved < goal.target;
 }
 
@@ -89,7 +91,9 @@ export function JarsPageClient() {
     );
 
     const jars = jarsQuery.data ?? [];
-    const goals = goalsQuery.data ?? [];
+    const goals = (goalsQuery.data ?? []).filter(
+        goal => (goal.kind ?? GoalKind.SAVE) === GoalKind.SAVE
+    );
     const net = sumMonthly(incomeQuery.data ?? []);
     const totalPct = jars.reduce((total, j) => total + j.percentage, 0);
     const onTarget = jars.filter(j => !j.overspent).length;

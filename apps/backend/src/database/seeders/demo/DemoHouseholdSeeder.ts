@@ -32,6 +32,7 @@ import { EnergyLog } from '../../../modules/public/product/energy/log/energy-log
 import { BankAccount } from '../../../modules/public/product/money/ledger/account/bank-account.entity';
 import { Transaction } from '../../../modules/public/product/money/ledger/transaction/transaction.entity';
 import { FixedCost } from '../../../modules/public/product/money/plan/fixed-cost/fixed-cost.entity';
+import { IncomeAmountPeriod } from '../../../modules/public/product/money/plan/income/income-amount-period.entity';
 import { IncomeSource } from '../../../modules/public/product/money/plan/income/income-source.entity';
 import { Jar } from '../../../modules/public/product/money/plan/jar/jar.entity';
 import { Debt } from '../../../modules/public/product/money/targets/debt/debt.entity';
@@ -175,7 +176,8 @@ export class DemoHouseholdSeeder extends Seeder {
         if (incomeCount === 0) {
             const amount =
                 demo.persona === 'basic' ? 180_000 : demo.persona === 'plus' ? 320_000 : 650_000;
-            em.create(IncomeSource, {
+            const startedOn = new Date().toISOString().slice(0, 10);
+            const source = em.create(IncomeSource, {
                 householdId,
                 name:
                     demo.persona === 'plus'
@@ -193,6 +195,13 @@ export class DemoHouseholdSeeder extends Seeder {
                 expectedDay: demo.persona === 'plus' ? 15 : 1,
                 isActive: true,
                 cadence: Cadence.MONTHLY,
+                startedOn,
+            } as never);
+            em.create(IncomeAmountPeriod, {
+                householdId,
+                incomeSource: source,
+                amount,
+                effectiveOn: startedOn,
             } as never);
 
             em.create(FixedCost, {
