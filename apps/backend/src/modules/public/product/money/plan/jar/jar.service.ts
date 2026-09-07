@@ -38,7 +38,7 @@ export class JarService {
     async createCategory(jarId: string, name: string, budgeted: number) {
         const jar = await this.jars.findOneOrFail({ id: jarId });
         const cat = this.em.create(Category, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             jar,
             name,
             budgeted,
@@ -174,7 +174,7 @@ export class JarService {
                 const jar = jarById.get(entry.jarId);
                 if (!jar) continue;
                 const category = this.em.create(Category, {
-                    householdId: currentHouseholdId(),
+                    household: currentHouseholdId(),
                     jar,
                     name: entry.name,
                     budgeted: 0,
@@ -345,7 +345,7 @@ function toJarDto(jar: Jar): JarDto {
         // String-enum members are nominal in TypeScript, so they need widening to the
         // contract's literal union even though the runtime values are identical.
         id: jar.id,
-        householdId: jar.householdId,
+        householdId: jar.household,
         key: jar.key as JarDto['key'],
         name: jar.name,
         subtitle: jar.subtitle,

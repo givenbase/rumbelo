@@ -12,7 +12,7 @@ import { PeriodTurn } from './period-turn.entity';
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'turn_event' }))
-@Index({ properties: ['householdId', 'period'] })
+@Index({ properties: ['household', 'period'] })
 export class TurnEvent extends HouseholdEntity {
     // ? PROPERTIES
     @Property({ length: 7 })

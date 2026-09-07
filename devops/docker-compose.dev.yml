@@ -1,15 +1,20 @@
 # Local Postgres + Redis only. The apps run on the host via `pnpm dev` so hot
 # reload stays fast; production runs on Railway, not on this file.
+#
+# Postgres 18 matches Railway (`postgres-ssl:18`) so native uuidv7() is available.
+# Major bumps need a fresh volume: `docker compose -f devops/docker-compose.dev.yml down -v`
+# then `up -d` and `pnpm --filter @rumbelo/backend db:fresh` (or migrate + seed).
 services:
     postgres:
-        image: postgres:17-alpine
+        image: postgres:18-alpine
         container_name: rumbelo-postgres
         environment:
             POSTGRES_USER: rumbelo
             POSTGRES_PASSWORD: rumbelo
             POSTGRES_DB: rumbelo
         ports: ['5432:5432']
-        volumes: ['rumbelo-pgdata:/var/lib/postgresql/data']
+        # PG 18+ images expect the mount at /var/lib/postgresql (versioned data dir inside).
+        volumes: ['rumbelo-pgdata:/var/lib/postgresql']
         healthcheck:
             test: ['CMD-SHELL', 'pg_isready -U rumbelo']
             interval: 5s

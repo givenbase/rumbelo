@@ -20,7 +20,7 @@ export class AccountService {
 
     async create(input: { name: string; iban?: string | null; kind: string; balance: number }) {
         const account = this.em.create(BankAccount, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             name: input.name,
             iban: input.iban ?? null,
             kind: input.kind as AccountKind,
@@ -43,7 +43,7 @@ export class AccountService {
 export function toDto(account: BankAccount) {
     return {
         id: account.id,
-        householdId: account.householdId,
+        householdId: account.household,
         name: account.name,
         iban: account.iban,
         kind: account.kind,

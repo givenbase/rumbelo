@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, Property, Unique } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property, Unique } from '@mikro-orm/core';
 
 import { AuthUser } from '../user/auth-user.entity';
 
@@ -9,7 +9,7 @@ import { AuthUser } from '../user/auth-user.entity';
 @Entity({ tableName: 'session', schema: 'auth' })
 @Unique({ properties: ['token'] })
 export class AuthSession {
-    @Property({ type: 'text', primary: true })
+    @PrimaryKey({ type: 'uuid' })
     id!: string;
 
     @Property({ type: 'timestamptz' })
@@ -34,6 +34,6 @@ export class AuthSession {
     user!: AuthUser;
 
     /** The household this session acts in — organization plugin column. */
-    @Property({ type: 'text', nullable: true, fieldName: 'active_household_id' })
+    @Property({ type: 'uuid', nullable: true, fieldName: 'active_household_id' })
     activeHouseholdId?: string;
 }

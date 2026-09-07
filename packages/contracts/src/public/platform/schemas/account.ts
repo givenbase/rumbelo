@@ -15,8 +15,9 @@ const OptionalPersonName = PersonName.nullable().optional();
  */
 export const AccountProfile = z.object({
     accountId: Id,
+    /** Better Auth user — linked via Account.user; keep for membership/session joins. */
     userId: UserId,
-    /** Public nickname / how we greet you — Better Auth `user.name`. */
+    /** Public nickname / how we greet you — Better Auth `user.name` (via Account→User). */
     displayName: z.string().trim().min(1).max(80),
     firstName: z.string().trim().max(80).nullable(),
     middleName: z.string().trim().max(80).nullable(),

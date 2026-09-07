@@ -1,26 +1,26 @@
-import { Entity, Enum, Index, Property, Unique } from '@mikro-orm/core';
+import { Entity, Enum, Index, ManyToOne, Property, Unique } from '@mikro-orm/core';
 import { EnergyMetric } from '@rumbelo/contracts';
 
 import { HouseholdEntity } from '../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../common/database/native-enum.util';
 import { entityConfig } from '../../../../../common/database/entity-config.util';
+import { Account } from '../../../../auth/user/account/account.entity';
 
 /**
  * "Energie draagt geld." Tracked because the product claims these are the floor
  * under financial decisions. Correlation with spending is surfaced; causation is
  * never asserted.
  *
+ * Person-attributed household row — who logged it is {@link Account}, not Better Auth `user`.
+ *
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'energy', tableName: 'log' }))
-@Index({ properties: ['householdId', 'loggedOn'] })
-// One reading per metric per user per day; a second entry is a correction, not a new row.
-@Unique({ properties: ['userId', 'loggedOn', 'metric'] })
+@Index({ properties: ['household', 'loggedOn'] })
+// One reading per metric per account per day; a second entry is a correction, not a new row.
+@Unique({ properties: ['account', 'loggedOn', 'metric'] })
 export class EnergyLog extends HouseholdEntity {
     // ? PROPERTIES
-    @Property({ type: 'varchar', length: 64 })
-    userId!: string;
-
     @Property({ type: 'date', fieldName: 'logged_on' })
     loggedOn!: string;
 
@@ -34,4 +34,16 @@ export class EnergyLog extends HouseholdEntity {
     // ? ENUMS
     @Enum(NativeEnum({ EnergyMetric, domain: 'energy' }))
     metric!: EnergyMetric;
+
+    // ? RELATIONSHIPS
+    /**
+     * Logging person (`auth.account`). mapToPk keeps `account: string` in app code.
+     * Cascades when the account is deleted.
+     */
+    @ManyToOne(() => Account, {
+        mapToPk: true,
+        fieldName: 'account_id',
+        deleteRule: 'cascade',
+    })
+    account!: string;
 }

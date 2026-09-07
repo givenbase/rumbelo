@@ -12,7 +12,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'period_turn' }))
-@Unique({ properties: ['householdId', 'period'] })
+@Unique({ properties: ['household', 'period'] })
 export class PeriodTurn extends HouseholdEntity {
     // ? PROPERTIES
     /** YYYY-MM */

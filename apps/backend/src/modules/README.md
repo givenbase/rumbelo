@@ -82,16 +82,21 @@ auth/
 - `auth/user/managed/`, `auth/household/managed/` — better-auth owns writes; we map read entities
 - `auth/user/account/` — person data + prefs (theme, locale) — **user** writes
 - `auth/household/household-settings/` — board prefs — **household** writes
+- `auth/household/household-billing/` — plan tier + Stripe subscription pointers — **household** writes
 
 **IDs (do not mix):**
 
 | Kind | Contract | Storage | Example consumers |
 |---|---|---|---|
-| Better Auth identity | `AuthId` / `UserId` / `HouseholdId` / `MemberId` | opaque text | `useAuth().userId`, `useAuth().householdId`, `x-household-id` |
-| Rumbelo product rows | `Id` | Postgres `uuid` | jar, transaction, goal, account profile |
+| Better Auth identity | `AuthId` / `UserId` / `HouseholdId` / `MemberId` | Postgres `uuid` (BA `generateId` → uuidv7) | `useAuth().userId`, `useAuth().householdId`, `x-household-id` |
+| Rumbelo person profile | `Id` as `accountId` | Postgres `uuid` (`auth.account`) | energy/gratitude attribution, account settings |
+| Rumbelo product rows | `Id` | Postgres `uuid` (BaseEntity uuidv7) | jar, transaction, goal |
 
-Never validate a BA id as `z.uuid()`. Frontend session field stays
-`activeOrganizationId` (BA SDK name); DB column is `active_household_id`.
+Both BA and Rumbelo ids validate as `z.uuid()` and share uuidv7 minting going forward, but they are still **different id spaces**.
+
+**Rule:** application / product person FKs on entities use **`account`** (`@ManyToOne mapToPk`); DTOs map it back as **`accountId: row.account`**. Better Auth **`userId`** stays for session, membership (`auth.member`), and the `Account.user` link. When you need profile + login fields together, resolve Account and map `account.user` (see `AccountService.ensureCurrentAccount` / `HouseholdMember`).
+
+Frontend session field stays `activeOrganizationId` (BA SDK name); DB column is `active_household_id`.
 - Jar **instances** → `public/product/money/plan/jar` — **household** writes (table in `public`)
 - Jar **templates** → `backoffice/product/money/template/jar` — **we** write; onboard copies into household jars
 - Product **tiers** → `backoffice/plan` — **we** write; not the same as `product/money/plan` (jars/income)

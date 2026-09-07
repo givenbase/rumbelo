@@ -29,16 +29,14 @@ export const STRIPE_PLAN_CATALOG: Record<
 > = {
     [PlanKey.PLUS]: {
         name: 'Rumbelo Plus',
-        description:
-            'Share the board with family or friends — debt, energy week, and goals.',
+        description: 'Share the board with family or friends — debt, energy week, and goals.',
         currency: 'eur',
         month: 9,
         year: 90,
     },
     [PlanKey.MAX]: {
         name: 'Rumbelo Max',
-        description:
-            'Unlimited household, income curve, learning, and net worth.',
+        description: 'Unlimited household, income curve, learning, and net worth.',
         currency: 'eur',
         month: 19,
         year: 190,
@@ -57,7 +55,9 @@ const LOOKUP_TO_PLAN: Record<string, PaidPlanKey> = {
 };
 
 /** Map a Stripe Price `lookup_key` → Plus / Max (null if unknown). */
-export function planKeyFromStripeLookupKey(lookupKey: string | null | undefined): PaidPlanKey | null {
+export function planKeyFromStripeLookupKey(
+    lookupKey: string | null | undefined
+): PaidPlanKey | null {
     if (!lookupKey) return null;
     return LOOKUP_TO_PLAN[lookupKey] ?? null;
 }

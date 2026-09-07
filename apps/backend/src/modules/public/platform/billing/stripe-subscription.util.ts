@@ -2,10 +2,7 @@ import type Stripe from 'stripe';
 
 import { PlanKey } from '@rumbelo/contracts';
 
-import {
-    planKeyFromStripeLookupKey,
-    type PaidPlanKey,
-} from './config/stripe-plans.config';
+import { planKeyFromStripeLookupKey, type PaidPlanKey } from './config/stripe-plans.config';
 
 /** Statuses that mean the subscriber still has paid access. */
 const ACTIVE_SUB_STATUSES = new Set<Stripe.Subscription.Status>(['active', 'trialing']);
@@ -43,4 +40,26 @@ export function planKeyFromSubscription(subscription: Stripe.Subscription): Paid
     const meta = subscription.metadata?.planKey;
     if (meta === PlanKey.PLUS || meta === PlanKey.MAX) return meta;
     return null;
+}
+
+/** Period / trial / cancel flags mirrored onto HouseholdBilling. */
+export function periodFieldsFromSubscription(subscription: Stripe.Subscription): {
+    periodStartedAt: Date | null;
+    periodEndsAt: Date | null;
+    trialEndsAt: Date | null;
+    isCancelAtPeriodEnd: boolean;
+} {
+    // Stripe API 2025+: period lives on subscription items, not the subscription root.
+    const item = subscription.items.data[0];
+    const periodStart = item?.current_period_start;
+    const periodEnd = item?.current_period_end;
+
+    return {
+        periodStartedAt:
+            periodStart !== null && periodStart !== undefined ? new Date(periodStart * 1000) : null,
+        periodEndsAt:
+            periodEnd !== null && periodEnd !== undefined ? new Date(periodEnd * 1000) : null,
+        trialEndsAt: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+        isCancelAtPeriodEnd: Boolean(subscription.cancel_at_period_end),
+    };
 }

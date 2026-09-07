@@ -1,9 +1,8 @@
-import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
 import {
     Currency,
     HouseholdKind,
     IncomeRhythm,
-    PlanKey,
     PayoffStrategy,
     type HouseholdAnswers,
     type HouseholdFeatureSettings,
@@ -12,6 +11,7 @@ import {
 } from '@rumbelo/contracts';
 
 import { entityConfig } from '../../../../common/database/entity-config.util';
+import { HouseholdEntity } from '../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../common/database/native-enum.util';
 
 export const DEFAULT_MONEY_SETTINGS: HouseholdMoneySettings = {
@@ -31,27 +31,28 @@ export const DEFAULT_FEATURE_SETTINGS: HouseholdFeatureSettings = {
 };
 
 /**
+ * Household Settings Entity
+ *
  * Money-board prefs for a household (`auth.household_settings`).
  * Language, appearance, and money character live on `auth.account_settings`
  * (person-scoped). Currency and board money style stay here — one accounting
  * currency and one debt order for every member.
  *
- * Enum columns still use the existing `public.platform_*` / `public.backoffice_*`
- * Postgres types (enums always live in `public`, even when the table is in `auth`).
+ * Commercial plan + Stripe ids live on `HouseholdBilling` (1:1), not here.
  *
- * Layout:
- *   - general scalars (why)
- *   - product / board enums (kind, currency, planKey)
- *   - grouped jsonb bags (money*, ritual*, feature*, answers)
+ * Household-owned via {@link HouseholdEntity} (uuid `id` + `household` →
+ * AuthHousehold). UNIQUE(`household`) enforces **1:1** — one settings row
+ * per household (product rows like jars stay 1:N on the same base).
+ *
+ * Enum columns use `public.platform_*` Postgres types
+ * (enums always live in `public`, even when the table is in `auth`).
  *
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'auth', domain: 'household', tableName: 'settings' }))
-export class HouseholdSettings {
+@Unique({ properties: ['household'] })
+export class HouseholdSettings extends HouseholdEntity {
     // ? PROPERTIES
-    @PrimaryKey({ type: 'varchar', length: 64 })
-    householdId!: string;
-
     /** The user's stated reason, surfaced on the dashboard as the "why" line. */
     @Property({ type: 'text', nullable: true })
     why: string | null = null;
@@ -86,19 +87,10 @@ export class HouseholdSettings {
     @Property({ type: 'timestamptz', nullable: true })
     onboardedAt: Date | null = null;
 
-    @Property({ type: 'timestamptz', defaultRaw: 'now()' })
-    createdAt: Date = new Date();
-
-    @Property({ type: 'timestamptz', defaultRaw: 'now()', onUpdate: () => new Date() })
-    updatedAt: Date = new Date();
-
     // ? ENUMS
     @Enum(NativeEnum({ HouseholdKind, domain: 'platform', defaultValue: HouseholdKind.SOLO }))
     kind: HouseholdKind = HouseholdKind.SOLO;
 
     @Enum(NativeEnum({ Currency, domain: 'platform', defaultValue: Currency.EUR }))
     currency: Currency = Currency.EUR;
-
-    @Enum(NativeEnum({ PlanKey, domain: 'backoffice', defaultValue: PlanKey.BASIC }))
-    planKey: PlanKey = PlanKey.BASIC;
 }

@@ -7,19 +7,18 @@ import {
     type PlanLimitKey,
 } from '@rumbelo/contracts';
 
-import { HouseholdSettingsService } from '../../modules/auth/household/household-settings/household-settings.service';
+import { HouseholdBillingService } from '../../modules/auth/household/household-billing/household-billing.service';
 import { currentHouseholdId } from '../household/household.context';
 
 /** Shared plan access checks for services (limits + capability). */
 @Injectable()
 export class PlanAccessService {
     constructor(
-        @Inject(HouseholdSettingsService) private readonly settings: HouseholdSettingsService
+        @Inject(HouseholdBillingService) private readonly billing: HouseholdBillingService
     ) {}
 
     async planKeyForCurrentHousehold(): Promise<PlanKey> {
-        const settings = await this.settings.get(currentHouseholdId());
-        return settings.planKey as PlanKey;
+        return this.billing.getPlanKey(currentHouseholdId());
     }
 
     async assertCapability(capabilityKey: CapabilityKey): Promise<void> {

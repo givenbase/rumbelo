@@ -12,7 +12,7 @@ import { entityConfig } from '../../../../common/database/entity-config.util';
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'platform', tableName: 'coach_message' }))
-@Index({ properties: ['householdId', 'period'] })
+@Index({ properties: ['household', 'period'] })
 export class CoachMessage extends HouseholdEntity {
     // ? PROPERTIES
     @Property({ length: 7 })

@@ -21,9 +21,9 @@ export type AccountSettingsPatch = {
 /**
  * Account Settings Service
  *
- * CRUD for person-scoped UI prefs. The authenticated user's settings are the
- * usual surface; create/ensure is used by onboarding so language lands here,
- * not on the household board.
+ * CRUD for person-scoped UI prefs on `auth.account_settings` (FK → Account).
+ * Session identity is still Better Auth `userId`; we resolve Account first, then
+ * read/write settings. Prefer account-centric DTOs (`accountId` in output).
  */
 @Injectable()
 export class AccountSettingsService {
@@ -36,27 +36,28 @@ export class AccountSettingsService {
     // ====================================================================
 
     /**
-     * Create settings for the current user (and the Account row if missing).
+     * Create settings for the current session's Account (creates Account if missing).
      * Fails if settings already exist — use update or upsert instead.
      */
     async create(patch: AccountSettingsPatch = {}): Promise<AccountSettingsDto> {
         const userId = currentUserId();
-        const existing = await this.findEntityByUserId(userId);
+        const existing = await this.findEntityByAuthUserId(userId);
         if (existing) {
-            throw new Error(`Account settings for user ${userId} already exist`);
+            throw new Error(`Account settings for account already exist`);
         }
-        const row = await this.createForUser(userId, patch);
+        const row = await this.createForAuthUser(userId, patch);
         return toDto(row);
     }
 
     /**
-     * Ensure settings exist for a user (onboarding / lazy get). Idempotent.
+     * Ensure settings exist for a Better Auth user → Account bridge (onboarding).
+     * Prefer {@link get} / {@link update} for the current session.
      */
     async upsertForUser(
-        userId: string,
+        authUserId: string,
         defaults: AccountSettingsPatch = {}
     ): Promise<AccountSettings> {
-        const existing = await this.findEntityByUserId(userId);
+        const existing = await this.findEntityByAuthUserId(authUserId);
         if (existing) {
             if (defaults.locale !== undefined) existing.locale = defaults.locale;
             if (defaults.theme !== undefined) existing.theme = defaults.theme;
@@ -67,15 +68,15 @@ export class AccountSettingsService {
             await this.em.flush();
             return existing;
         }
-        return this.createForUser(userId, defaults);
+        return this.createForAuthUser(authUserId, defaults);
     }
 
     /**
      * Mark personal onboarding complete (idempotent). Used by household.onboard
      * for the creator; invitees can get a lighter personal pass later.
      */
-    async markOnboarded(userId: string): Promise<AccountSettings> {
-        const row = await this.upsertForUser(userId);
+    async markOnboarded(authUserId: string): Promise<AccountSettings> {
+        const row = await this.upsertForUser(authUserId);
         if (!row.onboardedAt) {
             row.onboardedAt = new Date();
             await this.em.flush();
@@ -86,8 +87,8 @@ export class AccountSettingsService {
     /**
      * Clear personal onboarded flag (dev / reset flow).
      */
-    async clearOnboarded(userId: string): Promise<AccountSettings> {
-        const row = await this.upsertForUser(userId);
+    async clearOnboarded(authUserId: string): Promise<AccountSettings> {
+        const row = await this.upsertForUser(authUserId);
         row.onboardedAt = null;
         await this.em.flush();
         return row;
@@ -98,7 +99,7 @@ export class AccountSettingsService {
     // ====================================================================
 
     /**
-     * Current authenticated user's settings (creates defaults if missing).
+     * Current session Account's settings (creates defaults if missing).
      */
     async get(): Promise<AccountSettingsDto> {
         const row = await this.upsertForUser(currentUserId());
@@ -116,7 +117,7 @@ export class AccountSettingsService {
     // ====================================================================
 
     /**
-     * Patch the current authenticated user's settings.
+     * Patch the current session Account's settings.
      */
     async update(patch: AccountSettingsPatch): Promise<AccountSettingsDto> {
         const row = await this.upsertForUser(currentUserId());
@@ -144,25 +145,25 @@ export class AccountSettingsService {
     }
 
     // ====================================================================
-    // Private
+    // Private — Better Auth userId → Account bridge
     // ====================================================================
 
-    private async findEntityByUserId(userId: string): Promise<AccountSettings | null> {
+    private async findEntityByAuthUserId(authUserId: string): Promise<AccountSettings | null> {
         const account = await this.em.findOne(
             Account,
-            { user: userId },
+            { user: authUserId },
             { populate: ['settings'] }
         );
         return account?.settings ?? null;
     }
 
-    private async createForUser(
-        userId: string,
+    private async createForAuthUser(
+        authUserId: string,
         defaults: AccountSettingsPatch
     ): Promise<AccountSettings> {
-        let account = await this.em.findOne(Account, { user: userId });
+        let account = await this.em.findOne(Account, { user: authUserId });
         if (!account) {
-            account = this.em.create(Account, { user: userId } as never);
+            account = this.em.create(Account, { user: authUserId } as never);
             this.em.persist(account);
         }
 

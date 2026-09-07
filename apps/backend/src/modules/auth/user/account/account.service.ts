@@ -12,6 +12,9 @@ import { Account } from './account.entity';
  *
  * Display name is written through to Better Auth `user.name` so session /
  * member lists stay in sync without a second source of truth for greetings.
+ *
+ * Application code should prefer {@link ensureCurrentAccount} / `accountId`.
+ * Better Auth `userId` stays for session, membership, and the Account→User link.
  */
 @Injectable()
 export class AccountService {
@@ -20,12 +23,12 @@ export class AccountService {
     constructor(@Inject(EntityManager) private readonly em: EntityManager) {}
 
     async getProfile(): Promise<AccountProfileDto> {
-        const { account, user } = await this.ensureAccountForUser(currentUserId());
+        const { account, user } = await this.ensureCurrentAccount();
         return toProfileDto(account, user);
     }
 
     async updateProfile(patch: AccountProfilePatch): Promise<AccountProfileDto> {
-        const { account, user } = await this.ensureAccountForUser(currentUserId());
+        const { account, user } = await this.ensureCurrentAccount();
 
         if (patch.displayName !== undefined) {
             user.name = patch.displayName.trim();
@@ -42,7 +45,15 @@ export class AccountService {
     }
 
     /**
-     * Ensure the Account row exists (onboarding / first profile read).
+     * Session → Rumbelo Account (+ Better Auth user via `account.user`).
+     * Prefer this in product / platform services over touching `currentUserId()`.
+     */
+    async ensureCurrentAccount(): Promise<{ account: Account; user: AuthUser }> {
+        return this.ensureAccountForUser(currentUserId());
+    }
+
+    /**
+     * Ensure the Account row exists for a Better Auth user (onboarding / members).
      * Does not create settings — that stays in AccountSettingsService.
      */
     async ensureAccountForUser(userId: string): Promise<{ account: Account; user: AuthUser }> {

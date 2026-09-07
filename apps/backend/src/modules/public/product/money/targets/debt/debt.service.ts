@@ -31,7 +31,7 @@ export class DebtService {
         closedOn?: string | null;
     }) {
         const entity = this.em.create(Debt, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             name: input.name,
             kind: input.kind as DebtKind,
             balance: input.balance,
@@ -65,7 +65,7 @@ export class DebtService {
             strategy ??
             (
                 await this.em.findOne(HouseholdSettings, {
-                    householdId: currentHouseholdId(),
+                    household: currentHouseholdId(),
                 })
             )?.moneySettings?.payoffStrategy ??
             PayoffStrategy.AVALANCHE;
@@ -163,7 +163,7 @@ function addMonths(months: number): string {
 export function toDto(debt: Debt) {
     return {
         id: debt.id,
-        householdId: debt.householdId,
+        householdId: debt.household,
         name: debt.name,
         kind: debt.kind,
         balance: Number(debt.balance),

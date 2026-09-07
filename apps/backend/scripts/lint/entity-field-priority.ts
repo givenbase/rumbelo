@@ -37,7 +37,7 @@ export function findMissingBaseEntity(text: string): string | null {
     }
 
     if (!decl.extendsName) {
-        return `${decl.className} must extend BaseEntity (or HouseholdEntity for household-scoped rows)`;
+        return `${decl.className} must extend BaseEntity or HouseholdEntity`;
     }
 
     if (!(ALLOWED_ENTITY_BASES as readonly string[]).includes(decl.extendsName)) {
@@ -64,11 +64,12 @@ export function findInheritedFieldRedeclarations(text: string): string[] {
 
     const forbidden = new Set<string>(['id', 'createdAt', 'updatedAt']);
     if (decl.extendsName === 'HouseholdEntity') {
-        forbidden.add('householdId');
+        forbidden.add('household');
     }
 
     const redeclarations: string[] = [];
-    const pattern = /@(?:PrimaryKey|Property|Enum)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
+    const pattern =
+        /@(?:PrimaryKey|Property|Enum|ManyToOne|OneToOne)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
         const fieldName = match[1]!;
@@ -78,6 +79,24 @@ export function findInheritedFieldRedeclarations(text: string): string[] {
     }
 
     return redeclarations;
+}
+
+/**
+ * `@ManyToOne` / `@OneToOne` fields must be relation nouns (`household`, `account`, `jar`),
+ * never `*Id`. Scalar FK `@Property` fields may still use `*Id` (e.g. `appliedRuleId`).
+ * @see apps/backend/docs/ENTITY_STYLE.md
+ */
+export function findRelationIdSuffixViolations(text: string): string[] {
+    const violations: string[] = [];
+    const pattern = /@(?:ManyToOne|OneToOne)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
+    let match: null | RegExpExecArray;
+    while ((match = pattern.exec(text)) !== null) {
+        const fieldName = match[1]!;
+        if (fieldName.endsWith('Id') && !violations.includes(fieldName)) {
+            violations.push(fieldName);
+        }
+    }
+    return violations;
 }
 
 /** Affirmative boolean prefixes — see ENTITY_STYLE.md field naming. */
@@ -246,8 +265,8 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
     key: 1,
     code: 1,
     identifier: 1,
-    householdId: 1,
-    accountId: 1,
+    household: 1,
+    account: 1,
     entityId: 1,
     version: 1,
 
@@ -351,7 +370,7 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
 export const SAME_PRIORITY_ORDER: readonly (readonly string[])[] = [
     ['firstName', 'lastName'],
     ['entityId', 'entityType', 'fieldName'],
-    ['householdId', 'accountId'],
+    ['household', 'account'],
     ['key', 'name', 'slug'],
     ['budgeted', 'actual', 'target'],
     ['amount', 'balance', 'rate', 'percentage'],

@@ -14,7 +14,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'weekly_ritual' }))
-@Unique({ properties: ['householdId', 'week'] })
+@Unique({ properties: ['household', 'week'] })
 export class WeeklyRitual extends HouseholdEntity {
     // ? PROPERTIES
     /** YYYY-Www */

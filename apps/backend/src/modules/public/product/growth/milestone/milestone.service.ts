@@ -19,7 +19,7 @@ export class MilestoneService {
         const rows = await this.repo.find();
         return rows.map(milestone => ({
             id: milestone.id,
-            householdId: milestone.householdId,
+            householdId: milestone.household,
             label: milestone.label,
             targetMonthly: Number(milestone.targetMonthly),
             reachedOn: milestone.reachedOn,

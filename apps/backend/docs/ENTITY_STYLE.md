@@ -45,14 +45,16 @@ Every domain entity must extend one of:
 | Base | Use when |
 |------|----------|
 | `BaseEntity` | Root — uuid `id` + timestamps. Catalogs, account, anything not household-scoped |
-| `HouseholdEntity` | **Extends** `BaseEntity` and adds only `householdId` (money / product rows) |
+| `HouseholdEntity` | **Extends** `BaseEntity` and adds `household` → `AuthHousehold` via `@ManyToOne({ mapToPk: true })` (money / product / household settings) |
 
-Files: `common/database/base.entity.ts` and `common/database/household.entity.ts`.
-Do **not** redeclare `id`, `createdAt`, `updatedAt` (or `householdId` on `HouseholdEntity` subclasses).
+**1:1 vs 1:N:** both use `HouseholdEntity`. Enforce one row per household with `@Unique({ properties: ['household'] })` (e.g. `HouseholdSettings`). Product rows (jars, goals) stay many-per-household without that unique.
 
-Not the same as `AuthHousehold` (Better Auth organization plugin table).
+`household` stays a **string** uuid in app code (`mapToPk`); MikroORM still owns the FK to `auth.household`. Do not redeclare it as a plain `@Property` or a full entity relation on subclasses.
 
-Exception: `auth.household_settings` is keyed by better-auth `householdId` (not uuid) — it is allowlisted in `scripts/lint/check-entity-style.ts` until a dedicated settings base exists.
+Files: `common/database/base.entity.ts`, `household.entity.ts`.
+Do **not** redeclare `id`, `createdAt`, `updatedAt`, or `household` on subclasses.
+
+Not the same as `AuthHousehold` (Better Auth organization plugin table) — that mirror does **not** extend `BaseEntity`.
 
 ## Section order (mandatory)
 
@@ -81,7 +83,7 @@ Names should make the **shape** obvious without reading the decorator or the col
 | **Instant** | `*At` → `timestamptz` | `createdAt`, `closedAt`, `publishedAt` | `closed`, `timestamp`, `closedDate` for an instant |
 | **Calendar date** | `*On` → Postgres `date` | `startedOn`, `endsOn`, `publishedOn` | `*At` for date-only; `*Day` for a full date |
 | **Day ordinal** | `*Day` → `int` / `smallint` (1–31 or weekday 1–7) | `dueDay`, `expectedDay`, `periodStartDay`, `ritualReminderDay` | `dueDate` / `expectedDate` when the value is **not** a full date |
-| **FK / id** | `*Id` matching the target | `householdId`, `accountId`, `jarId` | bare `household` as a string id |
+| **FK / id** | `*Id` for plain scalar FKs; relation noun for `@ManyToOne`/`@OneToOne` (`mapToPk`) | `jarId` (plain scalar); `household`, `account` (mapToPk relations) | bare `householdId`/`accountId` on entity fields — use `household`/`account` and map at API boundary |
 | **Money / count** | plain noun | `amount`, `balance`, `percentage`, `rate` | encoding the type in the name (`amountCents`) unless dual units exist |
 | **JSON array** | plural noun | `aliases`, `unlocks`, `audienceTags` | `aliasList`, `unlockJson` when plural is enough |
 | **JSON object** | bag noun or `*Json` / `*Metadata` / `*Payload` | `metadata`, `settings`, `checkoutSnapshot`, `payloadJson` | vague `data`, `info`, `json` |
@@ -123,7 +125,8 @@ When a “flag” needs more than two values later, use an **enum** (`status`) i
 
 | Situation | Prefer |
 |-----------|--------|
-| Household-owned money rows | `HouseholdEntity` + `householdId` (row-level isolation) |
+| Household-owned money rows | `HouseholdEntity` + `household` relation (`mapToPk` string — row-level isolation) |
+| Person attribution on household rows | `account` relation (`@ManyToOne` + `mapToPk`) → `auth.account` — **not** Better Auth `userId`; DTO maps as `accountId: row.account` |
 | Catalog we publish | `backoffice.*` templates/presets — households **copy**, do not FK live money to mutable catalog rows except stable template keys |
 | Repeating child lines you query | Child entity + FK (`RitualAllocation`) |
 | Opaque config / match needles | jsonb with a clear plural / bag name |
@@ -131,14 +134,14 @@ When a “flag” needs more than two values later, use an **enum** (`status`) i
 
 ## Property order within `// ? PROPERTIES`
 
-`id`, `createdAt`, and `updatedAt` live on `BaseEntity` — do not redefine them. `householdId` lives on `HouseholdEntity`.
+`id`, `createdAt`, and `updatedAt` live on `BaseEntity` — do not redefine them. `household` lives on `HouseholdEntity`.
 
 Order domain fields as follows:
 
 | Priority | Field types | Examples |
 |---------:|-------------|----------|
 | 0 | Primary key (when declared on entity) | `id` (`@PrimaryKey`) |
-| 1 | **Identifier cluster** | `key`, `householdId`, `accountId`, `code` |
+| 1 | **Identifier cluster** | `key`, `household`, `account`, `code` |
 | 2 | Names & titles | `name`, `title`, `label` |
 | 3 | URL slugs / dates | `slug`, `date` |
 | 4 | Summaries & descriptions | `summary`, `description`, `why`, `notes` |
@@ -193,7 +196,9 @@ pnpm --filter @rumbelo/backend lint:entities
 The script `scripts/lint/check-entity-style.ts` enforces:
 
 - `extends BaseEntity` or `extends HouseholdEntity` (+ import from `common/database/base.entity` or `household.entity`)
-- no redeclared inherited fields (`id` / `createdAt` / `updatedAt` / `householdId`)
+- no redeclared inherited fields (`id` / `createdAt` / `updatedAt` / `household`)
+- **1:1 household rows** listed in `HOUSEHOLD_ONE_TO_ONE_ENTITIES` must have `@Unique({ properties: ['household'] })`
+- `@ManyToOne` / `@OneToOne` fields are relation nouns — never `*Id` (API DTOs still map `householdId: row.household`)
 - boolean `@Property` names use `is*` / `has*` / `can*` (e.g. `isActive`, not `active`)
 - temporal suffix matches column kind (`*Day` = int ordinal, `*On` = date, `*At` = timestamptz)
 - jsonb `@Property` names are plural arrays or clear bag nouns (`metadata`, `*Json`, `*Payload`, …)
@@ -202,9 +207,13 @@ The script `scripts/lint/check-entity-style.ts` enforces:
 
 Domain-specific field sequences are declared in `SAME_PRIORITY_ORDER` inside `scripts/lint/entity-field-priority.ts`.
 
+When adding a new **1:1** household-owned entity, add its class name to `HOUSEHOLD_ONE_TO_ONE_ENTITIES` in `check-entity-style.ts` and put `@Unique({ properties: ['household'] })` on the class.
+
 ## Checklist for new / updated entities
 
 - [ ] `extends BaseEntity` or `extends HouseholdEntity` (imported from `common/database`)
+- [ ] If 1:1 household-owned: `@Unique({ properties: ['household'] })` + listed in `HOUSEHOLD_ONE_TO_ONE_ENTITIES`
+- [ ] Relation fields are nouns (`household`, `account`, `jar`) — never `householdId` / `accountId` on `@ManyToOne` / `@OneToOne`
 - [ ] Booleans named `is*` / `has*` / `can*` (affirmative)
 - [ ] Temporal suffixes match types (`*Day` int, `*On` date, `*At` timestamptz) — never `dueDate` for day-of-month
 - [ ] jsonb fields are plural arrays or clear bags (`metadata` / `*Json` / `*Payload`)
@@ -216,4 +225,4 @@ Domain-specific field sequences are declared in `SAME_PRIORITY_ORDER` inside `sc
 - [ ] No `@Enum` outside `// ? ENUMS`
 - [ ] No relationships outside `// ? RELATIONSHIPS`
 - [ ] Enums imported from `@rumbelo/contracts` + `NativeEnum({ EnumName, domain: '…' })` (explicit domain → PG prefix)
-- [ ] No redeclared `id` / `createdAt` / `updatedAt` / `householdId`
+- [ ] No redeclared `id` / `createdAt` / `updatedAt` / `household`

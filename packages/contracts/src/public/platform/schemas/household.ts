@@ -10,7 +10,7 @@ import {
     PayoffStrategy,
     PlanKey,
 } from '../../../enums';
-import { HouseholdId, MemberId, UserId } from '../../../common/schemas';
+import { HouseholdId, MemberId, UserId, Id } from '../../../common/schemas';
 
 export { HouseholdKind, HouseholdRole, IncomeRhythm, MoneyCharacter } from '../../../enums';
 
@@ -33,12 +33,15 @@ export const Household = z.object({
 export type Household = z.infer<typeof Household>;
 
 export const HouseholdMember = z.object({
-    /** Better Auth `auth.member.id` — opaque text, not Rumbelo uuid. */
+    /** Better Auth `auth.member.id` — uuid (BA-owned, not Rumbelo {@link Id}). */
     id: MemberId,
     householdId: HouseholdId,
+    /** Rumbelo `auth.account.id` — application person (profile / prefs). */
+    accountId: Id,
+    /** Better Auth `auth.user.id` — login identity (session / membership). */
     userId: UserId,
     role: z.enum(HouseholdRole),
-    /** Better Auth display name (`user.name`). */
+    /** Better Auth display name (`user.name`) — mapped via Account→User. */
     displayName: z.string(),
     email: z.email(),
     /** Better Auth may store absolute URLs or leave null. */
@@ -98,7 +101,10 @@ export const HouseholdSettings = z.object({
     why: z.string().max(500).nullable().optional(),
     kind: z.enum(HouseholdKind),
     currency: z.enum(Currency),
-    /** Product tier for the board — Basic / Plus / Max. */
+    /**
+     * Product tier for the board — Basic / Plus / Max.
+     * Stored on `auth.household_billing`; composed into this DTO for the app.
+     */
     planKey: z.enum(PlanKey),
     money: HouseholdMoneySettings,
     ritual: HouseholdRitualSettings,

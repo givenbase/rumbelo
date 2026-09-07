@@ -1,4 +1,4 @@
-import { Entity, Property } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 /**
  * better-auth `verification` table — short-lived verification tokens
@@ -6,7 +6,7 @@ import { Entity, Property } from '@mikro-orm/core';
  */
 @Entity({ tableName: 'verification', schema: 'auth' })
 export class AuthVerification {
-    @Property({ type: 'text', primary: true })
+    @PrimaryKey({ type: 'uuid' })
     id!: string;
 
     @Property({ type: 'text' })

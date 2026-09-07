@@ -18,7 +18,7 @@ export class HouseholdScopedRepository<T extends HouseholdEntity> {
     ) {}
 
     private scope(where: FilterQuery<T> = {} as FilterQuery<T>): FilterQuery<T> {
-        return { ...(where as object), householdId: currentHouseholdId() } as FilterQuery<T>;
+        return { ...(where as object), household: currentHouseholdId() } as FilterQuery<T>;
     }
 
     find(where?: FilterQuery<T>, options?: FindOptions<T>) {
@@ -39,16 +39,16 @@ export class HouseholdScopedRepository<T extends HouseholdEntity> {
         return this.em.count(this.entity, this.scope(where));
     }
 
-    create(data: Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'householdId'>): T {
+    create(data: Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'household'>): T {
         const entity = this.em.create(this.entity, {
             ...(data as object),
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
         } as never);
         return entity;
     }
 
     remove(entity: T) {
-        if (entity.householdId !== currentHouseholdId()) {
+        if (entity.household !== currentHouseholdId()) {
             throw new Error('Refusing to delete a row from another household');
         }
         return this.em.remove(entity);

@@ -29,6 +29,7 @@ import { IncomeAmountPeriod } from '../../public/product/money/plan/income/incom
 import { IncomeSource } from '../../public/product/money/plan/income/income-source.entity';
 import { Jar } from '../../public/product/money/plan/jar/jar.entity';
 import { AccountSettingsService } from '../user/account/account-settings/account-settings.service';
+import { AccountService } from '../user/account/account.service';
 import { HouseholdSettingsService } from './household-settings/household-settings.service';
 import { AuthHousehold } from './managed/household/auth-household.entity';
 import { AuthInvitation } from './managed/invitation/auth-invitation.entity';
@@ -47,6 +48,7 @@ export class HouseholdService {
     constructor(
         @Inject(EntityManager) private readonly em: EntityManager,
         @Inject(AuthService) private readonly authService: AuthService<Auth>,
+        @Inject(AccountService) private readonly accounts: AccountService,
         @Inject(AccountSettingsService) private readonly accountSettings: AccountSettingsService,
         @Inject(HouseholdSettingsService)
         private readonly householdSettings: HouseholdSettingsService,
@@ -131,15 +133,22 @@ export class HouseholdService {
             { household: householdId },
             { populate: ['user'] }
         );
-        return memberships.map(member => ({
-            id: member.id,
-            householdId,
-            userId: member.user.id,
-            role: mapRole(member.role),
-            displayName: member.user.name,
-            email: member.user.email,
-            image: member.user.image ?? null,
-        }));
+        return Promise.all(
+            memberships.map(async member => {
+                // Application person is Account; display fields come from Account→User.
+                const { account, user } = await this.accounts.ensureAccountForUser(member.user.id);
+                return {
+                    id: member.id,
+                    householdId,
+                    accountId: account.id,
+                    userId: user.id,
+                    role: mapRole(member.role),
+                    displayName: user.name,
+                    email: user.email,
+                    image: user.image ?? null,
+                };
+            })
+        );
     }
 
     async current(householdId: string) {
@@ -173,7 +182,7 @@ export class HouseholdService {
 
     /**
      * Unique organization.slug. Prefer readable slugify(name); on collision append
-     * a short random suffix. householdId is opaque text minted by Better Auth.
+     * a short random suffix. householdId is a uuid minted by Better Auth.
      */
     private async uniqueOrgSlug(name: string): Promise<string> {
         const base = slugify(name);
@@ -230,7 +239,7 @@ export class HouseholdService {
         for (const meta of templates) {
             const pct = splitByKey.get(meta.key) ?? Number(meta.defaultPercentage);
             this.em.create(Jar, {
-                householdId: org.id,
+                household: org.id,
                 key: meta.key,
                 name: meta.name,
                 subtitle: meta.subtitle,
@@ -262,7 +271,7 @@ export class HouseholdService {
         if (input.monthlyNetIncome > 0) {
             const startedOn = new Date().toISOString().slice(0, 10);
             const source = this.em.create(IncomeSource, {
-                householdId: org.id,
+                household: org.id,
                 name: 'Netto inkomen',
                 kind: IncomeKind.SALARY,
                 amount: input.monthlyNetIncome,
@@ -270,7 +279,7 @@ export class HouseholdService {
                 startedOn,
             } as never);
             this.em.create(IncomeAmountPeriod, {
-                householdId: org.id,
+                household: org.id,
                 incomeSource: source,
                 amount: input.monthlyNetIncome,
                 effectiveOn: startedOn,

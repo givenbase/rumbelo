@@ -9,10 +9,10 @@ export const Id = z.uuid();
 export type Id = z.infer<typeof Id>;
 
 /**
- * Better Auth opaque text id (user, household, member, invitation, session, …).
- * BA mints these — never validate as `z.uuid()` and never confuse with {@link Id}.
+ * Better Auth entity ids — Postgres `uuid` (`advanced.database.generateId: "uuid"`).
+ * Still distinct from {@link Id} (BA-owned vs Rumbelo-owned rows).
  */
-export const AuthId = z.string().min(1).max(64);
+export const AuthId = z.uuid();
 export type AuthId = z.infer<typeof AuthId>;
 
 /** Better Auth household id (`auth.household.id`). */

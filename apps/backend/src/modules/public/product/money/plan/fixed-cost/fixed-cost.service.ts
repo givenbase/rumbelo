@@ -37,7 +37,7 @@ export class FixedCostService {
         note?: string | null;
     }) {
         const entity = this.em.create(FixedCost, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             jar: this.em.getReference(Jar, input.jarId),
             category: input.categoryId ? this.em.getReference(Category, input.categoryId) : null,
             name: input.name,
@@ -153,7 +153,7 @@ export class FixedCostService {
 export function toDto(fixedCost: FixedCost) {
     return {
         id: fixedCost.id,
-        householdId: fixedCost.householdId,
+        householdId: fixedCost.household,
         jarId: fixedCost.jar.id,
         categoryId: fixedCost.category?.id ?? null,
         name: fixedCost.name,

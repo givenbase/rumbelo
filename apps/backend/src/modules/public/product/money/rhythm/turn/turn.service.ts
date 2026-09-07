@@ -52,7 +52,7 @@ export class TurnService {
             levelLabel: level.label,
             events: events.map(event => ({
                 id: event.id,
-                householdId: event.householdId,
+                householdId: event.household,
                 period: event.period,
                 kind: event.kind,
                 day: event.day,
@@ -86,7 +86,7 @@ export class TurnService {
 
         if (!turn) {
             turn = this.em.create(PeriodTurn, {
-                householdId: currentHouseholdId(),
+                household: currentHouseholdId(),
                 period,
             } as never);
             this.em.persist(turn);

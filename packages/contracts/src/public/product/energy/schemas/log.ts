@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { EnergyMetric, EnergyTrend } from '../../../../enums';
-import { HouseholdId, Id, IsoDate, UserId } from '../../../../common/schemas';
+import { HouseholdId, Id, IsoDate } from '../../../../common/schemas';
 
 export { EnergyMetric, EnergyTrend } from '../../../../enums';
 
@@ -13,7 +13,8 @@ export { EnergyMetric, EnergyTrend } from '../../../../enums';
 export const EnergyLog = z.object({
     id: Id,
     householdId: HouseholdId,
-    userId: UserId,
+    /** Rumbelo `auth.account.id` — person who logged the reading (not Better Auth user). */
+    accountId: Id,
     on: IsoDate,
     metric: z.enum(EnergyMetric),
     /** Normalised 0..100 so metrics are comparable on one axis. */

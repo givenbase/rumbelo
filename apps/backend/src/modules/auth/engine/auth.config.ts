@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { organization, twoFactor } from 'better-auth/plugins';
 import { buildBetterAuthTrustedOrigins, resolveCrossSubdomainCookieDomain } from '@rumbelo/utils';
 import { Pool } from 'pg';
+import { v7 as uuidv7 } from 'uuid';
 
 import type { Env } from '../../../common/config/env.config';
 import { EmailService } from '../../backoffice/communication/email';
@@ -40,11 +41,8 @@ function authUserFirstName(user: { name?: string | null; email: string }): strin
  * sessions bind on DOMAIN_APP via `/api/auth` proxies. Production/staging use
  * cross-subdomain cookies on `.rumbelo.com` (no www).
  *
- * IDs: leave Better Auth defaults (opaque text). Do **not** set
- * `generateId: false` / Postgres UUID defaults here — that mixed BA text FKs
- * with uuid validation and caused confusion. Rumbelo-owned rows (`auth.account`,
- * product tables) keep native Postgres uuid via BaseEntity.
- * Personal profile (names, DOB, address) lives on Rumbelo `auth.account`, not BA.
+ * IDs: Better Auth mints uuidv7 via `advanced.database.generateId` (same as BaseEntity).
+ * Columns stay Postgres `uuid`. Personal profile lives on Rumbelo `auth.account`, not BA.
  */
 export function createAuth(env: Env) {
     const pool = new Pool({
@@ -247,7 +245,14 @@ export function createAuth(env: Env) {
          * @see https://www.better-auth.com/docs/concepts/cookies#cross-subdomain-cookies
          */
         advanced: {
-            // Better Auth mints its own opaque text ids. App rows use uuid via BaseEntity.
+            database: {
+                /**
+                 * Same uuidv7 as {@link BaseEntity} — time-ordered Postgres uuid PKs.
+                 * Built-in `"uuid"` would mint v4 via gen_random_uuid(); we mint in JS.
+                 * @see https://www.better-auth.com/docs/concepts/database#option-3-consistent-custom-id-generator
+                 */
+                generateId: () => uuidv7(),
+            },
             cookiePrefix: 'rumbelo',
             useSecureCookies: isSecureCookieEnv,
             ...(cookieDomain

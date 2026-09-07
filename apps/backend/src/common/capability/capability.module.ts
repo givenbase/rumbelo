@@ -1,13 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
-import { HouseholdSettingsModule } from '../../modules/auth/household/household-settings/household-settings.module';
+import { HouseholdBillingModule } from '../../modules/auth/household/household-billing/household-billing.module';
 import { CapabilityInterceptor } from './capability.interceptor';
 import { PlanAccessService } from './plan-access.service';
 
 @Global()
 @Module({
-    imports: [HouseholdSettingsModule],
+    imports: [HouseholdBillingModule],
     providers: [
         PlanAccessService,
         CapabilityInterceptor,

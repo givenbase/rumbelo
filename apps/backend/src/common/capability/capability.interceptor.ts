@@ -10,19 +10,19 @@ import { Reflector } from '@nestjs/core';
 import { hasCapability, type CapabilityKey, type PlanKey } from '@rumbelo/contracts';
 import { Observable } from 'rxjs';
 
-import { HouseholdSettingsService } from '../../modules/auth/household/household-settings/household-settings.service';
+import { HouseholdBillingService } from '../../modules/auth/household/household-billing/household-billing.service';
 import { currentHouseholdId, householdStorage } from '../household/household.context';
 import { REQUIRE_CAPABILITY_KEY } from './require-capability.decorator';
 
 /**
  * Enforces @RequireCapability after household scope is established.
- * Loads planKey from household settings (contracts hasCapability).
+ * Loads planKey from household billing (contracts hasCapability).
  */
 @Injectable()
 export class CapabilityInterceptor implements NestInterceptor {
     constructor(
         @Inject(Reflector) private readonly reflector: Reflector,
-        @Inject(HouseholdSettingsService) private readonly settings: HouseholdSettingsService
+        @Inject(HouseholdBillingService) private readonly billing: HouseholdBillingService
     ) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
@@ -44,8 +44,7 @@ export class CapabilityInterceptor implements NestInterceptor {
             throw new ForbiddenException('Household context required for capability check');
         }
         const householdId = currentHouseholdId();
-        const settings = await this.settings.get(householdId);
-        const planKey = settings.planKey as PlanKey;
+        const planKey = (await this.billing.getPlanKey(householdId)) as PlanKey;
         for (const key of keys) {
             if (!hasCapability(key, planKey)) {
                 throw new ForbiddenException(`Plan does not include ${key}`);

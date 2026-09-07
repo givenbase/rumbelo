@@ -48,7 +48,7 @@ export class IncomeService {
     }) {
         const effectiveOn = input.startedOn ?? todayIso();
         const source = this.em.create(IncomeSource, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             name: input.name,
             kind: input.kind as IncomeKind,
             amount: input.amount,
@@ -58,7 +58,7 @@ export class IncomeService {
             startedOn: input.startedOn ?? null,
         } as never);
         const period = this.em.create(IncomeAmountPeriod, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             incomeSource: source,
             amount: input.amount,
             effectiveOn,
@@ -120,7 +120,7 @@ export class IncomeService {
         if (patch.amount !== undefined && Number(source.amount) !== patch.amount) {
             const effectiveOn = patch.amountEffectiveFrom?.slice(0, 10) || todayIso();
             const period = this.em.create(IncomeAmountPeriod, {
-                householdId: currentHouseholdId(),
+                household: currentHouseholdId(),
                 incomeSource: source,
                 amount: patch.amount,
                 effectiveOn,
@@ -172,7 +172,7 @@ export class IncomeService {
         );
         return {
             id: source.id,
-            householdId: source.householdId,
+            householdId: source.household,
             name: source.name,
             kind: source.kind,
             amount: Number(source.amount),

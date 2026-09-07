@@ -110,7 +110,9 @@ async function confirmProduction(nodeEnv: string, stripeMode: 'live' | 'test'): 
     if (nodeEnv !== 'production') return;
     if (hasFlag('--yes') || process.env.CONFIRM === 'yes') return;
 
-    console.log('\n⚠️  NODE_ENV=production — this seeds the Stripe account for the production key.');
+    console.log(
+        '\n⚠️  NODE_ENV=production — this seeds the Stripe account for the production key.'
+    );
     console.log(`   Stripe mode detected: ${stripeMode}`);
     if (stripeMode === 'test') {
         console.log(

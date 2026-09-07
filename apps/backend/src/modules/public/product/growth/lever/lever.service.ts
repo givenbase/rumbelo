@@ -20,7 +20,7 @@ export class LeverService {
         const rows = await this.repo.find();
         return rows.map(lever => ({
             id: lever.id,
-            householdId: lever.householdId,
+            householdId: lever.household,
             label: lever.label,
             note: lever.note,
             potentialMonthly: Number(lever.potentialMonthly),

@@ -18,9 +18,24 @@ type PlanChangeDialogProps = {
     busy?: boolean;
     /** When true, confirm continues to Stripe Checkout (paid upgrade). */
     stripeCheckout?: boolean;
+    /** When true, downgrade is scheduled for period end (Stripe live). */
+    periodEndDowngrade?: boolean;
+    /** ISO date when the current paid period ends (for copy). */
+    periodEndsAt?: string | null;
     onOpenChange: (open: boolean) => void;
     onConfirm: () => void;
 };
+
+function formatPeriodEnd(iso: string | null | undefined): string | null {
+    if (!iso) return null;
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+}
 
 function ChangeList({
     title,
@@ -62,6 +77,8 @@ export function PlanChangeDialog({
     diff,
     busy = false,
     stripeCheckout = false,
+    periodEndDowngrade = false,
+    periodEndsAt = null,
     onOpenChange,
     onConfirm,
 }: PlanChangeDialogProps) {
@@ -70,6 +87,7 @@ export function PlanChangeDialog({
     const toLabel = PLAN_LABELS[diff.to as PlanKey];
     const fromLabel = PLAN_LABELS[diff.from as PlanKey];
     const upgrading = diff.direction === 'upgrade';
+    const endsLabel = formatPeriodEnd(periodEndsAt);
 
     const confirmLabel = busy
         ? '…'
@@ -77,7 +95,9 @@ export function PlanChangeDialog({
           ? `Continue to pay — ${toLabel}`
           : upgrading
             ? `Upgrade to ${toLabel}`
-            : `Downgrade to ${toLabel}`;
+            : periodEndDowngrade
+              ? `Schedule ${toLabel}`
+              : `Downgrade to ${toLabel}`;
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -88,15 +108,23 @@ export function PlanChangeDialog({
                     </DialogTitle>
                     <DialogDescription>
                         {upgrading
-                            ? `You are moving from ${fromLabel} to ${toLabel}. Review what unlocks before you continue.`
-                            : `You are moving from ${fromLabel} to ${toLabel}. Features below will be disabled until you upgrade again — your data stays.`}
+                            ? stripeCheckout
+                                ? `You are moving from ${fromLabel} to ${toLabel}. You will be charged now for the billing period — that period is paid through until it ends.`
+                                : `You are moving from ${fromLabel} to ${toLabel}. Review what unlocks before you continue.`
+                            : periodEndDowngrade
+                              ? `You keep ${fromLabel} until ${endsLabel ?? 'the end of your billing period'}. Then you move to ${toLabel}. No refund for unused days — your data stays.`
+                              : `You are moving from ${fromLabel} to ${toLabel}. Features below will be disabled until you upgrade again — your data stays.`}
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="grid gap-4 py-1">
                     <ChangeList title="You unlock" tone="gain" items={diff.gained} />
                     <ChangeList
-                        title="Disabled on this plan"
+                        title={
+                            periodEndDowngrade
+                                ? `Disabled after ${endsLabel ?? 'period end'}`
+                                : 'Disabled on this plan'
+                        }
                         tone="loss"
                         items={diff.lost}
                     />
@@ -114,7 +142,8 @@ export function PlanChangeDialog({
                                         <span className="font-medium text-fg">{change.label}</span>
                                         <span className="text-fg-faint">{change.from}</span>
                                         <span aria-hidden>→</span>
-                                        <span className={change.expanded ? 'text-accent' : 'text-fg'}>
+                                        <span
+                                            className={change.expanded ? 'text-accent' : 'text-fg'}>
                                             {change.to}
                                         </span>
                                     </li>
@@ -129,10 +158,18 @@ export function PlanChangeDialog({
                         </p>
                     ))}
 
+                    {upgrading && stripeCheckout ? (
+                        <p className="rounded-md border border-line bg-surface px-2.5 py-2 text-xs leading-snug text-fg-secondary">
+                            After you pay, {toLabel} unlocks immediately. If you later downgrade,
+                            you keep {toLabel} until the paid period ends.
+                        </p>
+                    ) : null}
+
                     {!upgrading ? (
                         <p className="rounded-md border border-line bg-surface px-2.5 py-2 text-xs leading-snug text-fg-secondary">
-                            Nothing you have entered is deleted. Gated screens and actions stay
-                            locked until you return to a higher plan.
+                            {periodEndDowngrade
+                                ? 'Nothing is deleted. You will not be charged again for the higher plan after this period.'
+                                : 'Nothing you have entered is deleted. Gated screens and actions stay locked until you return to a higher plan.'}
                         </p>
                     ) : null}
                 </div>

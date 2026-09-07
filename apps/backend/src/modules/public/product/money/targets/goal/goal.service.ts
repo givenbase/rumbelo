@@ -47,7 +47,7 @@ export class GoalService {
 
         const kind = (input.kind as GoalKind) ?? GoalKind.SAVE;
         const entity = this.em.create(Goal, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             kind,
             jar:
                 kind === GoalKind.EARN
@@ -240,7 +240,7 @@ function monthsUntil(isoDate: string): number {
 export function toDto(goal: Goal) {
     return {
         id: goal.id,
-        householdId: goal.householdId,
+        householdId: goal.household,
         kind: goal.kind,
         jarId: goal.jar?.id ?? null,
         name: goal.name,

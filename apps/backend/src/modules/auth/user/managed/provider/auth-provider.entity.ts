@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 
 import { AuthUser } from '../user/auth-user.entity';
 
@@ -13,7 +13,7 @@ import { AuthUser } from '../user/auth-user.entity';
  */
 @Entity({ tableName: 'provider', schema: 'auth' })
 export class AuthProvider {
-    @Property({ type: 'text', primary: true })
+    @PrimaryKey({ type: 'uuid' })
     id!: string;
 
     @Property({ type: 'text' })

@@ -2,8 +2,9 @@
  * Application auth helpers — product sign-in + session only.
  * Sign-up / verify / forgot-password live on DOMAIN_WEB.
  *
- * IDs from Better Auth (`user.id`, `activeOrganizationId`) are opaque text —
- * not Postgres uuids. Pass them straight into oRPC as `UserId` / `HouseholdId`.
+ * Session identity is Better Auth `user.id` (`useAuth().userId`) — needed for
+ * login / membership. Application person data uses Rumbelo `accountId`
+ * (`auth.account`); profile DTOs map Account → User when both are needed.
  * Product row ids (`jar.id`, …) are separate Rumbelo uuids (`Id`).
  */
 

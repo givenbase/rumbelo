@@ -27,7 +27,7 @@ export class RitualService {
         let ritual = await this.rituals.findOne({ week });
         if (!ritual) {
             ritual = this.em.create(WeeklyRitual, {
-                householdId: currentHouseholdId(),
+                household: currentHouseholdId(),
                 week,
             } as never);
             await this.em.persist(ritual).flush();
@@ -53,7 +53,7 @@ export class RitualService {
         let ritual = await this.rituals.findOne({ week: input.week });
         if (!ritual) {
             ritual = this.em.create(WeeklyRitual, {
-                householdId: currentHouseholdId(),
+                household: currentHouseholdId(),
                 week: input.week,
             } as never);
             await this.em.persist(ritual).flush();
@@ -70,7 +70,7 @@ export class RitualService {
             await this.em.nativeDelete(RitualAllocation, { ritual: ritual.id });
             for (const allocation of input.allocations) {
                 this.em.create(RitualAllocation, {
-                    householdId: currentHouseholdId(),
+                    household: currentHouseholdId(),
                     ritual,
                     jar: this.em.getReference(Jar, allocation.jarId),
                     amount: allocation.amount,
@@ -88,7 +88,7 @@ export class RitualService {
         const allocations = await this.allocations.find({ ritual: ritual.id });
         return {
             id: ritual.id,
-            householdId: ritual.householdId,
+            householdId: ritual.household,
             week: ritual.week,
             stage: ritual.stage,
             surplus: Number(ritual.surplus),

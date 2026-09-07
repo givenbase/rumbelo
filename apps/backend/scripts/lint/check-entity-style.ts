@@ -11,12 +11,14 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
+    extractEntityClassDeclaration,
     extractPropertyFieldNames,
     findBooleanNamingViolations,
     findFieldOrderViolations,
     findInheritedFieldRedeclarations,
     findJsonNamingViolations,
     findMissingBaseEntity,
+    findRelationIdSuffixViolations,
     findTemporalNamingViolations,
 } from './entity-field-priority';
 
@@ -35,12 +37,17 @@ const EXCLUDED_PREFIXES: readonly string[] = [
 ];
 
 /**
- * Rare rows keyed by an external id (not uuid) — cannot use BaseEntity's `@PrimaryKey id`.
- * Prefer BaseEntity / HouseholdEntity everywhere else.
+ * Prefer BaseEntity / HouseholdEntity for domain entities.
+ * Better Auth mirrors under managed/ are excluded separately.
  */
-const ALLOWED_WITHOUT_BASE_ENTITY = new Set([
-    'modules/auth/household/household-settings/household-settings.entity.ts',
-]);
+const ALLOWED_WITHOUT_BASE_ENTITY = new Set<string>([]);
+
+/**
+ * Household-scoped entities that must be **1:1** with a household
+ * (`@Unique({ properties: ['householdId'] })`). Product rows (jars, …) stay 1:N.
+ * @see apps/backend/docs/ENTITY_STYLE.md
+ */
+const HOUSEHOLD_ONE_TO_ONE_ENTITIES = new Set<string>(['HouseholdSettings', 'HouseholdBilling']);
 
 const CANONICAL_SECTIONS = [
     'PROPERTIES',
@@ -143,8 +150,39 @@ function validateEntity(absPath: string): EntityIssue[] {
         }
     }
 
+    const decl = extractEntityClassDeclaration(text);
+    if (decl && HOUSEHOLD_ONE_TO_ONE_ENTITIES.has(decl.className)) {
+        const hasUniqueHouseholdId =
+            /@Unique\(\s*\{\s*properties:\s*\[[^\]]*['"]household['"][^\]]*\]/.test(text);
+        if (!hasUniqueHouseholdId) {
+            pushIssue(
+                issues,
+                file,
+                'household-one-to-one-unique',
+                `${decl.className} is a 1:1 household entity — add @Unique({ properties: ['household'] })`
+            );
+        }
+        if (decl.extendsName !== 'HouseholdEntity') {
+            pushIssue(
+                issues,
+                file,
+                'household-one-to-one-base',
+                `${decl.className} must extend HouseholdEntity (1:1 household-owned)`
+            );
+        }
+    }
+
     for (const detail of findBooleanNamingViolations(text)) {
         pushIssue(issues, file, 'boolean-naming', detail);
+    }
+
+    for (const fieldName of findRelationIdSuffixViolations(text)) {
+        pushIssue(
+            issues,
+            file,
+            'relation-id-suffix',
+            `Relationship field "${fieldName}" must not end in Id — use the relation noun (e.g. household, account, jar)`
+        );
     }
 
     for (const detail of findTemporalNamingViolations(text)) {

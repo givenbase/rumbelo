@@ -175,8 +175,7 @@ export function diffPlans(from: PlanKey, to: PlanKey): PlanChangeDiff {
         after: number | null
     ) => {
         if (before === after) return;
-        const rank = (value: number | null) =>
-            value === null ? Number.POSITIVE_INFINITY : value;
+        const rank = (value: number | null) => (value === null ? Number.POSITIVE_INFINITY : value);
         limitChanges.push({
             label,
             from: formatCeiling(before, unit),

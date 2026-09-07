@@ -18,7 +18,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
  * @see https://mikro-orm.io/docs/defining-entities
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'jar' }))
-@Unique({ properties: ['householdId', 'key'] })
+@Unique({ properties: ['household', 'key'] })
 export class Jar extends HouseholdEntity {
     // ? PROPERTIES
     @Property({ length: 80 })

@@ -47,27 +47,9 @@ export const contract = {
     plans: {
         list: oc.output(z.array(schemas.PlanCatalogItem)),
     },
-    /** Stripe Checkout for Plus / Max. */
+    /** Stripe Checkout for Plus / Max; downgrades apply at period end. */
     billing: {
-        status: oc.input(schemas.HouseholdScoped).output(
-            z.object({
-                stripeEnabled: z.boolean(),
-                previewBypass: z.boolean(),
-                /** Amounts/names from Stripe Price IDs in env (when secret key is set). */
-                prices: z
-                    .object({
-                        PLUS: z.object({
-                            month: schemas.BillingPriceDisplay.nullable(),
-                            year: schemas.BillingPriceDisplay.nullable(),
-                        }),
-                        MAX: z.object({
-                            month: schemas.BillingPriceDisplay.nullable(),
-                            year: schemas.BillingPriceDisplay.nullable(),
-                        }),
-                    })
-                    .nullable(),
-            })
-        ),
+        status: oc.input(schemas.HouseholdScoped).output(schemas.HouseholdBillingStatus),
         createCheckoutSession: oc
             .input(
                 z.object({
@@ -76,6 +58,32 @@ export const contract = {
                     interval: z.enum(['month', 'year']),
                 })
             )
+            .output(
+                z.object({
+                    /** Checkout URL when a new subscription is needed. */
+                    url: z.url().nullable(),
+                    /** True when an existing subscription was upgraded in place (proration). */
+                    applied: z.boolean(),
+                })
+            ),
+        /**
+         * Downgrade / cancel — keeps current entitlements until period end
+         * (industry standard). Preview / no-Stripe applies immediately.
+         */
+        schedulePlanChange: oc
+            .input(
+                z.object({
+                    householdId: schemas.HouseholdId,
+                    planKey: z.enum([PlanKey.BASIC, PlanKey.PLUS]),
+                })
+            )
+            .output(schemas.HouseholdBillingStatus),
+        /**
+         * Stripe Customer Portal — payment methods, invoices, cancel / change plan.
+         * Changes sync back via webhooks (`customer.subscription.*`).
+         */
+        createPortalSession: oc
+            .input(z.object({ householdId: schemas.HouseholdId }))
             .output(z.object({ url: z.url() })),
     },
     coach: {

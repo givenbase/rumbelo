@@ -1,11 +1,17 @@
-import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    Logger,
+    ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PlanKey, PLAN_RANK } from '@rumbelo/contracts';
 import Stripe from 'stripe';
 
 import type { Env } from '../../../../common/config/env.config';
-import { currentUserId } from '../../../../common/household/household.context';
-import { HouseholdSettingsService } from '../../../auth/household/household-settings/household-settings.service';
+import { HouseholdBillingService } from '../../../auth/household/household-billing/household-billing.service';
+import { AccountService } from '../../../auth/user/account/account.service';
 import {
     stripeLookupKey,
     type BillingInterval,
@@ -14,12 +20,14 @@ import {
 import {
     customerIdFromStripe,
     isActiveSubscriptionStatus,
+    periodFieldsFromSubscription,
     planKeyFromSubscription,
     subscriptionIdFromCheckout,
 } from './stripe-subscription.util';
 
 /**
  * Stripe Checkout for Plus / Max + webhook sync of planKey.
+ * Downgrades / cancel keep entitlements until period end (industry standard).
  * Prices resolve via stable lookup keys (seed with `pnpm stripe:seed-plans`).
  * When the secret key is unset (or BILLING_PREVIEW_BYPASS), plan changes stay free.
  */
@@ -32,7 +40,8 @@ export class BillingService {
 
     constructor(
         @Inject(ConfigService) private readonly config: ConfigService<Env, true>,
-        @Inject(HouseholdSettingsService) private readonly settings: HouseholdSettingsService
+        @Inject(HouseholdBillingService) private readonly billing: HouseholdBillingService,
+        @Inject(AccountService) private readonly accounts: AccountService
     ) {
         const key = this.config.get('STRIPE_SECRET_KEY', { infer: true });
         this.stripe = key ? new Stripe(key) : null;
@@ -49,10 +58,18 @@ export class BillingService {
         return !this.stripe;
     }
 
-    async status() {
+    async status(householdId: string) {
+        const snap = await this.billing.getSnapshot(householdId);
         return {
             stripeEnabled: this.isStripeEnabled(),
             previewBypass: this.isPreviewBypass(),
+            planKey: snap.planKey,
+            periodEndsAt: snap.periodEndsAt?.toISOString() ?? null,
+            periodStartedAt: snap.periodStartedAt?.toISOString() ?? null,
+            isCancelAtPeriodEnd: snap.isCancelAtPeriodEnd,
+            scheduledPlanKey: snap.scheduledPlanKey,
+            hasStripeCustomer: Boolean(snap.stripeCustomerId),
+            hasActiveSubscription: Boolean(snap.stripeSubscriptionId),
             prices: await this.loadPriceCatalog(),
         };
     }
@@ -117,14 +134,18 @@ export class BillingService {
 
     /**
      * Reject client-driven upgrades to paid tiers when Stripe is live.
-     * Downgrades to Basic and same-tier patches stay allowed.
+     * Downgrades must use {@link schedulePlanChange}.
      */
     assertFreePlanChangeAllowed(from: PlanKey, to: PlanKey): void {
         if (this.isPreviewBypass()) return;
-        if (to === PlanKey.BASIC) return;
-        if (PLAN_RANK[to] <= PLAN_RANK[from]) return;
+        if (from === to) return;
+        if (PLAN_RANK[to] > PLAN_RANK[from]) {
+            throw new ServiceUnavailableException(
+                'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
+            );
+        }
         throw new ServiceUnavailableException(
-            'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
+            'Plan downgrades take effect at period end — use billing.schedulePlanChange'
         );
     }
 
@@ -132,11 +153,29 @@ export class BillingService {
         householdId: string;
         planKey: PaidPlanKey;
         interval: BillingInterval;
-    }): Promise<{ url: string }> {
+    }): Promise<{ url: string | null; applied: boolean }> {
         if (!this.stripe || this.isPreviewBypass()) {
             throw new ServiceUnavailableException(
                 'Stripe Checkout is not enabled — use household.updateSettings (preview / local)'
             );
+        }
+
+        const snap = await this.billing.getSnapshot(input.householdId);
+        if (PLAN_RANK[input.planKey] <= PLAN_RANK[snap.planKey]) {
+            throw new BadRequestException(
+                `${input.planKey} is not an upgrade from ${snap.planKey}`
+            );
+        }
+
+        // Already subscribed (e.g. Plus → Max): change price now with proration.
+        if (snap.stripeSubscriptionId) {
+            await this.upgradeExistingSubscription({
+                householdId: input.householdId,
+                subscriptionId: snap.stripeSubscriptionId,
+                planKey: input.planKey,
+                interval: input.interval,
+            });
+            return { url: null, applied: true };
         }
 
         const priceId = await this.priceIdFor(input.planKey, input.interval);
@@ -147,8 +186,8 @@ export class BillingService {
         }
 
         const appOrigin = this.config.get('DOMAIN_APP', { infer: true });
-        const userId = currentUserId();
-        const existingCustomer = await this.settings.getStripeCustomerId(input.householdId);
+        const { account } = await this.accounts.ensureCurrentAccount();
+        const existingCustomer = snap.stripeCustomerId;
 
         const session = await this.stripe.checkout.sessions.create({
             mode: 'subscription',
@@ -160,7 +199,7 @@ export class BillingService {
             metadata: {
                 householdId: input.householdId,
                 planKey: input.planKey,
-                userId,
+                accountId: account.id,
             },
             subscription_data: {
                 metadata: {
@@ -174,7 +213,294 @@ export class BillingService {
             throw new ServiceUnavailableException('Stripe did not return a Checkout URL');
         }
 
+        return { url: session.url, applied: false };
+    }
+
+    /**
+     * Downgrade / cancel at period end. Keeps current planKey until Stripe
+     * applies the change (subscription.deleted or scheduled price change).
+     */
+    async schedulePlanChange(input: {
+        householdId: string;
+        planKey: typeof PlanKey.BASIC | typeof PlanKey.PLUS;
+    }) {
+        const snap = await this.billing.getSnapshot(input.householdId);
+        if (PLAN_RANK[input.planKey] >= PLAN_RANK[snap.planKey]) {
+            throw new BadRequestException(
+                `${input.planKey} is not a downgrade from ${snap.planKey}`
+            );
+        }
+        if (input.planKey === PlanKey.PLUS && snap.planKey !== PlanKey.MAX) {
+            throw new BadRequestException('Only Max can schedule a downgrade to Plus');
+        }
+
+        // Preview / no Stripe: apply immediately.
+        if (this.isPreviewBypass() || !this.stripe) {
+            await this.billing.setPlanKey(input.householdId, input.planKey);
+            return this.status(input.householdId);
+        }
+
+        if (!snap.stripeSubscriptionId) {
+            await this.billing.setPlanKey(input.householdId, input.planKey);
+            return this.status(input.householdId);
+        }
+
+        if (input.planKey === PlanKey.BASIC) {
+            await this.scheduleCancelAtPeriodEnd(input.householdId, snap.stripeSubscriptionId);
+        } else {
+            await this.schedulePaidDowngrade(
+                input.householdId,
+                snap.stripeSubscriptionId,
+                PlanKey.PLUS
+            );
+        }
+
+        return this.status(input.householdId);
+    }
+
+    /**
+     * Stripe Customer Portal — cards, invoices, cancel / switch plan.
+     * Creates a Customer if the household has not checked out yet.
+     * Portal mutations sync via `customer.subscription.updated` / `.deleted`.
+     */
+    async createPortalSession(householdId: string): Promise<{ url: string }> {
+        if (!this.stripe || this.isPreviewBypass()) {
+            throw new ServiceUnavailableException(
+                'Stripe Customer Portal is not enabled — set STRIPE_SECRET_KEY'
+            );
+        }
+
+        const customerId = await this.ensureStripeCustomer(householdId);
+        const appOrigin = this.config.get('DOMAIN_APP', { infer: true });
+
+        const session = await this.stripe.billingPortal.sessions.create({
+            customer: customerId,
+            return_url: `${appOrigin}/settings/general/plan?billing=return`,
+        });
+
+        if (!session.url) {
+            throw new ServiceUnavailableException('Stripe did not return a Portal URL');
+        }
+
         return { url: session.url };
+    }
+
+    /** Reuse stored Customer or create one linked to this household. */
+    private async ensureStripeCustomer(householdId: string): Promise<string> {
+        if (!this.stripe) {
+            throw new ServiceUnavailableException('Stripe is not configured');
+        }
+
+        const existing = await this.billing.getStripeCustomerId(householdId);
+        if (existing) return existing;
+
+        const { account, user } = await this.accounts.ensureCurrentAccount();
+        const customer = await this.stripe.customers.create({
+            email: user.email,
+            name: user.name?.trim() || undefined,
+            metadata: {
+                householdId,
+                accountId: account.id,
+            },
+        });
+
+        const snap = await this.billing.getSnapshot(householdId);
+        await this.billing.applyStripeBilling(householdId, {
+            planKey: snap.planKey,
+            stripeCustomerId: customer.id,
+        });
+
+        return customer.id;
+    }
+
+    private async upgradeExistingSubscription(input: {
+        householdId: string;
+        subscriptionId: string;
+        planKey: PaidPlanKey;
+        interval: BillingInterval;
+    }): Promise<void> {
+        if (!this.stripe) return;
+
+        const priceId = await this.priceIdFor(input.planKey, input.interval);
+        if (!priceId) {
+            throw new ServiceUnavailableException(
+                `Missing Stripe price for ${input.planKey} / ${input.interval} — run pnpm stripe:seed-plans`
+            );
+        }
+
+        const subscription = await this.stripe.subscriptions.retrieve(input.subscriptionId, {
+            expand: ['items.data.price'],
+        });
+        const item = subscription.items.data[0];
+        if (!item) {
+            throw new ServiceUnavailableException('Stripe subscription has no items');
+        }
+
+        // Clear any pending cancel / schedule before upgrading.
+        if (subscription.cancel_at_period_end) {
+            await this.stripe.subscriptions.update(input.subscriptionId, {
+                cancel_at_period_end: false,
+            });
+        }
+        await this.releaseSubscriptionSchedule(subscription);
+
+        const updated = await this.stripe.subscriptions.update(input.subscriptionId, {
+            items: [{ id: item.id, price: priceId }],
+            proration_behavior: 'create_prorations',
+            metadata: {
+                ...subscription.metadata,
+                householdId: input.householdId,
+                planKey: input.planKey,
+            },
+            expand: ['items.data.price'],
+        });
+
+        await this.billing.applyStripeBilling(input.householdId, {
+            planKey: input.planKey,
+            stripeCustomerId: customerIdFromStripe(updated.customer),
+            stripeSubscriptionId: updated.id,
+            ...periodFieldsFromSubscription(updated),
+            scheduledPlanKey: null,
+            isCancelAtPeriodEnd: false,
+        });
+        this.logger.log(
+            `Plan ${input.planKey} applied in-place for household ${input.householdId}`
+        );
+    }
+
+    private async scheduleCancelAtPeriodEnd(
+        householdId: string,
+        subscriptionId: string
+    ): Promise<void> {
+        if (!this.stripe) return;
+
+        const subscription = await this.stripe.subscriptions.retrieve(subscriptionId, {
+            expand: ['items.data.price'],
+        });
+        await this.releaseSubscriptionSchedule(subscription);
+
+        const updated = await this.stripe.subscriptions.update(subscriptionId, {
+            cancel_at_period_end: true,
+            expand: ['items.data.price'],
+        });
+
+        const currentPlan = planKeyFromSubscription(updated) ?? PlanKey.PLUS;
+        await this.billing.applyStripeBilling(householdId, {
+            planKey: currentPlan,
+            stripeCustomerId: customerIdFromStripe(updated.customer),
+            stripeSubscriptionId: updated.id,
+            ...periodFieldsFromSubscription(updated),
+            scheduledPlanKey: PlanKey.BASIC,
+            isCancelAtPeriodEnd: true,
+        });
+        this.logger.log(
+            `Cancel at period end scheduled for household ${householdId} (keeps ${currentPlan})`
+        );
+    }
+
+    private async schedulePaidDowngrade(
+        householdId: string,
+        subscriptionId: string,
+        toPlan: typeof PlanKey.PLUS
+    ): Promise<void> {
+        if (!this.stripe) return;
+
+        const subscription = await this.stripe.subscriptions.retrieve(subscriptionId, {
+            expand: ['items.data.price'],
+        });
+        const item = subscription.items.data[0];
+        if (!item?.price || typeof item.price === 'string') {
+            throw new ServiceUnavailableException('Stripe subscription item price missing');
+        }
+
+        const interval: BillingInterval =
+            item.price.recurring?.interval === 'year' ? 'year' : 'month';
+        const newPriceId = await this.priceIdFor(toPlan, interval);
+        if (!newPriceId) {
+            throw new ServiceUnavailableException(
+                `Missing Stripe price for ${toPlan} / ${interval} — run pnpm stripe:seed-plans`
+            );
+        }
+
+        if (subscription.cancel_at_period_end) {
+            await this.stripe.subscriptions.update(subscriptionId, {
+                cancel_at_period_end: false,
+            });
+        }
+
+        const periodEnd = item.current_period_end;
+        if (!periodEnd) {
+            throw new ServiceUnavailableException('Stripe subscription has no period end');
+        }
+
+        let scheduleId =
+            typeof subscription.schedule === 'string'
+                ? subscription.schedule
+                : subscription.schedule?.id;
+
+        if (!scheduleId) {
+            const created = await this.stripe.subscriptionSchedules.create({
+                from_subscription: subscriptionId,
+            });
+            scheduleId = created.id;
+        }
+
+        const schedule = await this.stripe.subscriptionSchedules.retrieve(scheduleId);
+        const currentPhase = schedule.phases[0];
+        if (!currentPhase) {
+            throw new ServiceUnavailableException('Stripe subscription schedule has no phase');
+        }
+
+        await this.stripe.subscriptionSchedules.update(scheduleId, {
+            end_behavior: 'release',
+            phases: [
+                {
+                    start_date: currentPhase.start_date,
+                    end_date: periodEnd,
+                    items: [{ price: item.price.id, quantity: 1 }],
+                },
+                {
+                    start_date: periodEnd,
+                    items: [{ price: newPriceId, quantity: 1 }],
+                    metadata: {
+                        householdId,
+                        planKey: toPlan,
+                    },
+                },
+            ],
+        });
+
+        const refreshed = await this.stripe.subscriptions.retrieve(subscriptionId, {
+            expand: ['items.data.price'],
+        });
+        const currentPlan = planKeyFromSubscription(refreshed) ?? PlanKey.MAX;
+        await this.billing.applyStripeBilling(householdId, {
+            planKey: currentPlan,
+            stripeCustomerId: customerIdFromStripe(refreshed.customer),
+            stripeSubscriptionId: refreshed.id,
+            ...periodFieldsFromSubscription(refreshed),
+            scheduledPlanKey: toPlan,
+            isCancelAtPeriodEnd: false,
+        });
+        this.logger.log(
+            `Downgrade to ${toPlan} scheduled at period end for household ${householdId}`
+        );
+    }
+
+    private async releaseSubscriptionSchedule(subscription: Stripe.Subscription): Promise<void> {
+        if (!this.stripe) return;
+        const scheduleId =
+            typeof subscription.schedule === 'string'
+                ? subscription.schedule
+                : subscription.schedule?.id;
+        if (!scheduleId) return;
+        try {
+            await this.stripe.subscriptionSchedules.release(scheduleId);
+        } catch (err) {
+            this.logger.warn(
+                `Could not release schedule ${scheduleId}: ${err instanceof Error ? err.message : String(err)}`
+            );
+        }
     }
 
     async handleWebhookEvent(rawBody: Buffer, signature: string): Promise<void> {
@@ -195,9 +521,11 @@ export class BillingService {
                 await this.onCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
                 break;
             case 'customer.subscription.updated':
+                // Portal cancel / plan switches / renewals land here.
                 await this.onSubscriptionUpdated(event.data.object as Stripe.Subscription);
                 break;
             case 'customer.subscription.deleted':
+                // Portal cancel at period end (or immediate) — drop to Basic.
                 await this.onSubscriptionDeleted(event.data.object as Stripe.Subscription);
                 break;
             default:
@@ -208,8 +536,7 @@ export class BillingService {
     private async onCheckoutCompleted(session: Stripe.Checkout.Session): Promise<void> {
         if (!this.stripe) return;
 
-        const householdId =
-            session.metadata?.householdId ?? session.client_reference_id ?? null;
+        const householdId = session.metadata?.householdId ?? session.client_reference_id ?? null;
         if (!householdId) {
             this.logger.warn('checkout.session.completed missing householdId');
             return;
@@ -219,11 +546,13 @@ export class BillingService {
         const customerId = customerIdFromStripe(session.customer);
 
         let planKey: PaidPlanKey | null = null;
+        let period: ReturnType<typeof periodFieldsFromSubscription> | undefined;
         if (subscriptionId) {
             const subscription = await this.stripe.subscriptions.retrieve(subscriptionId, {
                 expand: ['items.data.price'],
             });
             planKey = planKeyFromSubscription(subscription);
+            period = periodFieldsFromSubscription(subscription);
         }
 
         if (!planKey) {
@@ -238,10 +567,12 @@ export class BillingService {
             return;
         }
 
-        await this.settings.applyStripeBilling(householdId, {
+        await this.billing.applyStripeBilling(householdId, {
             planKey,
             stripeCustomerId: customerId,
             stripeSubscriptionId: subscriptionId,
+            ...period,
+            scheduledPlanKey: null,
         });
         this.logger.log(`Plan ${planKey} applied for household ${householdId} via Checkout`);
     }
@@ -271,12 +602,28 @@ export class BillingService {
             return;
         }
 
-        await this.settings.applyStripeBilling(householdId, {
+        const period = periodFieldsFromSubscription(subscription);
+        const snap = await this.billing.getSnapshot(householdId);
+
+        // Keep a scheduled downgrade marker while cancel_at_period_end is set,
+        // or while we still expect Max→Plus and price has not switched yet.
+        let scheduledPlanKey: PlanKey | null = null;
+        if (period.isCancelAtPeriodEnd) {
+            scheduledPlanKey = PlanKey.BASIC;
+        } else if (snap.scheduledPlanKey && snap.scheduledPlanKey !== planKey) {
+            scheduledPlanKey = snap.scheduledPlanKey;
+        }
+
+        await this.billing.applyStripeBilling(householdId, {
             planKey,
             stripeCustomerId: customerIdFromStripe(subscription.customer),
             stripeSubscriptionId: subscription.id,
+            ...period,
+            scheduledPlanKey,
         });
-        this.logger.log(`Plan ${planKey} synced for household ${householdId} via subscription.updated`);
+        this.logger.log(
+            `Plan ${planKey} synced for household ${householdId} via subscription.updated`
+        );
     }
 
     private async onSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
@@ -288,10 +635,15 @@ export class BillingService {
             return;
         }
 
-        await this.settings.applyStripeBilling(householdId, {
+        await this.billing.applyStripeBilling(householdId, {
             planKey: PlanKey.BASIC,
             stripeCustomerId: customerIdFromStripe(subscription.customer),
             stripeSubscriptionId: null,
+            periodStartedAt: null,
+            periodEndsAt: null,
+            trialEndsAt: null,
+            isCancelAtPeriodEnd: false,
+            scheduledPlanKey: null,
         });
         this.logger.log(`Plan BASIC applied for household ${householdId} via subscription.deleted`);
     }
@@ -299,7 +651,7 @@ export class BillingService {
     private async resolveHouseholdId(subscription: Stripe.Subscription): Promise<string | null> {
         const fromMeta = subscription.metadata?.householdId?.trim();
         if (fromMeta) return fromMeta;
-        return this.settings.findHouseholdIdByStripeSubscriptionId(subscription.id);
+        return this.billing.findHouseholdIdByStripeSubscriptionId(subscription.id);
     }
 
     /** Resolve `price_…` via lookup key (Meltizo-style). */

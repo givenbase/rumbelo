@@ -22,7 +22,7 @@ export class CoachService {
         );
         return rows.map(message => ({
             id: message.id,
-            householdId: message.householdId,
+            householdId: message.household,
             period: message.period,
             kind: message.kind,
             text: message.text,

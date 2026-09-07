@@ -4,7 +4,6 @@ import {
     type HouseholdSettingsPatch,
     type PlanKey,
     PLAN_RANK,
-    PlanKey as PlanKeyEnum,
     canUseHouseholdKind,
     capabilitiesFor,
     householdFitsPlan,
@@ -21,6 +20,8 @@ import { ConfigService } from '@nestjs/config';
 
 import type { Env } from '../../../../common/config/env.config';
 import { AuthMember } from '../managed/member/auth-member.entity';
+import { HouseholdBilling } from '../household-billing/household-billing.entity';
+import { HouseholdBillingService } from '../household-billing/household-billing.service';
 import {
     DEFAULT_FEATURE_SETTINGS,
     DEFAULT_MONEY_SETTINGS,
@@ -42,25 +43,29 @@ export interface CreateHouseholdSettingsInput {
  * Household money-board preferences (`household_settings`).
  *
  * One row per Better Auth household; created by onboarding or lazily on first
- * read. Plan / kind rules (Basic is solo-only, seat limits) are enforced here.
+ * read. Plan tier lives on {@link HouseholdBilling}; this DTO still exposes
+ * `planKey` for the app by composing both rows.
  */
 @Injectable()
 export class HouseholdSettingsService {
     constructor(
         @Inject(EntityManager) private readonly em: EntityManager,
-        @Inject(ConfigService) private readonly config: ConfigService<Env, true>
+        @Inject(ConfigService) private readonly config: ConfigService<Env, true>,
+        @Inject(HouseholdBillingService) private readonly billing: HouseholdBillingService
     ) {}
 
     // ====================================================================
     // ? CREATE Operations
     // ====================================================================
 
-    /** Seed the settings row during onboarding. Caller flushes. */
+    /**
+     * Seed settings + billing during onboarding. Caller flushes.
+     * Billing is persisted here so planKey is set before first get().
+     */
     create(input: CreateHouseholdSettingsInput): HouseholdSettings {
-        return this.em.create(HouseholdSettings, {
-            householdId: input.householdId,
+        const settings = this.em.create(HouseholdSettings, {
+            household: input.householdId,
             kind: input.kind,
-            planKey: input.planKey,
             currency: input.currency,
             why: input.why,
             moneySettings: { ...DEFAULT_MONEY_SETTINGS, ...input.money },
@@ -69,6 +74,13 @@ export class HouseholdSettingsService {
             answers: {},
             onboardedAt: new Date(),
         } as never);
+        this.em.persist(
+            this.em.create(HouseholdBilling, {
+                household: input.householdId,
+                planKey: input.planKey,
+            } as never)
+        );
+        return settings;
     }
 
     // ====================================================================
@@ -77,12 +89,13 @@ export class HouseholdSettingsService {
 
     /** Settings row is created lazily so onboarding never has to pre-seed it. */
     async get(householdId: string): Promise<HouseholdSettingsDto> {
-        let row = await this.em.findOne(HouseholdSettings, { householdId });
+        let row = await this.em.findOne(HouseholdSettings, { household: householdId });
         if (!row) {
-            row = this.em.create(HouseholdSettings, { householdId } as never);
+            row = this.em.create(HouseholdSettings, { household: householdId } as never);
             await this.em.persist(row).flush();
         }
-        return toSettingsDto(row);
+        const planKey = await this.billing.getPlanKey(householdId);
+        return toSettingsDto(row, planKey);
     }
 
     // ====================================================================
@@ -94,13 +107,14 @@ export class HouseholdSettingsService {
         patch: Omit<HouseholdSettingsPatch, 'householdId'>,
         opts?: { allowPaidUpgrade?: boolean; allowStripeBillingSync?: boolean }
     ): Promise<HouseholdSettingsDto> {
-        let row = await this.em.findOne(HouseholdSettings, { householdId });
+        let row = await this.em.findOne(HouseholdSettings, { household: householdId });
         if (!row) {
-            row = this.em.create(HouseholdSettings, { householdId } as never);
+            row = this.em.create(HouseholdSettings, { household: householdId } as never);
             this.em.persist(row);
         }
 
-        const nextPlan = patch.planKey ?? row.planKey;
+        const currentPlan = await this.billing.getPlanKey(householdId);
+        const nextPlan = patch.planKey ?? currentPlan;
         const nextKind = patch.kind ?? row.kind;
 
         if (patch.kind !== undefined && !canUseHouseholdKind(nextPlan, patch.kind)) {
@@ -111,7 +125,7 @@ export class HouseholdSettingsService {
 
         if (patch.planKey !== undefined) {
             if (!opts?.allowPaidUpgrade && !opts?.allowStripeBillingSync) {
-                this.assertClientPlanChangeAllowed(row.planKey, patch.planKey);
+                this.assertClientPlanChangeAllowed(currentPlan, patch.planKey);
             }
             // Stripe is billing source of truth — skip seat/kind fit on cancel/sync
             // so multi-member households can downgrade to Basic without blocking the webhook.
@@ -131,7 +145,6 @@ export class HouseholdSettingsService {
         if (patch.why !== undefined) row.why = patch.why;
         if (patch.kind !== undefined) row.kind = patch.kind;
         if (patch.currency !== undefined) row.currency = patch.currency;
-        if (patch.planKey !== undefined) row.planKey = patch.planKey;
         if (patch.money) {
             row.moneySettings = { ...row.moneySettings, ...patch.money };
         }
@@ -146,69 +159,42 @@ export class HouseholdSettingsService {
         }
 
         await this.em.flush();
-        return toSettingsDto(row);
-    }
 
-    /** Internal — Stripe webhook / Checkout sync (not exposed on public DTO). */
-    async applyStripeBilling(
-        householdId: string,
-        input: {
-            planKey: PlanKey;
-            stripeCustomerId?: string | null;
-            stripeSubscriptionId?: string | null;
-        }
-    ): Promise<void> {
-        let row = await this.em.findOne(HouseholdSettings, { householdId });
-        if (!row) {
-            row = this.em.create(HouseholdSettings, { householdId } as never);
-            this.em.persist(row);
+        if (patch.planKey !== undefined) {
+            await this.billing.setPlanKey(householdId, patch.planKey);
         }
 
-        row.planKey = input.planKey;
-        if (input.stripeCustomerId !== undefined) {
-            row.stripeCustomerId = input.stripeCustomerId;
-        }
-        if (input.stripeSubscriptionId !== undefined) {
-            row.stripeSubscriptionId = input.stripeSubscriptionId;
-        }
-        await this.em.flush();
-    }
-
-    async findHouseholdIdByStripeSubscriptionId(
-        stripeSubscriptionId: string
-    ): Promise<string | null> {
-        const row = await this.em.findOne(HouseholdSettings, { stripeSubscriptionId });
-        return row?.householdId ?? null;
-    }
-
-    async getStripeCustomerId(householdId: string): Promise<string | null> {
-        const row = await this.em.findOne(HouseholdSettings, { householdId });
-        return row?.stripeCustomerId ?? null;
+        const planKey = await this.billing.getPlanKey(householdId);
+        return toSettingsDto(row, planKey);
     }
 
     /**
-     * When Stripe is configured (and not in preview bypass), paid upgrades must
-     * go through Checkout — not a free updateSettings call.
+     * When Stripe is live, plan changes must not go through updateSettings:
+     * upgrades → Checkout / in-place proration; downgrades → schedulePlanChange.
      */
     private assertClientPlanChangeAllowed(from: PlanKey, to: PlanKey): void {
         const bypass = this.config.get('BILLING_PREVIEW_BYPASS', { infer: true });
         const stripeKey = this.config.get('STRIPE_SECRET_KEY', { infer: true });
         if (bypass || !stripeKey) return;
-        if (to === PlanKeyEnum.BASIC) return;
-        if (PLAN_RANK[to] <= PLAN_RANK[from]) return;
+        if (from === to) return;
+        if (PLAN_RANK[to] > PLAN_RANK[from]) {
+            throw new ServiceUnavailableException(
+                'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
+            );
+        }
         throw new ServiceUnavailableException(
-            'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
+            'Plan downgrades take effect at period end — use billing.schedulePlanChange'
         );
     }
 }
 
-function toSettingsDto(row: HouseholdSettings): HouseholdSettingsDto {
+function toSettingsDto(row: HouseholdSettings, planKey: PlanKey): HouseholdSettingsDto {
     return {
-        householdId: row.householdId,
+        householdId: row.household,
         why: row.why,
         kind: row.kind,
         currency: row.currency,
-        planKey: row.planKey,
+        planKey,
         money: {
             ...DEFAULT_MONEY_SETTINGS,
             ...row.moneySettings,

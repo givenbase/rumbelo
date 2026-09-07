@@ -2,13 +2,16 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { HouseholdScopedRepository } from '../../../../../common/household/household-scoped.repository';
-import { currentUserId } from '../../../../../common/household/household.context';
+import { AccountService } from '../../../../auth/user/account/account.service';
 import { Gratitude } from './gratitude.entity';
 
 @Injectable()
 export class GratitudeService {
     private readonly repo: HouseholdScopedRepository<Gratitude>;
-    constructor(@Inject(EntityManager) private readonly em: EntityManager) {
+    constructor(
+        @Inject(EntityManager) private readonly em: EntityManager,
+        @Inject(AccountService) private readonly accounts: AccountService
+    ) {
         this.repo = new HouseholdScopedRepository(em, Gratitude);
     }
 
@@ -17,17 +20,18 @@ export class GratitudeService {
     // ====================================================================
 
     async create(input: { householdId: string; week: string; text: string }) {
+        const { account } = await this.accounts.ensureCurrentAccount();
         const row = this.em.create(Gratitude, {
-            householdId: input.householdId,
-            userId: currentUserId(),
+            household: input.householdId,
+            account: account.id,
             week: input.week,
             text: input.text,
         } as never);
         await this.em.persist(row).flush();
         return {
             id: row.id,
-            householdId: row.householdId,
-            userId: row.userId,
+            householdId: row.household,
+            accountId: row.account,
             week: row.week,
             text: row.text,
             createdAt: row.createdAt.toISOString(),
@@ -42,8 +46,8 @@ export class GratitudeService {
         const rows = await this.repo.find({ week }, { orderBy: { createdAt: 'DESC' } });
         return rows.map(gratitude => ({
             id: gratitude.id,
-            householdId: gratitude.householdId,
-            userId: gratitude.userId,
+            householdId: gratitude.household,
+            accountId: gratitude.account,
             week: gratitude.week,
             text: gratitude.text,
             createdAt: gratitude.createdAt.toISOString(),

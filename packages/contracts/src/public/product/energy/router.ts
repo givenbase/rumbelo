@@ -14,7 +14,7 @@ export const contract = {
             )
             .output(z.array(schemas.EnergyLog)),
         create: oc
-            .input(schemas.EnergyLog.omit({ id: true, userId: true }))
+            .input(schemas.EnergyLog.omit({ id: true, accountId: true }))
             .output(schemas.EnergyLog),
         summary: oc.input(schemas.HouseholdScoped).output(z.array(schemas.EnergySummary)),
     },

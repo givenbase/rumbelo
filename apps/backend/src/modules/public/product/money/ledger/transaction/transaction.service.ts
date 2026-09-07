@@ -39,7 +39,7 @@ export class TransactionService {
         note?: string | null;
     }) {
         const entity = this.em.create(Transaction, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             account: input.accountId ? this.em.getReference(BankAccount, input.accountId) : null,
             jar: input.jarId ? this.em.getReference(Jar, input.jarId) : null,
             category: input.categoryId ? this.em.getReference(Category, input.categoryId) : null,
@@ -81,7 +81,7 @@ export class TransactionService {
             parsed.forEach((row, i) => {
                 if (seen.has(keys[i]!)) return;
                 this.em.create(Transaction, {
-                    householdId: currentHouseholdId(),
+                    household: currentHouseholdId(),
                     account: this.em.getReference(BankAccount, accountId),
                     amount: row.amount,
                     bookedOn: row.bookedOn,
@@ -207,7 +207,7 @@ export class TransactionService {
 export function toDto(transaction: Transaction) {
     return {
         id: transaction.id,
-        householdId: transaction.householdId,
+        householdId: transaction.household,
         accountId: transaction.account?.id ?? null,
         jarId: transaction.jar?.id ?? null,
         categoryId: transaction.category?.id ?? null,

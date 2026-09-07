@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { HouseholdSettingsModule } from '../../../auth/household/household-settings/household-settings.module';
+import { HouseholdBillingModule } from '../../../auth/household/household-billing/household-billing.module';
+import { AccountModule } from '../../../auth/user/account/account.module';
 import { BillingController } from './billing.controller';
 import { BillingService } from './billing.service';
 import { StripeWebhookController } from './stripe-webhook.controller';
 
 @Module({
-    imports: [HouseholdSettingsModule],
+    imports: [HouseholdBillingModule, AccountModule],
     controllers: [BillingController, StripeWebhookController],
     providers: [BillingService],
     exports: [BillingService],

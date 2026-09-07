@@ -72,7 +72,8 @@ See `docs/ENTITY_STYLE.md`. Enforced by `pnpm lint:entities`:
 | Instant | `*At` (`timestamptz`) | `closedAt` |
 | JSON array | plural | `aliases`, `unlocks` |
 | JSON object | bag / `*Json` | `metadata`, `payloadJson` |
-| FK | `*Id` | `householdId` |
+| FK (ORM relation) | relation noun | `household`, `account`, `jar` — never `householdId` on `@ManyToOne` |
+| FK (scalar `@Property`) | `*Id` | `appliedRuleId` |
 | Collection | plural relation | `events` |
 
 ### Enums — contracts + `NativeEnum` + Zod 4

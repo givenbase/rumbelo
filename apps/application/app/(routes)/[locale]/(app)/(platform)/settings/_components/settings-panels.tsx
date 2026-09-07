@@ -3,9 +3,9 @@
 import { api } from '@/app/_lib/api';
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
     AccountKind,
@@ -38,7 +38,15 @@ import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumbel
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
-import { CAPABILITIES, diffPlans, lockCopyFor, memberLimitLabel, PLAN_LABELS, PLAN_RANK, PlanKey } from '@/app/_lib/plan';
+import {
+    CAPABILITIES,
+    diffPlans,
+    lockCopyFor,
+    memberLimitLabel,
+    PLAN_LABELS,
+    PLAN_RANK,
+    PlanKey,
+} from '@/app/_lib/plan';
 import { isLiveData, PREVIEW_MODE } from '@/app/_lib/preview';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
@@ -1487,6 +1495,8 @@ export function AutomationSettings() {
 
 export function PlanSettings() {
     const queryClient = useQueryClient();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const { householdId } = useAuth();
     const { showToast, plan, setPlan } = useAppShell();
     const [billing, setBilling] = useState<'month' | 'year'>('month');
@@ -1494,11 +1504,22 @@ export function PlanSettings() {
 
     const billingStatus = useLiveQuery(
         apiQuery.billing.status.queryOptions({ input: { householdId: householdId! } }),
-        { stripeEnabled: false, previewBypass: true, prices: null },
+        {
+            stripeEnabled: false,
+            previewBypass: true,
+            planKey: PlanKey.BASIC,
+            periodEndsAt: null,
+            periodStartedAt: null,
+            isCancelAtPeriodEnd: false,
+            scheduledPlanKey: null,
+            hasStripeCustomer: false,
+            hasActiveSubscription: false,
+            prices: null,
+        },
         Boolean(householdId) && !PREVIEW_MODE
     );
 
-    /** Stripe Checkout required only when backend reports stripeEnabled. */
+    /** Stripe Checkout / Portal when backend reports stripeEnabled. */
     const stripeLive = !PREVIEW_MODE && billingStatus.data?.stripeEnabled === true;
     const freePlanSwitch = !stripeLive;
     const pendingDiff = pendingPlan ? diffPlans(plan, pendingPlan) : null;
@@ -1507,6 +1528,26 @@ export function PlanSettings() {
         pendingPlan !== PlanKey.BASIC &&
         !freePlanSwitch &&
         pendingDiff?.direction === 'upgrade';
+    const pendingPeriodEndDowngrade =
+        Boolean(pendingPlan) && !freePlanSwitch && pendingDiff?.direction === 'downgrade';
+
+    // Return from Checkout or Customer Portal — refresh entitlement from webhooks.
+    useEffect(() => {
+        const checkoutResult = searchParams.get('checkout');
+        const billingReturn = searchParams.get('billing');
+        if (!checkoutResult && billingReturn !== 'return') return;
+
+        void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
+        void queryClient.invalidateQueries({ queryKey: apiQuery.billing.status.key() });
+
+        if (checkoutResult === 'success') {
+            showToast('Payment received — plan updates when Stripe confirms', 'success');
+        } else if (billingReturn === 'return') {
+            showToast('Billing updated — syncing from Stripe', 'info');
+        }
+
+        router.replace('/settings/general/plan');
+    }, [searchParams, queryClient, router, showToast]);
 
     const savePlan = useMutation({
         mutationFn: async (next: PlanKey) => {
@@ -1517,9 +1558,40 @@ export function PlanSettings() {
             setPlan(data.planKey);
             setPendingPlan(null);
             void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.billing.status.key() });
             showToast(`${PLAN_LABELS[data.planKey]} selected`, 'success');
         },
         onError: () => showToast('Could not update plan', 'error'),
+    });
+
+    const scheduleDowngrade = useMutation({
+        mutationFn: async (next: typeof PlanKey.BASIC | typeof PlanKey.PLUS) => {
+            if (!householdId) throw new Error('No household');
+            return api.billing.schedulePlanChange({ householdId, planKey: next });
+        },
+        onSuccess: data => {
+            setPlan(data.planKey);
+            setPendingPlan(null);
+            void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
+            void queryClient.invalidateQueries({ queryKey: apiQuery.billing.status.key() });
+            const until = data.periodEndsAt
+                ? new Date(data.periodEndsAt).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                  })
+                : null;
+            const nextLabel = data.scheduledPlanKey
+                ? PLAN_LABELS[data.scheduledPlanKey as PlanKey]
+                : null;
+            showToast(
+                until && nextLabel
+                    ? `${PLAN_LABELS[data.planKey]} until ${until}, then ${nextLabel}`
+                    : `${PLAN_LABELS[data.planKey]} kept until period end`,
+                'success'
+            );
+        },
+        onError: () => showToast('Could not schedule plan change', 'error'),
     });
 
     const checkout = useMutation({
@@ -1531,10 +1603,35 @@ export function PlanSettings() {
                 interval: billing,
             });
         },
+        onSuccess: ({ url, applied }, next) => {
+            if (url) {
+                window.location.assign(url);
+                return;
+            }
+            if (applied) {
+                setPlan(next);
+                setPendingPlan(null);
+                void queryClient.invalidateQueries({ queryKey: apiQuery.household.settings.key() });
+                void queryClient.invalidateQueries({ queryKey: apiQuery.billing.status.key() });
+                showToast(`${PLAN_LABELS[next]} upgraded`, 'success');
+            }
+        },
+        onError: () => showToast('Could not start Stripe Checkout', 'error'),
+    });
+
+    const openPortal = useMutation({
+        mutationFn: async () => {
+            if (!householdId) throw new Error('No household');
+            return api.billing.createPortalSession({ householdId });
+        },
         onSuccess: ({ url }) => {
             window.location.assign(url);
         },
-        onError: () => showToast('Could not start Stripe Checkout', 'error'),
+        onError: () =>
+            showToast(
+                'Could not open Stripe billing portal — enable Customer Portal in Stripe Dashboard',
+                'error'
+            ),
     });
 
     function choosePlan(next: PlanKey) {
@@ -1547,17 +1644,29 @@ export function PlanSettings() {
 
     function confirmPlanChange() {
         if (!pendingPlan || !pendingDiff) return;
-        if (
-            pendingNeedsCheckout &&
-            (pendingPlan === PlanKey.PLUS || pendingPlan === PlanKey.MAX)
-        ) {
+        if (pendingNeedsCheckout && (pendingPlan === PlanKey.PLUS || pendingPlan === PlanKey.MAX)) {
             checkout.mutate(pendingPlan);
+            return;
+        }
+        if (
+            pendingPeriodEndDowngrade &&
+            (pendingPlan === PlanKey.BASIC || pendingPlan === PlanKey.PLUS)
+        ) {
+            scheduleDowngrade.mutate(pendingPlan);
             return;
         }
         savePlan.mutate(pendingPlan);
     }
 
-    const busy = savePlan.isPending || checkout.isPending || billingStatus.isLoading;
+    const busy =
+        savePlan.isPending ||
+        checkout.isPending ||
+        scheduleDowngrade.isPending ||
+        openPortal.isPending ||
+        billingStatus.isLoading;
+    const scheduledPlanKey = billingStatus.data?.scheduledPlanKey ?? null;
+    const periodEndsAt = billingStatus.data?.periodEndsAt ?? null;
+    const hasActiveSubscription = billingStatus.data?.hasActiveSubscription === true;
 
     const cards: {
         key: PlanKey;
@@ -1668,6 +1777,19 @@ export function PlanSettings() {
                                         <span className="rounded-full border border-line px-2 py-0.5 font-mono text-[8px] tracking-widest text-fg-secondary uppercase">
                                             {card.tag}
                                         </span>
+                                        {cur && scheduledPlanKey && periodEndsAt ? (
+                                            <span className="font-mono text-[10px] tracking-wide text-fg-muted uppercase">
+                                                until{' '}
+                                                {new Date(periodEndsAt).toLocaleDateString(
+                                                    undefined,
+                                                    {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                    }
+                                                )}{' '}
+                                                → {PLAN_LABELS[scheduledPlanKey as PlanKey]}
+                                            </span>
+                                        ) : null}
                                     </span>
                                     <p className="line-clamp-2 text-xs leading-snug text-fg-muted">
                                         {card.line}
@@ -1697,11 +1819,41 @@ export function PlanSettings() {
                     })}
                 </div>
             </SettingsInkCard>
+
+            {stripeLive ? (
+                <SettingsInkCard
+                    eyebrow="Payment & invoices"
+                    blurb={
+                        hasActiveSubscription
+                            ? 'Update your card, download invoices, or change the subscription in Stripe. Changes sync back here via webhooks.'
+                            : 'Add a payment method in Stripe before or after you upgrade. Subscription changes sync back here via webhooks.'
+                    }>
+                    <div className="flex flex-wrap items-center justify-between gap-3 py-2">
+                        <p className="text-xs leading-snug text-fg-muted">
+                            {hasActiveSubscription
+                                ? 'Opens Stripe Customer Portal for this household.'
+                                : 'Creates a Stripe customer for this household if needed.'}
+                        </p>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            className="shrink-0 rounded-full font-mono text-[10px] tracking-widest uppercase"
+                            disabled={busy}
+                            onClick={() => openPortal.mutate()}>
+                            {openPortal.isPending ? '…' : 'Manage billing'}
+                        </Button>
+                    </div>
+                </SettingsInkCard>
+            ) : null}
+
             <PlanChangeDialog
                 open={pendingPlan !== null}
                 diff={pendingDiff}
                 busy={busy}
                 stripeCheckout={pendingNeedsCheckout}
+                periodEndDowngrade={pendingPeriodEndDowngrade}
+                periodEndsAt={periodEndsAt}
                 onOpenChange={open => {
                     if (!open) setPendingPlan(null);
                 }}
@@ -1713,7 +1865,7 @@ export function PlanSettings() {
                         ? 'Preview mode — plan switches are free (no Stripe).'
                         : freePlanSwitch
                           ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY and run pnpm stripe:seed-plans to charge.'
-                          : 'Paid upgrades open Stripe Checkout. Plan activates after payment (webhook).'
+                          : 'Upgrades charge now. Downgrades keep your current plan until the paid period ends. Manage card & invoices via Stripe Portal.'
                 }
             />
         </SettingsPanel>

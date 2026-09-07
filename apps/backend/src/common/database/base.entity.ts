@@ -8,10 +8,12 @@ import { v7 as uuidv7 } from 'uuid';
  * (account profile, backoffice catalogs, templates).
  *
  * Household-scoped product rows extend {@link HouseholdEntity} instead —
- * that class adds only `householdId` on top of this base (no duplicated fields).
+ * that class adds `household` → AuthHousehold (`mapToPk` string uuid) on top of this base
+ * (no duplicated fields). 1:1 settings also use {@link HouseholdEntity} with
+ * UNIQUE(`household`).
  *
  * Better Auth tables (`AuthUser`, `AuthHousehold`, …) do **not** extend this —
- * they keep library-owned opaque text primary keys (not Postgres uuid).
+ * BA mints the same uuidv7 via `advanced.database.generateId` in auth.config.
  */
 export abstract class BaseEntity {
     /** uuid v7 — time-ordered keys keep btree inserts local. */

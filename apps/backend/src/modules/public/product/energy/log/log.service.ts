@@ -4,10 +4,8 @@ import { CAPABILITIES, EnergyMetric, EnergyTrend } from '@rumbelo/contracts';
 
 import { PlanAccessService } from '../../../../../common/capability';
 import { HouseholdScopedRepository } from '../../../../../common/household/household-scoped.repository';
-import {
-    currentHouseholdId,
-    currentUserId,
-} from '../../../../../common/household/household.context';
+import { currentHouseholdId } from '../../../../../common/household/household.context';
+import { AccountService } from '../../../../auth/user/account/account.service';
 
 import { EnergyLog } from './energy-log.entity';
 
@@ -23,7 +21,8 @@ export class LogService {
     private readonly repo: HouseholdScopedRepository<EnergyLog>;
     constructor(
         @Inject(EntityManager) private readonly em: EntityManager,
-        @Inject(PlanAccessService) private readonly planAccess: PlanAccessService
+        @Inject(PlanAccessService) private readonly planAccess: PlanAccessService,
+        @Inject(AccountService) private readonly accounts: AccountService
     ) {
         this.repo = new HouseholdScopedRepository(em, EnergyLog);
     }
@@ -45,9 +44,10 @@ export class LogService {
             await this.planAccess.assertCapability(capabilityKey);
         }
 
-        const userId = currentUserId();
+        const { account } = await this.accounts.ensureCurrentAccount();
+        const accountId = account.id;
         let row = await this.repo.findOne({
-            userId,
+            account: accountId,
             loggedOn: input.on,
             metric,
         });
@@ -56,8 +56,8 @@ export class LogService {
             row.note = input.note ?? null;
         } else {
             row = this.em.create(EnergyLog, {
-                householdId: currentHouseholdId(),
-                userId,
+                household: currentHouseholdId(),
+                account: accountId,
                 loggedOn: input.on,
                 metric: input.metric,
                 value: String(input.value),
@@ -68,8 +68,8 @@ export class LogService {
         await this.em.flush();
         return {
             id: row.id,
-            householdId: row.householdId,
-            userId: row.userId,
+            householdId: row.household,
+            accountId: row.account,
             on: row.loggedOn,
             metric: row.metric,
             value: Number(row.value),
@@ -85,8 +85,8 @@ export class LogService {
         const rows = await this.repo.find({}, { orderBy: { loggedOn: 'DESC' }, limit: 200 });
         return rows.map(log => ({
             id: log.id,
-            householdId: log.householdId,
-            userId: log.userId,
+            householdId: log.household,
+            accountId: log.account,
             on: log.loggedOn,
             metric: log.metric,
             value: Number(log.value),

@@ -31,7 +31,7 @@ export class RuleService {
         isActive?: boolean;
     }) {
         const entity = this.em.create(Rule, {
-            householdId: currentHouseholdId(),
+            household: currentHouseholdId(),
             field: input.field as RuleField,
             matcher: input.matcher as RuleMatcher,
             value: input.value.trim(),
@@ -96,7 +96,7 @@ export class RuleService {
 
         const inbox = await this.em.find(
             Transaction,
-            { householdId: currentHouseholdId(), status: TransactionStatus.INBOX },
+            { household: currentHouseholdId(), status: TransactionStatus.INBOX },
             { orderBy: { bookedOn: 'DESC' }, limit: 500 }
         );
 
@@ -172,7 +172,7 @@ function fieldValue(transaction: Transaction, field: RuleField): string {
 export function toDto(rule: Rule) {
     return {
         id: rule.id,
-        householdId: rule.householdId,
+        householdId: rule.household,
         field: rule.field,
         matcher: rule.matcher,
         value: rule.value,

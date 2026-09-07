@@ -1,4 +1,4 @@
-import { randomBytes } from 'node:crypto';
+import { v7 as uuidv7 } from 'uuid';
 
 import type { EntityManager } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
@@ -28,6 +28,7 @@ import { Account } from '../../../modules/auth/user/account/account.entity';
 import { AccountSettings } from '../../../modules/auth/user/account/account-settings/account-settings.entity';
 import { JarTemplate } from '../../../modules/backoffice/product/money/template/jar/jar.entity';
 import { HouseholdSettings } from '../../../modules/auth/household/household-settings/household-settings.entity';
+import { HouseholdBilling } from '../../../modules/auth/household/household-billing/household-billing.entity';
 import { EnergyLog } from '../../../modules/public/product/energy/log/energy-log.entity';
 import { BankAccount } from '../../../modules/public/product/money/ledger/account/bank-account.entity';
 import { Transaction } from '../../../modules/public/product/money/ledger/transaction/transaction.entity';
@@ -107,16 +108,16 @@ export class DemoHouseholdSeeder extends Seeder {
 
         let org = await em.findOne(AuthHousehold, { slug: demo.slug });
         if (!org) {
-            // Seeder-only insert into BA tables — opaque text ids (not BaseEntity uuid).
+            // Seeder-only insert into BA tables — uuidv7 (same as auth.config generateId).
             org = em.create(AuthHousehold, {
-                id: authTextId(),
+                id: authUuid(),
                 name: demo.householdName,
                 slug: demo.slug,
                 createdAt: new Date(),
             } as never);
             em.persist(org);
             em.create(AuthMember, {
-                id: authTextId(),
+                id: authUuid(),
                 household: org,
                 user,
                 role: 'owner',
@@ -125,12 +126,11 @@ export class DemoHouseholdSeeder extends Seeder {
         }
 
         const householdId = org.id;
-        let settings = await em.findOne(HouseholdSettings, { householdId });
+        let settings = await em.findOne(HouseholdSettings, { household: householdId });
         if (!settings) {
             settings = em.create(HouseholdSettings, {
-                householdId,
+                household: householdId,
                 why: demo.why,
-                planKey: demo.planKey,
                 moneySettings: {
                     periodStartDay: 1,
                     incomeRhythm:
@@ -140,7 +140,6 @@ export class DemoHouseholdSeeder extends Seeder {
             } as never);
             em.persist(settings);
         } else {
-            settings.planKey = demo.planKey;
             settings.why = demo.why;
             settings.moneySettings = {
                 ...settings.moneySettings,
@@ -149,11 +148,22 @@ export class DemoHouseholdSeeder extends Seeder {
             };
         }
 
-        const jarCount = await em.count(Jar, { householdId });
+        let billing = await em.findOne(HouseholdBilling, { household: householdId });
+        if (!billing) {
+            billing = em.create(HouseholdBilling, {
+                household: householdId,
+                planKey: demo.planKey,
+            } as never);
+            em.persist(billing);
+        } else {
+            billing.planKey = demo.planKey;
+        }
+
+        const jarCount = await em.count(Jar, { household: householdId });
         if (jarCount === 0) {
             for (const meta of templates) {
                 em.create(Jar, {
-                    householdId,
+                    household: householdId,
                     key: meta.key,
                     name: meta.name,
                     subtitle: meta.subtitle,
@@ -167,18 +177,22 @@ export class DemoHouseholdSeeder extends Seeder {
 
         await em.flush();
 
-        const jars = await em.find(Jar, { householdId }, { orderBy: { sortOrder: 'ASC' } });
+        const jars = await em.find(
+            Jar,
+            { household: householdId },
+            { orderBy: { sortOrder: 'ASC' } }
+        );
         const necessities = jars.find(j => j.key === 'NECESSITIES') ?? jars[0]!;
         const ff = jars.find(j => j.key === 'FINANCIAL_FREEDOM') ?? jars[0]!;
         const lts = jars.find(j => j.key === 'LONG_TERM_SAVINGS') ?? jars[0]!;
 
-        const incomeCount = await em.count(IncomeSource, { householdId });
+        const incomeCount = await em.count(IncomeSource, { household: householdId });
         if (incomeCount === 0) {
             const amount =
                 demo.persona === 'basic' ? 180_000 : demo.persona === 'plus' ? 320_000 : 650_000;
             const startedOn = new Date().toISOString().slice(0, 10);
             const source = em.create(IncomeSource, {
-                householdId,
+                household: householdId,
                 name:
                     demo.persona === 'plus'
                         ? 'Freelance'
@@ -198,14 +212,14 @@ export class DemoHouseholdSeeder extends Seeder {
                 startedOn,
             } as never);
             em.create(IncomeAmountPeriod, {
-                householdId,
+                household: householdId,
                 incomeSource: source,
                 amount,
                 effectiveOn: startedOn,
             } as never);
 
             em.create(FixedCost, {
-                householdId,
+                household: householdId,
                 name: 'Huur',
                 amount: demo.persona === 'basic' ? 85_000 : 120_000,
                 dueDay: 1,
@@ -216,7 +230,7 @@ export class DemoHouseholdSeeder extends Seeder {
             } as never);
 
             em.create(FixedCost, {
-                householdId,
+                household: householdId,
                 name: 'Boodschappen',
                 amount: demo.persona === 'basic' ? 35_000 : 45_000,
                 dueDay: 1,
@@ -228,7 +242,7 @@ export class DemoHouseholdSeeder extends Seeder {
 
             if (demo.persona !== 'basic') {
                 em.create(Debt, {
-                    householdId,
+                    household: householdId,
                     name: demo.persona === 'plus' ? 'Creditcard' : 'Zakelijke lening',
                     kind: demo.persona === 'plus' ? DebtKind.CREDIT_CARD : DebtKind.LOAN,
                     balance: demo.persona === 'plus' ? 240_000 : 1_200_000,
@@ -239,7 +253,7 @@ export class DemoHouseholdSeeder extends Seeder {
                 } as never);
 
                 em.create(Goal, {
-                    householdId,
+                    household: householdId,
                     jar: demo.persona === 'max' ? ff : lts,
                     name: demo.persona === 'max' ? 'Beleggingsbuffer' : 'Noodfonds',
                     target: demo.persona === 'max' ? 2_500_000 : 600_000,
@@ -249,10 +263,10 @@ export class DemoHouseholdSeeder extends Seeder {
                 } as never);
             }
 
-            let bank = await em.findOne(BankAccount, { householdId });
+            let bank = await em.findOne(BankAccount, { household: householdId });
             if (!bank) {
                 bank = em.create(BankAccount, {
-                    householdId,
+                    household: householdId,
                     name: 'Betaalrekening',
                     kind: AccountKind.CHECKING,
                 } as never);
@@ -262,7 +276,7 @@ export class DemoHouseholdSeeder extends Seeder {
             const today = new Date().toISOString().slice(0, 10);
             const week = isoWeekKey(new Date());
             em.create(Transaction, {
-                householdId,
+                household: householdId,
                 account: bank,
                 amount: -2_450,
                 bookedOn: today,
@@ -274,7 +288,7 @@ export class DemoHouseholdSeeder extends Seeder {
 
             if (demo.persona !== 'basic') {
                 em.create(Transaction, {
-                    householdId,
+                    household: householdId,
                     account: bank,
                     jar: necessities,
                     amount: -6_500,
@@ -285,16 +299,16 @@ export class DemoHouseholdSeeder extends Seeder {
                 } as never);
 
                 em.create(EnergyLog, {
-                    householdId,
-                    userId: user.id,
+                    household: householdId,
+                    account: rumbeloAccount.id,
                     metric: EnergyMetric.SLEEP,
                     value: '72.00',
                     loggedOn: today,
                 } as never);
 
                 em.create(Gratitude, {
-                    householdId,
-                    userId: user.id,
+                    household: householdId,
+                    account: rumbeloAccount.id,
                     week,
                     text: 'Rustige ochtend zonder haast.',
                 } as never);
@@ -305,9 +319,9 @@ export class DemoHouseholdSeeder extends Seeder {
     }
 }
 
-/** Opaque text id for seeder inserts into Better Auth tables (not BaseEntity uuid). */
-function authTextId(): string {
-    return randomBytes(16).toString('hex');
+/** Uuidv7 for seeder inserts into Better Auth tables (matches auth.config generateId). */
+function authUuid(): string {
+    return uuidv7();
 }
 
 function isoWeekKey(date: Date): string {

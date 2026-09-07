@@ -17,8 +17,8 @@ import { BankAccount } from '../account/bank-account.entity';
  */
 @Entity(entityConfig({ schema: 'public', domain: 'money', tableName: 'transaction' }))
 // The dashboard reads by period and the inbox reads by status; cover both.
-@Index({ properties: ['householdId', 'bookedOn'] })
-@Index({ properties: ['householdId', 'status'] })
+@Index({ properties: ['household', 'bookedOn'] })
+@Index({ properties: ['household', 'status'] })
 @Index({ properties: ['dedupeKey'] })
 export class Transaction extends HouseholdEntity {
     // ? PROPERTIES
