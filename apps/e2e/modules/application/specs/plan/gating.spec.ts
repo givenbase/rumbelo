@@ -11,12 +11,12 @@ basicTest.describe('plan gating @plan', () => {
         await expect(personaPage.getByText(LOCKED_COPY).first()).toBeVisible();
     });
 
-    basicTest('Basic sees growth income locked (not page content)', async ({ personaPage }) => {
+    basicTest('Basic can open growth income', async ({ personaPage }) => {
         await personaPage.goto('/product/growth/income');
+        await expect(personaPage).not.toHaveURL(/sign-in/);
         await expect(
             personaPage.getByRole('region', { name: /plan upgrade required/i })
-        ).toBeVisible({ timeout: 30_000 });
-        await expect(personaPage.getByText(/Available in the Max plan/i)).toBeVisible();
+        ).toHaveCount(0);
     });
 
     basicTest('Basic sees net worth locked', async ({ personaPage }) => {

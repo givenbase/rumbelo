@@ -25,9 +25,9 @@ import {
 /**
  * Plan gating — plan → product → feature (`{product}-{feature}`).
  *
- * Full catalog (26 keys). Basic grants free surfaces + growth-goals (capped).
+ * Full catalog (26 keys). Basic grants free surfaces + growth goals/income (capped goals).
  * Plus adds debt / bank / import / energy week·train·food / invite.
- * Max adds growth income·board·learn / soul-chakra.
+ * Max adds growth board·learn / soul-chakra.
  */
 
 export {

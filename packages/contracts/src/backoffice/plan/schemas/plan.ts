@@ -154,7 +154,7 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
         key: CAPABILITIES.growthIncome,
         kind: CapabilityKind.SCREEN,
         name: 'Income',
-        description: 'Income curve, levers, and growth targets.',
+        description: 'Income sources, monthly net, and earning methods.',
         sortOrder: 22,
     },
     [CAPABILITIES.growthLearn]: {
@@ -270,7 +270,11 @@ const BASIC_ACCESS: ProductFeatureMap = {
         CAPABILITIES.moneyTransactions,
         CAPABILITIES.moneyFixedCosts,
     ],
-    [CapabilityProduct.GROWTH]: [CAPABILITIES.growthOverview, CAPABILITIES.growthGoals],
+    [CapabilityProduct.GROWTH]: [
+        CAPABILITIES.growthOverview,
+        CAPABILITIES.growthGoals,
+        CAPABILITIES.growthIncome,
+    ],
     [CapabilityProduct.ENERGY]: [CAPABILITIES.energyOverview, CAPABILITIES.energySleep],
     [CapabilityProduct.SOUL]: [
         CAPABILITIES.soulOverview,
@@ -301,11 +305,7 @@ const PLUS_EXTRA: ProductFeatureMap = {
 const MAX_EXTRA: ProductFeatureMap = {
     [CapabilityProduct.HOME]: [],
     [CapabilityProduct.MONEY]: [],
-    [CapabilityProduct.GROWTH]: [
-        CAPABILITIES.growthIncome,
-        CAPABILITIES.growthBoard,
-        CAPABILITIES.growthLearn,
-    ],
+    [CapabilityProduct.GROWTH]: [CAPABILITIES.growthBoard, CAPABILITIES.growthLearn],
     [CapabilityProduct.ENERGY]: [],
     [CapabilityProduct.SOUL]: [CAPABILITIES.soulChakra],
     [CapabilityProduct.PLATFORM]: [],
