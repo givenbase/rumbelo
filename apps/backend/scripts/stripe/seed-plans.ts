@@ -1,18 +1,22 @@
-#!/usr/bin/env tsx
 /**
  * Create Rumbelo Plus / Max Stripe Products + recurring Prices (idempotent).
  *
  * Mirrors Meltizo's website-plan-package.stripe.ts pattern: stable lookup_keys
  * so test and live accounts share the same code paths after seeding each one.
  *
- * Usage (from apps/backend, with STRIPE_SECRET_KEY set):
- *   pnpm stripe:seed-plans
+ * Usage:
+ *   pnpm env:use:staging && pnpm stripe:seed-plans:stag
+ *   pnpm env:use:production && pnpm stripe:seed-plans:prod
+ *   pnpm stripe:seed-plans          # local / development .env
+ *
+ * Production requires `--yes` (or CONFIRM=yes) when NODE_ENV=production.
  */
-import { join } from 'node:path';
+import { createInterface } from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
 
-import { config as loadDotenv } from 'dotenv';
 import Stripe from 'stripe';
 
+import { loadEnvFiles } from '../../src/common/config/load-env';
 import {
     STRIPE_PLAN_CATALOG,
     STRIPE_PLAN_LOOKUP_KEYS,
@@ -20,8 +24,7 @@ import {
     type PaidPlanKey,
 } from '../../src/modules/public/platform/billing/config/stripe-plans.config';
 
-loadDotenv({ path: join(process.cwd(), '.env') });
-loadDotenv({ path: join(process.cwd(), '.env.local') });
+const loadedEnvPath = loadEnvFiles();
 
 const PLAN_KEYS = Object.keys(STRIPE_PLAN_CATALOG) as PaidPlanKey[];
 const INTERVALS: BillingInterval[] = ['month', 'year'];
@@ -99,16 +102,65 @@ async function ensurePrice(
     return price;
 }
 
-async function main() {
-    const secret = process.env.STRIPE_SECRET_KEY?.trim();
-    if (!secret) {
-        console.error('❌ STRIPE_SECRET_KEY is required (set in apps/backend/.env)');
+function hasFlag(flag: string): boolean {
+    return process.argv.includes(flag);
+}
+
+async function confirmProduction(nodeEnv: string, stripeMode: 'live' | 'test'): Promise<void> {
+    if (nodeEnv !== 'production') return;
+    if (hasFlag('--yes') || process.env.CONFIRM === 'yes') return;
+
+    console.log('\n⚠️  NODE_ENV=production — this seeds the Stripe account for the production key.');
+    console.log(`   Stripe mode detected: ${stripeMode}`);
+    if (stripeMode === 'test') {
+        console.log(
+            '   Note: key looks like sk_test_… — usually staging uses test; prod uses sk_live_…'
+        );
+    }
+
+    if (!input.isTTY) {
+        console.error('❌ Refusing production seed without --yes in non-interactive mode.');
         process.exit(1);
     }
 
+    const rl = createInterface({ input, output });
+    const answer = await rl.question('Type "seed production" to continue: ');
+    rl.close();
+    if (answer.trim() !== 'seed production') {
+        console.error('Aborted.');
+        process.exit(1);
+    }
+}
+
+async function main() {
+    const nodeEnv = process.env.NODE_ENV || 'development';
+    const secret = process.env.STRIPE_SECRET_KEY?.trim();
+    if (!secret) {
+        console.error('❌ STRIPE_SECRET_KEY is required.');
+        console.error('   pnpm env:use:staging   then  pnpm stripe:seed-plans:stag');
+        console.error('   pnpm env:use:production then  pnpm stripe:seed-plans:prod');
+        process.exit(1);
+    }
+
+    const stripeMode = secret.startsWith('sk_live') ? 'live' : 'test';
+    await confirmProduction(nodeEnv, stripeMode);
+
+    if (nodeEnv === 'staging' && stripeMode === 'live') {
+        console.warn(
+            '⚠️  NODE_ENV=staging but STRIPE_SECRET_KEY is sk_live_… — seeding the live Stripe account.'
+        );
+    }
+    if (nodeEnv === 'production' && stripeMode === 'test') {
+        console.warn(
+            '⚠️  NODE_ENV=production but STRIPE_SECRET_KEY is sk_test_… — seeding the test Stripe account.'
+        );
+    }
+
     const stripe = new Stripe(secret);
-    const mode = secret.startsWith('sk_live') ? 'live' : 'test';
-    console.log(`\n💳 Seeding Rumbelo Stripe catalog (${mode} mode)\n`);
+    console.log(`\n💳 Seeding Rumbelo Stripe catalog`);
+    console.log(`   NODE_ENV=${nodeEnv} · Stripe=${stripeMode}`);
+    if (loadedEnvPath) console.log(`   env file → ${loadedEnvPath}`);
+    console.log('');
 
     const envLines: string[] = [];
 
@@ -126,7 +178,7 @@ async function main() {
         }
     }
 
-    console.log('\n✅ Catalog ready. Lookup keys (preferred — already wired in BillingService):');
+    console.log('\n✅ Catalog ready. Lookup keys (same in staging + prod after each seed):');
     for (const planKey of PLAN_KEYS) {
         for (const interval of INTERVALS) {
             console.log(`   ${STRIPE_PLAN_LOOKUP_KEYS[planKey][interval]}`);
