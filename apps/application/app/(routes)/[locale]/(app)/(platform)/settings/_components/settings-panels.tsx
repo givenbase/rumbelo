@@ -48,6 +48,7 @@ import {
     PlanKey,
 } from '@/app/_lib/plan';
 import { isLiveData, PREVIEW_MODE } from '@/app/_lib/preview';
+import { isDemoAccountEmail } from '@/app/_lib/demo-accounts';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { chrome as tourChrome, usePageTour } from '@/components/features/tour';
@@ -1498,10 +1499,11 @@ export function PlanSettings() {
     const queryClient = useQueryClient();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { householdId } = useAuth();
+    const { householdId, user } = useAuth();
     const { showToast, plan, setPlan } = useAppShell();
     const [billing, setBilling] = useState<'month' | 'year'>('month');
     const [pendingPlan, setPendingPlan] = useState<PlanKey | null>(null);
+    const isDemoAccount = isDemoAccountEmail(user?.email);
 
     const billingStatus = useLiveQuery(
         apiQuery.billing.status.queryOptions({ input: { householdId: householdId! } }),
@@ -1636,6 +1638,10 @@ export function PlanSettings() {
     });
 
     function choosePlan(next: PlanKey) {
+        if (isDemoAccount) {
+            showToast('Demo accounts stay on their seeded plan', 'info');
+            return;
+        }
         if (plan === next) {
             showToast(`Already on ${PLAN_LABELS[next]}`, 'info');
             return;
@@ -1803,17 +1809,19 @@ export function PlanSettings() {
                                     variant={cur ? 'secondary' : 'primary'}
                                     size="sm"
                                     className="shrink-0 rounded-full font-mono text-[10px] tracking-widest uppercase"
-                                    disabled={busy}
+                                    disabled={busy || isDemoAccount || cur}
                                     onClick={() => choosePlan(card.key)}>
                                     {cur
                                         ? 'Current'
-                                        : busy
-                                          ? '…'
-                                          : PLAN_RANK[card.key] < PLAN_RANK[plan]
-                                            ? 'Downgrade'
-                                            : card.key === PlanKey.BASIC
-                                              ? 'Choose Basic'
-                                              : 'Upgrade'}
+                                        : isDemoAccount
+                                          ? 'Locked'
+                                          : busy
+                                            ? '…'
+                                            : PLAN_RANK[card.key] < PLAN_RANK[plan]
+                                              ? 'Downgrade'
+                                              : card.key === PlanKey.BASIC
+                                                ? 'Choose Basic'
+                                                : 'Upgrade'}
                                 </Button>
                             </div>
                         );
@@ -1821,7 +1829,7 @@ export function PlanSettings() {
                 </div>
             </SettingsInkCard>
 
-            {stripeLive ? (
+            {stripeLive && !isDemoAccount ? (
                 <SettingsInkCard
                     eyebrow="Payment & invoices"
                     blurb={
@@ -1862,11 +1870,13 @@ export function PlanSettings() {
             />
             <StubNotice
                 what={
-                    PREVIEW_MODE
-                        ? 'Preview mode — plan switches are free (no Stripe).'
-                        : freePlanSwitch
-                          ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY and run pnpm stripe:seed-plans to charge.'
-                          : 'Upgrades charge now. Downgrades keep your current plan until the paid period ends. Manage card & invoices via Stripe Portal.'
+                    isDemoAccount
+                        ? 'Demo account — plan is fixed for this persona. Sign up with your own email to change plans.'
+                        : PREVIEW_MODE
+                          ? 'Preview mode — plan switches are free (no Stripe).'
+                          : freePlanSwitch
+                            ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY and run pnpm stripe:seed-plans to charge.'
+                            : 'Upgrades charge now. Downgrades keep your current plan until the paid period ends. Manage card & invoices via Stripe Portal.'
                 }
             />
         </SettingsPanel>

@@ -102,7 +102,7 @@ export function PlanChangeDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-h-none sm:overflow-visible sm:max-w-xl">
+            <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-h-none sm:max-w-xl sm:overflow-visible">
                 <DialogHeader>
                     <DialogTitle>
                         {upgrading ? `Upgrade to ${toLabel}?` : `Downgrade to ${toLabel}?`}

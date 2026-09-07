@@ -13,3 +13,11 @@ export const DEMO_ACCOUNTS: readonly {
     { persona: 'plus', email: 'plus@rumbelo.com', label: 'Plus' },
     { persona: 'max', email: 'max@rumbelo.com', label: 'Max' },
 ] as const;
+
+const DEMO_EMAILS = new Set(DEMO_ACCOUNTS.map(a => a.email.toLowerCase()));
+
+/** Seeded demo personas — plan and billing are read-only. */
+export function isDemoAccountEmail(email: string | null | undefined): boolean {
+    if (!email) return false;
+    return DEMO_EMAILS.has(email.trim().toLowerCase());
+}

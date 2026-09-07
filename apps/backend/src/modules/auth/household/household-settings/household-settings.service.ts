@@ -12,6 +12,7 @@ import {
 import { EntityManager } from '@mikro-orm/postgresql';
 import {
     BadRequestException,
+    ForbiddenException,
     Inject,
     Injectable,
     ServiceUnavailableException,
@@ -19,6 +20,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 import type { Env } from '../../../../common/config/env.config';
+import { isDemoHouseholdSlug } from '../../../../database/seeders/demo/demo-accounts';
+import { AuthHousehold } from '../managed/household/auth-household.entity';
 import { AuthMember } from '../managed/member/auth-member.entity';
 import { HouseholdBilling } from '../household-billing/household-billing.entity';
 import { HouseholdBillingService } from '../household-billing/household-billing.service';
@@ -125,6 +128,7 @@ export class HouseholdSettingsService {
 
         if (patch.planKey !== undefined) {
             if (!opts?.allowPaidUpgrade && !opts?.allowStripeBillingSync) {
+                await this.assertNotDemoHousehold(householdId);
                 this.assertClientPlanChangeAllowed(currentPlan, patch.planKey);
             }
             // Stripe is billing source of truth — skip seat/kind fit on cancel/sync
@@ -185,6 +189,14 @@ export class HouseholdSettingsService {
         throw new ServiceUnavailableException(
             'Plan downgrades take effect at period end — use billing.schedulePlanChange'
         );
+    }
+
+    /** Seeded demo households keep their plan fixed for product walkthroughs. */
+    private async assertNotDemoHousehold(householdId: string): Promise<void> {
+        const household = await this.em.findOne(AuthHousehold, { id: householdId });
+        if (isDemoHouseholdSlug(household?.slug)) {
+            throw new ForbiddenException('Demo households cannot change plans');
+        }
     }
 }
 

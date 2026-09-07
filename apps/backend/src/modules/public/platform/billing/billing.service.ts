@@ -1,15 +1,19 @@
 import {
     BadRequestException,
+    ForbiddenException,
     Inject,
     Injectable,
     Logger,
     ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { PlanKey, PLAN_RANK } from '@rumbelo/contracts';
 import Stripe from 'stripe';
 
 import type { Env } from '../../../../common/config/env.config';
+import { isDemoHouseholdSlug } from '../../../../database/seeders/demo/demo-accounts';
+import { AuthHousehold } from '../../../auth/household/managed/household/auth-household.entity';
 import { HouseholdBillingService } from '../../../auth/household/household-billing/household-billing.service';
 import { AccountService } from '../../../auth/user/account/account.service';
 import {
@@ -40,6 +44,7 @@ export class BillingService {
 
     constructor(
         @Inject(ConfigService) private readonly config: ConfigService<Env, true>,
+        @Inject(EntityManager) private readonly em: EntityManager,
         @Inject(HouseholdBillingService) private readonly billing: HouseholdBillingService,
         @Inject(AccountService) private readonly accounts: AccountService
     ) {
@@ -154,6 +159,7 @@ export class BillingService {
         planKey: PaidPlanKey;
         interval: BillingInterval;
     }): Promise<{ url: string | null; applied: boolean }> {
+        await this.assertNotDemoHousehold(input.householdId);
         if (!this.stripe || this.isPreviewBypass()) {
             throw new ServiceUnavailableException(
                 'Stripe Checkout is not enabled — use household.updateSettings (preview / local)'
@@ -224,6 +230,7 @@ export class BillingService {
         householdId: string;
         planKey: typeof PlanKey.BASIC | typeof PlanKey.PLUS;
     }) {
+        await this.assertNotDemoHousehold(input.householdId);
         const snap = await this.billing.getSnapshot(input.householdId);
         if (PLAN_RANK[input.planKey] >= PLAN_RANK[snap.planKey]) {
             throw new BadRequestException(
@@ -264,6 +271,7 @@ export class BillingService {
      * Portal mutations sync via `customer.subscription.updated` / `.deleted`.
      */
     async createPortalSession(householdId: string): Promise<{ url: string }> {
+        await this.assertNotDemoHousehold(householdId);
         if (!this.stripe || this.isPreviewBypass()) {
             throw new ServiceUnavailableException(
                 'Stripe Customer Portal is not enabled — set STRIPE_SECRET_KEY'
@@ -283,6 +291,16 @@ export class BillingService {
         }
 
         return { url: session.url };
+    }
+
+    /** Seeded demo households keep their plan fixed for product walkthroughs. */
+    private async assertNotDemoHousehold(householdId: string): Promise<void> {
+        const household = await this.em.findOne(AuthHousehold, { id: householdId });
+        if (isDemoHouseholdSlug(household?.slug)) {
+            throw new ForbiddenException(
+                'Demo households cannot change plans or open Stripe billing'
+            );
+        }
     }
 
     /** Reuse stored Customer or create one linked to this household. */

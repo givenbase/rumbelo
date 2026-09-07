@@ -48,3 +48,17 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
         why: 'Bedrijf + beleggen — Financial Freedom pot vullen zonder te gokken.',
     },
 ] as const;
+
+const DEMO_EMAILS = new Set(DEMO_ACCOUNTS.map(a => a.email.toLowerCase()));
+const DEMO_HOUSEHOLD_SLUGS = new Set(DEMO_ACCOUNTS.map(a => a.slug));
+
+/** Seeded demo personas — plan and Stripe billing are read-only. */
+export function isDemoAccountEmail(email: string | null | undefined): boolean {
+    if (!email) return false;
+    return DEMO_EMAILS.has(email.trim().toLowerCase());
+}
+
+export function isDemoHouseholdSlug(slug: string | null | undefined): boolean {
+    if (!slug) return false;
+    return DEMO_HOUSEHOLD_SLUGS.has(slug);
+}
