@@ -6,6 +6,7 @@ type JarProgressBarProps = {
     allocated: number;
     spent: number;
     committedOut: number;
+    credited?: number;
     /** Tailwind bg-* class when not overspent */
     colorClass: string;
     className?: string;
@@ -17,11 +18,12 @@ export function JarProgressBar({
     allocated,
     spent,
     committedOut,
+    credited = 0,
     colorClass,
     className,
     trackClassName,
 }: JarProgressBarProps) {
-    const coverage = jarCoverage({ allocated, spent, committedOut });
+    const coverage = jarCoverage({ allocated, spent, credited, committedOut });
     const pct = usedPctDisplay(coverage);
 
     return (

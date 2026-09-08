@@ -16,11 +16,15 @@ export function ListToolbar({
     children,
     createLabel = '+ Add',
     onCreate,
+    createSlot,
     secondary,
 }: {
     children?: ReactNode;
     createLabel?: string;
-    onCreate: () => void;
+    /** Used when {@link createSlot} is omitted. */
+    onCreate?: () => void;
+    /** Custom primary action (e.g. money menu). Replaces the default create button. */
+    createSlot?: ReactNode;
     /** Optional actions left of create (e.g. Regels toepassen). */
     secondary?: ReactNode;
 }) {
@@ -29,9 +33,15 @@ export function ListToolbar({
             <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">{children}</div>
             <div className="flex flex-wrap items-center gap-2">
                 {secondary}
-                <Button size="sm" onClick={onCreate}>
-                    {createLabel}
-                </Button>
+                {createSlot ?? (
+                    <Button
+                        size="sm"
+                        onClick={() => {
+                            onCreate?.();
+                        }}>
+                        {createLabel}
+                    </Button>
+                )}
             </div>
         </div>
     );

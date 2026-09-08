@@ -9,14 +9,14 @@
     --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
     --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-    /* Surfaces — light */
-    --color-bg: #edeff3;
-    --color-bg-app: #f5f7f9;
-    --color-surface: #ffffff;
-    --color-raised: #f4f6f8;
-    --color-sunken: #e2e6ee;
-    --color-line: rgb(14 17 22 / 0.1);
-    --color-line-strong: rgb(14 17 22 / 0.2);
+    /* Surfaces — light (slightly deeper than pure wash for balance) */
+    --color-bg: #e4e8ee;
+    --color-bg-app: #eceff4;
+    --color-surface: #f7f8fa;
+    --color-raised: #e8ecf2;
+    --color-sunken: #d5dbe5;
+    --color-line: rgb(14 17 22 / 0.11);
+    --color-line-strong: rgb(14 17 22 / 0.22);
 
     /* Foreground */
     --color-fg: #0e1116;
@@ -47,7 +47,7 @@
     --color-portal-soul: #7c3aed;
 
     --color-scrim: rgb(14 17 22 / 0.42);
-    --color-chrome: rgb(255 255 255 / 0.86);
+    --color-chrome: rgb(236 239 244 / 0.92);
 
     --radius-lg: 16px;
     --radius-md: calc(var(--radius-lg) - 4px);

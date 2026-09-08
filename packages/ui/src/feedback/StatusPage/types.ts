@@ -13,7 +13,7 @@ export interface StatusPageProps {
     homeHref?: string;
     /** Label for the home link. */
     homeLabel?: string;
-    /** Retry handler — typically `reset` from Next.js `error.tsx`. */
+    /** Retry handler — typically `router.refresh()` + error-boundary `reset()` in `startTransition`. */
     reset?: () => void;
     /** Override auto status code. Pass `0` / falsy to hide. */
     statusCode?: number | string | null;

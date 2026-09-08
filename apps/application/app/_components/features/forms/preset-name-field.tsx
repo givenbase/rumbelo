@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Input } from '@rumbelo/ui';
+import { cn } from '@rumbelo/utils';
 
 export type NamePresetOption = {
     key: string;
@@ -19,7 +20,17 @@ type PresetNameFieldProps = {
     placeholder?: string;
     disabled?: boolean;
     id?: string;
+    /**
+     * Lock the name after picking a preset (chip). Manual typing stays free.
+     * Keys in `freeTextKeys` (e.g. Other) stay editable after select.
+     */
+    lockPresets?: boolean;
+    freeTextKeys?: readonly string[];
+    /** Edit hydrate: lock this preset key on mount (not while free-typing). */
+    initialLockedKey?: string | null;
 };
+
+const EMPTY_FREE_TEXT_KEYS: readonly string[] = [];
 
 function matchesQuery(option: NamePresetOption, query: string) {
     if (!query) return true;
@@ -30,10 +41,22 @@ function matchesQuery(option: NamePresetOption, query: string) {
     );
 }
 
+function resolveLockedPreset(
+    lockPresets: boolean,
+    initialLockedKey: string | null | undefined,
+    freeTextKeys: readonly string[],
+    options: NamePresetOption[]
+): NamePresetOption | null {
+    if (!lockPresets || !initialLockedKey || freeTextKeys.includes(initialLockedKey)) {
+        return null;
+    }
+    return options.find(option => option.key === initialLockedKey) ?? null;
+}
+
 /**
  * Name input with a suggestion dropdown (design: New debt modal).
- * Free typing always allowed; the list filters as you type; picking a row
- * fills the name and calls onSelect.
+ * Default: free typing; list filters as you type; picking fills the name.
+ * With lockPresets: picking a fixed preset locks until cleared; Other / free type stays editable.
  */
 export function PresetNameField({
     value,
@@ -43,20 +66,39 @@ export function PresetNameField({
     placeholder = 'e.g. rent',
     disabled,
     id,
+    lockPresets = false,
+    freeTextKeys = EMPTY_FREE_TEXT_KEYS,
+    initialLockedKey = null,
 }: PresetNameFieldProps) {
     const [open, setOpen] = useState(false);
+    const [locked, setLocked] = useState<NamePresetOption | null>(() =>
+        resolveLockedPreset(lockPresets, initialLockedKey, freeTextKeys, options)
+    );
+    const [hydratedLockKey, setHydratedLockKey] = useState(initialLockedKey);
+    const [awaitingCustom, setAwaitingCustom] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const listboxId = `${id ?? 'preset-name'}-listbox`;
     const query = value.trim();
 
+    const freeKeySet = useMemo(() => new Set(freeTextKeys), [freeTextKeys]);
+
+    // Sync lock when edit hydrate key arrives (adjust during render — no effect).
+    if (initialLockedKey !== hydratedLockKey) {
+        setHydratedLockKey(initialLockedKey);
+        setLocked(resolveLockedPreset(lockPresets, initialLockedKey, freeTextKeys, options));
+    }
+
     const selectedKey = useMemo(() => {
+        if (locked) return locked.key;
         const match = options.find(option => option.name.toLowerCase() === query.toLowerCase());
         return match?.key ?? null;
-    }, [options, query]);
+    }, [options, query, locked]);
 
     const filtered = useMemo(
-        () => options.filter(option => matchesQuery(option, query)),
-        [options, query]
+        () =>
+            lockPresets && locked ? options : options.filter(option => matchesQuery(option, query)),
+        [options, query, lockPresets, locked]
     );
 
     const grouped = useMemo(() => {
@@ -78,36 +120,107 @@ export function PresetNameField({
         return () => document.removeEventListener('mousedown', onDoc);
     }, []);
 
+    function clearLock() {
+        setLocked(null);
+        setAwaitingCustom(false);
+        onChange('');
+        setOpen(true);
+        requestAnimationFrame(() => inputRef.current?.focus());
+    }
+
+    function pickOption(opt: NamePresetOption) {
+        onSelect?.(opt);
+        if (lockPresets && freeKeySet.has(opt.key)) {
+            setLocked(null);
+            setAwaitingCustom(true);
+            onChange('');
+            setOpen(false);
+            requestAnimationFrame(() => inputRef.current?.focus());
+            return;
+        }
+        if (lockPresets) {
+            setLocked(opt);
+            setAwaitingCustom(false);
+            onChange(opt.name);
+            setOpen(false);
+            return;
+        }
+        onChange(opt.name);
+        setOpen(false);
+    }
+
+    const showLockedChip = Boolean(lockPresets && locked);
+    const inputPlaceholder = awaitingCustom ? 'Describe where it came from…' : placeholder;
+
     return (
         <div ref={rootRef} className="relative">
-            <div className="relative">
-                <Input
-                    id={id}
-                    value={value}
-                    disabled={disabled}
-                    placeholder={placeholder}
-                    autoComplete="off"
-                    role="combobox"
-                    aria-expanded={open}
-                    aria-controls={listboxId}
-                    aria-autocomplete="list"
-                    onChange={event => {
-                        onChange(event.target.value);
-                        setOpen(true);
-                    }}
-                    onFocus={() => setOpen(true)}
-                />
-                <button
-                    type="button"
-                    disabled={disabled || options.length === 0}
-                    aria-label="Show suggestions"
-                    className="absolute top-1/2 right-2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md bg-accent/15 text-accent hover:bg-accent/25 disabled:opacity-40"
-                    onClick={() => setOpen(previous => !previous)}>
-                    <span className="text-xs tracking-widest" aria-hidden>
-                        ···
+            {showLockedChip && locked ? (
+                <div
+                    className={cn(
+                        'flex h-11 w-full items-center gap-2 rounded-lg border border-accent bg-raised px-3',
+                        disabled && 'opacity-50'
+                    )}>
+                    {locked.icon ? (
+                        <span className="shrink-0 text-base" aria-hidden>
+                            {locked.icon}
+                        </span>
+                    ) : null}
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">
+                        {locked.name}
                     </span>
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        disabled={disabled}
+                        aria-label="Clear selection"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-fg-muted hover:bg-fg/5 hover:text-fg disabled:opacity-40"
+                        onClick={clearLock}>
+                        <span aria-hidden>×</span>
+                    </button>
+                    <button
+                        type="button"
+                        disabled={disabled || options.length === 0}
+                        aria-label="Show suggestions"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent/15 text-accent hover:bg-accent/25 disabled:opacity-40"
+                        onClick={() => setOpen(previous => !previous)}>
+                        <span className="text-xs tracking-widest" aria-hidden>
+                            ···
+                        </span>
+                    </button>
+                </div>
+            ) : (
+                <div className="relative">
+                    <Input
+                        ref={inputRef}
+                        id={id}
+                        value={value}
+                        disabled={disabled}
+                        placeholder={inputPlaceholder}
+                        autoComplete="off"
+                        role="combobox"
+                        aria-expanded={open}
+                        aria-controls={listboxId}
+                        aria-autocomplete="list"
+                        onChange={event => {
+                            const next = event.target.value;
+                            onChange(next);
+                            setLocked(null);
+                            if (!next.trim()) setAwaitingCustom(false);
+                            setOpen(true);
+                        }}
+                        onFocus={() => setOpen(true)}
+                    />
+                    <button
+                        type="button"
+                        disabled={disabled || options.length === 0}
+                        aria-label="Show suggestions"
+                        className="absolute top-1/2 right-2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md bg-accent/15 text-accent hover:bg-accent/25 disabled:opacity-40"
+                        onClick={() => setOpen(previous => !previous)}>
+                        <span className="text-xs tracking-widest" aria-hidden>
+                            ···
+                        </span>
+                    </button>
+                </div>
+            )}
             {open && options.length > 0 ? (
                 <div
                     id={listboxId}
@@ -128,6 +241,7 @@ export function PresetNameField({
                                 <ul>
                                     {items.map(opt => {
                                         const selected = opt.key === selectedKey;
+                                        const isFree = freeKeySet.has(opt.key);
                                         return (
                                             <li key={opt.key}>
                                                 <button
@@ -135,11 +249,7 @@ export function PresetNameField({
                                                     role="option"
                                                     aria-selected={selected}
                                                     className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-bg/10"
-                                                    onClick={() => {
-                                                        onChange(opt.name);
-                                                        onSelect?.(opt);
-                                                        setOpen(false);
-                                                    }}>
+                                                    onClick={() => pickOption(opt)}>
                                                     <span
                                                         className={`w-4 shrink-0 text-center ${selected ? 'opacity-100' : 'opacity-0'}`}
                                                         aria-hidden>
@@ -152,7 +262,14 @@ export function PresetNameField({
                                                             {opt.icon}
                                                         </span>
                                                     ) : null}
-                                                    <span>{opt.name}</span>
+                                                    <span className="min-w-0 flex-1">
+                                                        {opt.name}
+                                                    </span>
+                                                    {lockPresets && isFree ? (
+                                                        <span className="shrink-0 text-[10px] tracking-wide text-bg/45 uppercase">
+                                                            Custom
+                                                        </span>
+                                                    ) : null}
                                                 </button>
                                             </li>
                                         );

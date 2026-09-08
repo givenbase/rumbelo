@@ -8,6 +8,7 @@ import { Button, Field, Input } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
 import { JAR_META } from '@/app/_lib/jar-meta';
+import { writeHelpersEnabled } from '@/app/_lib/feature-helpers';
 import { usePageTour } from '@/components/features/tour';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
@@ -24,6 +25,10 @@ const STEPS = [
         body: 'Soft labels only — so tips fit you. Partners can choose differently later.',
     },
     { title: 'Your why', body: 'One sentence on your dashboard. The check when money gets tight.' },
+    {
+        title: 'The Coach stays with you',
+        body: 'On-screen tips (marked ✦ The Coach) stay on while you learn — tips without shame. Open The Coach anytime for next moves. Turn tips off later in Settings → Account.',
+    },
 ];
 
 export function OnboardingOverlay() {
@@ -77,6 +82,8 @@ export function OnboardingOverlay() {
             });
             await setActiveHousehold(household.id);
             await refreshSession();
+            // Beginners start with Coach guides on; they can turn them off in Settings later.
+            writeHelpersEnabled(true);
             closeOnboarding(true);
             requestTourOffer();
             showToast('Household created', 'success');

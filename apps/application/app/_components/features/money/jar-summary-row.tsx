@@ -19,6 +19,7 @@ export type JarSummaryModel = {
     allocated: number;
     available: number;
     spent: number;
+    credited: number;
     committedOut: number;
     overspent: boolean;
     categoryCount: number;
@@ -31,12 +32,14 @@ export function JarSummaryRow({ jar }: { jar: JarSummaryModel }) {
     const coverage = jarCoverage({
         allocated: jar.allocated,
         spent: jar.spent,
+        credited: jar.credited,
         committedOut: jar.committedOut,
     });
     const activity =
-        jar.committedOut > 0 || jar.spent > 0
+        jar.committedOut > 0 || jar.spent > 0 || jar.credited > 0
             ? [
                   jar.committedOut > 0 ? `${formatMoney(jar.committedOut)} fixed` : null,
+                  jar.credited > 0 ? `${formatMoney(jar.credited)} added` : null,
                   jar.spent > 0 ? `${formatMoney(jar.spent)} spent` : null,
                   jar.categoryCount > 0 ? `${jar.categoryCount} categories` : null,
               ]
@@ -72,7 +75,7 @@ export function JarSummaryRow({ jar }: { jar: JarSummaryModel }) {
                         {formatMoney(coverage.available)}
                     </span>
                     <span className="font-mono text-xs text-fg-faint">
-                        of {formatMoney(jar.allocated)}
+                        of {formatMoney(jar.allocated + jar.credited)}
                     </span>
                 </span>
                 <span className="shrink-0 text-xs text-fg-faint" aria-hidden>
@@ -83,6 +86,7 @@ export function JarSummaryRow({ jar }: { jar: JarSummaryModel }) {
             <JarProgressBar
                 allocated={jar.allocated}
                 spent={jar.spent}
+                credited={jar.credited}
                 committedOut={jar.committedOut}
                 colorClass={jar.color}
             />

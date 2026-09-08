@@ -15,7 +15,10 @@ interface HubCard {
     value: string;
     note: string;
     color: string;
-    chart: { kind: 'bars'; bars: number[] } | { kind: 'ring'; pct: number };
+    chart:
+        | { kind: 'bars'; bars: number[] }
+        /** `progress` (default): gray → warning → green by pct. `brand`: fixed card color. */
+        | { kind: 'ring'; pct: number; tone?: 'progress' | 'brand' };
     delta?: { mark: '↑' | '↓' | '→'; text: string; positive: boolean };
     locked?: boolean;
     href: string;
@@ -65,7 +68,7 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
                             style={{ background: coach.dot }}
                         />
                         <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                            The coach
+                            The Coach
                         </span>
                         <span
                             className="font-mono text-xs font-medium tracking-widest uppercase"
@@ -135,7 +138,11 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
                                         })}
                                     </span>
                                 ) : (
-                                    <RingChart pct={card.chart.pct} color={card.color} />
+                                    <RingChart
+                                        pct={card.chart.pct}
+                                        brandColor={card.color}
+                                        tone={card.chart.tone ?? 'progress'}
+                                    />
                                 )}
                             </span>
                             <span className="text-sm leading-relaxed text-pretty text-fg-muted">
@@ -167,11 +174,38 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
     );
 }
 
-function RingChart({ pct, color }: { pct: number; color: string }) {
+/**
+ * Ring fill for “higher is better” metrics.
+ * 0% muted gray → mid warning amber → 100% success green.
+ */
+function progressRingColor(pct: number): string {
+    const p = Math.max(0, Math.min(100, pct));
+    if (p <= 0) return 'var(--color-fg-faint)';
+    if (p >= 100) return 'var(--color-success)';
+    if (p < 50) {
+        const warningShare = Math.round((p / 50) * 100);
+        return `color-mix(in oklab, var(--color-warning) ${warningShare}%, var(--color-fg-faint))`;
+    }
+    const successShare = Math.round(((p - 50) / 50) * 100);
+    return `color-mix(in oklab, var(--color-success) ${successShare}%, var(--color-warning))`;
+}
+
+function RingChart({
+    pct,
+    brandColor,
+    tone,
+}: {
+    pct: number;
+    brandColor: string;
+    tone: 'progress' | 'brand';
+}) {
     const clamped = Math.max(0, Math.min(100, pct));
+    const color = tone === 'brand' ? brandColor : progressRingColor(clamped);
+    const showStroke = clamped > 0;
+
     return (
         <span className="relative grid size-11.5 flex-none place-items-center">
-            <svg viewBox="0 0 36 36" className="size-11.5 -rotate-90">
+            <svg viewBox="0 0 36 36" className="size-11.5 -rotate-90" aria-hidden>
                 <circle
                     cx="18"
                     cy="18"
@@ -180,19 +214,24 @@ function RingChart({ pct, color }: { pct: number; color: string }) {
                     stroke="var(--color-sunken)"
                     strokeWidth="3"
                 />
-                <circle
-                    cx="18"
-                    cy="18"
-                    r="15.9"
-                    fill="none"
-                    stroke={color}
-                    strokeWidth="3"
-                    strokeDasharray={`${clamped} 100`}
-                    strokeLinecap="round"
-                    pathLength={100}
-                />
+                {showStroke ? (
+                    <circle
+                        cx="18"
+                        cy="18"
+                        r="15.9"
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="3"
+                        strokeDasharray={`${clamped} 100`}
+                        strokeLinecap="round"
+                        pathLength={100}
+                        className="transition-[stroke,stroke-dasharray] duration-500 ease-out"
+                    />
+                ) : null}
             </svg>
-            <span className="absolute font-mono text-xs text-fg-faint">{pct}%</span>
+            <span className="absolute font-mono text-xs tabular-nums" style={{ color }}>
+                {Math.round(clamped)}%
+            </span>
         </span>
     );
 }

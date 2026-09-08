@@ -13,12 +13,15 @@ import { formatMoney, formatPeriod, toPeriodKey, describePeriodTravel } from '@r
 
 import type { CoachMessage, CoachRecapItem } from '@/components/features/home/coach-verdict';
 
+import { JAR_META } from '@/app/_lib/jar-meta';
+import { jarKeyToSlug } from '@/app/_lib/jar-slug';
 import { isLiveData } from '@/app/_lib/preview';
 import { CoachVerdict } from '@/components/features/home/coach-verdict';
 import { HeroKluis } from '@/components/features/home/hero-kluis';
 import { PortalWidget } from '@/components/features/home/portal-widget';
 import { MonthScoreLog } from '@/components/features/home/month-score-log';
 import { JarDrilldownTable } from '@/components/features/money/jar-drilldown-table';
+import type { JarDrilldownItem } from '@/components/features/money/jar-drilldown-parts';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -28,7 +31,7 @@ const FALLBACK_RECAP: CoachRecapItem[] = [
         value: '—',
         what: 'spent this week',
         tint: 'var(--color-jar-give)',
-        href: '/product/money/spending',
+        href: '/product/money/transactions',
     },
     {
         portal: 'Growth',
@@ -116,7 +119,24 @@ export function HomeDashboardClient() {
 
     const liveData = dashboardQuery.data;
     const dashboard = liveData ?? emptyDashboard;
-    const jars = liveData?.jars?.length ? liveData.jars : [];
+    const jars: JarDrilldownItem[] = (liveData?.jars ?? []).map(jar => {
+        const meta = JAR_META.find(entry => entry.key === jar.key);
+        return {
+            id: jar.id,
+            key: jar.key,
+            name: jar.name,
+            subtitle: jar.subtitle ?? meta?.subtitle ?? '',
+            icon: jar.icon ?? meta?.icon ?? '◇',
+            color: meta?.color ?? 'bg-jar-nec',
+            allocated: jar.allocated,
+            available: jar.available,
+            spent: jar.spent,
+            committedOut: jar.committedOut,
+            overspent: jar.overspent,
+            categories: jar.categories ?? [],
+            href: `/product/money/jars/${jarKeyToSlug(jar.key)}`,
+        };
+    });
     const monthScore = liveData?.monthScore ?? emptyMonthScore;
     const periodLabel = liveData?.periodLabel ?? formatPeriod(periodKey, 'en-US');
     const coach: CoachMessage[] =
@@ -160,7 +180,7 @@ export function HomeDashboardClient() {
                                       : 'All sorted — time for intention.',
                                   ctaLabel: dashboard.inboxCount ? 'Sort inbox' : 'Week check',
                                   ctaHref: dashboard.inboxCount
-                                      ? '/product/money/spending'
+                                      ? '/product/money/transactions'
                                       : '/product/money/week-check',
                               },
                           ]
@@ -182,9 +202,13 @@ export function HomeDashboardClient() {
                         value: formatMoney(dashboard.safePerDay ?? 0),
                         tone: 'accent',
                     },
-                    { label: 'Left in Play', value: formatMoney(dashboard.playLeft ?? 0) },
+                    {
+                        label: 'Left in Play',
+                        value: formatMoney(dashboard.playLeft ?? 0),
+                        href: `/product/money/jars/${jarKeyToSlug('PLAY')}`,
+                    },
                 ]}>
-                <JarDrilldownTable jars={jars as never} />
+                <JarDrilldownTable jars={jars} />
             </HeroKluis>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

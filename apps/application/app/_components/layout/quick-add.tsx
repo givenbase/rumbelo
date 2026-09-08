@@ -10,7 +10,7 @@ import {
 } from '@/components/features/shell/use-plan-capabilities';
 
 const QUICK_ITEMS: { label: string; kind: CreateKind }[] = [
-    { label: 'Expense', kind: 'tx' },
+    { label: 'Transaction', kind: 'tx' },
     { label: 'Fixed cost', kind: 'fixed' },
     { label: 'Debt', kind: 'debt' },
     { label: 'Goal', kind: 'goal' },

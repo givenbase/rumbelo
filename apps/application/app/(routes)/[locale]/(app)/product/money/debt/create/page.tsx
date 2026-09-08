@@ -1,12 +1,19 @@
+import { formRoute } from '@/app/_lib/form-route-meta';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 import { DebtCreatePage } from '../_components/debt-pages';
 
-export const metadata = { title: 'New debt' };
+export const metadata = { title: formRoute('debtCreate').title };
 
 export default function Page() {
+    const meta = formRoute('debtCreate');
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">New debt</h1>
-            <DebtCreatePage />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={meta.closeHref}
+            width={meta.width}>
+            <DebtCreatePage embedded />
+        </FormRoutePageShell>
     );
 }

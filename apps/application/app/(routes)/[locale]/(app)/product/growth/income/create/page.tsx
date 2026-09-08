@@ -1,12 +1,19 @@
+import { formRoute } from '@/app/_lib/form-route-meta';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 import { IncomeCreatePage } from '../_components/income-pages';
 
-export const metadata = { title: 'New income' };
+export const metadata = { title: formRoute('incomeCreate').title };
 
 export default function Page() {
+    const meta = formRoute('incomeCreate');
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">New income</h1>
-            <IncomeCreatePage />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={meta.closeHref}
+            width={meta.width}>
+            <IncomeCreatePage embedded />
+        </FormRoutePageShell>
     );
 }

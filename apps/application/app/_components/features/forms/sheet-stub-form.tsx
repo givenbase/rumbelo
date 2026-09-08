@@ -27,7 +27,7 @@ const stubSchema = z.object({
 
 type StubValues = z.infer<typeof stubSchema>;
 
-export type StubKind = 'session' | 'asset' | 'move';
+export type StubKind = 'session' | 'asset';
 
 const KIND_COPY: Record<
     StubKind,
@@ -42,11 +42,6 @@ const KIND_COPY: Record<
         amountLabel: 'Value (€)',
         labelPlaceholder: 'e.g. bicycle',
     },
-    move: {
-        submit: 'Move money',
-        amountLabel: 'Amount (€)',
-        labelPlaceholder: 'From → to',
-    },
 };
 
 type SheetStubFormProps = {
@@ -58,8 +53,8 @@ type SheetStubFormProps = {
 };
 
 /**
- * Placeholder forms for domains without a money API yet (energy session, assets, jar moves).
- * Same shell + RHF/zod pattern as the live money forms.
+ * Placeholder forms for domains without a money API yet (energy session, assets).
+ * Jar moves use {@link MoveMoneyForm}.
  */
 export function SheetStubForm({
     kind,

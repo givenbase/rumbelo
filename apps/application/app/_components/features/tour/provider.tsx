@@ -39,6 +39,10 @@ type PageTourContextValue = {
     /** Settings / Help — clear series progress and run the full tour again. */
     restartFullTour: () => void;
     isTourDone: (tourId: string) => boolean;
+    /** Open the shell Help sheet for the current route. */
+    openHelp: () => void;
+    helpOpen: boolean;
+    setHelpOpen: (open: boolean) => void;
 };
 
 const PageTourContext = createContext<PageTourContextValue | null>(null);
@@ -108,12 +112,15 @@ export function PageTourProvider({ children }: { children: ReactNode }) {
     const [run, setRun] = useState(false);
     const [steps, setSteps] = useState<Step[]>([]);
     const [hydratedUserId, setHydratedUserId] = useState<string | null>(null);
+    const [helpOpen, setHelpOpen] = useState(false);
 
     const activeTourIdRef = useRef<PageTourId | null>(null);
     const seriesModeRef = useRef(false);
     const seriesIndexRef = useRef(0);
     const resumeHrefRef = useRef<string | null>(null);
     const startingRef = useRef(false);
+
+    const openHelp = useCallback(() => setHelpOpen(true), []);
 
     // Hydrate from account.settings when the signed-in user (and their prefs) are ready.
     if (!userId && hydratedUserId !== null) {
@@ -286,8 +293,20 @@ export function PageTourProvider({ children }: { children: ReactNode }) {
             dismissTourOffer,
             restartFullTour,
             isTourDone: (tourId: string) => isTourDone(progress, tourId),
+            openHelp,
+            helpOpen,
+            setHelpOpen,
         }),
-        [progress, startTour, requestTourOffer, acceptTourOffer, dismissTourOffer, restartFullTour]
+        [
+            progress,
+            startTour,
+            requestTourOffer,
+            acceptTourOffer,
+            dismissTourOffer,
+            restartFullTour,
+            openHelp,
+            helpOpen,
+        ]
     );
 
     return (

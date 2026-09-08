@@ -19,7 +19,14 @@ export const FULL_TOUR_CHAPTERS: FullTourChapter[] = [
     { id: 'income', href: growthPath('income'), steps: INCOME_TOUR_STEPS },
 ];
 
-const HELP_BY_PREFIX: { prefix: string; content: PageHelpContent }[] = [
+type HelpRoute = {
+    prefix: string;
+    /** When true, only the exact path matches (not children). */
+    exact?: boolean;
+    content: PageHelpContent;
+};
+
+const HELP_BY_PREFIX: HelpRoute[] = [
     {
         prefix: growthPath('income'),
         content: {
@@ -48,7 +55,22 @@ const HELP_BY_PREFIX: { prefix: string; content: PageHelpContent }[] = [
         },
     },
     {
+        prefix: moneyPath('transactions'),
+        content: {
+            title: pages.transactions.title,
+            sections: sectionsFrom(pages.transactions.sections),
+        },
+    },
+    {
+        prefix: moneyPath('debt'),
+        content: {
+            title: pages.debt.title,
+            sections: sectionsFrom(pages.debt.sections),
+        },
+    },
+    {
         prefix: moneyPath(),
+        exact: true,
         content: {
             title: pages.overview.title,
             sections: sectionsFrom(pages.overview.sections),
@@ -80,17 +102,21 @@ export function pathWithoutLocale(pathname: string): string {
     return pathname.replace(/^\/[a-z]{2}(?=\/)/, '') || pathname;
 }
 
+function pathMatches(path: string, entry: HelpRoute): boolean {
+    if (entry.exact) return path === entry.prefix;
+    return path === entry.prefix || path.startsWith(`${entry.prefix}/`);
+}
+
 /** Longest matching prefix wins so `/product/growth/income` beats `/product/growth`. */
 export function pageHelpForPathname(pathname: string): PageHelpContent {
     const path = pathWithoutLocale(pathname);
     let best: PageHelpContent | null = null;
     let bestLen = -1;
     for (const entry of HELP_BY_PREFIX) {
-        if (path === entry.prefix || path.startsWith(`${entry.prefix}/`)) {
-            if (entry.prefix.length > bestLen) {
-                best = entry.content;
-                bestLen = entry.prefix.length;
-            }
+        if (!pathMatches(path, entry)) continue;
+        if (entry.prefix.length > bestLen) {
+            best = entry.content;
+            bestLen = entry.prefix.length;
         }
     }
     return best ?? FALLBACK;

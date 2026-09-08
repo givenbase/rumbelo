@@ -36,6 +36,7 @@ export class TransactionService {
         bookedOn: string;
         description: string;
         counterparty?: string | null;
+        inflowKey?: string | null;
         note?: string | null;
     }) {
         const entity = this.em.create(Transaction, {
@@ -47,6 +48,7 @@ export class TransactionService {
             bookedOn: input.bookedOn,
             description: input.description,
             counterparty: input.counterparty ?? null,
+            inflowKey: input.amount > 0 ? input.inflowKey?.trim() || null : null,
             note: input.note ?? null,
             status: input.jarId ? TransactionStatus.SORTED : TransactionStatus.INBOX,
             source: TransactionSource.MANUAL,
@@ -182,13 +184,18 @@ export class TransactionService {
         id: string,
         patch: Partial<
             Pick<Transaction, 'description' | 'amount' | 'note' | 'status' | 'counterparty'>
-        > & { categoryId?: string | null }
+        > & { categoryId?: string | null; inflowKey?: string | null }
     ) {
         const entity = await this.transactions.findOneOrFail({ id });
-        const { categoryId, ...fields } = patch;
+        const { categoryId, inflowKey, ...fields } = patch;
         Object.assign(entity, fields);
         if (categoryId !== undefined) {
             entity.category = categoryId ? this.em.getReference(Category, categoryId) : null;
+        }
+        if (Number(entity.amount) <= 0) {
+            entity.inflowKey = null;
+        } else if (inflowKey !== undefined) {
+            entity.inflowKey = inflowKey?.trim() || null;
         }
         await this.em.flush();
         return toDto(entity);
@@ -215,6 +222,7 @@ export function toDto(transaction: Transaction) {
         bookedOn: transaction.bookedOn,
         description: transaction.description,
         counterparty: transaction.counterparty,
+        inflowKey: transaction.inflowKey,
         status: transaction.status,
         source: transaction.source,
         appliedRuleId: transaction.appliedRuleId,

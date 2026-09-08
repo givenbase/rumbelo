@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { cn, categoryVariance, formatMoney } from '@rumbelo/utils';
 
 import { JarProgressBar } from './jar-progress-bar';
@@ -11,6 +13,8 @@ export interface JarCategory {
 
 export interface JarDrilldownItem {
     id?: string;
+    /** JarKey — used to build the jar detail href when `href` is omitted. */
+    key?: string;
     name: string;
     subtitle: string;
     icon: string;
@@ -22,6 +26,52 @@ export interface JarDrilldownItem {
     committedOut?: number;
     overspent: boolean;
     categories: JarCategory[];
+    /** Jar detail page; when set, the row navigates and the chevron expands categories. */
+    href?: string;
+}
+
+function JarDrilldownBody({
+    jar,
+    spent,
+    committedOut,
+}: {
+    jar: JarDrilldownItem;
+    spent: number;
+    committedOut: number;
+}) {
+    return (
+        <>
+            <span className="flex min-w-0 flex-1 items-center gap-2.5">
+                <span className="grid size-7.5 shrink-0 place-items-center rounded-lg border border-line bg-raised text-sm">
+                    {jar.icon}
+                </span>
+                <span className="grid min-w-0 gap-0.5">
+                    <span className="truncate text-sm text-fg">{jar.name}</span>
+                    <span className="truncate font-mono text-xs tracking-wide text-fg-faint">
+                        {jar.subtitle}
+                    </span>
+                </span>
+            </span>
+
+            <JarProgressBar
+                allocated={jar.allocated}
+                spent={spent}
+                committedOut={committedOut}
+                colorClass={jar.color}
+                className="hidden sm:block"
+                trackClassName="h-2"
+            />
+
+            <span className="shrink-0 text-right tabular-nums">
+                <div className={cn('font-mono text-sm', jar.overspent ? 'text-danger' : 'text-fg')}>
+                    {formatMoney(jar.available)}
+                </div>
+                <div className="font-mono text-xs text-fg-faint">
+                    of {formatMoney(jar.allocated)}
+                </div>
+            </span>
+        </>
+    );
 }
 
 export function JarDrilldownTrigger({
@@ -35,6 +85,51 @@ export function JarDrilldownTrigger({
 }) {
     const spent = jar.spent ?? 0;
     const committedOut = jar.committedOut ?? Math.max(0, jar.allocated - spent - jar.available);
+    const href = jar.href;
+
+    const rowClass =
+        'flex items-center gap-3 sm:grid sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto] sm:gap-3';
+    const shellClass =
+        'grid w-full gap-2 rounded-lg px-1.5 py-2.5 text-left transition-colors outline-none hover:bg-raised focus-visible:ring-2 focus-visible:ring-accent/25';
+
+    if (href) {
+        return (
+            <div className="flex items-stretch gap-0.5">
+                <Link
+                    href={href}
+                    aria-label={`Open ${jar.name}`}
+                    className={cn(shellClass, 'min-w-0 flex-1')}>
+                    <span className={rowClass}>
+                        <JarDrilldownBody jar={jar} spent={spent} committedOut={committedOut} />
+                    </span>
+                    <JarProgressBar
+                        allocated={jar.allocated}
+                        spent={spent}
+                        committedOut={committedOut}
+                        colorClass={jar.color}
+                        className="sm:hidden"
+                        trackClassName="h-2"
+                    />
+                </Link>
+                <button
+                    type="button"
+                    onClick={onToggle}
+                    aria-expanded={open}
+                    aria-label={
+                        open ? `Hide ${jar.name} categories` : `Show ${jar.name} categories`
+                    }
+                    className="grid shrink-0 place-items-center rounded-lg px-2.5 transition-colors outline-none hover:bg-raised focus-visible:ring-2 focus-visible:ring-accent/25">
+                    <span
+                        className={cn(
+                            'text-xs text-fg-faint transition-transform duration-200',
+                            open && 'rotate-180'
+                        )}>
+                        ▾
+                    </span>
+                </button>
+            </div>
+        );
+    }
 
     return (
         <button
@@ -42,42 +137,9 @@ export function JarDrilldownTrigger({
             onClick={onToggle}
             aria-expanded={open}
             aria-label={jar.name}
-            className="grid w-full gap-2 rounded-lg px-1.5 py-2.5 text-left transition-colors outline-none hover:bg-raised focus-visible:ring-2 focus-visible:ring-accent/25">
+            className={shellClass}>
             <span className="flex items-center gap-3 sm:grid sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] sm:gap-3">
-                <span className="flex min-w-0 flex-1 items-center gap-2.5">
-                    <span className="grid size-7.5 shrink-0 place-items-center rounded-lg border border-line bg-raised text-sm">
-                        {jar.icon}
-                    </span>
-                    <span className="grid min-w-0 gap-0.5">
-                        <span className="truncate text-sm text-fg">{jar.name}</span>
-                        <span className="truncate font-mono text-xs tracking-wide text-fg-faint">
-                            {jar.subtitle}
-                        </span>
-                    </span>
-                </span>
-
-                <JarProgressBar
-                    allocated={jar.allocated}
-                    spent={spent}
-                    committedOut={committedOut}
-                    colorClass={jar.color}
-                    className="hidden sm:block"
-                    trackClassName="h-2"
-                />
-
-                <span className="shrink-0 text-right tabular-nums">
-                    <div
-                        className={cn(
-                            'font-mono text-sm',
-                            jar.overspent ? 'text-danger' : 'text-fg'
-                        )}>
-                        {formatMoney(jar.available)}
-                    </div>
-                    <div className="font-mono text-xs text-fg-faint">
-                        of {formatMoney(jar.allocated)}
-                    </div>
-                </span>
-
+                <JarDrilldownBody jar={jar} spent={spent} committedOut={committedOut} />
                 <span
                     className={cn(
                         'shrink-0 text-xs text-fg-faint transition-transform duration-200',

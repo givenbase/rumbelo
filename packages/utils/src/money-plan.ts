@@ -9,32 +9,35 @@ export function monthlyAmount(amount: number, cadence: Cadence | string): number
 export type JarCoverageInput = {
     allocated: number;
     spent: number;
+    /** Sorted Transaction In for the jar this period (gifts, top-ups). */
+    credited?: number;
     committedOut: number;
 };
 
 export type JarCoverage = {
-    /** allocated − spent (transactions only; ignores fixed commitments). */
+    /** allocated + credited − spent (transactions only; ignores fixed commitments). */
     remaining: number;
-    /** allocated − spent − committedOut — primary leftover for UI. */
+    /** remaining − committedOut — primary leftover for UI. */
     available: number;
-    /** available/allocated, clamped 0..1; null when nothing was allocated. */
+    /** available / (allocated + credited), clamped 0..1; null when envelope is empty. */
     progress: number | null;
-    /** (spent + committedOut)/allocated for progress bars, clamped 0..1. */
+    /** (spent + committedOut) / (allocated + credited) for progress bars, clamped 0..1. */
     usedProgress: number | null;
     overspent: boolean;
 };
 
-/** available = allocated − spent − committedOut (v1: both subtract; show all three in UI). */
+/** remaining = allocated + credited − spent; available also subtracts fixed Out. */
 export function jarCoverage(input: JarCoverageInput): JarCoverage {
-    const remaining = input.allocated - input.spent;
+    const credited = input.credited ?? 0;
+    const envelope = input.allocated + credited;
+    const remaining = envelope - input.spent;
     const available = remaining - input.committedOut;
     const used = input.spent + input.committedOut;
     return {
         remaining,
         available,
-        progress:
-            input.allocated > 0 ? Math.min(1, Math.max(0, available / input.allocated)) : null,
-        usedProgress: input.allocated > 0 ? Math.min(1, Math.max(0, used / input.allocated)) : null,
+        progress: envelope > 0 ? Math.min(1, Math.max(0, available / envelope)) : null,
+        usedProgress: envelope > 0 ? Math.min(1, Math.max(0, used / envelope)) : null,
         overspent: available < 0,
     };
 }

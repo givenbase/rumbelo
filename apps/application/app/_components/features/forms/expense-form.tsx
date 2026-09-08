@@ -30,6 +30,8 @@ import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell'
 import { ConfirmActionButton } from './confirm-action-button';
 import { resolveCategoryId, useCategoryTemplates } from './catalog-helpers';
 import { ExpenseIntentField, type ExpenseIntentSelection } from './expense-intent-field';
+import { PresetNameField } from './preset-name-field';
+import { resolveInflowKey, TRANSACTION_IN_PRESETS } from './transaction-in-presets';
 
 const expenseFormSchema = z.object({
     amount: z
@@ -44,6 +46,8 @@ const expenseFormSchema = z.object({
         ),
     note: z.string().max(280),
     jarId: z.string().min(1, 'Choose a jar'),
+    /** Free-text label for Transaction In (gift, tax return, …). */
+    label: z.string().max(120),
 });
 
 export type ExpenseFormValues = z.infer<typeof expenseFormSchema> & {
@@ -51,12 +55,16 @@ export type ExpenseFormValues = z.infer<typeof expenseFormSchema> & {
     description?: string;
     counterparty?: string | null;
     categoryId?: string | null;
+    /** Stable In source tag when logged from a preset. */
+    inflowKey?: string | null;
 };
 
 type ExpenseFormProps = {
     defaultValues?: Partial<ExpenseFormValues>;
     embedded?: boolean;
     mode?: 'create' | 'edit';
+    /** Out = spend (negative); In = gift / top-up / refund (positive). */
+    direction?: 'out' | 'in';
     /** When set (inbox "Anders"), submit sorts/updates that transaction instead of creating. */
     entityId?: string;
     onSuccess?: () => void;
@@ -141,6 +149,7 @@ export function ExpenseForm({
     defaultValues,
     embedded = true,
     mode = 'create',
+    direction: directionProp = 'out',
     entityId,
     onSuccess,
 }: ExpenseFormProps) {
@@ -149,8 +158,26 @@ export function ExpenseForm({
     const { showToast } = useAppShell();
     const dismiss = useFormDismiss(onSuccess);
     const live = isLiveData(householdId);
+    const propDirection: 'out' | 'in' = directionProp === 'in' ? 'in' : 'out';
+    const [direction, setDirection] = useState<'out' | 'in'>(propDirection);
+    const [seenDirectionProp, setSeenDirectionProp] = useState(propDirection);
     const [showNote, setShowNote] = useState(Boolean(defaultValues?.note?.trim()));
     const [intentOverride, setIntentOverride] = useState<ExpenseIntentSelection | null>(null);
+    const propInflowKey = defaultValues?.inflowKey ?? null;
+    const [inflowKey, setInflowKey] = useState<string | null>(propInflowKey);
+    const [seenInflowKey, setSeenInflowKey] = useState(propInflowKey);
+
+    // Reset when route/defaults change (adjust during render — no effect).
+    if (propDirection !== seenDirectionProp) {
+        setSeenDirectionProp(propDirection);
+        setDirection(propDirection);
+    }
+    if (propInflowKey !== seenInflowKey) {
+        setSeenInflowKey(propInflowKey);
+        setInflowKey(propInflowKey);
+    }
+
+    const isIn = direction === 'in';
 
     const jarsQuery = useLiveQuery(
         apiQuery.money.jars.list.queryOptions({ input: { householdId: householdId! } }),
@@ -219,6 +246,10 @@ export function ExpenseForm({
             amount: defaultValues?.amount ?? '',
             note: defaultValues?.note ?? '',
             jarId: defaultValues?.jarId ?? '',
+            label:
+                defaultValues?.description && defaultValues.description !== defaultValues.note
+                    ? defaultValues.description
+                    : (defaultValues?.counterparty ?? ''),
         },
         resolver: zodResolver(expenseFormSchema),
     });
@@ -242,18 +273,25 @@ export function ExpenseForm({
     const saveMutation = useMutation({
         mutationFn: async (values: z.infer<typeof expenseFormSchema>) => {
             if (!householdId) throw new Error('No household');
-            if (!intent.vendor && !intent.categoryKey) {
+            if (!isIn && !intent.vendor && !intent.categoryKey) {
                 throw new Error('Pick a vendor or type');
+            }
+            const label = values.label.trim();
+            if (isIn && !label) {
+                throw new Error('Say where this money came from');
             }
             const cents = parseEurosToCents(values.amount);
             if (cents === null || cents <= 0) throw new Error('Invalid amount');
+            const signedAmount = isIn ? cents : -cents;
 
-            const vendor = intent.vendor.trim();
+            const vendor = isIn ? label : intent.vendor.trim();
             const note = values.note.trim();
-            const description = note || intent.categoryName?.trim() || vendor || 'Expense';
+            const description = isIn
+                ? note || label || 'Money in'
+                : note || intent.categoryName?.trim() || vendor || 'Transaction';
 
             let categoryId: string | null = null;
-            if (intent.categoryName) {
+            if (!isIn && intent.categoryName) {
                 const jarBalance = (balancesQuery.data ?? []).find(
                     candidate => candidate.id === values.jarId
                 );
@@ -271,10 +309,11 @@ export function ExpenseForm({
                     id: entityId,
                     householdId,
                     description,
-                    amount: -cents,
+                    amount: signedAmount,
                     note: note || null,
                     counterparty: vendor || null,
                     categoryId,
+                    inflowKey: isIn ? inflowKey : null,
                 });
                 return api.money.transactions.sort({
                     householdId,
@@ -288,13 +327,14 @@ export function ExpenseForm({
             return api.money.transactions.create({
                 householdId,
                 description,
-                amount: -cents,
+                amount: signedAmount,
                 bookedOn: todayIsoDate(),
                 jarId: values.jarId,
                 accountId: null,
                 categoryId,
                 counterparty: vendor || null,
                 note: note || null,
+                inflowKey: isIn ? inflowKey : null,
             });
         },
         onSuccess: () => {
@@ -306,7 +346,10 @@ export function ExpenseForm({
             });
             void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
-            showToast(mode === 'edit' ? 'Expense updated' : 'Expense saved', 'success');
+            showToast(
+                mode === 'edit' ? 'Transaction updated' : isIn ? 'In saved' : 'Out saved',
+                'success'
+            );
             dismiss();
         },
         onError: error =>
@@ -327,7 +370,7 @@ export function ExpenseForm({
             });
             void queryClient.invalidateQueries({ queryKey: apiQuery.money.jars.balances.key() });
             void queryClient.invalidateQueries({ queryKey: apiQuery.money.dashboard.get.key() });
-            showToast('Expense deleted', 'success');
+            showToast('Transaction deleted', 'success');
             dismiss();
         },
         onError: () => showToast('Delete failed', 'error'),
@@ -335,11 +378,15 @@ export function ExpenseForm({
 
     async function onSubmit(values: z.infer<typeof expenseFormSchema>) {
         if (!live) {
-            showToast('Sign in to save expenses', 'error');
+            showToast('Sign in to save transactions', 'error');
             return;
         }
-        if (!intent.vendor && !intent.categoryKey) {
+        if (!isIn && !intent.vendor && !intent.categoryKey) {
             showToast('Pick a vendor or a type first', 'error');
+            return;
+        }
+        if (isIn && !values.label.trim()) {
+            showToast('Say where this money came from (gift, tax return, …)', 'error');
             return;
         }
         await saveMutation.mutateAsync(values);
@@ -367,7 +414,9 @@ export function ExpenseForm({
                             ? 'Working…'
                             : mode === 'edit'
                               ? 'Save changes'
-                              : 'Save expense'}
+                              : isIn
+                                ? 'Save in'
+                                : 'Save out'}
                     </Button>
                     {mode === 'edit' && entityId ? (
                         <ConfirmActionButton
@@ -388,17 +437,98 @@ export function ExpenseForm({
             }>
             <div className="grid gap-2">
                 <p className="font-mono text-[10px] font-semibold tracking-wider text-fg-muted uppercase">
-                    What was it?
+                    Direction
                 </p>
-                <ExpenseIntentField
-                    value={intent}
-                    onChange={setIntentOverride}
-                    merchants={merchants}
-                    categories={categories}
-                    categoryIconByKey={categoryIconByKey}
-                    disabled={busy}
-                />
+                <div className="flex gap-1 rounded-full bg-raised p-1">
+                    {(
+                        [
+                            ['out', 'Out'],
+                            ['in', 'In'],
+                        ] as const
+                    ).map(([key, label]) => (
+                        <button
+                            key={key}
+                            type="button"
+                            disabled={busy}
+                            onClick={() => {
+                                setDirection(key);
+                                if (key === 'out') setInflowKey(null);
+                            }}
+                            className={
+                                direction === key
+                                    ? 'flex-1 rounded-full bg-accent px-3 py-2 font-mono text-[10px] font-medium tracking-wide text-on-accent uppercase'
+                                    : 'flex-1 rounded-full px-3 py-2 font-mono text-[10px] font-medium tracking-wide text-fg-muted uppercase hover:text-fg'
+                            }>
+                            {label}
+                        </button>
+                    ))}
+                </div>
             </div>
+
+            {isIn ? (
+                <FormField
+                    control={form.control}
+                    name="label"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Where did it come from?</FormLabel>
+                            <FormControl>
+                                <PresetNameField
+                                    value={field.value}
+                                    lockPresets
+                                    freeTextKeys={['OTHER_IN']}
+                                    initialLockedKey={
+                                        defaultValues?.inflowKey &&
+                                        defaultValues.inflowKey !== 'OTHER_IN'
+                                            ? defaultValues.inflowKey
+                                            : null
+                                    }
+                                    onChange={value => {
+                                        field.onChange(value);
+                                        const resolved = resolveInflowKey(value);
+                                        setInflowKey(current => {
+                                            if (resolved) return resolved;
+                                            if (!value.trim()) return null;
+                                            // Keep Other after picking it, while they type a custom label
+                                            if (current === 'OTHER_IN') return 'OTHER_IN';
+                                            return null;
+                                        });
+                                    }}
+                                    options={[...TRANSACTION_IN_PRESETS]}
+                                    placeholder="Gift, tax return, or type your own…"
+                                    disabled={busy}
+                                    onSelect={preset => {
+                                        setInflowKey(preset.key);
+                                        const full = TRANSACTION_IN_PRESETS.find(
+                                            candidate => candidate.key === preset.key
+                                        );
+                                        if (!full?.jarKey) return;
+                                        const jar = jars.find(
+                                            candidate => candidate.key === full.jarKey
+                                        );
+                                        if (jar) form.setValue('jarId', jar.id);
+                                    }}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            ) : (
+                <div className="grid gap-2">
+                    <p className="font-mono text-[10px] font-semibold tracking-wider text-fg-muted uppercase">
+                        What was it?
+                    </p>
+                    <ExpenseIntentField
+                        value={intent}
+                        onChange={setIntentOverride}
+                        merchants={merchants}
+                        categories={categories}
+                        categoryIconByKey={categoryIconByKey}
+                        disabled={busy}
+                    />
+                </div>
+            )}
 
             <FormField
                 control={form.control}
@@ -419,7 +549,7 @@ export function ExpenseForm({
                 name="jarId"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Jar</FormLabel>
+                        <FormLabel>{isIn ? 'Into jar' : 'Jar'}</FormLabel>
                         <FormControl>
                             <select
                                 className="h-11 w-full rounded-lg border border-line bg-raised px-3 text-sm text-fg focus:border-accent focus:outline-none"
@@ -449,7 +579,14 @@ export function ExpenseForm({
                         <FormItem>
                             <FormLabel>Note</FormLabel>
                             <FormControl>
-                                <Input placeholder="Optional — e.g. kids lunch" {...field} />
+                                <Input
+                                    placeholder={
+                                        isIn
+                                            ? 'Optional — e.g. from aunt'
+                                            : 'Optional — e.g. kids lunch'
+                                    }
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

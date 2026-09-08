@@ -10,6 +10,7 @@ type JarCoverageStripProps = {
     allocated: number;
     spent: number;
     committedOut: number;
+    credited?: number;
     /** Tailwind bg-* jar color */
     colorClass: string;
     /** Show allocated / fixed / spent stats row */
@@ -22,12 +23,14 @@ export function JarCoverageStrip({
     allocated,
     spent,
     committedOut,
+    credited = 0,
     colorClass,
     showStats = true,
-    footnote = 'Available = allocated − spent − fixed. Booking the same bill as a transaction and a fixed cost will count twice until payments are linked.',
+    footnote = 'Available = allocated + added − spent − fixed. Booking the same bill as a transaction and a fixed cost will count twice until payments are linked.',
 }: JarCoverageStripProps) {
-    const coverage = jarCoverage({ allocated, spent, committedOut });
+    const coverage = jarCoverage({ allocated, spent, credited, committedOut });
     const accent = bgClassToCssVar(colorClass);
+    const envelope = allocated + credited;
 
     return (
         <div
@@ -43,21 +46,26 @@ export function JarCoverageStrip({
                         {formatMoney(coverage.available)}
                     </span>
                     <span className="font-mono text-xs font-medium text-fg-faint">
-                        available of {formatMoney(allocated)} allocated
+                        available of {formatMoney(envelope)}
+                        {credited > 0
+                            ? ` (${formatMoney(allocated)} + ${formatMoney(credited)} added)`
+                            : ' allocated'}
                     </span>
                 </div>
 
                 <JarProgressBar
                     allocated={allocated}
                     spent={spent}
+                    credited={credited}
                     committedOut={committedOut}
                     colorClass={colorClass}
                     trackClassName="h-2"
                 />
 
                 {showStats ? (
-                    <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         <CoverageStat label="Allocated" value={allocated} />
+                        <CoverageStat label="Added" value={credited} />
                         <CoverageStat label="Fixed (committed)" value={committedOut} />
                         <CoverageStat label="Spent" value={spent} />
                     </div>

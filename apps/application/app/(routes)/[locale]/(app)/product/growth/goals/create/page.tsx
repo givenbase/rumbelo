@@ -1,12 +1,19 @@
+import { formRoute } from '@/app/_lib/form-route-meta';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 import { GoalCreatePage } from '../_components/goal-pages';
 
-export const metadata = { title: 'New goal' };
+export const metadata = { title: formRoute('goalCreate').title };
 
 export default function Page() {
+    const meta = formRoute('goalCreate');
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">New goal</h1>
-            <GoalCreatePage />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={meta.closeHref}
+            width={meta.width}>
+            <GoalCreatePage embedded />
+        </FormRoutePageShell>
     );
 }

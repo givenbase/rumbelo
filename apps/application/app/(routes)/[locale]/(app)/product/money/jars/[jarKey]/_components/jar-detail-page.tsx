@@ -6,14 +6,16 @@ import { useRouter } from 'next/navigation';
 
 import type { JarKey } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
-import { Card } from '@rumbelo/ui';
+import { Button, Card } from '@rumbelo/ui';
 import { cn, formatMoney, monthlyAmount, toPeriodKey } from '@rumbelo/utils';
 
-import { CREATE_HREF, spendFromJarHref, updateHref } from '@/app/_lib/create-routes';
+import { createMoveHref, createTxHref, updateHref } from '@/app/_lib/create-routes';
 import { cadenceLabel } from '@/app/_lib/jar-chrome';
-import { JAR_GUIDE, type JarGuideKey } from '@/app/_lib/jar-guide';
+import type { JarGuideKey } from '@/app/_lib/jar-guide';
 import { JAR_META } from '@/app/_lib/jar-meta';
+import { jarKeyToSlug } from '@/app/_lib/jar-slug';
 import { isLiveData } from '@/app/_lib/preview';
+import { JarGuideCard } from '@/components/features/helpers';
 import { JarCoverageStrip } from '@/components/features/money/jar-coverage-strip';
 import { JarCategoryTable } from '@/components/features/money/jar-drilldown-parts';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
@@ -30,7 +32,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
     const periodKey = toPeriodKey(period.year, period.month);
     const live = isLiveData(householdId);
     const meta = JAR_META.find(entry => entry.key === jarKey);
-    const guide = JAR_GUIDE[jarKey as JarGuideKey];
+    const guideKey = jarKey as JarGuideKey;
 
     const jarsQuery = useLiveQuery(
         apiQuery.money.jars.balances.queryOptions({
@@ -108,19 +110,25 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                        <button
-                            type="button"
-                            onClick={() => router.push(spendFromJarHref(jar.id))}
-                            className="rounded-full border border-line-strong bg-transparent px-4 py-2 font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
-                            Add a spend
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => router.push(CREATE_HREF.move)}
-                            className="rounded-full border border-line-strong bg-transparent px-4 py-2 font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
-                            Move money
-                        </button>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() =>
+                                router.push(
+                                    createMoveHref({
+                                        fromJarId: jar.id,
+                                        returnTo: `/product/money/jars/${jarKeyToSlug(jar.key)}`,
+                                    })
+                                )
+                            }>
+                            Move between jars
+                        </Button>
+                        <Button
+                            size="sm"
+                            onClick={() => router.push(createTxHref({ jarId: jar.id }))}>
+                            + Add transaction
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -129,6 +137,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
             <JarCoverageStrip
                 allocated={jar.allocated}
                 spent={jar.spent}
+                credited={jar.credited}
                 committedOut={jar.committedOut}
                 colorClass={colorClass}
             />
@@ -212,9 +221,9 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                         ✦ This period
                     </h2>
                     <Link
-                        href="/product/money/spending"
+                        href="/product/money/transactions"
                         className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase hover:text-accent">
-                        All spending ›
+                        All transactions ›
                     </Link>
                 </div>
                 <Card className="p-0">
@@ -256,81 +265,7 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                 </Card>
             </section>
 
-            {/* Guide */}
-            {guide && (
-                <section className="grid gap-3">
-                    <h2 className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                        ✦ What can I use this for?
-                    </h2>
-                    <Card className="grid gap-4 p-5">
-                        <p className="text-sm leading-relaxed text-pretty text-fg-muted">
-                            {guide.note}
-                        </p>
-                        <div>
-                            <p className="mb-2.5 font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                                This may go to
-                            </p>
-                            <div className="flex flex-wrap gap-1.5">
-                                {guide.allowed.map(label => (
-                                    <span
-                                        key={label}
-                                        className="rounded-full border border-line bg-raised px-2.5 py-1.5 text-sm text-fg-secondary">
-                                        {label}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                        {guide.subs && guide.subs.length > 0 && (
-                            <div>
-                                <p className="mb-2.5 font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
-                                    Split inside this jar
-                                </p>
-                                <div className="grid gap-2.5">
-                                    {guide.subs.map(sub => (
-                                        <div key={sub.label}>
-                                            <div className="mb-1 flex justify-between gap-2.5 font-mono text-xs font-medium">
-                                                <span className="text-fg-secondary">
-                                                    {sub.label}
-                                                </span>
-                                                <span className="text-accent">
-                                                    {formatMoney(
-                                                        Math.round((jar.allocated * sub.pct) / 100)
-                                                    )}{' '}
-                                                    · {sub.pct}%
-                                                </span>
-                                            </div>
-                                            <div className="h-1.5 overflow-hidden rounded-full bg-sunken">
-                                                <div
-                                                    className="h-full rounded-full bg-accent"
-                                                    style={{ width: `${sub.pct}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                {guide.subNote && (
-                                    <p className="mt-3 text-sm leading-relaxed text-pretty text-accent">
-                                        {guide.subNote}
-                                    </p>
-                                )}
-                            </div>
-                        )}
-                        <p className="border-t border-line pt-3 text-sm leading-relaxed text-pretty text-fg-muted">
-                            {guide.notAllowed}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {guide.links.map(link => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="rounded-full border border-line-strong bg-transparent px-3 py-2 font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
-                                    {link.label}
-                                </Link>
-                            ))}
-                        </div>
-                    </Card>
-                </section>
-            )}
+            <JarGuideCard jarKey={guideKey} allocatedCents={jar.allocated} />
         </div>
     );
 }

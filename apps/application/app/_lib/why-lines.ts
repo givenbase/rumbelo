@@ -8,7 +8,7 @@ export const WHY_LINES: Record<string, string> = {
     '/': 'One look, one question: do I have the reins this month?',
     '/product/money/jars':
         'This month, divided before it starts. Money with a job never has to be defended.',
-    '/product/money/spending':
+    '/product/money/transactions':
         'You do not track spending to judge yourself — you track it to see where your life leaks.',
     '/product/money/debt':
         'Debt is rented time. Every euro of interest is an hour of your life someone else directs.',
@@ -35,10 +35,9 @@ export const WHY_LINES: Record<string, string> = {
         'Food is fuel for the week your jars divide. Fuel is bought, not willed.',
     '/product/money/week-check':
         'Ten minutes a week — look, redirect, set intention. Beats worrying every day.',
-    '/product/coach':
-        'Cross-product tips and next moves. The coach helps; the week check is the weekly practice.',
+    // No why-line on /product/coach — the page is already the Coach.
     '/product/why':
-        'One line on your dashboard — not a poster, a check question when a jar gets tight.',
+        'Stop wondering where it went — what that line means, and how the four portals keep the picture clear.',
 };
 
 /** Portal hubs use their own `line`; unknown paths show no caption. */

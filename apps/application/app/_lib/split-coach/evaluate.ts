@@ -93,6 +93,8 @@ export function evaluateSplitCoach(
         });
     }
 
+    // Soft ceiling — see money README → “When Necessities can’t fit in 55%”.
+    // Prefer cutting fixed costs / raising income over starving FF.
     if (nec > SPLIT_SOFT_CEILING[JarKey.NECESSITIES]) {
         tips.push({
             id: 'nec-high',

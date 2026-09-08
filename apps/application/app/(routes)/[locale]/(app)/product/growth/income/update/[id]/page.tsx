@@ -1,13 +1,20 @@
+import { formRoute } from '@/app/_lib/form-route-meta';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 import { IncomeUpdatePage } from '../../_components/income-pages';
 
-export const metadata = { title: 'Edit income' };
+export const metadata = { title: formRoute('incomeUpdate').title };
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    const meta = formRoute('incomeUpdate');
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">Edit income</h1>
-            <IncomeUpdatePage id={id} />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={meta.closeHref}
+            width={meta.width}>
+            <IncomeUpdatePage id={id} embedded />
+        </FormRoutePageShell>
     );
 }

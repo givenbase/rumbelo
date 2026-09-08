@@ -11,13 +11,22 @@ import { cn, formatMoney, monthlyAmount, fixedOutNetSummary } from '@rumbelo/uti
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { bgClassToCssVar, cadenceLabel } from '@/app/_lib/jar-chrome';
+import { evaluateNecessitiesPressure } from '@/app/_lib/necessities-pressure';
 import { isLiveData } from '@/app/_lib/preview';
 import { JAR_META } from '@/app/_lib/jar-meta';
+import { NecessitiesPressureCard } from '@/components/features/money/necessities-pressure-card';
+import { CoachTipCard } from '@/components/features/helpers';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar } from '@/components/layout/list-toolbar';
 
 type Tab = 'ERUIT' | 'ERIN';
 
+/**
+ * Fixed costs & income.
+ * When fixed OUT blows past the Necessities envelope, see NecessitiesPressureCard
+ * and doctrine in apps/backend/src/modules/public/product/money/README.md
+ * → “When Necessities can’t fit in 55%”.
+ */
 export function FixedCostsPageClient() {
     const { householdId } = useAuth();
     const router = useRouter();
@@ -89,6 +98,15 @@ export function FixedCostsPageClient() {
         ? fixedCosts.filter(fixedCost => fixedCost.jarKey === jarFilter)
         : fixedCosts;
 
+    const necessitiesFixedMonthly = fixedCosts
+        .filter(item => item.jarKey === 'NECESSITIES')
+        .reduce((total, item) => total + item.monthly, 0);
+    const necessitiesPressure = evaluateNecessitiesPressure({
+        netMonthlyCents: NET,
+        fixedOutMonthlyCents: outTotal,
+        necessitiesFixedMonthlyCents: necessitiesFixedMonthly,
+    });
+
     return (
         <div className="grid animate-rise gap-8">
             <div>
@@ -100,9 +118,12 @@ export function FixedCostsPageClient() {
                 </h1>
             </div>
 
+            {/* Doctrine: money README → “When Necessities can’t fit in 55%” */}
+            <NecessitiesPressureCard pressure={necessitiesPressure} variant="plan" />
+
             <div data-tour="fixed-tabs">
                 <ListToolbar
-                    createLabel={tab === 'ERUIT' ? '+ Add' : '+ Income source'}
+                    createLabel={tab === 'ERUIT' ? '+ Add fixed cost' : '+ Add income'}
                     onCreate={() =>
                         router.push(tab === 'ERUIT' ? CREATE_HREF.fixed : CREATE_HREF.income)
                     }
@@ -244,16 +265,11 @@ export function FixedCostsPageClient() {
                         </div>
                     </Card>
 
-                    <Card>
-                        <span className="font-mono text-xs font-medium tracking-widest text-fg-muted uppercase">
-                            ✦ Subscription check
-                        </span>
-                        <p className="mt-3 text-sm leading-relaxed text-pretty text-fg-secondary">
-                            Check every quarter that everything here still applies. Small amounts
-                            add up — a subscription you don't use is money you throw away monthly.
-                            Healthy: less than 20% of Necessity goes to recurring services.
-                        </p>
-                    </Card>
+                    <CoachTipCard title="Subscription check">
+                        Check every quarter that everything here still applies. Small amounts add up
+                        — a subscription you don&apos;t use is money you throw away monthly.
+                        Healthy: less than 20% of Necessity goes to recurring services.
+                    </CoachTipCard>
                 </div>
             )}
 
@@ -322,17 +338,19 @@ export function FixedCostsPageClient() {
                         </div>
                     </Card>
 
-                    <Card>
-                        <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                            ✦ Is this enough?
-                        </span>
-                        <p className="mt-3 text-sm leading-relaxed text-pretty text-fg-secondary">
-                            {formatMoney(NET)}/mo. Fixed costs take{' '}
-                            <strong className="text-fg">{commitmentRatio}%</strong> — that&apos;s{' '}
-                            {commitmentRatio < 50 ? 'comfortable' : 'tight'}. Under 50% there&apos;s
-                            room to build. The real ceiling is income, not cutting costs.
-                        </p>
-                    </Card>
+                    <CoachTipCard title="Is this enough?">
+                        {formatMoney(NET)}/mo. Fixed costs take{' '}
+                        <strong className="text-fg">{commitmentRatio}%</strong> — that&apos;s{' '}
+                        {commitmentRatio < 50
+                            ? 'comfortable'
+                            : commitmentRatio <= 55
+                              ? 'on the edge of the Necessities goal'
+                              : 'above the 55% Necessities goal'}
+                        .{' '}
+                        {commitmentRatio > 55
+                            ? 'Simplify bills and/or raise income — do not raid Financial Freedom.'
+                            : 'Under 55% there is room to build. The real ceiling is income, not only cutting costs.'}
+                    </CoachTipCard>
                 </div>
             )}
         </div>

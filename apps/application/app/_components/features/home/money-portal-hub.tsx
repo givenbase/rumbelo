@@ -58,12 +58,12 @@ export function MoneyPortalHubClient() {
                 href: '/product/money/jars',
             },
             {
-                name: 'Spending',
+                name: 'Transactions',
                 value: formatMoney(spent),
                 note: 'booked this month',
                 color: 'var(--color-jar-play)',
                 chart: { kind: 'bars', bars: [0, 0, 0, 0, 0, 0, 0] },
-                href: '/product/money/spending',
+                href: '/product/money/transactions',
             },
             {
                 name: 'Debt',
@@ -81,7 +81,7 @@ export function MoneyPortalHubClient() {
                 value: formatMoney(fixed),
                 note: 'fixed costs per month',
                 color: 'var(--color-jar-nec)',
-                chart: { kind: 'ring', pct: fixedRing },
+                chart: { kind: 'ring', pct: fixedRing, tone: 'brand' },
                 href: '/product/money/fixed-costs',
             },
         ],

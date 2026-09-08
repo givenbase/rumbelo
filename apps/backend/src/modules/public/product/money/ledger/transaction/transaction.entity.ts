@@ -28,6 +28,13 @@ export class Transaction extends HouseholdEntity {
     @Property({ length: 160, nullable: true })
     counterparty: string | null = null;
 
+    /**
+     * Stable Transaction In source tag (GIFT, REFUND, …).
+     * Null for Out, custom In labels, and bank/CSV imports.
+     */
+    @Property({ length: 64, nullable: true })
+    inflowKey: string | null = null;
+
     /** Negative = money out, positive = money in. Integer minor units, never floats. */
     @Property({ type: 'bigint' })
     amount!: number;

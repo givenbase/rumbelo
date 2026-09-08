@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { startTransition, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { StatusPage } from '@rumbelo/ui';
 
@@ -13,6 +14,8 @@ export default function GlobalError({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    const router = useRouter();
+
     useEffect(() => {
         console.error(error);
     }, [error]);
@@ -24,7 +27,12 @@ export default function GlobalError({
                     type="error"
                     statusCode={500}
                     errorDetails={error.message}
-                    reset={reset}
+                    reset={() => {
+                        startTransition(() => {
+                            router.refresh();
+                            reset();
+                        });
+                    }}
                     homeHref="/"
                     homeLabel="Back to dashboard"
                 />

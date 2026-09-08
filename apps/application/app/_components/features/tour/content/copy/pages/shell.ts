@@ -14,7 +14,7 @@ const shell = {
         help: {
             title: 'Help',
             content:
-                'Open coach notes for this screen anytime — and replay a short tour if you want.',
+                'Open The Coach for this screen anytime — and replay a short tour if you want.',
         },
     },
 } as const;

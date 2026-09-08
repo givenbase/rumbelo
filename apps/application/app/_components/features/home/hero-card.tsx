@@ -9,6 +9,7 @@ interface Stat {
     label: string;
     value: string;
     tone?: 'accent' | 'default';
+    href?: string;
 }
 
 /**
@@ -21,35 +22,65 @@ export function HeroCard({
     incomeBreakdown,
     stats,
     children,
+    incomeHref = '/product/growth/income',
+    jarsHref = '/product/money/jars',
 }: {
     total: string;
     incomeBreakdown: string;
     stats: Stat[];
     children: ReactNode;
+    incomeHref?: string;
+    jarsHref?: string;
 }) {
     return (
         <div className="rounded-2xl border border-accent-hover bg-surface p-6 shadow-glow sm:p-7">
             <div className="flex flex-wrap items-start justify-between gap-6">
-                <div>
+                <Link
+                    href={incomeHref}
+                    className="group rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-accent/25">
                     <Eyebrow>Money · Allocated this month</Eyebrow>
-                    <HeroNumber className="mt-2.5 text-4xl leading-none sm:text-5xl">
+                    <HeroNumber className="mt-2.5 text-4xl leading-none transition-colors group-hover:text-accent sm:text-5xl">
                         {total}
                     </HeroNumber>
-                    <p className="mt-2 text-sm text-fg-muted">{incomeBreakdown}</p>
-                </div>
+                    <p className="mt-2 text-sm text-fg-muted group-hover:text-fg-secondary">
+                        {incomeBreakdown}
+                        <span className="ml-1.5 font-mono text-xs tracking-wide text-fg-faint uppercase group-hover:text-accent">
+                            See income ▸
+                        </span>
+                    </p>
+                </Link>
                 <div className="flex flex-wrap gap-7">
-                    {stats.map(stat => (
-                        <div key={stat.label} className="grid gap-1.5">
-                            <Eyebrow className="whitespace-nowrap">{stat.label}</Eyebrow>
-                            <p
-                                className={cn(
-                                    'font-display text-3xl leading-none font-semibold tracking-tight',
-                                    stat.tone === 'accent' ? 'text-accent' : 'text-fg'
-                                )}>
-                                {stat.value}
-                            </p>
-                        </div>
-                    ))}
+                    {stats.map(stat => {
+                        const valueClass = cn(
+                            'font-display text-3xl leading-none font-semibold tracking-tight',
+                            stat.tone === 'accent' ? 'text-accent' : 'text-fg'
+                        );
+
+                        if (stat.href) {
+                            return (
+                                <Link
+                                    key={stat.label}
+                                    href={stat.href}
+                                    className="group grid gap-1.5 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-accent/25">
+                                    <Eyebrow className="whitespace-nowrap">{stat.label}</Eyebrow>
+                                    <p
+                                        className={cn(
+                                            valueClass,
+                                            'transition-colors group-hover:text-accent'
+                                        )}>
+                                        {stat.value}
+                                    </p>
+                                </Link>
+                            );
+                        }
+
+                        return (
+                            <div key={stat.label} className="grid gap-1.5">
+                                <Eyebrow className="whitespace-nowrap">{stat.label}</Eyebrow>
+                                <p className={valueClass}>{stat.value}</p>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -58,9 +89,9 @@ export function HeroCard({
             <div className="flex items-center justify-between">
                 <Eyebrow>✦ The six jars</Eyebrow>
                 <Link
-                    href="/product/money/jars"
+                    href={jarsHref}
                     className="font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase hover:text-accent">
-                    Manage ▸
+                    See all ▸
                 </Link>
             </div>
             <div className="mt-3">{children}</div>

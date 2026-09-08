@@ -51,7 +51,7 @@ export function CoachPageClient() {
             <div>
                 <Eyebrow>Across every portal</Eyebrow>
                 <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">
-                    The coach
+                    The Coach
                 </h1>
                 <p className="mt-2 max-w-prose text-sm text-fg-muted">
                     Suggestions and next moves from money, growth, energy, and soul — one tip at a
@@ -62,7 +62,7 @@ export function CoachPageClient() {
             {messages.length === 0 ? (
                 <div className="grid gap-3 rounded-2xl border border-line bg-surface px-5 py-6">
                     <p className="text-sm text-fg-muted">
-                        No open tips right now. The coach speaks when a jar, habit, or week needs a
+                        No open tips right now. The Coach speaks when a jar, habit, or week needs a
                         nudge.
                     </p>
                     <Link

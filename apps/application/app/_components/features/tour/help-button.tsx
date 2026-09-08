@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 import {
@@ -10,44 +9,60 @@ import {
     SheetDescription,
     SheetHeader,
     SheetTitle,
-    SheetTrigger,
 } from '@rumbelo/ui';
+import { cn } from '@rumbelo/utils';
+
+import { useFeatureHelpers } from '@/components/features/helpers';
 
 import { chrome, pageHelpForPathname } from './content';
 import { usePageTour } from './provider';
 
-/** Shell Help — coach copy for the current route, optional Joyride tour. */
+/** Shell Help — brief for the current route, helpers toggle, optional Joyride tour. */
 export function PageHelpButton() {
     const pathname = usePathname() ?? '/';
     const help = pageHelpForPathname(pathname);
-    const { startTour, isTourDone } = usePageTour();
-    const [open, setOpen] = useState(false);
+    const { startTour, isTourDone, helpOpen, setHelpOpen } = usePageTour();
+    const { helpersEnabled, setHelpersEnabled } = useFeatureHelpers();
     const hasTour = Boolean(help.tourId && (help.tourSteps?.length ?? 0) > 0);
     const replay = help.tourId ? isTourDone(help.tourId) : false;
 
     return (
-        <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger
+        <Sheet open={helpOpen} onOpenChange={setHelpOpen}>
+            <button
+                type="button"
                 data-tour="shell-help"
-                className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-mono text-xs font-medium tracking-wide text-fg-faint uppercase transition-colors hover:border-accent-hover hover:text-accent sm:px-3.5">
-                <span aria-hidden>?</span>
+                aria-label={chrome.help_trigger}
+                onClick={() => setHelpOpen(true)}
+                className={cn(
+                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs font-semibold tracking-wide uppercase transition-colors sm:px-3.5',
+                    'border-accent/35 bg-accent/10 text-accent hover:border-accent hover:bg-accent/15'
+                )}>
+                <span
+                    aria-hidden
+                    className="grid size-4 place-items-center rounded-full bg-accent text-[10px] font-bold text-on-accent">
+                    ?
+                </span>
                 <span className="hidden sm:inline">{chrome.help_trigger}</span>
-            </SheetTrigger>
+            </button>
             <SheetContent
                 side="right"
-                className="flex flex-col gap-0 border-line bg-chrome text-fg sm:max-w-md">
-                <SheetHeader className="border-b border-line px-1 pb-4 text-left">
-                    <SheetTitle className="font-display text-xl font-semibold tracking-tight text-fg">
+                className="flex flex-col gap-0 overflow-hidden border-line bg-surface p-0 text-fg sm:max-w-md">
+                <SheetHeader className="shrink-0 space-y-0 border-b border-line bg-raised px-5 py-4 pr-12 text-left">
+                    <p className="font-mono text-[10px] font-semibold tracking-widest text-fg-faint uppercase">
+                        {chrome.sheet_eyebrow}
+                    </p>
+                    <SheetTitle className="font-display text-lg font-semibold tracking-tight text-fg">
                         {help.title}
                     </SheetTitle>
-                    <SheetDescription className="font-mono text-xs tracking-wide text-fg-muted uppercase">
+                    <SheetDescription className="text-sm text-fg-muted">
                         {chrome.sheet_description}
                     </SheetDescription>
                 </SheetHeader>
-                <div className="mt-4 grid flex-1 gap-5 overflow-y-auto px-1 pb-4">
+
+                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-5">
                     {help.sections.map(section => (
                         <section key={section.heading} className="grid gap-1.5">
-                            <h3 className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
+                            <h3 className="font-mono text-[10px] font-semibold tracking-widest text-accent uppercase">
                                 {section.heading}
                             </h3>
                             <p className="text-sm leading-relaxed text-pretty text-fg-secondary">
@@ -56,24 +71,59 @@ export function PageHelpButton() {
                         </section>
                     ))}
                 </div>
-                {hasTour && help.tourId ? (
-                    <div className="grid gap-2 border-t border-line px-1 pt-4 pb-2">
-                        <p className="text-sm text-fg-muted">
-                            {replay ? chrome.replay_tour_prompt : chrome.take_tour_prompt}
-                        </p>
-                        <Button
-                            type="button"
-                            className="w-full"
-                            onClick={() => {
-                                const steps = help.tourSteps ?? [];
-                                const tourId = help.tourId!;
-                                setOpen(false);
-                                startTour(tourId, steps);
-                            }}>
-                            {replay ? chrome.replay_tour : chrome.take_tour}
-                        </Button>
-                    </div>
-                ) : null}
+
+                <div className="shrink-0 space-y-3 border-t border-line bg-raised px-5 py-4">
+                    <button
+                        type="button"
+                        onClick={() => setHelpersEnabled(!helpersEnabled)}
+                        className="flex w-full items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3 py-3 text-left transition-colors hover:border-accent/40">
+                        <span className="min-w-0">
+                            <span className="block text-sm font-medium text-fg">
+                                {chrome.helpers_label}
+                            </span>
+                            <span className="mt-0.5 block text-xs text-fg-muted">
+                                {chrome.helpers_hint}
+                            </span>
+                        </span>
+                        <span
+                            className={cn(
+                                'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+                                helpersEnabled ? 'bg-accent' : 'bg-line'
+                            )}
+                            aria-hidden>
+                            <span
+                                className={cn(
+                                    'absolute top-0.5 size-3.5 rounded-full bg-surface shadow-sm transition-[left]',
+                                    helpersEnabled ? 'left-[18px]' : 'left-0.5'
+                                )}
+                            />
+                        </span>
+                        <span className="sr-only">
+                            {helpersEnabled ? chrome.helpers_on : chrome.helpers_off}
+                        </span>
+                    </button>
+
+                    {hasTour && help.tourId ? (
+                        <div className="grid gap-2">
+                            <p className="text-sm text-fg-muted">
+                                {replay ? chrome.replay_tour_prompt : chrome.take_tour_prompt}
+                            </p>
+                            <Button
+                                type="button"
+                                className="w-full"
+                                onClick={() => {
+                                    const steps = help.tourSteps ?? [];
+                                    const tourId = help.tourId!;
+                                    setHelpOpen(false);
+                                    startTour(tourId, steps);
+                                }}>
+                                {replay ? chrome.replay_tour : chrome.take_tour}
+                            </Button>
+                        </div>
+                    ) : (
+                        <p className="text-xs leading-relaxed text-fg-faint">{chrome.no_tour}</p>
+                    )}
+                </div>
             </SheetContent>
         </Sheet>
     );

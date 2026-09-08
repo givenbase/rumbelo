@@ -2,8 +2,10 @@ import type { ReactNode } from 'react';
 
 import { cn } from '@rumbelo/utils';
 
+import { RegisterPageContentWidth } from '@/components/layout/page-content-width';
+
 /** Shared max-widths — always paired with mx-auto so narrow pages center in the shell. */
-const WIDTH = {
+export const PAGE_CONTENT_WIDTH = {
     /** Week check, gratitude, intent, settings forms (~672px) */
     narrow: 'max-w-2xl',
     /** Why, chakra (~768px) */
@@ -16,11 +18,13 @@ const WIDTH = {
     full: 'max-w-none',
 } as const;
 
-export type PageContentWidth = keyof typeof WIDTH;
+export type PageContentWidth = keyof typeof PAGE_CONTENT_WIDTH;
 
 /**
  * Centers page content within the shell. Use `narrow` for wizard/form flows;
  * omit or use `full` for dashboard-style wide layouts.
+ *
+ * Also registers the width so WhyCaption (shell) can match the same column.
  */
 export function PageContent({
     children,
@@ -31,5 +35,12 @@ export function PageContent({
     width?: PageContentWidth;
     className?: string;
 }) {
-    return <div className={cn('mx-auto w-full', WIDTH[width], className)}>{children}</div>;
+    return (
+        <>
+            <RegisterPageContentWidth width={width} />
+            <div className={cn('mx-auto w-full', PAGE_CONTENT_WIDTH[width], className)}>
+                {children}
+            </div>
+        </>
+    );
 }

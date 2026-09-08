@@ -101,13 +101,15 @@ export const JarBalance = Jar.extend({
     period: PeriodKey,
     allocated: Money,
     spent: Money,
+    /** Sorted Transaction In for this jar in the period (gifts, top-ups, refunds). */
+    credited: Money,
     /** Active fixed OUT for this jar, monthly-normalised. */
     committedOut: Money,
-    /** allocated − spent (transactions only; ignores fixed commitments). */
+    /** allocated + credited − spent (transactions only; ignores fixed commitments). */
     remaining: Money,
-    /** allocated − spent − committedOut — what is left after plan + spend (UI primary). */
+    /** remaining − committedOut — what is left after plan + spend (UI primary). */
     available: Money,
-    /** available/allocated, clamped 0..1; null when nothing was allocated. */
+    /** available / (allocated + credited), clamped 0..1; null when envelope is empty. */
     progress: z.number().min(0).max(1).nullable(),
     overspent: z.boolean(),
     categories: z.array(Category),

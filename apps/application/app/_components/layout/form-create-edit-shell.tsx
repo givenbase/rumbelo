@@ -62,7 +62,7 @@ export function FormCreateEditShell<T extends FieldValues>({
                             {children}
                         </fieldset>
                     </div>
-                    <div className="sticky bottom-0 z-10 -mx-5 mt-6 border-t border-line bg-surface px-5 py-4 shadow-lg">
+                    <div className="sticky bottom-0 z-10 -mx-5 mt-6 -mb-5 border-t border-line bg-surface px-5 py-4 shadow-[0_-4px_12px_-4px_rgb(0_0_0_/0.08)]">
                         {sidebar}
                     </div>
                 </form>

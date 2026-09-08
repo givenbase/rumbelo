@@ -104,8 +104,8 @@ export const CAPABILITY_CATALOG: Record<CapabilityKey, CapabilityDefinition> = {
     [CAPABILITIES.moneySpending]: {
         key: CAPABILITIES.moneySpending,
         kind: CapabilityKind.SCREEN,
-        name: 'Spending',
-        description: 'Manual spending and sorting.',
+        name: 'Transactions',
+        description: 'Manual in/out ledger and sorting.',
         sortOrder: 12,
     },
     [CAPABILITIES.moneyFixedCosts]: {

@@ -39,7 +39,7 @@ export function CoachCarousel({ slides, recap }: { slides: CoachSlide[]; recap: 
             <div className="grid gap-3.5 px-5 pt-4.5 pb-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                        ✦ The coach
+                        ✦ The Coach
                     </span>
                     <span className="flex items-center gap-2">
                         <span

@@ -67,6 +67,7 @@ export class JarService {
     async balances(period: string) {
         const jars = await this.jars.find({}, { orderBy: { sortOrder: 'ASC' } });
         const spentByJar = await this.spentByJar(period);
+        const creditedByJar = await this.creditedByJar(period);
         const spentByCategory = await this.spentByCategory(period);
         const committedByJar = await this.committedOutByJar();
         const committedByCategory = await this.committedOutByCategory();
@@ -82,14 +83,16 @@ export class JarService {
             jars.map(async jar => {
                 const allocated = allocations.get(jar.id) ?? 0;
                 const spent = spentByJar.get(jar.id) ?? 0;
+                const credited = creditedByJar.get(jar.id) ?? 0;
                 const committedOut = committedByJar.get(jar.id) ?? 0;
-                const coverage = jarCoverage({ allocated, spent, committedOut });
+                const coverage = jarCoverage({ allocated, spent, credited, committedOut });
                 const cats = await this.categories.find({ jar: jar.id });
                 return {
                     ...toJarDto(jar),
                     period,
                     allocated,
                     spent,
+                    credited,
                     committedOut,
                     remaining: coverage.remaining,
                     available: coverage.available,
@@ -275,6 +278,19 @@ export class JarService {
             `SELECT jar_id, COALESCE(SUM(-amount), 0)::text AS total
          FROM money_transaction
         WHERE household_id = ? AND status = 'SORTED' AND amount < 0
+          AND to_char(booked_on, 'YYYY-MM') = ?
+        GROUP BY jar_id`,
+            [currentHouseholdId(), period]
+        );
+        return new Map(rows.filter(row => row.jar_id).map(row => [row.jar_id, Number(row.total)]));
+    }
+
+    /** Sorted Transaction In (gifts, top-ups) per jar for the period. */
+    private async creditedByJar(period: string): Promise<Map<string, number>> {
+        const rows = await this.em.getConnection().execute<{ jar_id: string; total: string }[]>(
+            `SELECT jar_id, COALESCE(SUM(amount), 0)::text AS total
+         FROM money_transaction
+        WHERE household_id = ? AND status = 'SORTED' AND amount > 0
           AND to_char(booked_on, 'YYYY-MM') = ?
         GROUP BY jar_id`,
             [currentHouseholdId(), period]

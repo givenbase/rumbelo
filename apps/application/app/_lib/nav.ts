@@ -17,7 +17,11 @@ export const NAV_GROUPS = [
         href: '/',
         children: [
             { href: '/', label: 'Overview', capabilityKey: CAPABILITIES.homeOverview },
-            { href: productPath('coach'), label: 'Coach', capabilityKey: CAPABILITIES.homeCoach },
+            {
+                href: productPath('coach'),
+                label: 'The Coach',
+                capabilityKey: CAPABILITIES.homeCoach,
+            },
             { href: productPath('why'), label: 'Why', capabilityKey: CAPABILITIES.homeWhy },
         ],
     },
@@ -38,8 +42,8 @@ export const NAV_GROUPS = [
                 capabilityKey: CAPABILITIES.moneyJars,
             },
             {
-                href: productPath('money/spending'),
-                label: 'Spending',
+                href: productPath('money/transactions'),
+                label: 'Transactions',
                 capabilityKey: CAPABILITIES.moneySpending,
             },
             {

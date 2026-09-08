@@ -1,12 +1,24 @@
-import { SheetStubForm } from '@/components/features/forms/sheet-stub-form';
+'use client';
 
-export const metadata = { title: 'Move money' };
+import { useSearchParams } from 'next/navigation';
+
+import { formRoute, moveCreateMeta } from '@/app/_lib/form-route-meta';
+import { MoveMoneyForm } from '@/components/features/forms/move-money-form';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 
 export default function Page() {
+    const searchParams = useSearchParams();
+    const fromJarId = searchParams.get('fromJarId') ?? undefined;
+    const returnTo = searchParams.get('returnTo');
+    const meta = moveCreateMeta(fromJarId);
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">Move money</h1>
-            <SheetStubForm kind="move" mode="create" embedded={false} />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={returnTo || formRoute('moveCreate').closeHref}
+            width={meta.width}>
+            <MoveMoneyForm embedded defaultFromJarId={fromJarId} />
+        </FormRoutePageShell>
     );
 }

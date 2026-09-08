@@ -1,9 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {
+    useEffect,
+    useState,
+    type ButtonHTMLAttributes,
+    type CSSProperties,
+    type ReactNode,
+} from 'react';
 
 import { cn } from '../../lib/utils';
-import { Button } from '../../forms/Button';
 import { STATUS_COPY } from './copy';
 import type { StatusPageProps } from './types';
 
@@ -17,9 +22,66 @@ const FALLBACK = {
     raised: '#F5F6F9',
     accent: '#0f766e',
     accentHover: '#0d9488',
+    accentSoft: 'rgb(15 118 110 / 0.1)',
     danger: '#dc2626',
     onAccent: '#FFFFFF',
 } as const;
+
+const actionBaseClass =
+    'inline-flex h-11 w-full cursor-pointer items-center justify-center rounded-full px-5 text-sm font-semibold no-underline transition-[filter,background-color,border-color,color] duration-200 ease-out hover:brightness-110 active:scale-[0.98] sm:w-auto';
+
+type ActionTone = 'primary' | 'secondary' | 'ghost';
+
+function actionStyle(tone: ActionTone): CSSProperties {
+    if (tone === 'primary') {
+        return {
+            backgroundColor: `var(--color-accent, ${FALLBACK.accent})`,
+            color: `var(--color-on-accent, ${FALLBACK.onAccent})`,
+            border: '1px solid transparent',
+        };
+    }
+    if (tone === 'secondary') {
+        return {
+            backgroundColor: `var(--color-accent-soft, ${FALLBACK.accentSoft})`,
+            color: `var(--color-accent, ${FALLBACK.accent})`,
+            border: `1px solid color-mix(in oklab, var(--color-accent, ${FALLBACK.accent}) 35%, transparent)`,
+        };
+    }
+    return {
+        backgroundColor: 'transparent',
+        color: `var(--color-fg-muted, ${FALLBACK.muted})`,
+        border: `1px solid var(--color-line, ${FALLBACK.line})`,
+    };
+}
+
+function StatusAction({
+    tone,
+    href,
+    children,
+    onClick,
+}: {
+    tone: ActionTone;
+    children: ReactNode;
+    href?: string;
+    onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
+}) {
+    const className = cn(actionBaseClass);
+    const style = actionStyle(tone);
+
+    if (href) {
+        return (
+            <a href={href} className={className} style={style}>
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <button type="button" className={className} style={style} onClick={onClick}>
+            {children}
+        </button>
+    );
+}
 
 /**
  * Full-viewport status / error surface for Next.js `error`, `global-error`,
@@ -114,29 +176,17 @@ export function StatusPage({
                     </pre>
                 ) : null}
 
-                <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:justify-center">
+                <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center">
                     {reset ? (
-                        <Button
-                            type="button"
-                            size="lg"
-                            className="w-full sm:w-auto"
-                            onClick={reset}>
+                        <StatusAction tone="primary" onClick={reset}>
                             Try again
-                        </Button>
+                        </StatusAction>
                     ) : null}
-                    <Button
-                        as="a"
-                        href={homeHref}
-                        variant={reset ? 'secondary' : 'primary'}
-                        size="lg"
-                        className="w-full sm:w-auto">
+                    <StatusAction tone={reset ? 'secondary' : 'primary'} href={homeHref}>
                         {resolvedHomeLabel}
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="lg"
-                        className="w-full sm:w-auto"
+                    </StatusAction>
+                    <StatusAction
+                        tone="ghost"
                         onClick={() => {
                             if (typeof window !== 'undefined' && window.history.length > 1) {
                                 window.history.back();
@@ -145,7 +195,7 @@ export function StatusPage({
                             }
                         }}>
                         Go back
-                    </Button>
+                    </StatusAction>
                 </div>
             </div>
         </div>

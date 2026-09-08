@@ -19,7 +19,7 @@ const income = {
             body: 'Add salary, freelance, benefits, and side income here. Tap a row to change amount (with an effective date), cadence, or type.',
         },
         earning_methods: {
-            heading: 'Earning methods (coach)',
+            heading: 'Earning methods (The Coach)',
             body: 'Cutting costs has a floor; raising income does not. Typical levers: trade time or skill (freelance, raise), build a small system (productized offer), or grow asset income later. Pick one method, set an Earn goal for the net you want, then raise a source when the money lands — the gap and jar projection update with you.',
         },
     },
@@ -37,7 +37,7 @@ const income = {
         sources: {
             title: 'Income sources',
             content:
-                'Your pay streams. Tap a row to change amount (with an effective date) or add another with + Add.',
+                'Your pay streams. Tap a row to change amount (with an effective date) or add another with + Add income.',
         },
     },
 } as const;

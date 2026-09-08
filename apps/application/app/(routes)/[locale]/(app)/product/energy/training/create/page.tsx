@@ -1,12 +1,19 @@
+import { formRoute } from '@/app/_lib/form-route-meta';
 import { SheetStubForm } from '@/components/features/forms/sheet-stub-form';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 
-export const metadata = { title: 'New training' };
+export const metadata = { title: formRoute('sessionCreate').title };
 
 export default function Page() {
+    const meta = formRoute('sessionCreate');
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">New training</h1>
-            <SheetStubForm kind="session" mode="create" embedded={false} />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={meta.closeHref}
+            width={meta.width}>
+            <SheetStubForm kind="session" mode="create" embedded />
+        </FormRoutePageShell>
     );
 }

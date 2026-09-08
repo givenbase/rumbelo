@@ -3,16 +3,12 @@ const jars = {
     title: 'Jars',
     sections: {
         what_for: {
-            heading: 'What this page is for',
+            heading: 'What this is for',
             body: 'Six jars hold your monthly money by purpose. Percentages must add to 100%. Allocated, spent, and fixed commitments decide what is still available.',
         },
-        coverage: {
-            heading: 'Coverage',
-            body: 'Available = allocated − spent − fixed OUT on that jar. Overspent means commitments and spending already ate the envelope.',
-        },
-        simulator: {
-            heading: 'Simulator',
-            body: 'What-if income shows how a different monthly net would fund each jar and how long a Save goal might take at that pace.',
+        how: {
+            heading: 'How it works',
+            body: 'Available = allocated − spent − fixed OUT on that jar. Overspent means commitments and spending already ate the envelope. The simulator asks what if income were higher or lower.',
         },
     },
     steps: {

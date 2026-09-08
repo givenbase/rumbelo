@@ -52,6 +52,7 @@ import { isDemoAccountEmail } from '@/app/_lib/demo-accounts';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { chrome as tourChrome, usePageTour } from '@/components/features/tour';
+import { useFeatureHelpers } from '@/components/features/helpers';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -94,12 +95,6 @@ const AUTO_RULES = [
         desc: 'Whatever is left in Necessity on the 1st moves to Financial Freedom.',
         defaultOn: true,
     },
-    {
-        key: 'coach',
-        name: 'Coach explanations',
-        desc: 'Adds a plain-language explanation with the maths behind each signal.',
-        defaultOn: false,
-    },
 ] as const;
 
 function initials(name: string, email: string): string {
@@ -117,6 +112,7 @@ export function AccountSettings() {
     const { session, householdId, refreshSession } = useAuth();
     const { showToast, locale, toggleLocale, plan } = useAppShell();
     const { restartFullTour } = usePageTour();
+    const { helpersEnabled, setHelpersEnabled } = useFeatureHelpers();
     const live = isLiveData(householdId);
 
     const user = session?.user;
@@ -758,6 +754,21 @@ export function AccountSettings() {
             </SettingsInkCard>
 
             <SettingsInkCard
+                eyebrow="The Coach"
+                blurb="The Coach never scolds — only clear next moves. On-screen tips (why-lines, jar cards) stay on while you learn; the inbox at Overview → The Coach holds tip cards across money, growth, energy, and soul.">
+                <Toggle
+                    checked={helpersEnabled}
+                    label="Show The Coach on screens"
+                    hint={
+                        helpersEnabled
+                            ? 'On — look for the ✦ The Coach mark. Inbox stays at Overview → The Coach.'
+                            : 'Off — on-screen tips hidden. The Coach inbox still available anytime.'
+                    }
+                    onCheckedChange={setHelpersEnabled}
+                />
+            </SettingsInkCard>
+
+            <SettingsInkCard
                 eyebrow={tourChrome.settings.eyebrow}
                 blurb={tourChrome.settings.blurb}>
                 <SettingsRow last>
@@ -1201,7 +1212,7 @@ export function BankSettings() {
                         variant="secondary"
                         className="rounded-full font-mono text-[10px] tracking-[0.12em] uppercase"
                         onClick={() => setAdding(true)}>
-                        + Add
+                        + Add account
                     </Button>
                 }>
                 {accounts.length === 0 ? (
@@ -1440,7 +1451,7 @@ export function AutomationSettings() {
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="What Rumbelo does by itself"
-                blurb="Four rules. Everything off means Rumbelo only shows, never acts.">
+                blurb="Three rules. Everything off means Rumbelo only shows, never acts. The Coach settings live under Account.">
                 {AUTO_RULES.map((rule, i) => (
                     <button
                         key={rule.key}
@@ -1490,7 +1501,7 @@ export function AutomationSettings() {
                 </div>
             </SettingsInkCard>
 
-            <StubNotice what="Automation rules persist with household settings when that API lands. Theme and language live under Account." />
+            <StubNotice what="Automation rules persist with household settings when that API lands. The Coach is under Account. Theme and language live under Account too." />
         </SettingsPanel>
     );
 }

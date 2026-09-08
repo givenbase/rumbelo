@@ -1,12 +1,17 @@
 # Split coach
 
-Soft guidance when someone changes their income jar split. Never blocks save. Defaults stay **T. Harv Eker** (`DEFAULT_JAR_SPLIT` in `@rumbelo/contracts`): **55 / 10 / 10 / 10 / 10 / 5**.
+Soft guidance when someone changes their income jar split. Never blocks save.
+
+Defaults stay **T. Harv Eker** (`DEFAULT_JAR_SPLIT` in `@rumbelo/contracts`): **55 / 10 / 10 / 10 / 10 / 5**. Full jar doctrine (FF vs LTS, why 55/5, pre-allocation): [`product/money/README.md`](../../../../backend/src/modules/public/product/money/README.md).
 
 ## Why
 
-People often raise Play or Give by cutting Financial Freedom or Long Term Savings. The coach surfaces that trade-off in plain English and points at a better order of operations: **pay yourself first, then fun and giving**.
+People often raise Play or Give by cutting Financial Freedom or Long Term Savings. That inverts Eker’s order: **pay yourself first (FF + LTS), then fun and giving**. The coach surfaces that trade-off in plain English.
 
-Override is always allowed — tips are coaching, not rules.
+When **Necessities / fixed costs** blow past the envelope, coaching is different: simplify bills and/or raise income — never raid FF. Full doctrine + UI surfaces:
+[`product/money/README.md`](../../../../backend/src/modules/public/product/money/README.md) → “When Necessities can’t fit in 55%”.
+
+Override is always allowed — tips are coaching, not rules. Eker’s percentages are guidelines; our only hard rule is the split sums to 100%.
 
 ## Phases
 

@@ -210,7 +210,7 @@ export function NetWorthPageClient() {
                                         variant="secondary"
                                         className="self-center"
                                         onClick={() => router.push(CREATE_HREF.asset)}>
-                                        + Add
+                                        + Add asset
                                     </Button>
                                 </div>
                                 <div className="grid gap-3.5 p-4 sm:grid-cols-2 lg:grid-cols-3">

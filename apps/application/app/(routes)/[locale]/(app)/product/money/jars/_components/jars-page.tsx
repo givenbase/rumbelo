@@ -7,14 +7,16 @@ import { useRouter } from 'next/navigation';
 
 import { GoalKind } from '@rumbelo/contracts';
 import { useLiveQuery } from '@rumbelo/hooks';
-import { Card, Eyebrow } from '@rumbelo/ui';
+import { Card, Eyebrow, Button } from '@rumbelo/ui';
 import { formatMoney, toPeriodKey, cn, sumMonthly } from '@rumbelo/utils';
 
-import { CREATE_HREF } from '@/app/_lib/create-routes';
+import { CREATE_HREF, createTxHref } from '@/app/_lib/create-routes';
 import { bgClassToCssVar } from '@/app/_lib/jar-chrome';
+import { necessitiesPressureFromJar } from '@/app/_lib/necessities-pressure';
 import { isLiveData } from '@/app/_lib/preview';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { JarSummaryRow } from '@/components/features/money/jar-summary-row';
+import { NecessitiesPressureCard } from '@/components/features/money/necessities-pressure-card';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { ListToolbar, ListToolbarTab } from '@/components/layout/list-toolbar';
@@ -53,7 +55,10 @@ function isGoalOpen(goal: { saved: number; target: number; status?: string }) {
 
 /**
  * Jars screen — design Kluis Finance App.dc.html :689-839.
- * ListToolbar create stays (+ Move money → URL modal). No dashed add CTAs.
+ * ListToolbar: + Add transaction (Out/In) · Move between jars secondary.
+ * Necessities overspent → NecessitiesPressureCard; doctrine in
+ * apps/backend/src/modules/public/product/money/README.md
+ * → “When Necessities can’t fit in 55%”.
  */
 export function JarsPageClient() {
     const { householdId } = useAuth();
@@ -96,6 +101,8 @@ export function JarsPageClient() {
     const net = sumMonthly(incomeQuery.data ?? []);
     const totalPct = jars.reduce((total, j) => total + j.percentage, 0);
     const onTarget = jars.filter(j => !j.overspent).length;
+    const necJar = jars.find(jar => jar.key === 'NECESSITIES');
+    const necessitiesPressure = necJar ? necessitiesPressureFromJar(necJar) : null;
 
     const range = simRange(net);
     const simEuros =
@@ -180,8 +187,6 @@ export function JarsPageClient() {
 
             <div data-tour="jars-tabs">
                 <ListToolbar
-                    createLabel="+ Move money"
-                    onCreate={() => router.push(CREATE_HREF.move)}
                     secondary={
                         tab === 'JARS' ? (
                             <span className="font-mono text-xs font-medium text-fg-faint">
@@ -192,6 +197,19 @@ export function JarsPageClient() {
                                 Income {formatMoney(net)}/mo
                             </span>
                         ) : null
+                    }
+                    createSlot={
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => router.push(CREATE_HREF.move)}>
+                                Move between jars
+                            </Button>
+                            <Button size="sm" onClick={() => router.push(createTxHref())}>
+                                + Add transaction
+                            </Button>
+                        </div>
                     }>
                     {(['JARS', 'SIMULATOR'] as const).map(tabKey => (
                         <ListToolbarTab
@@ -217,6 +235,13 @@ export function JarsPageClient() {
 
             {tab === 'JARS' && (
                 <div data-tour="jars-list">
+                    {/* Doctrine: money README → “When Necessities can’t fit in 55%” */}
+                    {necessitiesPressure?.active ? (
+                        <div className="mb-4">
+                            <NecessitiesPressureCard pressure={necessitiesPressure} variant="jar" />
+                        </div>
+                    ) : null}
+
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="rounded-full border border-accent/30 bg-accent-soft px-4 py-2 font-mono text-xs font-medium tracking-wide text-accent uppercase">
                             {jars.length} jars · {Math.round(totalPct * 10) / 10}% allocated
@@ -243,6 +268,7 @@ export function JarsPageClient() {
                                         allocated: jar.allocated,
                                         available: jar.available,
                                         spent: jar.spent,
+                                        credited: jar.credited,
                                         committedOut: jar.committedOut,
                                         overspent: jar.overspent,
                                         categoryCount: jar.categories?.length ?? 0,
@@ -384,7 +410,7 @@ export function JarsPageClient() {
                                     type="button"
                                     onClick={() => router.push(CREATE_HREF.goal)}
                                     className="mt-3 block font-mono text-xs font-medium tracking-wide text-accent uppercase underline-offset-2 hover:underline">
-                                    + Add a goal
+                                    + Add goal
                                 </button>
                             </div>
                         )}
@@ -496,7 +522,7 @@ export function JarsPageClient() {
                                         type="button"
                                         onClick={() => router.push(CREATE_HREF.goal)}
                                         className="font-mono text-xs font-medium tracking-wide text-accent uppercase underline-offset-2 hover:underline">
-                                        + Add a goal
+                                        + Add goal
                                     </button>
                                 )}
                             </div>

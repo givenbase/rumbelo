@@ -21,6 +21,11 @@ export const Transaction = z.object({
     bookedOn: IsoDate,
     description: z.string().max(280),
     counterparty: z.string().max(160).nullable(),
+    /**
+     * Stable Transaction In source tag (e.g. GIFT, REFUND).
+     * Null for Out / free-typed In / bank imports.
+     */
+    inflowKey: z.string().min(1).max(64).nullable(),
     status: z.enum(TransactionStatus),
     source: z.enum(TransactionSource),
     /** Set when a rule auto-sorted this, so the user can see and undo the automation. */
@@ -47,6 +52,8 @@ export const CreateTransaction = z.object({
     bookedOn: IsoDate,
     description: z.string().min(1).max(280),
     counterparty: z.string().max(160).nullish(),
+    /** Set when logging In from a known preset — omit/null for Out or custom labels. */
+    inflowKey: z.string().min(1).max(64).nullish(),
     note: z.string().max(500).nullish(),
 });
 

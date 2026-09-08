@@ -19,11 +19,6 @@ type RouteModalShellProps = {
     width?: 'default' | 'wide';
 };
 
-const sheetWidthClass = {
-    default: 'w-full sm:max-w-md',
-    wide: 'w-full sm:max-w-2xl',
-} as const;
-
 /**
  * Shared overlay for create/edit via Next.js intercepting routes.
  * Soft nav → this sheet over the list. Hard refresh → full page (no shell).
@@ -80,7 +75,8 @@ export function RouteModalShell({
                 showCloseButton
                 className={cn(
                     'flex flex-col gap-0 overflow-hidden border-line bg-surface p-0 shadow-xl',
-                    sheetWidthClass[width]
+                    // Must override Sheet default sm:max-w-sm
+                    width === 'wide' ? 'sm:max-w-lg' : 'sm:max-w-md'
                 )}>
                 <SheetHeader className="shrink-0 space-y-0 border-b border-line bg-raised px-5 py-4 pr-12 text-left">
                     <div className="space-y-1">

@@ -1,13 +1,20 @@
+import { formRoute } from '@/app/_lib/form-route-meta';
+import { FormRoutePageShell } from '@/components/layout/form-route-page-shell';
 import { FixedCostUpdatePage } from '../../_components/fixed-cost-pages';
 
-export const metadata = { title: 'Edit fixed cost' };
+export const metadata = { title: formRoute('fixedUpdate').title };
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    const meta = formRoute('fixedUpdate');
+
     return (
-        <div className="mx-auto max-w-lg animate-rise px-4 py-8">
-            <h1 className="mb-6 font-display text-2xl font-semibold text-fg">Edit fixed cost</h1>
-            <FixedCostUpdatePage id={id} />
-        </div>
+        <FormRoutePageShell
+            title={meta.title}
+            description={meta.description}
+            closeHref={meta.closeHref}
+            width={meta.width}>
+            <FixedCostUpdatePage id={id} embedded />
+        </FormRoutePageShell>
     );
 }

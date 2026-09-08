@@ -1,64 +1,143 @@
+import Link from 'next/link';
+
+import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { Card, Eyebrow, Section } from '@rumbelo/ui';
 
+import { productPath } from '@/app/_lib/routes';
 import { PageContent } from '@/components/layout/page-content';
 
 export const metadata = { title: 'Why' };
 
-const PRINCIPLES = [
+/** What the slogan means — decode, then widen. Source: docs/brand/quotes.md */
+const MEANING = [
     {
-        num: '1',
-        title: '1 · DISTRIBUTE FIRST, SPEND SECOND',
-        body: 'Six jars, filled the moment income arrives. Money that already has a job does not need to be defended a hundred times a month. This is the oldest wealth habit there is — pay your future first.',
+        line: 'Money leaves. You’ll know why.',
+        body: 'Not a spreadsheet after the fact. When an amount leaves, you see the jar it came from — so “where did it go?” has an answer.',
     },
     {
-        num: '2',
-        title: '2 · TEN MINUTES A WEEK',
-        body: 'Rumbelo does not ask for your evenings. One weekly check — look, aim, set intention — beats worrying every day. Control is a rhythm, not a mood.',
+        line: 'Assign it before you wonder where it went.',
+        body: 'Income lands and gets a job across six jars the same second. Split first. Spend second. Money with a job does not need defending all month.',
     },
     {
-        num: '3',
-        title: '3 · ENERGY CARRIES MONEY',
-        body: 'Sleep, training, and nutrition are not lifestyle extras here. They are the floor beneath every financial decision you make. A tired mind spends; a rested mind steers.',
+        line: 'Know where it went. Know where it’s going.',
+        body: 'Looking back without a direction is only half the picture. Goals, debt payoff, and Financial Freedom point the next paycheck forward.',
     },
-    {
-        num: '4',
-        title: '4 · INFORMATION, NEVER SHAME',
-        body: 'A jar over its line is a signal, not a judgement. Every overspend comes with the one move that fixes it. Those who feel judged stop; those who feel informed adjust.',
-    },
-];
+] as const;
 
+const WIDER = [
+    {
+        portal: 'Money',
+        line: 'Money gets a job.',
+        body: 'Six jars. One calm overview. Fixed costs, inbox, and the week check keep the picture current.',
+        href: productPath('money/jars'),
+    },
+    {
+        portal: 'Growth',
+        line: 'Ambition with a plan — not a guess.',
+        body: 'Income, goals, and net worth so “earn more” has a map, not a vibe.',
+        href: productPath('growth/income'),
+    },
+    {
+        portal: 'Energy',
+        line: 'A tired head spends. A rested head decides.',
+        body: 'Sleep, training, food — the floor under every money choice. Life leaks too, not only the balance.',
+        href: productPath('energy/week'),
+    },
+    {
+        portal: 'Soul',
+        line: 'Know the why — not only the spend.',
+        body: 'Intention and stillness so the plan survives a hard week. Direction, not only discipline.',
+        href: productPath('soul/intent'),
+    },
+] as const;
+
+/**
+ * In-app manifesto — slogan first, then what we mean.
+ * Brand: docs/brand/quotes.md · positioning.md
+ */
 export default function WhyFoundationPage() {
     return (
         <PageContent width="prose" className="animate-rise">
-            <Section eyebrow="✦ The foundation">
-                <h1 className="font-display text-4xl leading-tight font-semibold tracking-tight text-fg md:text-5xl">
-                    Your money should give you room to live — and room to grow.
+            <Section eyebrow="✦ Why Rumbelo">
+                <p className="font-mono text-xs font-medium tracking-[0.14em] text-accent uppercase">
+                    The line we stand on
+                </p>
+                <h1 className="mt-3 font-display text-4xl leading-[1.1] font-semibold tracking-tight text-fg md:text-5xl lg:text-6xl">
+                    {BRAND_TAGLINE}
                 </h1>
-                <p className="mt-4 max-w-prose text-base leading-relaxed text-fg-muted">
-                    Rumbelo is for people who want control over their life with money: split with
-                    intention, grow what matters, and keep a calm weekly rhythm. It is not a
-                    bookkeeping app — it is one overview of money, energy, and time so you steer
-                    before life steers you.
+                <p className="mt-5 max-w-prose text-base leading-relaxed text-pretty text-fg-muted md:text-lg">
+                    That is not a clever phrase. It is the problem we refuse to leave unsolved —
+                    mystery spending, foggy paychecks, and the quiet stress of not knowing. We end
+                    the mystery. Then we widen the picture.
                 </p>
             </Section>
 
-            {/* Four principle cards */}
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {PRINCIPLES.map(principle => (
-                    <Card key={principle.num} className="grid gap-2">
-                        <Eyebrow>{principle.title}</Eyebrow>
-                        <p className="text-sm leading-relaxed text-fg-secondary">
-                            {principle.body}
-                        </p>
-                    </Card>
-                ))}
-            </div>
+            <section className="mt-12 grid gap-6">
+                <Eyebrow className="text-accent">✦ What we mean</Eyebrow>
+                <div className="grid gap-4">
+                    {MEANING.map(item => (
+                        <Card key={item.line} className="grid gap-2 p-5">
+                            <h2 className="font-display text-xl font-semibold tracking-tight text-fg">
+                                {item.line}
+                            </h2>
+                            <p className="text-sm leading-relaxed text-pretty text-fg-secondary">
+                                {item.body}
+                            </p>
+                        </Card>
+                    ))}
+                </div>
+            </section>
 
-            {/* Closing quote */}
-            <blockquote className="mt-10 font-display text-xl leading-relaxed font-medium tracking-tight text-fg-secondary italic md:text-2xl">
-                &ldquo;Show me where your money and your hours go, and I will tell you where your
-                life goes.&rdquo;
-            </blockquote>
+            <section className="mt-12 grid gap-6">
+                <div>
+                    <Eyebrow className="text-accent">✦ Bigger than the balance</Eyebrow>
+                    <p className="mt-3 max-w-prose text-sm leading-relaxed text-pretty text-fg-muted">
+                        Money is the door. Energy, growth, and soul complete the overview — so you
+                        stop wondering where it went, what you’re running on, and why it matters.
+                    </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                    {WIDER.map(item => (
+                        <Link
+                            key={item.portal}
+                            href={item.href}
+                            className="group grid gap-2 rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-accent/40 hover:bg-raised">
+                            <span className="font-mono text-[10px] font-medium tracking-[0.14em] text-fg-faint uppercase">
+                                {item.portal}
+                            </span>
+                            <span className="font-display text-base font-semibold tracking-tight text-fg group-hover:text-accent">
+                                {item.line}
+                            </span>
+                            <span className="text-sm leading-relaxed text-pretty text-fg-secondary">
+                                {item.body}
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+            </section>
+
+            <section className="mt-12 grid gap-5 border-t border-line pt-10">
+                <p className="font-display text-2xl leading-snug font-semibold tracking-tight text-fg md:text-3xl">
+                    Don’t chase the number. Own the direction.
+                </p>
+                <p className="max-w-prose text-sm leading-relaxed text-pretty text-fg-muted">
+                    Built for people who are doing well — and for people who are ready to. Six jars.
+                    One calm overview. Information, never shame: a jar over its line is a signal
+                    with a next move, not a verdict on who you are.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    <Link
+                        href={productPath('money/jars')}
+                        className="inline-flex h-9 cursor-pointer items-center justify-center rounded-full bg-accent px-4 text-xs font-semibold text-on-accent shadow-glow transition-all duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-95">
+                        Open the jars
+                    </Link>
+                    <Link
+                        href={productPath('money/week-check')}
+                        className="inline-flex h-9 cursor-pointer items-center justify-center rounded-full border border-line-strong bg-transparent px-4 text-xs font-semibold text-fg transition-all duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-95">
+                        Weekly check
+                    </Link>
+                </div>
+            </section>
         </PageContent>
     );
 }

@@ -19,7 +19,7 @@ const fixed = {
         tabs: {
             title: 'Out vs In',
             content:
-                'Switch between monthly bills (Out) and income sources (In). Leftover after costs shows next to + Add.',
+                'Switch between monthly bills (Out) and income sources (In). Leftover after costs shows next to + Add fixed cost / + Add income.',
         },
         list: {
             title: 'The list',
