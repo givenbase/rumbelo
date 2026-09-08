@@ -44,7 +44,7 @@ This is **common when starting**. The 55% is a **goal to work toward**, not a ha
 
 - Income arrives → `income` + jar split (`jar`)
 - Recurring draws → `fixed-cost` from a jar
-- Bank noise → `transaction` Inbox → sort into a jar (`rule` optional)
+- Bank noise → `transaction` Inbox → sort into a jar (`rule` optional). CSV import and Enable Banking / PSD2 strategy: [docs/engineering/banking.md](../../../../../../../docs/engineering/banking.md)
 - Planned outcomes → `goal` / `debt` attached to the right jar behaviour
 - Soft teaching when people drag the split → [split coach](../../../../../../application/app/_lib/split-coach/README.md)
 

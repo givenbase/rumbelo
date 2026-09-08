@@ -348,10 +348,12 @@ node scripts/rename-project.mjs <new-name>
 - **Free open banking is gone.** GoCardless Bank Account Data (ex-Nordigen) closed
   to new signups. **Enable Banking** has a free *restricted production* tier
   limited to accounts you link yourself, which fits the owner-plus-friends phase
-  exactly. Bank sync sits behind a port with a **null adapter** by default; the
-  Enable Banking adapter throws rather than returning `[]`, because a banking
-  adapter that silently returns nothing looks like "your bank has no
-  transactions". CSV import is the always-on path.
+  exactly. **Full production** (any customer connects a bank) is sales-quote only —
+  no public price list. Bank sync sits behind a port with a **null adapter** by
+  default; the Enable Banking adapter throws rather than returning `[]`, because a
+  banking adapter that silently returns nothing looks like "your bank has no
+  transactions". CSV import is the always-on path. Canonical write-up:
+  [`docs/engineering/banking.md`](docs/engineering/banking.md).
 - **`Downloads` is TCC-protected on macOS** and the attribute follows a copy. §8.
 
 ---

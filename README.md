@@ -153,3 +153,11 @@ CSV import with idempotent dedupe, debt payoff ordering, goal projections, energ
 summaries, household settings with **Basic / Plus / Max** plan keys. Demo personas
 are seeded for live login. Application screens use live oRPC queries (no `_mock/`
 fixtures). Playwright lives in `apps/e2e`.
+
+### Bank data
+
+**CSV statement import** is the always-on path (backend + dedupe → Inbox). Live bank
+sync is planned via **Enable Banking** (PSD2 AIS) behind `FEATURE_BANK_SYNC` — not
+Stripe. Full commercial production pricing is quote-based from Enable Banking;
+restricted production (owner-linked accounts) is free for early use. Details:
+[docs/engineering/banking.md](docs/engineering/banking.md).
