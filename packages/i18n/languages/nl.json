@@ -89,7 +89,7 @@
         "auth": {
             "sign_in": {
                 "title": "Welkom terug",
-                "subtitle": "Stop met gissen waar het bleef.",
+                "subtitle": "Log in en ga verder waar je was gebleven.",
                 "verification": {
                     "title": "Verify your email",
                     "required": "Confirm {email} before signing in. Check your inbox for the link.",
@@ -100,7 +100,7 @@
                 }
             },
             "sign_up": {
-                "title": "Stop met gissen waar het bleef.",
+                "title": "Maak je account",
                 "subtitle": "Zes potten. Één rustig overzicht."
             },
             "actions": {
@@ -142,26 +142,48 @@
                 "two": "Geld gaat weg. Jij weet waarom.",
                 "three": "Geen mysterie-uitgaven meer."
             },
-            "auth_quotes": {
+            "auth_quotes_web": {
                 "money_picture": {
                     "eyebrow": "Het geldbeeld",
                     "headline": "Stop met gissen waar het bleef.",
-                    "support": "Geld gaat weg. Jij weet waarom. Geen mysterie-uitgaven meer."
+                    "support": "Geld gaat. Jij weet waarom. Geen mysterie-uitgaven meer."
                 },
                 "how_it_works": {
                     "eyebrow": "Hoe het werkt",
                     "headline": "Eerst verdelen. Dan uitgeven.",
-                    "support": "Inkomen landt en krijgt meteen een taak over zes potten. Salaris binnen. Beeld helder."
+                    "support": "Geld. Energie. Groei. Ziel. Één overzicht."
                 },
                 "who_its_for": {
                     "eyebrow": "Voor wie",
-                    "headline": "Voor mensen die het goed doen — en voor wie er klaar voor is.",
-                    "support": "Jaag niet op het getal. Eigen de richting. Ambitie met een kaart — geen giswerk."
+                    "headline": "Voor wie het goed doet — en klaar is.",
+                    "support": "Jaag niet op het getal. Kies de richting."
                 },
-                "bigger_than_balance": {
-                    "eyebrow": "Groter dan het saldo",
-                    "headline": "Wijs het geld toe. Bescherm de energie. Bewaar het waarom.",
-                    "support": "Geld, groei, energie en ziel — één rustig overzicht. Een moe hoofd geeft uit; een uitgerust hoofd beslist."
+                "life_beyond": {
+                    "eyebrow": "Het hele beeld",
+                    "headline": "Wijs het geld toe. Bescherm de energie. Houd het waarom.",
+                    "support": "Niet alleen geld. Waar je leven naartoe gaat."
+                }
+            },
+            "auth_quotes_app": {
+                "money_picture": {
+                    "eyebrow": "Jouw geld",
+                    "headline": "Weet waar het bleef. Weet waar het naartoe gaat.",
+                    "support": "Jouw geld, toegewezen. Niet geraden."
+                },
+                "how_it_works": {
+                    "eyebrow": "Vandaag",
+                    "headline": "Salaris binnen. Plaatje helder.",
+                    "support": "Wijs toe. Dan uitgeven. Zes potten beslissen."
+                },
+                "energy": {
+                    "eyebrow": "Jouw capaciteit",
+                    "headline": "Een moe hoofd geeft uit. Een uitgerust hoofd beslist.",
+                    "support": "Stop met gissen waar je op draait."
+                },
+                "why": {
+                    "eyebrow": "Blijf doorgaan",
+                    "headline": "Zie de uitgave. Zie de energie. Zie het waarom.",
+                    "support": "Heldere boeken. Rustig hoofd. Morgen weer."
                 }
             }
         }

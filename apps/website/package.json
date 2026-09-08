@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^5.9.1",
+        "@rumbelo/brand": "workspace:*",
         "@rumbelo/config": "workspace:*",
         "@rumbelo/contracts": "workspace:*",
         "@rumbelo/i18n": "workspace:*",

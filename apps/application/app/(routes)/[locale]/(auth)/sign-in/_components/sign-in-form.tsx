@@ -125,7 +125,7 @@ export function SignInForm() {
     return (
         <div className="grid gap-6">
             <div>
-                <h1 className="font-display text-2xl font-semibold tracking-tight text-fg">
+                <h1 className="font-display text-3xl font-semibold tracking-tight text-fg">
                     {AUTH_SIGN_IN.title}
                 </h1>
                 <p className="mt-1 text-sm text-fg-muted">{AUTH_SIGN_IN.subtitle}</p>

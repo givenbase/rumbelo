@@ -3,6 +3,8 @@ export * from './locales';
 export * from './next-intl';
 export {
     AUTH_QUOTES,
+    AUTH_QUOTES_WEB,
+    AUTH_QUOTES_APP,
     AUTH_SIGN_IN,
     AUTH_SIGN_UP,
     AUTH_VERIFY,

@@ -1,3 +1,4 @@
+import { RumbeloLogo } from '@rumbelo/brand';
 import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { FOOT_COLS, TRUST_BADGES, TRUST_CARDS } from '@/lib/landing-content';
 
@@ -35,10 +36,8 @@ export function LandingFooter() {
             <div className="mx-auto flex max-w-6xl flex-wrap items-start gap-7 px-4 py-8 pb-8 lg:gap-14 lg:px-6">
                 {/* Brand blurb */}
                 <div className="grid max-w-prose min-w-0 flex-1 basis-72 gap-3">
-                    <div className="flex items-baseline gap-2">
-                        <span className="font-display text-lg font-bold tracking-tight">
-                            Rumbelo
-                        </span>
+                    <div className="flex items-center gap-2">
+                        <RumbeloLogo variant="wordmark" className="h-6 w-auto max-w-[8.5rem]" />
                         <span className="font-mono text-xs font-medium tracking-wide text-fg-faint">
                             {BRAND_TAGLINE}
                         </span>

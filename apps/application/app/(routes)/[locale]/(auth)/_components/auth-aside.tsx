@@ -2,18 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { AUTH_QUOTES } from '@rumbelo/i18n';
+import { AUTH_QUOTES_APP } from '@rumbelo/i18n';
+import { AuthManifesto } from '@rumbelo/ui';
 
-const ROTATE_MS = 7000;
+/** Pexels clip (download id 17337078) — dark background. */
+const AUTH_ASIDE_VIDEO =
+    'https://videos.pexels.com/video-files/15179376/15179376-uhd_1920_1440_60fps.mp4';
 
 /**
- * Desktop auth manifesto panel — looping muted video with brand quotes.
- * Respects prefers-reduced-motion (poster only; first quote stays).
+ * Desktop auth manifesto — habit quotes to pull them back into the product.
+ * Respects prefers-reduced-motion (first quote stays; no video).
  */
 export function AuthAside() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [reduceMotion, setReduceMotion] = useState(false);
-    const [quoteIndex, setQuoteIndex] = useState(0);
 
     useEffect(() => {
         const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -27,75 +29,32 @@ export function AuthAside() {
         const video = videoRef.current;
         if (!video || reduceMotion) return;
         void video.play().catch(() => {
-            // Autoplay can fail without user gesture; poster remains visible.
+            // Autoplay can fail without user gesture; manifesto copy remains.
         });
     }, [reduceMotion]);
 
-    useEffect(() => {
-        if (reduceMotion || AUTH_QUOTES.length < 2) return;
-        const id = window.setInterval(() => {
-            setQuoteIndex(i => (i + 1) % AUTH_QUOTES.length);
-        }, ROTATE_MS);
-        return () => window.clearInterval(id);
-    }, [reduceMotion]);
-
-    const quote = AUTH_QUOTES[quoteIndex] ?? AUTH_QUOTES[0];
-    if (!quote) return null;
-
     return (
-        <aside className="relative hidden overflow-hidden lg:block">
-            <div
-                aria-hidden
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('/videos/auth-aside-poster.jpg')" }}
-            />
-
+        <aside className="relative hidden h-full min-h-dvh overflow-hidden bg-fg lg:block">
             {!reduceMotion ? (
                 <video
                     ref={videoRef}
                     aria-hidden
                     className="absolute inset-0 size-full object-cover"
-                    poster="/videos/auth-aside-poster.jpg"
                     autoPlay
                     muted
                     loop
                     playsInline
                     preload="metadata">
-                    <source src="/videos/auth-aside.mp4" type="video/mp4" />
+                    <source src={AUTH_ASIDE_VIDEO} type="video/mp4" />
                 </video>
             ) : null}
 
-            <div
-                aria-hidden
-                className="absolute inset-0 bg-linear-to-t from-black/75 via-black/45 to-black/30"
+            <AuthManifesto
+                quotes={AUTH_QUOTES_APP}
+                reduceMotion={reduceMotion}
+                autoRotate={false}
+                footer="portals"
             />
-
-            <div className="relative z-10 flex h-full min-h-dvh flex-col justify-end px-12 py-16">
-                <div key={quoteIndex} className="animate-rise">
-                    <p className="text-xs font-semibold tracking-widest text-white/70 uppercase">
-                        ✦ {quote.eyebrow}
-                    </p>
-                    <p className="mt-4 max-w-md font-display text-3xl leading-tight font-semibold tracking-tight text-white">
-                        {quote.headline}
-                    </p>
-                    <p className="mt-6 max-w-md text-sm leading-relaxed text-white/80">
-                        {quote.support}
-                    </p>
-                </div>
-
-                <div className="mt-10 flex gap-1.5" aria-hidden>
-                    {AUTH_QUOTES.map((item, quoteIdx) => (
-                        <span
-                            key={item.headline}
-                            className={
-                                quoteIdx === quoteIndex
-                                    ? 'h-1 w-6 rounded-full bg-white'
-                                    : 'h-1 w-1.5 rounded-full bg-white/35'
-                            }
-                        />
-                    ))}
-                </div>
-            </div>
         </aside>
     );
 }

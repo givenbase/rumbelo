@@ -2,7 +2,7 @@
 const auth = {
     sign_in: {
         title: 'Welcome back',
-        subtitle: 'Stop wondering where it went.',
+        subtitle: 'Sign in to pick up where you left off.',
         verification: {
             title: 'Verify your email',
             required: 'Confirm {email} before signing in. Check your inbox for the link.',
@@ -16,7 +16,7 @@ const auth = {
         create_account: 'Create an account',
     },
     sign_up: {
-        title: 'Stop wondering where it went.',
+        title: 'Create your account',
         subtitle: 'Six jars. One calm overview.',
     },
     /** Pending verification gate — email today; phone / etc. later. */

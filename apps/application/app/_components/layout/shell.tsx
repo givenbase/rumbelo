@@ -5,6 +5,7 @@ import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
+import { RumbeloLogo } from '@rumbelo/brand';
 import { BRAND_TAGLINE } from '@rumbelo/i18n';
 import { ThemeToggle } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
@@ -146,11 +147,9 @@ function AppShellInner({ children }: { children: ReactNode }) {
                     {/* Wordmark */}
                     <Link
                         href="/"
-                        className="flex shrink-0 items-baseline gap-2.5"
+                        className="flex shrink-0 items-center gap-2.5"
                         data-tour="shell-brand">
-                        <span className="font-display text-lg font-semibold tracking-tight text-fg">
-                            Rumbelo
-                        </span>
+                        <RumbeloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
                         <span className="hidden font-mono text-xs font-medium tracking-wide text-fg-faint xl:inline">
                             {BRAND_TAGLINE}
                         </span>
