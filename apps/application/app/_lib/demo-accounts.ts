@@ -14,7 +14,7 @@ export const DEMO_ACCOUNTS: readonly {
     { persona: 'max', email: 'max@rumbelo.com', label: 'Max' },
 ] as const;
 
-const DEMO_EMAILS = new Set(DEMO_ACCOUNTS.map(a => a.email.toLowerCase()));
+const DEMO_EMAILS = new Set(DEMO_ACCOUNTS.map(account => account.email.toLowerCase()));
 
 /** Seeded demo personas — plan and billing are read-only. */
 export function isDemoAccountEmail(email: string | null | undefined): boolean {

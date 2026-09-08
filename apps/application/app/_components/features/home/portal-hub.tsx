@@ -179,14 +179,14 @@ export function PortalHub({ tint, icon, eyebrow, title, line, coach, cards }: Po
  * 0% muted gray → mid warning amber → 100% success green.
  */
 function progressRingColor(pct: number): string {
-    const p = Math.max(0, Math.min(100, pct));
-    if (p <= 0) return 'var(--color-fg-faint)';
-    if (p >= 100) return 'var(--color-success)';
-    if (p < 50) {
-        const warningShare = Math.round((p / 50) * 100);
+    const percent = Math.max(0, Math.min(100, pct));
+    if (percent <= 0) return 'var(--color-fg-faint)';
+    if (percent >= 100) return 'var(--color-success)';
+    if (percent < 50) {
+        const warningShare = Math.round((percent / 50) * 100);
         return `color-mix(in oklab, var(--color-warning) ${warningShare}%, var(--color-fg-faint))`;
     }
-    const successShare = Math.round(((p - 50) / 50) * 100);
+    const successShare = Math.round(((percent - 50) / 50) * 100);
     return `color-mix(in oklab, var(--color-success) ${successShare}%, var(--color-warning))`;
 }
 

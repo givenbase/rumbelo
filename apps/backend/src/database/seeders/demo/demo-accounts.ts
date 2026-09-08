@@ -49,8 +49,8 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     },
 ] as const;
 
-const DEMO_EMAILS = new Set(DEMO_ACCOUNTS.map(a => a.email.toLowerCase()));
-const DEMO_HOUSEHOLD_SLUGS = new Set(DEMO_ACCOUNTS.map(a => a.slug));
+const DEMO_EMAILS = new Set(DEMO_ACCOUNTS.map(account => account.email.toLowerCase()));
+const DEMO_HOUSEHOLD_SLUGS = new Set(DEMO_ACCOUNTS.map(account => account.slug));
 
 /** Seeded demo personas — plan and Stripe billing are read-only. */
 export function isDemoAccountEmail(email: string | null | undefined): boolean {
