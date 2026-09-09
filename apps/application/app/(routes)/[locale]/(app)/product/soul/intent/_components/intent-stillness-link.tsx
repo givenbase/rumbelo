@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { Button } from '@rumbelo/ui';
+import { Button } from '@rumtelo/ui';
 
 export function IntentStillnessLink() {
     return (

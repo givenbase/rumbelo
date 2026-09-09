@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { ThemeProvider } from '@rumbelo/ui';
+import { ThemeProvider } from '@rumtelo/ui';
 
 export function Providers({ children }: { children: ReactNode }) {
     return <ThemeProvider>{children}</ThemeProvider>;

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { PlanKey, PLAN_RANK } from '@rumbelo/contracts';
+import { PlanKey, PLAN_RANK } from '@rumtelo/contracts';
 import Stripe from 'stripe';
 
 import type { Env } from '../../../../common/config/env.config';

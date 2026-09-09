@@ -4,7 +4,7 @@
  *
  * Owned under each domain folder. This barrel exists so routers/schemas can
  * import cross-domain without long relative paths.
- * Prefer public imports via `@rumbelo/contracts/money`, `/platform`, …
+ * Prefer public imports via `@rumtelo/contracts/money`, `/platform`, …
  * Postgres types use NativeEnum `domain` (e.g. `money_debt_kind`) — do not
  * rename TS enums to `MoneyDebtKind`.
  */

@@ -4,8 +4,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 type RouteModalShellProps = {
     children: React.ReactNode;

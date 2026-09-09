@@ -1,5 +1,5 @@
 import { Entity, Enum, Index, ManyToOne, Property } from '@mikro-orm/core';
-import { TransactionSource, TransactionStatus } from '@rumbelo/contracts';
+import { TransactionSource, TransactionStatus } from '@rumtelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';

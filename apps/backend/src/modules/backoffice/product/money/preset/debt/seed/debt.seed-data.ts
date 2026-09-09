@@ -1,4 +1,4 @@
-import { DebtKind } from '@rumbelo/contracts';
+import { DebtKind } from '@rumtelo/contracts';
 
 /**
  * Debt types for “New debt”.

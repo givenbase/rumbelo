@@ -4,13 +4,13 @@
         {
             "name": "application",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--filter", "@rumbelo/application", "run", "dev"],
+            "runtimeArgs": ["--filter", "@rumtelo/application", "run", "dev"],
             "port": 3000
         },
         {
             "name": "website",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--filter", "@rumbelo/website", "run", "dev"],
+            "runtimeArgs": ["--filter", "@rumtelo/website", "run", "dev"],
             "port": 3001
         }
     ]

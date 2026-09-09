@@ -1,5 +1,5 @@
 {
-    "name": "@rumbelo/utils",
+    "name": "@rumtelo/utils",
     "version": "0.0.0",
     "private": true,
     "type": "module",
@@ -10,12 +10,12 @@
         "check-types": "tsc --noEmit"
     },
     "dependencies": {
-        "@rumbelo/contracts": "workspace:*",
+        "@rumtelo/contracts": "workspace:*",
         "clsx": "^2.1.1",
         "tailwind-merge": "^3.3.1"
     },
     "devDependencies": {
-        "@rumbelo/typescript-config": "workspace:*",
+        "@rumtelo/typescript-config": "workspace:*",
         "@types/node": "26.3.0",
         "typescript": "5.9.3"
     }

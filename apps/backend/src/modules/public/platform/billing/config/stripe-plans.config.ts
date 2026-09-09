@@ -1,14 +1,14 @@
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 
 /** Stable Stripe lookup keys — same string in test + live after seeding each account. */
 export const STRIPE_PLAN_LOOKUP_KEYS = {
     [PlanKey.PLUS]: {
-        month: 'rumbelo_plus_monthly',
-        year: 'rumbelo_plus_yearly',
+        month: 'rumtelo_plus_monthly',
+        year: 'rumtelo_plus_yearly',
     },
     [PlanKey.MAX]: {
-        month: 'rumbelo_max_monthly',
-        year: 'rumbelo_max_yearly',
+        month: 'rumtelo_max_monthly',
+        year: 'rumtelo_max_yearly',
     },
 } as const;
 
@@ -28,14 +28,14 @@ export const STRIPE_PLAN_CATALOG: Record<
     }
 > = {
     [PlanKey.PLUS]: {
-        name: 'Rumbelo Plus',
+        name: 'Rumtelo Plus',
         description: 'Share the board with family or friends — debt, energy week, and goals.',
         currency: 'eur',
         month: 9,
         year: 90,
     },
     [PlanKey.MAX]: {
-        name: 'Rumbelo Max',
+        name: 'Rumtelo Max',
         description: 'Unlimited household, income curve, learning, and net worth.',
         currency: 'eur',
         month: 19,

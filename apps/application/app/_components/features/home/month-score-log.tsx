@@ -1,5 +1,5 @@
-import { Eyebrow } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Eyebrow } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 export interface MonthScoreEvent {
     day: number;

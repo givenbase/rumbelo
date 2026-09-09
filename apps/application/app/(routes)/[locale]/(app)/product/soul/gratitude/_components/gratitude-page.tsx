@@ -5,9 +5,9 @@ import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Button, Eyebrow, Input, Section } from '@rumbelo/ui';
-import { currentWeekKey } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Button, Eyebrow, Input, Section } from '@rumtelo/ui';
+import { currentWeekKey } from '@rumtelo/utils';
 
 import { isLiveData } from '@/app/_lib/preview';
 import { useAuth } from '@/components/features/shell/auth-provider';

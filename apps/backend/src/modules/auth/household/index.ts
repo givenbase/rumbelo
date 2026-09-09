@@ -1,5 +1,5 @@
 /**
- * Household barrel — Better Auth organization = Rumbelo household.
+ * Household barrel — Better Auth organization = Rumtelo household.
  */
 export { HouseholdController } from './household.controller';
 export { HouseholdModule } from './household.module';

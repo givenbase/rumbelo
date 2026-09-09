@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Card } from '@rumbelo/ui';
-import { cn, formatMoney, monthlyAmount, fixedOutNetSummary } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Card } from '@rumtelo/ui';
+import { cn, formatMoney, monthlyAmount, fixedOutNetSummary } from '@rumtelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { bgClassToCssVar, cadenceLabel } from '@/app/_lib/jar-chrome';

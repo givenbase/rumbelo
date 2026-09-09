@@ -4,7 +4,7 @@ import { Entity, PrimaryKey, Property, Unique } from '@mikro-orm/core';
  * better-auth organization plugin table, stored as `auth.household`.
  *
  * The plugin API still says "organization"; we map `modelName: 'household'`
- * so the database and our code speak Rumbelo. Finance settings hang off this
+ * so the database and our code speak Rumtelo. Finance settings hang off this
  * id in `auth.household_settings`.
  *
  *   id    = householdId (Postgres uuid — BA `generateId` → uuidv7)

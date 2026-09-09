@@ -1,4 +1,4 @@
-import type { JarKey } from '@rumbelo/contracts';
+import type { JarKey } from '@rumtelo/contracts';
 
 export type MerchantMatchNeedle = {
     jarKey: JarKey;

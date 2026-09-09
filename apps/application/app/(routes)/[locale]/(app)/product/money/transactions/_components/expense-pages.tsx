@@ -2,9 +2,9 @@
 
 import { apiQuery } from '@/app/_lib/api-hooks';
 
-import { useLiveQuery } from '@rumbelo/hooks';
+import { useLiveQuery } from '@rumtelo/hooks';
 
-import type { Transaction } from '@rumbelo/contracts';
+import type { Transaction } from '@rumtelo/contracts';
 
 import { centsToEurosInput } from '@/app/_lib/money-input';
 import { isLiveData } from '@/app/_lib/preview';

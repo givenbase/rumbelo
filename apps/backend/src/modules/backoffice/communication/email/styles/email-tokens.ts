@@ -1,5 +1,5 @@
 /**
- * Rumbelo email design tokens — mirrors packages/config/tailwind/theme.css.
+ * Rumtelo email design tokens — mirrors packages/config/tailwind/theme.css.
  * Tuned for WCAG AA contrast on white reading surfaces.
  */
 

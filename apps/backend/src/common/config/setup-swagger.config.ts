@@ -38,7 +38,7 @@ export async function setupSwagger(app: NestFastifyApplication, env: Env): Promi
     }
 
     const config = new DocumentBuilder()
-        .setTitle(`Rumbelo API (${env.NODE_ENV})`)
+        .setTitle(`Rumtelo API (${env.NODE_ENV})`)
         .setDescription(
             `
 Household money / energy / growth / soul API — **~70 oRPC procedures** under Public + Auth tags.
@@ -85,7 +85,7 @@ Cookie session from the application. Optional header: \`x-household-id\`.
             operationsSorter: 'alpha',
             displayRequestDuration: true,
         },
-        customSiteTitle: 'Rumbelo API',
+        customSiteTitle: 'Rumtelo API',
     };
 
     SwaggerModule.setup('api/docs', app, document, customOptions);

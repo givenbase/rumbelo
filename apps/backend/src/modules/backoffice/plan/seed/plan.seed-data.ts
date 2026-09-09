@@ -1,4 +1,4 @@
-import { PlanKey, PLAN_CAPABILITIES } from '@rumbelo/contracts';
+import { PlanKey, PLAN_CAPABILITIES } from '@rumtelo/contracts';
 
 /**
  * Commercial plan rows (Basic / Plus / Max).

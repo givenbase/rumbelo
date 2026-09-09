@@ -13,7 +13,7 @@ Better Auth mirrors under `modules/auth/*/managed/` are library-owned and exclud
 ## File layout
 
 ```text
-1. Imports        → common/database → mikro-orm → @rumbelo/contracts → local entities
+1. Imports        → common/database → mikro-orm → @rumtelo/contracts → local entities
 2. Class JSDoc    → name, purpose, @see MikroORM link
 3. Decorators     → @Entity(entityConfig(...)), @Unique, @Index
 4. export class   → grouped sections (below)
@@ -23,7 +23,7 @@ Better Auth mirrors under `modules/auth/*/managed/` are library-owned and exclud
 
 `entityConfig()` must set `schema`, `domain`, and optionally `tableName`. See `common/database/entity-config.util.ts`.
 
-Enums come from `@rumbelo/contracts` + `NativeEnum({ … })` — never `export enum` inside an entity file.
+Enums come from `@rumtelo/contracts` + `NativeEnum({ … })` — never `export enum` inside an entity file.
 
 **Postgres type prefix (mandatory):** every `@Enum` uses `NativeEnum({ EnumName, domain: '…' })`.
 `domain` is the product/plane of the **column** (where the row lives), not the TS file name:
@@ -106,7 +106,7 @@ This is the #1 naming footgun in money apps:
 
 **Do not** rename `dueDay` → `dueDate` or `expectedDay` → `expectedDate`. Those values are not dates; they are ordinals that repeat every period. Calling them `*Date` lies about the type and breaks sorting/validation assumptions.
 
-Rumbelo calendar-date suffix is **`*On`** (Rails-style). Prefer `startedOn` / `endsOn` over `startDate` / `endDate` so `*Day` and `*Date` never collide in reviews. Use `*At` only for true instants.
+Rumtelo calendar-date suffix is **`*On`** (Rails-style). Prefer `startedOn` / `endsOn` over `startDate` / `endDate` so `*Day` and `*Date` never collide in reviews. Use `*At` only for true instants.
 
 ### JSON — when and how to name it
 
@@ -189,10 +189,10 @@ Abstract bases are not domain entities:
 
 ## Automated check
 
-Run before commit (also runs as part of `pnpm --filter @rumbelo/backend lint`):
+Run before commit (also runs as part of `pnpm --filter @rumtelo/backend lint`):
 
 ```bash
-pnpm --filter @rumbelo/backend lint:entities
+pnpm --filter @rumtelo/backend lint:entities
 ```
 
 The script `scripts/lint/check-entity-style.ts` enforces:
@@ -226,5 +226,5 @@ When adding a new **1:1** household-owned entity, add its class name to `HOUSEHO
 - [ ] Every `@Property` and relationship has JSDoc
 - [ ] No `@Enum` outside `// ? ENUMS`
 - [ ] No relationships outside `// ? RELATIONSHIPS`
-- [ ] Enums imported from `@rumbelo/contracts` + `NativeEnum({ EnumName, domain: '…' })` (explicit domain → PG prefix)
+- [ ] Enums imported from `@rumtelo/contracts` + `NativeEnum({ EnumName, domain: '…' })` (explicit domain → PG prefix)
 - [ ] No redeclared `id` / `createdAt` / `updatedAt` / `household`

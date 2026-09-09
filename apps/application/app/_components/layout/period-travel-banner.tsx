@@ -1,6 +1,6 @@
 'use client';
 
-import { cn, describePeriodTravel } from '@rumbelo/utils';
+import { cn, describePeriodTravel } from '@rumtelo/utils';
 
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 

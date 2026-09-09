@@ -1,5 +1,5 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
-import { RuleField, RuleMatcher } from '@rumbelo/contracts';
+import { RuleField, RuleMatcher } from '@rumtelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';

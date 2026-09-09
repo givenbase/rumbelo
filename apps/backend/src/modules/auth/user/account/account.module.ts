@@ -9,7 +9,7 @@ import { AccountService } from './account.service';
 /**
  * Account Module
  *
- * Rumbelo-owned person data (not better-auth machinery, not household board).
+ * Rumtelo-owned person data (not better-auth machinery, not household board).
  * Board money settings live under auth/household/household-settings.
  */
 @Module({

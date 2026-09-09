@@ -150,7 +150,7 @@ function syncToGithub(envName, type, envFile) {
 
     const tmp = path.join(
         os.tmpdir(),
-        `rumbelo-github-${type}-${envName}-${process.pid}-${Date.now()}.env`
+        `rumtelo-github-${type}-${envName}-${process.pid}-${Date.now()}.env`
     );
     fs.writeFileSync(tmp, body, 'utf8');
     const cmd =

@@ -1,4 +1,4 @@
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey } from '@rumtelo/contracts';
 
 type Seed = {
     key: string;

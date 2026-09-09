@@ -1,7 +1,7 @@
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 
 /** Shared password for all demo / E2E personas (better-auth min length 12). */
-export const DEMO_PASSWORD = 'RumbeloDemo1!';
+export const DEMO_PASSWORD = 'RumteloDemo1!';
 
 export type DemoPersona = 'basic' | 'plus' | 'max';
 
@@ -17,13 +17,13 @@ export type DemoAccount = {
 
 /**
  * Seeded demo accounts — also used by sign-in chips and apps/e2e.
- * Domain: @rumbelo.com
+ * Domain: @rumtelo.com
  */
 export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     {
         persona: 'basic',
         planKey: PlanKey.BASIC,
-        email: 'basic@rumbelo.com',
+        email: 'basic@rumtelo.com',
         name: 'Basic Demo',
         householdName: 'Basic huishouden',
         slug: 'demo-basic',
@@ -32,7 +32,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     {
         persona: 'plus',
         planKey: PlanKey.PLUS,
-        email: 'plus@rumbelo.com',
+        email: 'plus@rumtelo.com',
         name: 'Plus Demo',
         householdName: 'Freelancer Plus',
         slug: 'demo-plus',
@@ -41,7 +41,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     {
         persona: 'max',
         planKey: PlanKey.MAX,
-        email: 'max@rumbelo.com',
+        email: 'max@rumtelo.com',
         name: 'Max Demo',
         householdName: 'Max Invest',
         slug: 'demo-max',

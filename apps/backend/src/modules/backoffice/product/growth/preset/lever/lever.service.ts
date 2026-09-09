@@ -6,7 +6,7 @@ import {
     WEALTH_STAGE_KEYS,
     filterGrowthLeverPresets,
     type GrowthLeverPreset,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { WealthStageService } from '../../catalog/wealth-stage/wealth-stage.service';
 import { LeverPreset } from './lever.entity';

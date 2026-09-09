@@ -1,6 +1,6 @@
 import type { EntityManager } from '@mikro-orm/postgresql';
 
-import type { JarKey } from '@rumbelo/contracts';
+import type { JarKey } from '@rumtelo/contracts';
 import { JarTemplate } from './template/jar/jar.entity';
 
 /** Resolve a seeded jar template by stable key — throws if catalog not seeded yet. */

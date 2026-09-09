@@ -1,4 +1,4 @@
-import { INCOME_POSTURE_KEYS } from '@rumbelo/contracts';
+import { INCOME_POSTURE_KEYS } from '@rumtelo/contracts';
 
 /** Seed rows for backoffice.reference_growth_income_posture. */
 export const INCOME_POSTURE_SEED = [

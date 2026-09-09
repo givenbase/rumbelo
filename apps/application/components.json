@@ -14,7 +14,7 @@
         "components": "@/app/_components",
         "hooks": "@/app/_hooks",
         "lib": "@/app/_lib",
-        "utils": "@rumbelo/ui/lib/utils",
-        "ui": "@rumbelo/ui/components/ui"
+        "utils": "@rumtelo/ui/lib/utils",
+        "ui": "@rumtelo/ui/components/ui"
     }
 }

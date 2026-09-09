@@ -1,5 +1,5 @@
 import { createEnv } from '@t3-oss/env-nextjs';
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 import { z } from 'zod';
 
 const isProdBuild = process.env.NODE_ENV === 'production' && !process.env.SKIP_ENV_VALIDATION;

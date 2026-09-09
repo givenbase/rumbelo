@@ -1,6 +1,6 @@
-# @rumbelo/brand
+# @rumtelo/brand
 
-Single source of truth for Rumbelo logos and lockups.
+Single source of truth for Rumtelo logos and lockups.
 
 ## Why here (not `apps/*/public`)
 
@@ -15,20 +15,20 @@ and **symlinking** each app’s `public/brand` → `packages/brand/assets` means
 
 ```
 packages/brand/assets/
-  rumbelo-mark.png              # icon only
-  rumbelo-mark.svg              # points at the PNG until we have vectors
-  rumbelo-wordmark.png          # horizontal lockup (light)
-  rumbelo-wordmark.svg
-  rumbelo-wordmark-on-dark.jpg  # horizontal lockup on dark
-  rumbelo-lockup.jpg            # square presentation asset
+  rumtelo-mark.png              # icon only
+  rumtelo-mark.svg              # points at the PNG until we have vectors
+  rumtelo-wordmark.png          # horizontal lockup (light)
+  rumtelo-wordmark.svg
+  rumtelo-wordmark-on-dark.jpg  # horizontal lockup on dark
+  rumtelo-lockup.jpg            # square presentation asset
 ```
 
 ## Usage
 
 ```tsx
-import { RumbeloLogo, BRAND_ASSETS } from '@rumbelo/brand';
+import { RumteloLogo, BRAND_ASSETS } from '@rumtelo/brand';
 
-<RumbeloLogo variant="wordmark" className="h-7 w-auto" />
+<RumteloLogo variant="wordmark" className="h-7 w-auto" />
 <img src={BRAND_ASSETS.mark} alt="" />
 ```
 

@@ -1,6 +1,6 @@
 /**
  * Soul product contracts — schemas.
- * Prefer: `import { … } from '@rumbelo/contracts/soul'`
+ * Prefer: `import { … } from '@rumtelo/contracts/soul'`
  *
  * Mirror: apps/backend/src/modules/public/product/soul/
  */

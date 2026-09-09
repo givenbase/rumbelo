@@ -1,4 +1,4 @@
-import { JarKey, SpendingStyle } from '@rumbelo/contracts';
+import { JarKey, SpendingStyle } from '@rumtelo/contracts';
 
 import {
     DEFAULT_JAR_SPLIT,

@@ -1,5 +1,5 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
-import { PlanKey, type PlanCapabilities } from '@rumbelo/contracts';
+import { PlanKey, type PlanCapabilities } from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../common/database/base.entity';
 import { NativeEnum } from '../../../common/database/native-enum.util';
@@ -10,7 +10,7 @@ import type { PlanCapability } from './plan-capability/plan-capability.entity';
 /**
  * Plan Entity
  *
- * Rumbelo-owned product tiers (Basic / Plus / Max).
+ * Rumtelo-owned product tiers (Basic / Plus / Max).
  * We write these rows; households only *subscribe* (later) or read for gating.
  * Runtime checks use PLAN_CAPABILITY_GRANTS from contracts; this row is the catalog mirror.
  * Display / tier order is `sortOrder` only (0 = Basic …).

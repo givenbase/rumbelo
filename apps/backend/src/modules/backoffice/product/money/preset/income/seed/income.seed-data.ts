@@ -1,4 +1,4 @@
-import { Cadence, IncomeKind } from '@rumbelo/contracts';
+import { Cadence, IncomeKind } from '@rumtelo/contracts';
 
 const monthly = Cadence.MONTHLY;
 const quarterly = Cadence.QUARTERLY;

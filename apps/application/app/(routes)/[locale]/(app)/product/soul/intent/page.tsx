@@ -1,5 +1,5 @@
-import { Eyebrow, Section } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Eyebrow, Section } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { PageContent } from '@/components/layout/page-content';
 

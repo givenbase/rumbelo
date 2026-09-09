@@ -6,7 +6,7 @@ import {
     parseCapabilityKey,
     type CapabilityKey,
     type CapabilityProduct,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 /**
  * Capability seed — readable mirror of contracts (all 26 featureKeys).

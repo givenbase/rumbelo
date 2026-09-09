@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useLiveQuery } from '@rumbelo/hooks';
+import { useLiveQuery } from '@rumtelo/hooks';
 import {
     FormControl,
     FormField,
@@ -15,11 +15,11 @@ import {
     FormMessage,
     Button,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
+} from '@rumtelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Cadence, IncomeKind } from '@rumbelo/contracts';
-import { formatMoney } from '@rumbelo/utils';
+import { Cadence, IncomeKind } from '@rumtelo/contracts';
+import { formatMoney } from '@rumtelo/utils';
 import { z } from 'zod';
 
 import { parseEurosToCents } from '@/app/_lib/money-input';

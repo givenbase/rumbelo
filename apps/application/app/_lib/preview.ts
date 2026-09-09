@@ -10,7 +10,7 @@
  * Production / normal local: leave both unset so household planKey drives gating.
  */
 
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 
 import { env } from '@/app/_utils/get-env';
 

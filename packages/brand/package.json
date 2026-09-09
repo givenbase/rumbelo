@@ -1,5 +1,5 @@
 {
-    "name": "@rumbelo/brand",
+    "name": "@rumtelo/brand",
     "version": "0.0.0",
     "private": true,
     "type": "module",
@@ -14,7 +14,7 @@
         "react": "^19.0.0"
     },
     "devDependencies": {
-        "@rumbelo/typescript-config": "workspace:*",
+        "@rumtelo/typescript-config": "workspace:*",
         "@types/react": "19.2.18",
         "react": "19.2.8",
         "typescript": "5.9.3"

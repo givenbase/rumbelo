@@ -5,11 +5,11 @@ import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { RumbeloLogo } from '@rumbelo/brand';
-import { BRAND_TAGLINE } from '@rumbelo/i18n';
-import { ThemeToggle } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
-import { Locale } from '@rumbelo/contracts';
+import { RumteloLogo } from '@rumtelo/brand';
+import { BRAND_TAGLINE } from '@rumtelo/i18n';
+import { ThemeToggle } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
+import { Locale } from '@rumtelo/contracts';
 
 import { signOut } from '@/app/_lib/auth';
 import {
@@ -149,7 +149,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                         href="/"
                         className="flex shrink-0 items-center gap-2.5"
                         data-tour="shell-brand">
-                        <RumbeloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
+                        <RumteloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
                         <span className="hidden font-mono text-xs font-medium tracking-wide text-fg-faint xl:inline">
                             {BRAND_TAGLINE}
                         </span>

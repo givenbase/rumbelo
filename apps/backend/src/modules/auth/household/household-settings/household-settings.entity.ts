@@ -8,7 +8,7 @@ import {
     type HouseholdFeatureSettings,
     type HouseholdMoneySettings,
     type HouseholdWeekCheckSettings,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { entityConfig } from '../../../../common/database/entity-config.util';
 import { HouseholdEntity } from '../../../../common/database/household.entity';

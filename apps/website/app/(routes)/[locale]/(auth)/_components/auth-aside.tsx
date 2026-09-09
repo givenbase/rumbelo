@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import { AUTH_QUOTES_WEB } from '@rumbelo/i18n';
-import { AuthManifesto } from '@rumbelo/ui';
+import { AUTH_QUOTES_WEB } from '@rumtelo/i18n';
+import { AuthManifesto } from '@rumtelo/ui';
 
 /** Pexels clip (download id 27908405). */
 const AUTH_ASIDE_VIDEO =

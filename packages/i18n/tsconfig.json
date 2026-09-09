@@ -1,5 +1,5 @@
 {
-    "extends": "@rumbelo/typescript-config/base.json",
+    "extends": "@rumtelo/typescript-config/base.json",
     "compilerOptions": {
         "baseUrl": ".",
         "jsx": "preserve",

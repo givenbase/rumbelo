@@ -1,5 +1,5 @@
 {
-    "name": "@rumbelo/contracts",
+    "name": "@rumtelo/contracts",
     "version": "0.0.0",
     "private": true,
     "type": "module",
@@ -81,7 +81,7 @@
         "zod": "^4.0.0"
     },
     "devDependencies": {
-        "@rumbelo/typescript-config": "workspace:*",
+        "@rumtelo/typescript-config": "workspace:*",
         "@tanstack/react-query": "^5.90.12",
         "@types/react": "19.2.18",
         "tsup": "^8.5.0",

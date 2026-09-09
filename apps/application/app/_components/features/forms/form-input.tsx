@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { Input } from '@rumbelo/ui';
+import { Input } from '@rumtelo/ui';
 
 import {
     ignorePasswordManagers,

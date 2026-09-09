@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import type { AccountProfile as AccountProfileDto, AccountProfilePatch } from '@rumbelo/contracts';
+import type { AccountProfile as AccountProfileDto, AccountProfilePatch } from '@rumtelo/contracts';
 
 import { currentUserId } from '../../../../common/household/household.context';
 import { AuthUser } from '../managed/user/auth-user.entity';
@@ -45,7 +45,7 @@ export class AccountService {
     }
 
     /**
-     * Session → Rumbelo Account (+ Better Auth user via `account.user`).
+     * Session → Rumtelo Account (+ Better Auth user via `account.user`).
      * Prefer this in product / platform services over touching `currentUserId()`.
      */
     async ensureCurrentAccount(): Promise<{ account: Account; user: AuthUser }> {

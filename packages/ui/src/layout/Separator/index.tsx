@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { Separator as SeparatorPrimitive } from 'radix-ui';
 

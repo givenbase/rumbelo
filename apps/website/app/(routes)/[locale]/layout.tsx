@@ -3,7 +3,7 @@ import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/googl
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
-import { locales } from '@rumbelo/i18n';
+import { locales } from '@rumtelo/i18n';
 
 import { Providers } from './providers';
 
@@ -29,9 +29,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'Rumbelo — Stop wondering where it went.',
+    title: 'Rumtelo — Stop wondering where it went.',
     description:
-        'Six jars, one calm overview. Rumbelo splits your income the second it lands — every amount gets a job before it arrives.',
+        'Six jars, one calm overview. Rumtelo splits your income the second it lands — every amount gets a job before it arrives.',
 };
 
 export const viewport: Viewport = {

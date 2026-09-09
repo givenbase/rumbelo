@@ -3,7 +3,7 @@
  * Pattern from galighticus-platform `packages/utils/src/better-auth-domains.ts`.
  */
 
-/** e.g. `https://app.rumbelo.com` → `rumbelo.com` */
+/** e.g. `https://app.rumtelo.com` → `rumtelo.com` */
 export function extractRootDomainFromUrl(url: string): string | null {
     try {
         const hostname = new URL(url).hostname;
@@ -21,8 +21,8 @@ export function extractRootDomainFromUrl(url: string): string | null {
 }
 
 /**
- * Shared cookie domain for production/staging subdomains — e.g. `.rumbelo.com`
- * so `rumbelo.com` and `app.rumbelo.com` share the session (no www).
+ * Shared cookie domain for production/staging subdomains — e.g. `.rumtelo.com`
+ * so `rumtelo.com` and `app.rumtelo.com` share the session (no www).
  */
 export function resolveCrossSubdomainCookieDomain(
     ...domainUrls: (string | undefined)[]
@@ -35,7 +35,7 @@ export function resolveCrossSubdomainCookieDomain(
     return undefined;
 }
 
-/** Exact origin (`https://app.rumbelo.com`) — Better Auth does not support `*.domain` wildcards. */
+/** Exact origin (`https://app.rumtelo.com`) — Better Auth does not support `*.domain` wildcards. */
 export function normalizeOrigin(url: string): string {
     return new URL(url).origin;
 }

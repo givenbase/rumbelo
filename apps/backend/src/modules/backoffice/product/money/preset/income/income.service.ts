@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import type { IncomeKind } from '@rumbelo/contracts';
+import type { IncomeKind } from '@rumtelo/contracts';
 
 import { IncomeSourcePreset } from './income.entity';
 

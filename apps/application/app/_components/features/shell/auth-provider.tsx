@@ -30,7 +30,7 @@ interface AuthCtx {
     isPending: boolean;
     isAuthenticated: boolean;
     refreshSession: () => Promise<void>;
-    /** Sets BA active organization (= Rumbelo household) and refreshes session. */
+    /** Sets BA active organization (= Rumtelo household) and refreshes session. */
     setActiveHousehold: (householdId: string) => Promise<void>;
 }
 

@@ -1,4 +1,4 @@
-name: 🧪 Rumbelo CI - E2E Smoke Tests
+name: 🧪 Rumtelo CI - E2E Smoke Tests
 
 # Staging only — never production.
 # Domains come from GitHub Environment `staging` vars.
@@ -50,7 +50,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Install Playwright browsers
-              run: pnpm --filter @rumbelo/e2e install:browsers
+              run: pnpm --filter @rumtelo/e2e install:browsers
 
             - name: Write E2E env
               working-directory: apps/e2e
@@ -67,12 +67,12 @@ jobs:
                   cat > .env <<EOF
                   APP_URL=${DOMAIN_APP}
                   BACKEND_URL=${DOMAIN_BACK}
-                  E2E_BASIC_EMAIL=${E2E_BASIC_EMAIL:-basic@rumbelo.com}
-                  E2E_BASIC_PASSWORD=${E2E_BASIC_PASSWORD:-RumbeloDemo1!}
-                  E2E_PLUS_EMAIL=${E2E_PLUS_EMAIL:-plus@rumbelo.com}
-                  E2E_PLUS_PASSWORD=${E2E_PLUS_PASSWORD:-RumbeloDemo1!}
-                  E2E_MAX_EMAIL=${E2E_MAX_EMAIL:-max@rumbelo.com}
-                  E2E_MAX_PASSWORD=${E2E_MAX_PASSWORD:-RumbeloDemo1!}
+                  E2E_BASIC_EMAIL=${E2E_BASIC_EMAIL:-basic@rumtelo.com}
+                  E2E_BASIC_PASSWORD=${E2E_BASIC_PASSWORD:-RumteloDemo1!}
+                  E2E_PLUS_EMAIL=${E2E_PLUS_EMAIL:-plus@rumtelo.com}
+                  E2E_PLUS_PASSWORD=${E2E_PLUS_PASSWORD:-RumteloDemo1!}
+                  E2E_MAX_EMAIL=${E2E_MAX_EMAIL:-max@rumtelo.com}
+                  E2E_MAX_PASSWORD=${E2E_MAX_PASSWORD:-RumteloDemo1!}
                   EOF
 
             - name: Run smoke tests

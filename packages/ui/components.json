@@ -11,10 +11,10 @@
     },
     "iconLibrary": "lucide",
     "aliases": {
-        "components": "@rumbelo/ui/src",
-        "utils": "@rumbelo/ui/lib/utils",
-        "hooks": "@rumbelo/ui/hooks",
-        "lib": "@rumbelo/ui/lib",
-        "ui": "@rumbelo/ui/src/forms"
+        "components": "@rumtelo/ui/src",
+        "utils": "@rumtelo/ui/lib/utils",
+        "hooks": "@rumtelo/ui/hooks",
+        "lib": "@rumtelo/ui/lib",
+        "ui": "@rumtelo/ui/src/forms"
     }
 }

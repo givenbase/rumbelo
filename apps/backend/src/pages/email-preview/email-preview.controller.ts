@@ -64,7 +64,7 @@ export class EmailPreviewController {
                     EmailTemplate.HOUSEHOLD_INVITE,
                     {
                         householdName: 'Huishouden van Anna',
-                        inviteUrl: 'https://app.rumbelo.local/invite/demo-id',
+                        inviteUrl: 'https://app.rumtelo.local/invite/demo-id',
                         inviterName: 'Anna',
                         role: 'MEMBER',
                     },
@@ -76,7 +76,7 @@ export class EmailPreviewController {
                     {
                         firstName: 'Anna',
                         verificationUrl:
-                            'https://app.rumbelo.local/api/auth/verify-email?token=demo',
+                            'https://app.rumtelo.local/api/auth/verify-email?token=demo',
                         expiresInHours: 48,
                     },
                     'en'

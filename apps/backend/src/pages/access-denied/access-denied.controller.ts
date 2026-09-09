@@ -18,7 +18,7 @@ export class AccessDeniedController {
             eyebrow: 'Beperkt',
             headline: 'Geen toegang',
             message:
-                'Dit deel van de API is alleen voor Rumbelo-systemen en bevoegde tools. Kwam je hier per ongeluk? Ga terug naar de site.',
+                'Dit deel van de API is alleen voor Rumtelo-systemen en bevoegde tools. Kwam je hier per ongeluk? Ga terug naar de site.',
             code: '403',
             primaryHref: env.DOMAIN_WEB,
             primaryLabel: 'Naar de website',
@@ -27,7 +27,7 @@ export class AccessDeniedController {
             footerHtml:
                 'Hulp nodig? Open de app of ga terug naar <a href="' +
                 env.DOMAIN_WEB +
-                '">rumbelo</a>.',
+                '">rumtelo</a>.',
         });
         void reply.status(403).type('text/html').send(html);
     }

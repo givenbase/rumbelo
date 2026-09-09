@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { AccentCard, Button, Card, EmptyState, Eyebrow, Section } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { AccentCard, Button, Card, EmptyState, Eyebrow, Section } from '@rumtelo/ui';
+import { cn, formatMoney } from '@rumtelo/utils';
 
 import { CREATE_HREF } from '@/app/_lib/create-routes';
 import { HOLDING_KINDS, type HoldingKind } from '@/app/_lib/holding-kinds';

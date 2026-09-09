@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 

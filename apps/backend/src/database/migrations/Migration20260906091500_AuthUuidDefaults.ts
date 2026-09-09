@@ -2,7 +2,7 @@ import { Migration } from '@mikro-orm/migrations';
 
 /**
  * Historical no-op. Previously set `gen_random_uuid()::text` defaults for Better
- * Auth (Option 1). Rumbelo follows Galighticus: Better Auth mints opaque text
+ * Auth (Option 1). Rumtelo follows Galighticus: Better Auth mints opaque text
  * ids itself — do not let Postgres generate UUIDs for these tables.
  *
  * Defaults already applied on a DB are removed by

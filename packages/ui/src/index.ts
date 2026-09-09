@@ -1,5 +1,5 @@
 /**
- * @rumbelo/ui — design-system package (Galighticus-style categories).
+ * @rumtelo/ui — design-system package (Galighticus-style categories).
  *
  * categories:
  * - forms      controls + RHF Form helpers

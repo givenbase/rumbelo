@@ -5,10 +5,10 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { GoalKind, GoalStatus } from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { AccentCard, EmptyState, Meter } from '@rumbelo/ui';
-import { cn, earnGoalProgress, formatMoney, monthlyNetAsOf } from '@rumbelo/utils';
+import { GoalKind, GoalStatus } from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { AccentCard, EmptyState, Meter } from '@rumtelo/ui';
+import { cn, earnGoalProgress, formatMoney, monthlyNetAsOf } from '@rumtelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';

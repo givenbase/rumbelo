@@ -3,9 +3,9 @@
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMemo, useState } from 'react';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Card, Eyebrow, Section } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Card, Eyebrow, Section } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { isLiveData } from '@/app/_lib/preview';
 import { DEFAULT_SLEEP_HOURS } from '@/app/_lib/energy-constants';

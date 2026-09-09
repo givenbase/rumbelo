@@ -1,5 +1,5 @@
 import { Entity, Property, Unique } from '@mikro-orm/core';
-import type { SpendingStyle } from '@rumbelo/contracts';
+import type { SpendingStyle } from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../../../../common/database/base.entity';
 import { entityConfig } from '../../../../../../common/database/entity-config.util';
@@ -7,7 +7,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
 /**
  * Growth Lever Preset Entity
  *
- * Rumbelo-owned catalog of earning methods / levers shown on Growth → Income.
+ * Rumtelo-owned catalog of earning methods / levers shown on Growth → Income.
  * Tags use catalog keys (posture / wealth stage) so taxonomies scale without enums.
  *
  * @see https://mikro-orm.io/docs/defining-entities

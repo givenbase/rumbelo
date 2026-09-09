@@ -1,4 +1,4 @@
-import { CAPABILITY_PRODUCTS, type CapabilityProduct } from '@rumbelo/contracts';
+import { CAPABILITY_PRODUCTS, type CapabilityProduct } from '@rumtelo/contracts';
 
 const PRODUCT_NAMES: Record<CapabilityProduct, string> = {
     home: 'Home',

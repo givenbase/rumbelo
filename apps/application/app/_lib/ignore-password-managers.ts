@@ -43,6 +43,6 @@ const AUTOFILL_BAIT_NAMES = new Set([
 /** Remap bait `name` attrs so managers don’t treat the control as a person field. */
 export function safeAutofillName(name: string | undefined): string | undefined {
     if (!name) return name;
-    if (AUTOFILL_BAIT_NAMES.has(name.toLowerCase())) return `rumbelo-${name}`;
+    if (AUTOFILL_BAIT_NAMES.has(name.toLowerCase())) return `rumtelo-${name}`;
     return name;
 }

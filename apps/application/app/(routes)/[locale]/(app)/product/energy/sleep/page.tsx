@@ -1,4 +1,4 @@
-import { EmptyState, Section } from '@rumbelo/ui';
+import { EmptyState, Section } from '@rumtelo/ui';
 
 export const metadata = { title: 'Sleep' };
 

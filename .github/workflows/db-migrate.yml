@@ -1,4 +1,4 @@
-name: 🗄️ Rumbelo CI - Database Migrations
+name: 🗄️ Rumtelo CI - Database Migrations
 
 # ============================================================================
 # Standalone + reusable workflow for remote database migrations.
@@ -108,10 +108,10 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            # Entity discovery loads @rumbelo/contracts via package "import" → dist/.
+            # Entity discovery loads @rumtelo/contracts via package "import" → dist/.
             # dist/ is gitignored, so CI must build it before MikroORM / auth migrate.
             - name: Build workspace packages
-              run: pnpm --filter @rumbelo/contracts build
+              run: pnpm --filter @rumtelo/contracts build
 
             - name: Show target environment
               env:

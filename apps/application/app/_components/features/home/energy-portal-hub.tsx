@@ -1,6 +1,6 @@
 'use client';
 
-import { useLiveQuery } from '@rumbelo/hooks';
+import { useLiveQuery } from '@rumtelo/hooks';
 
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { pickPortalCoach } from '@/app/_lib/portal-coach';

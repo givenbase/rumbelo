@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { productPath } from '@/app/_lib/routes';
 import { whyLineFor } from '@/app/_lib/why-lines';

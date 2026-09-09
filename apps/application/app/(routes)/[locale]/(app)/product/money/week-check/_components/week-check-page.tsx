@@ -4,10 +4,10 @@ import { api } from '@/app/_lib/api';
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { WeekCheckStage } from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Eyebrow } from '@rumbelo/ui';
-import { currentWeekKey, toPeriodKey } from '@rumbelo/utils';
+import { WeekCheckStage } from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Eyebrow } from '@rumtelo/ui';
+import { currentWeekKey, toPeriodKey } from '@rumtelo/utils';
 
 import { isLiveData } from '@/app/_lib/preview';
 import { WeekCheckWizard } from '@/components/features/week-check/week-check-wizard';
@@ -89,7 +89,7 @@ export function WeekCheckPageClient() {
                     The week check
                 </h1>
                 <p className="mt-2 max-w-prose text-sm text-fg-muted">
-                    Rumbelo does not ask for your evenings. One week check — look, direct, set
+                    Rumtelo does not ask for your evenings. One week check — look, direct, set
                     intention — beats worrying every single day.
                 </p>
             </div>

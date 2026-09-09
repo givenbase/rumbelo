@@ -18,12 +18,12 @@ import {
     Input,
     bindFormSubmit,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
-import { AUTH_RESET_PASSWORD } from '@rumbelo/i18n';
+} from '@rumtelo/ui';
+import { AUTH_RESET_PASSWORD } from '@rumtelo/i18n';
 import {
     AUTH_MIN_PASSWORD_LENGTH,
     ResetPasswordForm as ResetPasswordFormSchema,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 

@@ -1,4 +1,4 @@
-import { CADENCE_TO_MONTHLY, type Cadence } from '@rumbelo/contracts';
+import { CADENCE_TO_MONTHLY, type Cadence } from '@rumtelo/contracts';
 
 /** Convert a cadence amount to a monthly-equivalent (integer minor units). */
 export function monthlyAmount(amount: number, cadence: Cadence | string): number {

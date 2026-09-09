@@ -17,9 +17,9 @@ import {
     Input,
     bindFormSubmit,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
-import { AUTH_SIGN_IN } from '@rumbelo/i18n';
-import { SignInForm as SignInFormSchema } from '@rumbelo/contracts';
+} from '@rumtelo/ui';
+import { AUTH_SIGN_IN } from '@rumtelo/i18n';
+import { SignInForm as SignInFormSchema } from '@rumtelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 

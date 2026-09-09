@@ -17,7 +17,7 @@ outputs:
         description: GitHub Environments name (staging | production)
         value: ${{ steps.resolve.outputs.github_environment }}
     node_env:
-        description: Backend NODE_ENV (production for both deployed envs — Rumbelo has no staging NODE_ENV)
+        description: Backend NODE_ENV (production for both deployed envs — Rumtelo has no staging NODE_ENV)
         value: ${{ steps.resolve.outputs.node_env }}
     next_public_app_env:
         description: Optional label for future NEXT_PUBLIC_APP_ENV (staging | production)

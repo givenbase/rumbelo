@@ -1,5 +1,5 @@
 /**
- * Account — Rumbelo-owned person data under auth/.
+ * Account — Rumtelo-owned person data under auth/.
  */
 export { Account } from './account.entity';
 export { AccountController } from './account.controller';

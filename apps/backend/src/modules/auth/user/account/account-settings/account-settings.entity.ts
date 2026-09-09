@@ -5,7 +5,7 @@ import {
     SpendingStyle,
     Theme,
     type AccountTourProgress,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../../../common/database/base.entity';
 import { entityConfig } from '../../../../../common/database/entity-config.util';

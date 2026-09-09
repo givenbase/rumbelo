@@ -11,7 +11,7 @@ export function LandingJars() {
                 Six jobs, so no euro has to decide for itself.
             </h2>
             <p className="mb-8 max-w-prose text-base leading-relaxed text-fg-muted">
-                Every jar has rules you can read in one line. Rumbelo tells you what belongs in it —
+                Every jar has rules you can read in one line. Rumtelo tells you what belongs in it —
                 and what does not.
             </p>
 

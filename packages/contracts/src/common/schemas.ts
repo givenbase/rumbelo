@@ -4,13 +4,13 @@ import { Cadence, Currency, Locale, Theme } from './enums';
 
 export { Cadence, Currency, Locale, Theme } from './enums';
 
-/** Rumbelo-owned entity ids — Postgres `uuid` (uuid v7 via BaseEntity). */
+/** Rumtelo-owned entity ids — Postgres `uuid` (uuid v7 via BaseEntity). */
 export const Id = z.uuid();
 export type Id = z.infer<typeof Id>;
 
 /**
  * Better Auth entity ids — Postgres `uuid` (`advanced.database.generateId: "uuid"`).
- * Still distinct from {@link Id} (BA-owned vs Rumbelo-owned rows).
+ * Still distinct from {@link Id} (BA-owned vs Rumtelo-owned rows).
  */
 export const AuthId = z.uuid();
 export type AuthId = z.infer<typeof AuthId>;

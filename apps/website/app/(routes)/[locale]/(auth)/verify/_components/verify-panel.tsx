@@ -18,9 +18,9 @@ import {
     Input,
     bindFormSubmit,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
-import { AUTH_VERIFY } from '@rumbelo/i18n';
-import { VerifyEmailForm as VerifyEmailFormSchema } from '@rumbelo/contracts';
+} from '@rumtelo/ui';
+import { AUTH_VERIFY } from '@rumtelo/i18n';
+import { VerifyEmailForm as VerifyEmailFormSchema } from '@rumtelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 

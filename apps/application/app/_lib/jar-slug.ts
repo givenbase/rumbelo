@@ -1,4 +1,4 @@
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey } from '@rumtelo/contracts';
 
 /** Route slug for jar detail pages — NECESSITIES → necessities. */
 export function jarKeyToSlug(key: string): string {

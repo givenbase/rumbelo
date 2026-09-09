@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import type { FormRouteWidth } from '@/app/_lib/form-route-meta';
 

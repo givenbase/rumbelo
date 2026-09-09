@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Button } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Button } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 interface CoachSlide {
     kind: string;

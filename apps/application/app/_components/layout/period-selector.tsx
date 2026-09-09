@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@rumbelo/ui';
-import { cn, describePeriodTravel } from '@rumbelo/utils';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@rumtelo/ui';
+import { cn, describePeriodTravel } from '@rumtelo/utils';
 
 import { useAppShell, type Period } from '@/components/features/shell/app-shell-context';
 

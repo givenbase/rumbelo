@@ -4,7 +4,7 @@ import helmet from '@fastify/helmet';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { buildBetterAuthTrustedOrigins } from '@rumbelo/utils';
+import { buildBetterAuthTrustedOrigins } from '@rumtelo/utils';
 
 import { AppModule } from './app.module';
 import { loadEnv, type Env } from './common/config/env.config';
@@ -69,7 +69,7 @@ async function setupApp(app: NestFastifyApplication, env: Env): Promise<void> {
 
 async function startApp(app: NestFastifyApplication, env: Env): Promise<void> {
     await app.listen({ port: env.PORT, host: '0.0.0.0' });
-    Logger.log(`Rumbelo API listening on :${env.PORT}`, 'Bootstrap');
+    Logger.log(`Rumtelo API listening on :${env.PORT}`, 'Bootstrap');
     if (env.NODE_ENV === 'development') {
         Logger.log(`API home → http://localhost:${env.PORT}/`, 'Bootstrap');
         Logger.log(`Swagger UI → http://localhost:${env.PORT}/api/docs`, 'Bootstrap');

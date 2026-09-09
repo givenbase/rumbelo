@@ -13,8 +13,8 @@ import { HouseholdService } from './household.service';
  * Household Module — the GROUP half of the auth plane.
  *
  *   managed/             Better Auth writes: household, member, invitation
- *   household-settings/  Rumbelo writes: board prefs (currency, week-check)
- *   household-billing/   Rumbelo writes: plan tier + Stripe subscription pointers
+ *   household-settings/  Rumtelo writes: board prefs (currency, week-check)
+ *   household-billing/   Rumtelo writes: plan tier + Stripe subscription pointers
  *   household.*          orchestration over Better Auth's organization API
  */
 @Module({

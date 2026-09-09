@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { AUTH_QUOTES_APP } from '@rumbelo/i18n';
-import { AuthManifesto } from '@rumbelo/ui';
+import { AUTH_QUOTES_APP } from '@rumtelo/i18n';
+import { AuthManifesto } from '@rumtelo/ui';
 
 /** Pexels clip (download id 17337078) — dark background. */
 const AUTH_ASIDE_VIDEO =

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { cn, formatMoney, jarCoverage } from '@rumbelo/utils';
+import { cn, formatMoney, jarCoverage } from '@rumtelo/utils';
 
 import { jarKeyToSlug } from '@/app/_lib/jar-slug';
 

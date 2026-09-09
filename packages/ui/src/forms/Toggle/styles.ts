@@ -1,4 +1,4 @@
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 export function toggleTrackClass(checked: boolean) {
     return cn(

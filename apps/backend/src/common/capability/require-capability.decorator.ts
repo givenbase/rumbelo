@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import type { CapabilityKey } from '@rumbelo/contracts';
+import type { CapabilityKey } from '@rumtelo/contracts';
 
 export const REQUIRE_CAPABILITY_KEY = 'requireCapability';
 

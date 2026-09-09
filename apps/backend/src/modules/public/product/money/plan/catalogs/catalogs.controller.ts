@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
-import { contract } from '@rumbelo/contracts';
+import { contract } from '@rumtelo/contracts';
 
 import { ControllerSwagger } from '../../../../../../common/decorators/controller-swagger.decorators';
 import {
@@ -11,7 +11,7 @@ import {
     IncomeSourcePresetService,
     MerchantPresetService,
 } from '../../../../../backoffice/product';
-import type { DebtKind, IncomeKind, JarKey } from '@rumbelo/contracts';
+import type { DebtKind, IncomeKind, JarKey } from '@rumtelo/contracts';
 
 @ControllerSwagger('money/catalogs', 'public')
 export class MoneyCatalogsController {

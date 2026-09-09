@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Button, Section } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Button, Section } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { PageContent } from '@/components/layout/page-content';
 

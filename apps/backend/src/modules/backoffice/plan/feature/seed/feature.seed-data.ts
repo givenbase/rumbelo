@@ -3,7 +3,7 @@ import {
     parseCapabilityKey,
     type CapabilityKey,
     type CapabilityProduct,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 /**
  * PlanFeature seed — one row per capability (1:1 with Capability for now).

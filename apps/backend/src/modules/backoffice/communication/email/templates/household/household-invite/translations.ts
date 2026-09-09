@@ -3,8 +3,8 @@ import type { EmailLanguageObject } from '../../../utils/email-translation.util'
 export const languageObject: EmailLanguageObject = {
     en: {
         'email.household.invite.header.preview_text':
-            'You are invited to share a household on Rumbelo',
-        'email.household.invite.header.title': 'Household invite — Rumbelo',
+            'You are invited to share a household on Rumtelo',
+        'email.household.invite.header.title': 'Household invite — Rumtelo',
         'email.household.invite.header.heading': 'You are invited',
         'email.household.invite.body.message':
             '{who} invited you to the household {household} as {role}.',
@@ -14,8 +14,8 @@ export const languageObject: EmailLanguageObject = {
     },
     nl: {
         'email.household.invite.header.preview_text':
-            'Je bent uitgenodigd voor een huishouden op Rumbelo',
-        'email.household.invite.header.title': 'Huishouden uitnodiging — Rumbelo',
+            'Je bent uitgenodigd voor een huishouden op Rumtelo',
+        'email.household.invite.header.title': 'Huishouden uitnodiging — Rumtelo',
         'email.household.invite.header.heading': 'Je bent uitgenodigd',
         'email.household.invite.body.message':
             '{who} nodigt je uit voor het huishouden {household} als {role}.',

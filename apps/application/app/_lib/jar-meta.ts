@@ -1,4 +1,4 @@
-import { DEFAULT_JAR_SPLIT, JarKey } from '@rumbelo/contracts';
+import { DEFAULT_JAR_SPLIT, JarKey } from '@rumtelo/contracts';
 
 /** Jar catalogue — names, icons, colors. Default % from contracts DEFAULT_JAR_SPLIT. */
 

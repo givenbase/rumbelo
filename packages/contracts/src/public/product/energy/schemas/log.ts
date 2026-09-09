@@ -13,7 +13,7 @@ export { EnergyMetric, EnergyTrend } from '../../../../enums';
 export const EnergyLog = z.object({
     id: Id,
     householdId: HouseholdId,
-    /** Rumbelo `auth.account.id` — person who logged the reading (not Better Auth user). */
+    /** Rumtelo `auth.account.id` — person who logged the reading (not Better Auth user). */
     accountId: Id,
     on: IsoDate,
     metric: z.enum(EnergyMetric),

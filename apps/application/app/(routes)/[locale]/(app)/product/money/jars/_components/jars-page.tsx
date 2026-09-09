@@ -5,10 +5,10 @@ import { useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { GoalKind } from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Card, Eyebrow, Button } from '@rumbelo/ui';
-import { formatMoney, toPeriodKey, cn, sumMonthly } from '@rumbelo/utils';
+import { GoalKind } from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Card, Eyebrow, Button } from '@rumtelo/ui';
+import { formatMoney, toPeriodKey, cn, sumMonthly } from '@rumtelo/utils';
 
 import { CREATE_HREF, createTxHref } from '@/app/_lib/create-routes';
 import { bgClassToCssVar } from '@/app/_lib/jar-chrome';

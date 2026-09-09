@@ -12,7 +12,7 @@ export function LandingPillars() {
                     One switch. One focus at a time.
                 </h2>
                 <p className="mb-8 max-w-prose text-base leading-relaxed text-fg-muted">
-                    Rumbelo is built as four portals — Money, Growth, Energy, Soul. Each answers a
+                    Rumtelo is built as four portals — Money, Growth, Energy, Soul. Each answers a
                     different question, and you are always inside exactly one. No wall of charts, no
                     twelve tabs: one switch at the top, one question per screen, and a ten-minute
                     session with your coach that holds it all together.

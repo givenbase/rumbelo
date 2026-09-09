@@ -1,14 +1,14 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { type Jar as ContractJar, type Cadence } from '@rumbelo/contracts';
+import { type Jar as ContractJar, type Cadence } from '@rumtelo/contracts';
 import {
     allocateByPercentage,
     categoryEnvelope,
     jarCoverage,
     monthlyAmount,
     sumMonthly,
-} from '@rumbelo/utils';
+} from '@rumtelo/utils';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';

@@ -1,4 +1,4 @@
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey } from '@rumtelo/contracts';
 
 /** English category spine — single source of truth for preset categoryTemplateKey. */
 export const CATEGORY_TEMPLATE_SEED = [

@@ -2,7 +2,7 @@ import { PrimaryKey, Property } from '@mikro-orm/core';
 import { v7 as uuidv7 } from 'uuid';
 
 /**
- * Root for every Rumbelo-owned MikroORM row.
+ * Root for every Rumtelo-owned MikroORM row.
  *
  * Use this directly for rows that are **not** scoped to a household
  * (account profile, backoffice catalogs, templates).

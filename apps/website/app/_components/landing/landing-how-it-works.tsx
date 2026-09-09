@@ -11,7 +11,7 @@ export function LandingHowItWorks() {
             </h2>
             <p className="mb-9 max-w-prose text-base leading-relaxed text-fg-muted">
                 No secrets and no magic — five steps, each built on a principle wealthy families
-                have used for generations. You do the small part; Rumbelo does the arithmetic, every
+                have used for generations. You do the small part; Rumtelo does the arithmetic, every
                 day.
             </p>
 
@@ -76,10 +76,10 @@ export function LandingHowItWorks() {
                                         </span>
                                         <span className="grid min-w-0 gap-1">
                                             <span className="font-mono text-xs font-semibold tracking-widest text-accent uppercase">
-                                                RUMBELO DOES
+                                                RUMTELO DOES
                                             </span>
                                             <span className="text-sm leading-relaxed text-fg-secondary">
-                                                {j.rumbelo}
+                                                {j.rumtelo}
                                             </span>
                                         </span>
                                     </div>

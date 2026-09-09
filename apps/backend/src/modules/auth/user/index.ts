@@ -1,5 +1,5 @@
 /**
- * User barrel — Better Auth person tables + Rumbelo account data.
+ * User barrel — Better Auth person tables + Rumtelo account data.
  */
 export {
     Account,

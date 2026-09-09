@@ -27,7 +27,7 @@ const auth = {
             'We sent a verification link to {email}. Confirm it so we can recover your account if you lose access.',
         subtitle_no_target:
             'Confirm the verification we sent so we can recover your account if you lose access.',
-        confirmed: 'Your email is verified. Sign in to open Rumbelo.',
+        confirmed: 'Your email is verified. Sign in to open Rumtelo.',
         resend: 'Resend email',
         resend_in: 'Resend in {seconds}s',
         sent: 'Sent again.',

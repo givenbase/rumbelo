@@ -1,5 +1,5 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
-import { JarKey, type JarCapabilities } from '@rumbelo/contracts';
+import { JarKey, type JarCapabilities } from '@rumtelo/contracts';
 
 import type { Category } from './category.entity';
 

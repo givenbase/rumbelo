@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 type CoachMarkProps = {
     className?: string;

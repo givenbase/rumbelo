@@ -1,4 +1,4 @@
-import { EnergyMetric } from '@rumbelo/contracts';
+import { EnergyMetric } from '@rumtelo/contracts';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { currentPeriod, currentWeek } from '../../../../../common/utils/period.util';

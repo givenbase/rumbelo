@@ -4,9 +4,9 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type {
     AccountSettings as AccountSettingsDto,
     AccountTourProgress,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
-import { DEFAULT_ACCOUNT_TOUR_PROGRESS, Locale, SpendingStyle, Theme } from '@rumbelo/contracts';
+import { DEFAULT_ACCOUNT_TOUR_PROGRESS, Locale, SpendingStyle, Theme } from '@rumtelo/contracts';
 import { currentUserId } from '../../../../../common/household/household.context';
 import { Account } from '../account.entity';
 import { AccountSettings } from './account-settings.entity';

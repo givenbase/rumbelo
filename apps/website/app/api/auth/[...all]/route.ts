@@ -3,7 +3,7 @@
  * Cookies bind to DOMAIN_WEB for sign-up / verify / reset flows.
  */
 
-import { createBetterAuthRouteHandlers } from '@rumbelo/utils';
+import { createBetterAuthRouteHandlers } from '@rumtelo/utils';
 
 import { env } from '@/lib/get-env';
 

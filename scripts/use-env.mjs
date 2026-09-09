@@ -165,7 +165,7 @@ function main() {
     console.log('');
     console.log('Examples:');
     console.log(`  NODE_ENV=${target} pnpm db:push`);
-    console.log(`  NODE_ENV=${target} pnpm --filter @rumbelo/backend start`);
+    console.log(`  NODE_ENV=${target} pnpm --filter @rumtelo/backend start`);
     console.log(`  pnpm db:push:${target === 'production' ? 'prod' : 'stag'}`);
 }
 

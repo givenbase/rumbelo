@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { cn, categoryVariance, formatMoney } from '@rumbelo/utils';
+import { cn, categoryVariance, formatMoney } from '@rumtelo/utils';
 
 import { JarProgressBar } from './jar-progress-bar';
 

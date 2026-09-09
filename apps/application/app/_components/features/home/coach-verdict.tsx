@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Button } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Button } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 export interface CoachMessage {
     id: string;
@@ -120,7 +120,7 @@ export function CoachVerdict({
                             onClick={() => {
                                 if (typeof navigator !== 'undefined' && navigator.share) {
                                     void navigator.share({
-                                        title: 'Rumbelo',
+                                        title: 'Rumtelo',
                                         text: msg.text,
                                         url: window.location.href,
                                     });

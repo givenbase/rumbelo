@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { cn, formatMoney } from '@rumbelo/utils';
+import { cn, formatMoney } from '@rumtelo/utils';
 
 import { JAR_GUIDE, type JarGuideKey } from '@/app/_lib/jar-guide';
 import { JAR_META } from '@/app/_lib/jar-meta';

@@ -7,7 +7,7 @@ import {
     canUseHouseholdKind,
     capabilitiesFor,
     householdFitsPlan,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import {

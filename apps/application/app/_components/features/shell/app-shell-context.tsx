@@ -12,7 +12,7 @@ import {
     type ReactNode,
 } from 'react';
 
-import { Locale, type PlanKey } from '@rumbelo/contracts';
+import { Locale, type PlanKey } from '@rumtelo/contracts';
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_PLAN } from '@/app/_lib/plan';

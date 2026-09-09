@@ -11,7 +11,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const CURRENT = 'rumbelo';
+const CURRENT = 'rumtelo';
 const next = process.argv[2]?.trim().toLowerCase();
 
 if (!next || !/^[a-z][a-z0-9-]{1,38}$/.test(next)) {
@@ -40,7 +40,7 @@ let changed = 0;
 for (const file of walk(process.cwd())) {
     const before = readFileSync(file, 'utf8');
     // Capitalised form first: replacing the lowercase form first would leave
-    // "Rumbelo" unmatched once its tail had already been rewritten.
+    // "Rumtelo" unmatched once its tail had already been rewritten.
     const after = before
         .replaceAll(capitalise(CURRENT), capitalise(next))
         .replaceAll(CURRENT, next);

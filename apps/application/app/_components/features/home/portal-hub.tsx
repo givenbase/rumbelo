@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 
 import Link from 'next/link';
 
-import { Button } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Button } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { capabilityKeyForPathname } from '@/app/_lib/capability-access';
 import { usePlanCapabilities } from '@/components/features/shell/use-plan-capabilities';

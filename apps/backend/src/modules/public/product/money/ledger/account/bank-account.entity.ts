@@ -1,5 +1,5 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
-import { AccountKind } from '@rumbelo/contracts';
+import { AccountKind } from '@rumtelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';

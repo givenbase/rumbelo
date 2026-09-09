@@ -7,7 +7,7 @@ import { JarTemplate } from '../jar/jar.entity';
 /**
  * Category Template Entity
  *
- * Rumbelo-owned spending categories under a jar template (Housing, Groceries, …).
+ * Rumtelo-owned spending categories under a jar template (Housing, Groceries, …).
  * Presets reference `key`; households copy `name` into money.category on demand.
  *
  * @see JarTemplate — parent jar in the money company catalog

@@ -5,12 +5,12 @@
  * (mutations) as module singletons — do not wrap them in hooks.
  *
  * Import `createAPIUtils` only; let TypeScript infer the type here.
- * Do not re-export that return type from `@rumbelo/contracts/react` (TS7056).
+ * Do not re-export that return type from `@rumtelo/contracts/react` (TS7056).
  */
 
 'use client';
 
-import { createAPIUtils } from '@rumbelo/contracts/react';
+import { createAPIUtils } from '@rumtelo/contracts/react';
 
 import { api } from './api';
 

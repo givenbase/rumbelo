@@ -1,8 +1,8 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Cadence, FlowDirection } from '@rumbelo/contracts';
-import { sumMonthlyFixedOut } from '@rumbelo/utils';
+import { Cadence, FlowDirection } from '@rumtelo/contracts';
+import { sumMonthlyFixedOut } from '@rumtelo/utils';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from '../jar/category.entity';

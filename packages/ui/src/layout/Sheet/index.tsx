@@ -3,7 +3,7 @@
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { Dialog as SheetPrimitive } from 'radix-ui';
 

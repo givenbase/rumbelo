@@ -1,4 +1,4 @@
-export { PlanKey } from '@rumbelo/contracts';
+export { PlanKey } from '@rumtelo/contracts';
 export { Capability } from './capability';
 export { PlanFeature } from './feature';
 export { Plan } from './plan.entity';

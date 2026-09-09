@@ -194,7 +194,7 @@ export function ExpenseIntentField({
                 <div className="relative">
                     <FormInput
                         id={id}
-                        name="rumbelo-expense-vendor"
+                        name="rumtelo-expense-vendor"
                         value={query}
                         disabled={disabled}
                         placeholder="Vendor or type — e.g. AH, groceries"

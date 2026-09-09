@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { RumbeloLogo } from '@rumbelo/brand';
-import { BRAND_TAGLINE } from '@rumbelo/i18n';
+import { RumteloLogo } from '@rumtelo/brand';
+import { BRAND_TAGLINE } from '@rumtelo/i18n';
 
 import { AuthAside } from './_components/auth-aside';
 
@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 style={{ background: 'var(--gradient-page)' }}>
                 <div className="w-full max-w-md">
                     <Link href="/" className="mb-10 inline-grid gap-1.5">
-                        <RumbeloLogo variant="wordmark" className="h-8 w-auto max-w-[11rem]" />
+                        <RumteloLogo variant="wordmark" className="h-8 w-auto max-w-[11rem]" />
                         <span className="text-xs text-fg-muted">{BRAND_TAGLINE}</span>
                     </Link>
                     {children}

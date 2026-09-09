@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import { WeekCheckStage } from '@rumbelo/contracts';
-import { Button, Eyebrow } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { WeekCheckStage } from '@rumtelo/contracts';
+import { Button, Eyebrow } from '@rumtelo/ui';
+import { cn, formatMoney } from '@rumtelo/utils';
 
 interface WizardJar {
     id: string;

@@ -1,5 +1,5 @@
 {
-    "extends": "@rumbelo/typescript-config/react-library.json",
+    "extends": "@rumtelo/typescript-config/react-library.json",
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "Bundler",
@@ -7,7 +7,7 @@
         "strictNullChecks": true,
         "baseUrl": ".",
         "paths": {
-            "@rumbelo/ui/*": ["./src/*"]
+            "@rumtelo/ui/*": ["./src/*"]
         }
     },
     "include": ["src"],

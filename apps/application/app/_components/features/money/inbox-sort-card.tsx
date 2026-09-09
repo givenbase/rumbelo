@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 
-import { Button } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { Button } from '@rumtelo/ui';
+import { cn, formatMoney } from '@rumtelo/utils';
 
 import { bgClassToCssVar } from '@/app/_lib/jar-chrome';
 

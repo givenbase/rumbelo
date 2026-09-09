@@ -5,7 +5,7 @@ import { HouseholdScopedRepository } from '../../../../../../common/household/ho
 import { currentHouseholdId } from '../../../../../../common/household/household.context';
 import { Category } from '../../plan/jar/category.entity';
 import { Jar } from '../../plan/jar/jar.entity';
-import { RuleField, RuleMatcher, TransactionStatus } from '@rumbelo/contracts';
+import { RuleField, RuleMatcher, TransactionStatus } from '@rumtelo/contracts';
 
 import { Transaction } from '../transaction/transaction.entity';
 import { Rule } from './rule.entity';

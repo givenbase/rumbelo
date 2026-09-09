@@ -1,4 +1,4 @@
-# @rumbelo/application
+# @rumtelo/application
 
 The authenticated product. Next.js 16 (App Router, Turbopack), React 19,
 **Tailwind v4 only** — no CSS modules, no SCSS.
@@ -12,5 +12,5 @@ exactly. Switching one to live data means replacing the mock import with
 `useQuery(api.<domain>.<procedure>.queryOptions({ input }))`.
 
 ```bash
-pnpm --filter @rumbelo/application dev   # :3000
+pnpm --filter @rumtelo/application dev   # :3000
 ```

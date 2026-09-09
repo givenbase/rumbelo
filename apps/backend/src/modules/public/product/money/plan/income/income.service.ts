@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
-import { Cadence, type IncomeKind } from '@rumbelo/contracts';
+import { Cadence, type IncomeKind } from '@rumtelo/contracts';
 
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';
 import { currentHouseholdId } from '../../../../../../common/household/household.context';

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { AccentCard } from '@rumbelo/ui';
+import { AccentCard } from '@rumtelo/ui';
 
 export interface PortalWidgetStat {
     label: string;

@@ -1,7 +1,7 @@
 import { Migration } from '@mikro-orm/migrations';
 
 /**
- * Person attribution on energy/gratitude: Better Auth `user_id` → Rumbelo `account_id`.
+ * Person attribution on energy/gratitude: Better Auth `user_id` → Rumtelo `account_id`.
  *
  * App person FKs point at `auth.account` (BaseEntity uuid), not `auth.user`.
  * Remaps existing rows via `auth.account.user_id`.

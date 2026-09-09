@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import type { IncomePosture as IncomePostureDto } from '@rumbelo/contracts';
+import type { IncomePosture as IncomePostureDto } from '@rumtelo/contracts';
 
 import { IncomePosture } from './income-posture.entity';
 

@@ -1,5 +1,5 @@
 import { Entity, Enum, Index, Property, Unique } from '@mikro-orm/core';
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 
 import { entityConfig } from '../../../../common/database/entity-config.util';
 import { HouseholdEntity } from '../../../../common/database/household.entity';

@@ -1,6 +1,6 @@
 import type Stripe from 'stripe';
 
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 
 import { planKeyFromStripeLookupKey, type PaidPlanKey } from './config/stripe-plans.config';
 

@@ -7,9 +7,9 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Button, Card, EmptyState } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Button, Card, EmptyState } from '@rumtelo/ui';
+import { cn, formatMoney } from '@rumtelo/utils';
 
 import {
     JarKey,
@@ -20,7 +20,7 @@ import {
     type MerchantPreset,
     type Rule,
     type Transaction,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { createTxHref, updateHref } from '@/app/_lib/create-routes';
 import { matchMerchantJarKey } from '@/app/_lib/merchant-match';

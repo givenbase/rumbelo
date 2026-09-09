@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { EmptyState, Section } from '@rumbelo/ui';
+import { EmptyState, Section } from '@rumtelo/ui';
 
 import { CREATE_HREF } from '@/app/_lib/create-routes';
 import { ListToolbar } from '@/components/layout/list-toolbar';

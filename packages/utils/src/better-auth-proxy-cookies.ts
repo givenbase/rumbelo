@@ -6,8 +6,8 @@
  * - Strip `Domain=` so the cookie binds to the app origin (not Nest).
  * - SameSite=Lax — browser talks to the same origin as the proxy.
  *
- * Production / staging (`rumbelo.com` + `app.rumbelo.com`):
- * - Preserve `Domain=rumbelo.com` from Better Auth `advanced.crossSubDomainCookies`
+ * Production / staging (`rumtelo.com` + `app.rumtelo.com`):
+ * - Preserve `Domain=rumtelo.com` from Better Auth `advanced.crossSubDomainCookies`
  *   so sessions work across website and application (no www).
  *
  * @see https://www.better-auth.com/docs/concepts/cookies#cross-subdomain-cookies

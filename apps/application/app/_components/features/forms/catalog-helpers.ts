@@ -1,8 +1,8 @@
 'use client';
 
 import { apiQuery } from '@/app/_lib/api-hooks';
-import type { AppClient } from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
+import type { AppClient } from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
 
 import { isLiveData } from '@/app/_lib/preview';
 import { useAuth } from '@/components/features/shell/auth-provider';

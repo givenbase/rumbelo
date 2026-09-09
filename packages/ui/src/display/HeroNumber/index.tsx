@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import type HeroNumberProps from './types';
 

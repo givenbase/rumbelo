@@ -1,7 +1,7 @@
 'use client';
 
-import { formatMoney, toPeriodKey } from '@rumbelo/utils';
-import { useLiveQuery } from '@rumbelo/hooks';
+import { formatMoney, toPeriodKey } from '@rumtelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
 
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { pickPortalCoach } from '@/app/_lib/portal-coach';

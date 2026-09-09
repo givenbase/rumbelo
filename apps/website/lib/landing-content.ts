@@ -1,4 +1,4 @@
-import { DEFAULT_JAR_SPLIT, JarKey } from '@rumbelo/contracts';
+import { DEFAULT_JAR_SPLIT, JarKey } from '@rumtelo/contracts';
 
 export type IconName =
     | 'home'
@@ -169,7 +169,7 @@ export interface JourneyStep {
     title: string;
     tag: string;
     you: string;
-    rumbelo: string;
+    rumtelo: string;
     math: string;
     why: string;
 }
@@ -177,10 +177,10 @@ export interface JourneyStep {
 export const JOURNEY: JourneyStep[] = [
     {
         step: '01',
-        title: 'Tell Rumbelo what lands',
+        title: 'Tell Rumtelo what lands',
         tag: 'THE SIX-JAR SPLIT',
         you: 'Type one number: what arrives in your account each month. Salary, freelance, anything.',
-        rumbelo:
+        rumtelo:
             'Builds your six jars around it, with a hard ceiling on living costs — every euro gets a job before it arrives.',
         math: '€4,300 → 55% must-pays · 10% invest · 10% save · 10% learn · 10% play · 5% give',
         why: 'The oldest budgeting idea there is. The rule that matters: the split happens on arrival, not at month end. If must-pays need more than 55%, that is the problem to fix — not your discipline.',
@@ -190,7 +190,7 @@ export const JOURNEY: JourneyStep[] = [
         title: 'Income arrives — the split just happens',
         tag: 'PAY YOURSELF FIRST',
         you: 'Nothing. That is the point.',
-        rumbelo:
+        rumtelo:
             'Moves 10% into Financial Freedom before you can touch it — the jar that is never spent, only invested in things that pay you back.',
         math: '€430/month at 7% ≈ €74,000 in 10 years · €220,000 in 20',
         why: 'Compound growth is the whole trick. The jar exists so you never have to decide to invest — it already happened.',
@@ -200,7 +200,7 @@ export const JOURNEY: JourneyStep[] = [
         title: 'You spend from jars, not a balance',
         tag: 'SAFE TO SPEND',
         you: 'Live your life. Buy the coffee, book the dinner — from the jar that is for it.',
-        rumbelo:
+        rumtelo:
             'Shows one number every morning: what is genuinely free, after everything already promised to rent and bills.',
         math: '(€583 + €224 left) ÷ 8 days = €64 safe to spend today',
         why: 'A bank balance lies — it shows money that is already spoken for. Stay under the number and every jar survives the month by construction.',
@@ -210,7 +210,7 @@ export const JOURNEY: JourneyStep[] = [
         title: 'Your debts get a plan',
         tag: 'AVALANCHE & SNOWBALL',
         you: 'Enter each debt once: what, how much, what interest.',
-        rumbelo:
+        rumtelo:
             'Sorts good debt from expensive debt, computes both payoff orders, and shows the month you are free.',
         math: 'DUO 2.56% → pay minimum · credit card 14% → kill first · free: Feb 2035',
         why: 'Debt under roughly 4–5% is cheaper than inflation — pay the minimum and invest the difference. Expensive debt gets killed first, always.',
@@ -220,7 +220,7 @@ export const JOURNEY: JourneyStep[] = [
         title: 'You watch freedom grow',
         tag: 'THE FREEDOM NUMBER',
         you: 'Keep going. Check in once a week.',
-        rumbelo:
+        rumtelo:
             'Tracks what you own, what it pays you monthly, and how much of your living costs it already covers — your level, from Survival to Free.',
         math: 'Assets pay €168/month · covers 14% of your costs → Level 2 of 5',
         why: 'The end state this whole system points at: when what you own pays your monthly costs, a salary becomes optional.',
@@ -262,7 +262,7 @@ export const PLANS: Plan[] = [
         line: 'The part that runs without you — plus Energy. Banks tied to jars, transactions sorted on arrival, your week and your body in view.',
         feats: [
             'Connect ING, Revolut, bunq and more',
-            'Transactions arrive, Rumbelo guesses the jar',
+            'Transactions arrive, Rumtelo guesses the jar',
             'Debt plan with interest and an end date',
             'ENERGY · your week, sleep, training, food',
             'SOUL · gratitude and the seven centres',
@@ -302,12 +302,12 @@ export const TRUST_CARDS: { icon: IconName; head: string; line: string }[] = [
     {
         icon: 'lock',
         head: 'Payments by Stripe',
-        line: 'Card details go to Stripe, never to Rumbelo. PCI-DSS Level 1 — the same standard your bank uses.',
+        line: 'Card details go to Stripe, never to Rumtelo. PCI-DSS Level 1 — the same standard your bank uses.',
     },
     {
         icon: 'eye',
         head: 'Read-only bank access',
-        line: 'Connected through PSD2-licensed providers. Rumbelo can look, never move money.',
+        line: 'Connected through PSD2-licensed providers. Rumtelo can look, never move money.',
     },
     {
         icon: 'shield',
@@ -350,7 +350,7 @@ export const FOOT_COLS = [
     {
         head: 'Contact',
         links: [
-            { text: 'support@rumbelo.app', href: 'mailto:support@rumbelo.app' },
+            { text: 'support@rumtelo.app', href: 'mailto:support@rumtelo.app' },
             { text: 'Press & partnerships', href: '#' },
             { text: 'Status', href: '#' },
         ],
@@ -405,7 +405,7 @@ export const COACH_GLANCE_POINTS = [
 
 export const DEMO_INCOME_DEFAULT = 4300;
 
-export const BRAND = 'Rumbelo';
+export const BRAND = 'Rumtelo';
 
 export const FOOTER_COLUMNS = FOOT_COLS;
 

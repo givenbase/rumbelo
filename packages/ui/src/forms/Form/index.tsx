@@ -13,7 +13,7 @@ import {
     type FieldValues,
 } from 'react-hook-form';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { Slot } from 'radix-ui';
 

@@ -1,5 +1,5 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
-import { JarKey, type JarCapabilities } from '@rumbelo/contracts';
+import { JarKey, type JarCapabilities } from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../../../../common/database/base.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';
@@ -8,7 +8,7 @@ import { entityConfig } from '../../../../../../common/database/entity-config.ut
 /**
  * Jar Template Entity
  *
- * Rumbelo-owned catalog for the six jars (name, subtitle, icon, default %, capabilities).
+ * Rumtelo-owned catalog for the six jars (name, subtitle, icon, default %, capabilities).
  * We write these rows; households only copy them into money.jar on onboard.
  *
  * @see money.jar — household-owned instances

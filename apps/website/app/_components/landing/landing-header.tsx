@@ -3,9 +3,9 @@
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 
-import { BRAND_TAGLINE } from '@rumbelo/i18n';
-import { RumbeloLogo } from '@rumbelo/brand';
-import { ThemeToggle } from '@rumbelo/ui';
+import { BRAND_TAGLINE } from '@rumtelo/i18n';
+import { RumteloLogo } from '@rumtelo/brand';
+import { ThemeToggle } from '@rumtelo/ui';
 import { webSignUpPath } from '@/lib/portal-urls';
 
 const NAV_LINKS = [
@@ -51,7 +51,7 @@ export function LandingHeader() {
             <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-3 px-4 py-3 lg:gap-5 lg:px-6">
                 <div className="flex min-w-0 flex-1 items-center gap-2 lg:flex-none">
                     <Link href="/" className="flex min-w-0 items-center gap-2">
-                        <RumbeloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
+                        <RumteloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
                     </Link>
                     <span className="hidden font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint sm:inline">
                         {BRAND_TAGLINE}

@@ -1,6 +1,6 @@
 /**
  * Tour / Help types.
- * Copy keys live under `content/copy` — later hoist to `@rumbelo/i18n` (`features.tour.*`).
+ * Copy keys live under `content/copy` — later hoist to `@rumtelo/i18n` (`features.tour.*`).
  */
 
 export type PageHelpSection = {

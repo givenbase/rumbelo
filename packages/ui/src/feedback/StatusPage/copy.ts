@@ -17,7 +17,7 @@ export const STATUS_COPY: Record<StatusType, { code: number; title: string; desc
         'access-denied': {
             code: 403,
             title: 'You cannot open this',
-            description: 'Your account does not have access to this part of Rumbelo.',
+            description: 'Your account does not have access to this part of Rumtelo.',
         },
         unauthorized: {
             code: 401,
@@ -27,7 +27,7 @@ export const STATUS_COPY: Record<StatusType, { code: number; title: string; desc
         },
         maintenance: {
             code: 503,
-            title: 'Rumbelo is briefly offline',
+            title: 'Rumtelo is briefly offline',
             description:
                 'We are doing a short update. Your jars and data are safe — try again in a few minutes.',
         },

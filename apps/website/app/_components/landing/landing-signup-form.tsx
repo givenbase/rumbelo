@@ -3,7 +3,7 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import { AUTH_MIN_PASSWORD_LENGTH, LandingSignUpForm } from '@rumbelo/contracts';
+import { AUTH_MIN_PASSWORD_LENGTH, LandingSignUpForm } from '@rumtelo/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { ASSURANCES } from '@/lib/landing-content';
@@ -79,7 +79,7 @@ export function LandingSignupForm() {
                         </h2>
                         <p className="mb-5 max-w-prose text-base leading-relaxed text-fg-muted">
                             Built for people who are doing well — and for people who are ready to.
-                            Tell us what lands each month; Rumbelo assigns it from there.
+                            Tell us what lands each month; Rumtelo assigns it from there.
                         </p>
                         <div className="grid gap-3">
                             {ASSURANCES.map(assurance => (
@@ -169,7 +169,7 @@ export function LandingSignupForm() {
                                     {terms ? '✓' : ''}
                                 </span>
                                 <span className="text-sm leading-relaxed text-fg-muted">
-                                    I agree to the terms and privacy policy. Rumbelo has read-only
+                                    I agree to the terms and privacy policy. Rumtelo has read-only
                                     access to bank data, and only after I connect it myself.
                                 </span>
                             </label>

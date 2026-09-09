@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { BRAND_TAGLINE } from '@rumbelo/i18n';
-import { Card, Eyebrow, Section } from '@rumbelo/ui';
+import { BRAND_TAGLINE } from '@rumtelo/i18n';
+import { Card, Eyebrow, Section } from '@rumtelo/ui';
 
 import { productPath } from '@/app/_lib/routes';
 import { PageContent } from '@/components/layout/page-content';
@@ -58,7 +58,7 @@ const WIDER = [
 export default function WhyFoundationPage() {
     return (
         <PageContent width="prose" className="animate-rise">
-            <Section eyebrow="✦ Why Rumbelo">
+            <Section eyebrow="✦ Why Rumtelo">
                 <p className="font-mono text-xs font-medium tracking-[0.14em] text-accent uppercase">
                     The line we stand on
                 </p>

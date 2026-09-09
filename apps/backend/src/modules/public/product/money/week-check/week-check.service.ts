@@ -1,4 +1,4 @@
-import { WeekCheckStage } from '@rumbelo/contracts';
+import { WeekCheckStage } from '@rumtelo/contracts';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 

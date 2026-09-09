@@ -2,7 +2,7 @@
 
 **Stop wondering where it went.** Six jars, one calm overview.
 
-Rumbelo is not a bookkeeping app. It is a single quiet view of where your money, energy and time go — so intention leads, and life doesn’t decide first.
+Rumtelo is not a bookkeeping app. It is a single quiet view of where your money, energy and time go — so intention leads, and life doesn’t decide first.
 
 > Rijkdom is geen getal. Het zijn de teugels in jouw handen.  
 > *(Wealth isn’t a number. It’s the reins in your hands.)*

@@ -1,4 +1,4 @@
--- Create PostgreSQL schemas required by Rumbelo
+-- Create PostgreSQL schemas required by Rumtelo
 -- Planes: auth | public | backoffice
 --
 --   psql $DATABASE_URL -f scripts/db/sql/create-schemas.sql

@@ -3,7 +3,7 @@
 import { startTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { StatusPage } from '@rumbelo/ui';
+import { StatusPage } from '@rumtelo/ui';
 
 import './globals.css';
 
@@ -34,7 +34,7 @@ export default function GlobalError({
                         });
                     }}
                     homeHref="/"
-                    homeLabel="Back to Rumbelo"
+                    homeLabel="Back to Rumtelo"
                 />
             </body>
         </html>

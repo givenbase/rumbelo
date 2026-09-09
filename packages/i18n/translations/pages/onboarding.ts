@@ -1,5 +1,5 @@
 const onboarding = {
-    welcome: 'Welcome to Rumbelo',
+    welcome: 'Welcome to Rumtelo',
     income: 'Your income',
     jars: 'The six jars',
     why: 'Your why',

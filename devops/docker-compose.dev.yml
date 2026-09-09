@@ -3,30 +3,30 @@
 #
 # Postgres 18 matches Railway (`postgres-ssl:18`) so native uuidv7() is available.
 # Major bumps need a fresh volume: `docker compose -f devops/docker-compose.dev.yml down -v`
-# then `up -d` and `pnpm --filter @rumbelo/backend db:fresh` (or migrate + seed).
+# then `up -d` and `pnpm --filter @rumtelo/backend db:fresh` (or migrate + seed).
 services:
     postgres:
         image: postgres:18-alpine
-        container_name: rumbelo-postgres
+        container_name: rumtelo-postgres
         environment:
-            POSTGRES_USER: rumbelo
-            POSTGRES_PASSWORD: rumbelo
-            POSTGRES_DB: rumbelo
+            POSTGRES_USER: rumtelo
+            POSTGRES_PASSWORD: rumtelo
+            POSTGRES_DB: rumtelo
         ports: ['5432:5432']
         # PG 18+ images expect the mount at /var/lib/postgresql (versioned data dir inside).
-        volumes: ['rumbelo-pgdata:/var/lib/postgresql']
+        volumes: ['rumtelo-pgdata:/var/lib/postgresql']
         healthcheck:
-            test: ['CMD-SHELL', 'pg_isready -U rumbelo']
+            test: ['CMD-SHELL', 'pg_isready -U rumtelo']
             interval: 5s
             timeout: 5s
             retries: 10
 
     redis:
         image: redis:7-alpine
-        container_name: rumbelo-redis
+        container_name: rumtelo-redis
         ports: ['6379:6379']
-        volumes: ['rumbelo-redisdata:/data']
+        volumes: ['rumtelo-redisdata:/data']
 
 volumes:
-    rumbelo-pgdata:
-    rumbelo-redisdata:
+    rumtelo-pgdata:
+    rumtelo-redisdata:

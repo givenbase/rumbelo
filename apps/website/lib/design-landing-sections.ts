@@ -43,7 +43,7 @@ export const LANDING_SECTIONS: LandingSection[] = [
         anchor: '#how',
         label: 'Five-step journey',
         status: 'shell',
-        gap: 'Static copy; "Rumbelo does" column wired',
+        gap: 'Static copy; "Rumtelo does" column wired',
     },
     {
         id: 'coachGlance',

@@ -1,7 +1,7 @@
 /**
  * Schemas barrel — re-exports every domain for routers that import `* as S`.
  * Source of truth lives under the plane/product tree; prefer public imports via
- * `@rumbelo/contracts/{domain}`.
+ * `@rumtelo/contracts/{domain}`.
  */
 export * from '../common/schemas';
 export * from '../backoffice/plan/schemas';

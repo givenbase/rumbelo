@@ -1,4 +1,4 @@
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey } from '@rumtelo/contracts';
 
 /**
  * One-off Transaction In suggestions — money outside fixed/recurring income.

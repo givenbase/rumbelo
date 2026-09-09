@@ -1,7 +1,7 @@
 /**
  * Validates MikroORM entity files against ENTITY_STYLE.md conventions.
  *
- * Usage: pnpm --filter @rumbelo/backend lint:entities
+ * Usage: pnpm --filter @rumtelo/backend lint:entities
  * @see apps/backend/docs/ENTITY_STYLE.md
  * @see scripts/lint/entity-field-priority.ts
  */

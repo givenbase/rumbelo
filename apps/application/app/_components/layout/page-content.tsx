@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { RegisterPageContentWidth } from '@/components/layout/page-content-width';
 

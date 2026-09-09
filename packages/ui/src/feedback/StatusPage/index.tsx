@@ -86,7 +86,7 @@ function StatusAction({
 /**
  * Full-viewport status / error surface for Next.js `error`, `global-error`,
  * and `not-found` routes. Self-contained enough to render when the app shell
- * or theme provider failed — uses design tokens with Rumbelo teal fallbacks.
+ * or theme provider failed — uses design tokens with Rumtelo teal fallbacks.
  */
 export function StatusPage({
     type,
@@ -145,13 +145,13 @@ export function StatusPage({
                 <p
                     className="mb-4 font-mono text-xs font-medium tracking-widest uppercase"
                     style={{ color: `var(--color-accent, ${FALLBACK.accent})` }}>
-                    ✦ {code ? String(code) : 'Rumbelo'}
+                    ✦ {code ? String(code) : 'Rumtelo'}
                 </p>
 
                 <p
                     className="mb-3 font-display text-lg font-semibold tracking-tight"
                     style={{ color: `var(--color-fg, ${FALLBACK.fg})` }}>
-                    Rumbelo
+                    Rumtelo
                 </p>
 
                 <h1 className="font-display text-[clamp(1.5rem,4vw,1.875rem)] leading-tight font-semibold tracking-tight">

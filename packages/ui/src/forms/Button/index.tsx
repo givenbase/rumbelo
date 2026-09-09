@@ -1,12 +1,12 @@
 'use client';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import type ButtonProps from './types';
 
 import buttonVariants from './styles';
 
-/** Brand Button — rounded-full accent treatment from the Rumbelo design system. */
+/** Brand Button — rounded-full accent treatment from the Rumtelo design system. */
 export function Button({
     children,
     variant = 'primary',

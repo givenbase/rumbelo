@@ -32,25 +32,25 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(class-transformer@0.5.1)(class-validator@0.15.1)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
-      '@rumbelo/brand':
+      '@rumtelo/brand':
         specifier: workspace:*
         version: link:../../packages/brand
-      '@rumbelo/config':
+      '@rumtelo/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@rumbelo/contracts':
+      '@rumtelo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
-      '@rumbelo/hooks':
+      '@rumtelo/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
-      '@rumbelo/i18n':
+      '@rumtelo/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@rumbelo/ui':
+      '@rumtelo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@rumbelo/utils':
+      '@rumtelo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
       '@t3-oss/env-nextjs':
@@ -93,7 +93,7 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@tailwindcss/postcss':
@@ -195,10 +195,10 @@ importers:
       '@react-email/render':
         specifier: ^2.1.0
         version: 2.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@rumbelo/contracts':
+      '@rumtelo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
-      '@rumbelo/utils':
+      '@rumtelo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
       '@thallesp/nestjs-better-auth':
@@ -262,7 +262,7 @@ importers:
       '@nestjs/testing':
         specifier: ^11.0.1
         version: 11.2.3(@nestjs/common@11.2.3(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.3(@nestjs/common@11.2.3(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
@@ -292,7 +292,7 @@ importers:
       '@playwright/test':
         specifier: ^1.52.0
         version: 1.63.0
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       dotenv:
@@ -307,22 +307,22 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(class-transformer@0.5.1)(class-validator@0.15.1)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
-      '@rumbelo/brand':
+      '@rumtelo/brand':
         specifier: workspace:*
         version: link:../../packages/brand
-      '@rumbelo/config':
+      '@rumtelo/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@rumbelo/contracts':
+      '@rumtelo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
-      '@rumbelo/i18n':
+      '@rumtelo/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@rumbelo/ui':
+      '@rumtelo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@rumbelo/utils':
+      '@rumtelo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
       '@t3-oss/env-nextjs':
@@ -362,7 +362,7 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@tailwindcss/postcss':
@@ -386,7 +386,7 @@ importers:
 
   packages/brand:
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/react':
@@ -435,7 +435,7 @@ importers:
         specifier: ^4.0.0
         version: 4.4.3
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@tanstack/react-query':
@@ -457,7 +457,7 @@ importers:
         specifier: ^5.90.12
         version: 5.102.3(react@19.2.8)
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/react':
@@ -482,7 +482,7 @@ importers:
         specifier: ^19
         version: 19.2.8
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       tsx:
@@ -520,10 +520,10 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.13
         version: 1.1.21(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@rumbelo/config':
+      '@rumtelo/config':
         specifier: workspace:*
         version: link:../config
-      '@rumbelo/utils':
+      '@rumtelo/utils':
         specifier: workspace:*
         version: link:../utils
       class-variance-authority:
@@ -554,7 +554,7 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
@@ -572,7 +572,7 @@ importers:
 
   packages/utils:
     dependencies:
-      '@rumbelo/contracts':
+      '@rumtelo/contracts':
         specifier: workspace:*
         version: link:../contracts
       clsx:
@@ -582,7 +582,7 @@ importers:
         specifier: ^3.3.1
         version: 3.6.0
     devDependencies:
-      '@rumbelo/typescript-config':
+      '@rumtelo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':

@@ -1,6 +1,6 @@
 # Brand quotes & lines
 
-Canonical lines for Rumbelo — website, lockups, social, coach, and marketing.  
+Canonical lines for Rumtelo — website, lockups, social, coach, and marketing.  
 Voice: direct, punchy, product-clear. Names the problem. No shame. No soft abstraction.
 
 **Currency:** Brand copy is **currency-agnostic**. Never lock slogans to euro, dollar, or a symbol (€/$). The product formats amounts via locale (`Intl`) — NL may *display* euros; the brand talks about **money**, **income**, **paycheck**, **amount**.
@@ -201,7 +201,7 @@ Do **not** lead with these on the website:
 5. Pull **extensions** when a page needs more beats — stay in-lane.
 6. New lines: add here first, then use in UI/copy.
 
-**In product UI:** import from `@rumbelo/i18n` (`BRAND_TAGLINE`, `AUTH_QUOTES`, …). Source: `packages/i18n/src/brand-quotes.ts`. Keep that file in sync with this doc.
+**In product UI:** import from `@rumtelo/i18n` (`BRAND_TAGLINE`, `AUTH_QUOTES`, …). Source: `packages/i18n/src/brand-quotes.ts`. Keep that file in sync with this doc.
 
 **Auth aside rule:** the four rotating panels must be **different jobs**, not four riffs on “where it went”:
 

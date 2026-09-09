@@ -1,4 +1,4 @@
-import { contract } from '@rumbelo/contracts';
+import { contract } from '@rumtelo/contracts';
 
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';

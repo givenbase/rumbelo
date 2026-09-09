@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import type { WealthStage as WealthStageDto } from '@rumbelo/contracts';
+import type { WealthStage as WealthStageDto } from '@rumtelo/contracts';
 
 import { WealthStage } from './wealth-stage.entity';
 

@@ -2,7 +2,7 @@
 
 Soft guidance when someone changes their income jar split. Never blocks save.
 
-Defaults stay **T. Harv Eker** (`DEFAULT_JAR_SPLIT` in `@rumbelo/contracts`): **55 / 10 / 10 / 10 / 10 / 5**. Full jar doctrine (FF vs LTS, why 55/5, pre-allocation): [`product/money/README.md`](../../../../backend/src/modules/public/product/money/README.md).
+Defaults stay **T. Harv Eker** (`DEFAULT_JAR_SPLIT` in `@rumtelo/contracts`): **55 / 10 / 10 / 10 / 10 / 5**. Full jar doctrine (FF vs LTS, why 55/5, pre-allocation): [`product/money/README.md`](../../../../backend/src/modules/public/product/money/README.md).
 
 ## Why
 
@@ -56,7 +56,7 @@ evaluateSplitCoach(pctByKey, spendingStyle?: SpendingStyle): SplitTip[]
 pctByJarKey(jars, pctById): SplitPctByKey
 ```
 
-`SpendingStyle` lives in `@rumbelo/contracts`.
+`SpendingStyle` lives in `@rumtelo/contracts`.
 
 ## Out of scope (for now)
 

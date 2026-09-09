@@ -1,4 +1,4 @@
-# @rumbelo/contracts
+# @rumtelo/contracts
 
 Shared oRPC contract, Zod schemas, and TypeScript enums for app + backend.
 
@@ -30,16 +30,16 @@ not URL length.
 ```
 src/
   public/
-    platform/              → @rumbelo/contracts/platform
+    platform/              → @rumtelo/contracts/platform
       enums.ts · schemas/ · router.ts · index.ts
     product/
-      money/               → @rumbelo/contracts/money
-      growth/              → @rumbelo/contracts/growth
-      energy/              → @rumbelo/contracts/energy
-      soul/                → @rumbelo/contracts/soul
+      money/               → @rumtelo/contracts/money
+      growth/              → @rumtelo/contracts/growth
+      energy/              → @rumtelo/contracts/energy
+      soul/                → @rumtelo/contracts/soul
   backoffice/
-    plan/                  → @rumbelo/contracts/backoffice
-  common/                  → @rumbelo/contracts/common
+    plan/                  → @rumtelo/contracts/backoffice
+  common/                  → @rumtelo/contracts/common
   client/                  HTTP + React helpers
   routers/                 composes domain routers into `contract`
   enums/ · schemas/        thin cross-domain barrels
@@ -52,12 +52,12 @@ colocates `*.schema.ts` + `*.contract.ts` per leaf — same idea, domain-scoped)
 ## Domain subpaths (preferred for new code)
 
 ```ts
-import { DebtKind, JarKey, Cadence } from '@rumbelo/contracts/money';
-import { HouseholdKind, Currency } from '@rumbelo/contracts/platform';
-import { PlanKey, PLAN_CAPABILITIES } from '@rumbelo/contracts/backoffice';
-import { GrowthLeverPreset, WEALTH_STAGE_KEYS } from '@rumbelo/contracts/growth';
-import { EnergyMetric } from '@rumbelo/contracts/energy';
-import { Locale, Theme, Money } from '@rumbelo/contracts/common';
+import { DebtKind, JarKey, Cadence } from '@rumtelo/contracts/money';
+import { HouseholdKind, Currency } from '@rumtelo/contracts/platform';
+import { PlanKey, PLAN_CAPABILITIES } from '@rumtelo/contracts/backoffice';
+import { GrowthLeverPreset, WEALTH_STAGE_KEYS } from '@rumtelo/contracts/growth';
+import { EnergyMetric } from '@rumtelo/contracts/energy';
+import { Locale, Theme, Money } from '@rumtelo/contracts/common';
 ```
 
 | Subpath | Folder |
@@ -72,12 +72,12 @@ import { Locale, Theme, Money } from '@rumbelo/contracts/common';
 | `/` | full barrel |
 | `/react` | TanStack Query helpers |
 
-Root `@rumbelo/contracts` stays fully supported; migrate call sites to subpaths when you touch them.
+Root `@rumtelo/contracts` stays fully supported; migrate call sites to subpaths when you touch them.
 
 ## Enums
 
 ```ts
-import { DebtKind } from '@rumbelo/contracts/money';
+import { DebtKind } from '@rumtelo/contracts/money';
 import { z } from 'zod';
 
 z.enum(DebtKind); // ✅ Zod 4 — not z.nativeEnum

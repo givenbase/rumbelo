@@ -1,6 +1,6 @@
 # Audience
 
-Rumbelo is for people who take their life seriously — not only those already “winning,” and not only those in crisis.
+Rumtelo is for people who take their life seriously — not only those already “winning,” and not only those in crisis.
 
 ---
 

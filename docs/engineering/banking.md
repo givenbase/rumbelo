@@ -1,6 +1,6 @@
 # Bank data — CSV import and Enable Banking
 
-How Rumbelo gets bank transactions into the Inbox. **CSV is always-on. Live PSD2 sync is Enable Banking**, behind a feature flag, not implemented end-to-end yet.
+How Rumtelo gets bank transactions into the Inbox. **CSV is always-on. Live PSD2 sync is Enable Banking**, behind a feature flag, not implemented end-to-end yet.
 
 ---
 
@@ -29,11 +29,11 @@ Shared practices: paid plans for bank connect, dedupe on re-import, human review
 
 ## Why not Stripe
 
-Stripe in Rumbelo is **subscriptions / Checkout / Customer Portal** only. It does **not** pull household bank statement history for a budget app. Stripe Financial Connections (where available) is for payout/verification flows — not a Dutch PSD2 statement feed.
+Stripe in Rumtelo is **subscriptions / Checkout / Customer Portal** only. It does **not** pull household bank statement history for a budget app. Stripe Financial Connections (where available) is for payout/verification flows — not a Dutch PSD2 statement feed.
 
 ---
 
-## Rumbelo strategy
+## Rumtelo strategy
 
 1. **CSV statement import** — always available (Plus capability `moneyImport`). No third-party AIS cost.
 2. **Enable Banking restricted production** — owner + friends whitelist their own accounts; free under Enable Banking’s ToS for eval / personal use. Fits early product.

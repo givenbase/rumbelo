@@ -17,9 +17,9 @@ import {
     Input,
     bindFormSubmit,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
-import { AUTH_FORGOT_PASSWORD } from '@rumbelo/i18n';
-import { ForgotPasswordForm as ForgotPasswordFormSchema } from '@rumbelo/contracts';
+} from '@rumtelo/ui';
+import { AUTH_FORGOT_PASSWORD } from '@rumtelo/i18n';
+import { ForgotPasswordForm as ForgotPasswordFormSchema } from '@rumtelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 

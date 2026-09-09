@@ -1,5 +1,5 @@
 import { Entity, Enum, ManyToOne, Unique } from '@mikro-orm/core';
-import { PlanKey } from '@rumbelo/contracts';
+import { PlanKey } from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../../common/database/base.entity';
 import { NativeEnum } from '../../../../common/database/native-enum.util';

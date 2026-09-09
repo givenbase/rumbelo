@@ -13,7 +13,7 @@ import { EmailTemplate, renderTemplate } from './utils/template-adapter';
 import { loadEnv } from '../../../../common/config/env.config';
 
 /**
- * Outbound email — Rumbelo writes (backoffice). Households never send.
+ * Outbound email — Rumtelo writes (backoffice). Households never send.
  *
  * Templates are React Email components (Galighticus pattern) rendered via
  * `@react-email/render` — never hand-rolled HTML strings.
@@ -99,7 +99,7 @@ export class EmailService {
         const locale = input.locale ?? 'en';
         return this.sendTemplatedEmail(
             input.to,
-            locale === 'nl' ? 'Huishouden uitnodiging — Rumbelo' : 'Household invite — Rumbelo',
+            locale === 'nl' ? 'Huishouden uitnodiging — Rumtelo' : 'Household invite — Rumtelo',
             EmailTemplate.HOUSEHOLD_INVITE,
             {
                 householdName: input.householdName,
@@ -116,7 +116,7 @@ export class EmailService {
         const locale = input.locale ?? 'en';
         return this.sendTemplatedEmail(
             input.to,
-            locale === 'nl' ? 'Verifieer je e-mail — Rumbelo' : 'Verify your email — Rumbelo',
+            locale === 'nl' ? 'Verifieer je e-mail — Rumtelo' : 'Verify your email — Rumtelo',
             EmailTemplate.ACCOUNT_VERIFICATION,
             {
                 firstName: input.firstName,
@@ -132,7 +132,7 @@ export class EmailService {
         const locale = input.locale ?? 'en';
         return this.sendTemplatedEmail(
             input.to,
-            locale === 'nl' ? 'Wachtwoord resetten — Rumbelo' : 'Reset your password — Rumbelo',
+            locale === 'nl' ? 'Wachtwoord resetten — Rumtelo' : 'Reset your password — Rumtelo',
             EmailTemplate.PASSWORD_RESET,
             {
                 firstName: input.firstName,

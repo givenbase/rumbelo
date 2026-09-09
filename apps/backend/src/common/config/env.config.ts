@@ -139,7 +139,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     }
     if (data.DATABASE_SYNC) {
         throw new Error(
-            'DATABASE_SYNC must stay false — Rumbelo applies schema via migrations only'
+            'DATABASE_SYNC must stay false — Rumtelo applies schema via migrations only'
         );
     }
     if (data.EMAIL_PROVIDER === 'resend' && !data.RESEND_API_KEY && !data.EMAIL_LOG_ONLY) {
@@ -149,6 +149,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     return {
         ...data,
         DOMAIN_BACK_PUBLIC: data.DOMAIN_BACK_PUBLIC ?? data.DOMAIN_BACK,
-        EMAIL_FROM: data.EMAIL_FROM ?? 'Rumbelo <info@rumbelo.app>',
+        EMAIL_FROM: data.EMAIL_FROM ?? 'Rumtelo <info@rumtelo.app>',
     };
 }

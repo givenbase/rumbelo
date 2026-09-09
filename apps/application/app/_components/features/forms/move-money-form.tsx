@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
-import { useLiveQuery } from '@rumbelo/hooks';
+import { useLiveQuery } from '@rumtelo/hooks';
 import {
     FormControl,
     FormField,
@@ -16,9 +16,9 @@ import {
     FormMessage,
     Button,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
-import { cn, formatMoney, toPeriodKey } from '@rumbelo/utils';
-import { jarCapabilitiesFor, type JarKey } from '@rumbelo/contracts';
+} from '@rumtelo/ui';
+import { cn, formatMoney, toPeriodKey } from '@rumtelo/utils';
+import { jarCapabilitiesFor, type JarKey } from '@rumtelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

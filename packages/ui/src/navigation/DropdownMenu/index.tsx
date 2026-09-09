@@ -3,7 +3,7 @@
 import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { DropdownMenu as DropdownMenuPrimitive } from 'radix-ui';
 

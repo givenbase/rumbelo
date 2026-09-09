@@ -1,6 +1,6 @@
 'use client';
 
-import { cn, jarCoverage, usedPctDisplay } from '@rumbelo/utils';
+import { cn, jarCoverage, usedPctDisplay } from '@rumtelo/utils';
 
 type JarProgressBarProps = {
     allocated: number;

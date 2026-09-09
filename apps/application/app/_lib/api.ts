@@ -7,7 +7,7 @@
  * @see apps/website app/_lib/api.ts in galighticus-platform
  */
 
-import { createClient, type AppClient } from '@rumbelo/contracts';
+import { createClient, type AppClient } from '@rumtelo/contracts';
 
 import { getClientHouseholdHeaders } from '@/app/_lib/household-api-context';
 import { env } from '@/app/_utils/get-env';

@@ -1,16 +1,16 @@
-# @rumbelo/backend
+# @rumtelo/backend
 
 NestJS 11 + Fastify + oRPC + MikroORM 6 + better-auth. **ESM** — every `@orpc/*`
 package ships ESM only, so CommonJS is not an option here.
 
 ```bash
-pnpm --filter @rumbelo/backend dev   # :3002
+pnpm --filter @rumtelo/backend dev   # :3002
 ```
 
 - `src/common/` — config, database primitives, household scoping, shared utils
 - `src/modules/` — plane → product → aggregate; see `src/modules/README.md`
   for CRUD shape (Create → Read → Update → Delete) and folder rules
-- `src/modules/auth/` — better-auth + Rumbelo `account` (identity plane → schema `auth`)
+- `src/modules/auth/` — better-auth + Rumtelo `account` (identity plane → schema `auth`)
 - `src/modules/public/` — platform + product (household app → schema `public`)
 - `src/modules/backoffice/` — catalogs we publish (schema `backoffice`)
 - `src/banking/` — bank aggregation behind a port; null adapter by default
@@ -96,7 +96,7 @@ households of several. One person can belong to up to five households
 
 | Concern | Location | Storage |
 |---|---|---|
-| Auth identity, sessions, org membership, invitations | better-auth (+ Rumbelo account) | `auth` |
+| Auth identity, sessions, org membership, invitations | better-auth (+ Rumtelo account) | `auth` |
 | Household settings, coach, money / growth / energy / soul | `modules/public/*` | `public.*` (every household row has `household_id`) |
 | Catalogs we publish (plans, jar templates, …) | `modules/backoffice/*` | `backoffice.*` |
 | Enforcement | `HouseholdContextModule` interceptor + `HouseholdScopedRepository` | AsyncLocalStorage |
@@ -140,7 +140,7 @@ other households.
 
 Meltizo gives each subscriber its own `tenant_*` Postgres schema because its
 tenants are companies: large, compliance-heavy, with per-subscriber
-customization. Rumbelo's "tenant" is a household of 1–10 people sharing one
+customization. Rumtelo's "tenant" is a household of 1–10 people sharing one
 budget. Schema-per-household would mean creating/dropping a schema per signup,
 N× migrations, an EntityManager fork on every request and painful
 cross-household analytics — with zero product benefit at this tenant size.

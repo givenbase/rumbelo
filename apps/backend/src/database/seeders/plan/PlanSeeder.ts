@@ -1,7 +1,7 @@
 import type { EntityManager } from '@mikro-orm/postgresql';
 
 import { Seeder } from '@mikro-orm/seeder';
-import { PLAN_CAPABILITIES, type CapabilityKey, type PlanKey } from '@rumbelo/contracts';
+import { PLAN_CAPABILITIES, type CapabilityKey, type PlanKey } from '@rumtelo/contracts';
 
 import { Capability } from '../../../modules/backoffice/plan/capability/capability.entity';
 import {

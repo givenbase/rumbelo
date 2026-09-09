@@ -1,5 +1,5 @@
 {
-    "extends": "@rumbelo/typescript-config/react-library.json",
+    "extends": "@rumtelo/typescript-config/react-library.json",
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "Bundler",

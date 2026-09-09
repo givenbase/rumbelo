@@ -2,11 +2,11 @@
  * Merge translations TypeScript modules into languages/en.json, then fill
  * missing keys in other locale JSON files from English (does not call DeepL).
  *
- * Galighticus uses DeepL for non-English; Rumbelo starts with a local merge so
+ * Galighticus uses DeepL for non-English; Rumtelo starts with a local merge so
  * we never spend API quota from automation. Prefer adding English under
  * translations/ first; Dutch overrides live in languages/nl.json until DeepL.
  *
- * Run: pnpm --filter @rumbelo/i18n generate
+ * Run: pnpm --filter @rumtelo/i18n generate
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';

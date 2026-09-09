@@ -2,7 +2,7 @@
  * Help + Joyride tour feature.
  *
  * Layout:
- * - `content/copy/` — English strings keyed for later `@rumbelo/i18n` (`features.tour.*`)
+ * - `content/copy/` — English strings keyed for later `@rumtelo/i18n` (`features.tour.*`)
  * - `content/` — path registry + chapter targets
  * - UI: help sheet, offer dialog, provider
  */

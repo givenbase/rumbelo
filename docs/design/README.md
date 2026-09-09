@@ -19,7 +19,7 @@ Full story and unblock steps: [`HANDOFF.md`](../../HANDOFF.md) §8.
 ## Unblock `design/` on macOS (if EPERM)
 
 ```bash
-xattr -cr "/Users/givenloyiso/Desktop/DEV/rumbelo/design" && ls design
+xattr -cr "/Users/givenloyiso/Desktop/DEV/rumtelo/design" && ls design
 ```
 
 Or re-copy without attributes:
@@ -27,7 +27,7 @@ Or re-copy without attributes:
 ```bash
 ditto --norsrc --noextattr --noacl \
   "/path/to/Finance app with Monopoly concept" \
-  "/Users/givenloyiso/Desktop/DEV/rumbelo/design"
+  "/Users/givenloyiso/Desktop/DEV/rumtelo/design"
 ```
 
 ---

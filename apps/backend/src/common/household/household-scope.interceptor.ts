@@ -100,7 +100,7 @@ function isSystemPublicPath(pathname: string): boolean {
 }
 
 /** Explicit header wins, then the oRPC input body, then the session's active org.
- * All three are Better Auth opaque AuthIds (not Rumbelo uuids).
+ * All three are Better Auth opaque AuthIds (not Rumtelo uuids).
  */
 function resolveHouseholdId(req: Req): string | null {
     const header = req.headers['x-household-id'];

@@ -20,7 +20,7 @@ import {
     withinLimit,
     type CapabilityKey,
     type PlanLimitKey,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 /**
  * Plan gating — plan → product → feature (`{product}-{feature}`).

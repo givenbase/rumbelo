@@ -1,6 +1,6 @@
-# @rumbelo/i18n
+# @rumtelo/i18n
 
-Internationalization for Rumbelo — same spine as Galighticus (`next-intl` + TypeScript sources → generated JSON).
+Internationalization for Rumtelo — same spine as Galighticus (`next-intl` + TypeScript sources → generated JSON).
 
 ## Source of truth
 
@@ -9,7 +9,7 @@ Internationalization for Rumbelo — same spine as Galighticus (`next-intl` + Ty
 - After changing `translations/`, run:
 
 ```bash
-pnpm --filter @rumbelo/i18n generate
+pnpm --filter @rumtelo/i18n generate
 ```
 
 That rebuilds `languages/en.json` and fills **missing** keys in other locales from English (no DeepL API calls).
@@ -17,7 +17,7 @@ That rebuilds `languages/en.json` and fills **missing** keys in other locales fr
 ## Usage
 
 ```tsx
-import { useTranslations } from '@rumbelo/i18n';
+import { useTranslations } from '@rumtelo/i18n';
 
 const t = useTranslations();
 t('pages.shell.settings');
@@ -30,6 +30,6 @@ Brand lockups that are not yet on `useTranslations` can import `BRAND_TAGLINE` /
 
 ## What we kept vs dropped
 
-**Kept (useful):** next-intl routing helpers, locale metadata, common action/status/message, ui button/form, Rumbelo brand + auth + shell/onboarding/dashboard.
+**Kept (useful):** next-intl routing helpers, locale metadata, common action/status/message, ui button/form, Rumtelo brand + auth + shell/onboarding/dashboard.
 
 **Not ported (Galighticus-only):** POS, shop, checkout, student portal, pantheon, admin commerce, DeepL scripts, i18next mobile stack, healthcare entity vocabulary.

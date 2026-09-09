@@ -12,12 +12,12 @@ import { routing } from './i18n/routing';
  * - Does NOT validate the session (only checks cookie existence)
  * - Actual session validation happens server-side / via auth.api.getSession
  *
- * Cookie prefix must match backend `advanced.cookiePrefix` (`rumbelo`).
+ * Cookie prefix must match backend `advanced.cookiePrefix` (`rumtelo`).
  *
  * @see https://www.better-auth.com/docs/integrations/next#auth-protection
  */
 
-const AUTH_COOKIE_PREFIX = 'rumbelo';
+const AUTH_COOKIE_PREFIX = 'rumtelo';
 const intlMiddleware = createMiddleware(routing);
 
 function isSignInRoute(pathname: string): boolean {

@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import type { DebtKind } from '@rumbelo/contracts';
+import type { DebtKind } from '@rumtelo/contracts';
 
 import { DebtPreset } from './debt.entity';
 

@@ -1,5 +1,5 @@
 import { Collection, Entity, Enum, OneToMany, Property, Unique } from '@mikro-orm/core';
-import { WeekCheckStage } from '@rumbelo/contracts';
+import { WeekCheckStage } from '@rumtelo/contracts';
 
 import type { WeekCheckAllocation } from './week-check-allocation.entity';
 

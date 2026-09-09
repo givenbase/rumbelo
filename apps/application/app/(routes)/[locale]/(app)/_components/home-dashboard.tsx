@@ -7,9 +7,9 @@ import { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Eyebrow } from '@rumbelo/ui';
-import { formatMoney, formatPeriod, toPeriodKey, describePeriodTravel } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Eyebrow } from '@rumtelo/ui';
+import { formatMoney, formatPeriod, toPeriodKey, describePeriodTravel } from '@rumtelo/utils';
 
 import type { CoachMessage, CoachRecapItem } from '@/components/features/home/coach-verdict';
 

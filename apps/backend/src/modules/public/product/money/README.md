@@ -4,9 +4,9 @@ The money loop. Children map one-to-one onto the Geld navigation.
 
 ## Doctrine — the six jars
 
-Rumbelo’s money product is built on **T. Harv Eker’s 6 jar system**: every euro gets a job the moment income lands — not after you’ve already spent it. That is the opposite of a classic after-the-fact budget.
+Rumtelo’s money product is built on **T. Harv Eker’s 6 jar system**: every euro gets a job the moment income lands — not after you’ve already spent it. That is the opposite of a classic after-the-fact budget.
 
-**Default split** (`DEFAULT_JAR_SPLIT` in `@rumbelo/contracts`): **55 / 10 / 10 / 10 / 10 / 5**.
+**Default split** (`DEFAULT_JAR_SPLIT` in `@rumtelo/contracts`): **55 / 10 / 10 / 10 / 10 / 5**.
 
 | Jar | % | Job |
 |---|---|---|
@@ -35,7 +35,7 @@ This is **common when starting**. The 55% is a **goal to work toward**, not a ha
 
 **Product surfaces this as:**
 
-- Jar math: `available = allocated − spent − fixed OUT` → Necessities **overspent** when commitments exceed the envelope (`jarCoverage` in `@rumbelo/utils`)
+- Jar math: `available = allocated − spent − fixed OUT` → Necessities **overspent** when commitments exceed the envelope (`jarCoverage` in `@rumtelo/utils`)
 - Fixed costs / jars UI: shortfall callout + CTAs → review fixed costs · add income  
   (`NecessitiesPressureCard` — `apps/application/app/_components/features/money/necessities-pressure-card.tsx`)
 - Split coach: tip when Necessities % &gt; 60% — cut fixed costs before cutting Freedom

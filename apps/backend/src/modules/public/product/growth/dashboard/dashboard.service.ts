@@ -1,4 +1,4 @@
-import { GoalStatus } from '@rumbelo/contracts';
+import { GoalStatus } from '@rumtelo/contracts';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { currentPeriod } from '../../../../../common/utils/period.util';

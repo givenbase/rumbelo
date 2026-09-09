@@ -1,5 +1,5 @@
 import { Collection, Entity, Enum, ManyToOne, OneToMany, Property, Unique } from '@mikro-orm/core';
-import { CapabilityKind } from '@rumbelo/contracts';
+import { CapabilityKind } from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../../common/database/base.entity';
 import { NativeEnum } from '../../../../common/database/native-enum.util';

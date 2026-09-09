@@ -1,6 +1,6 @@
 /**
  * Money product contracts — enums + schemas.
- * Prefer: `import { JarKey, DebtKind } from '@rumbelo/contracts/money'`
+ * Prefer: `import { JarKey, DebtKind } from '@rumtelo/contracts/money'`
  *
  * Cadence / FlowDirection live in common but PG types are money_* —
  * re-exported here so money call sites stay on one subpath.

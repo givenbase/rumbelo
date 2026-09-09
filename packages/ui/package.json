@@ -1,5 +1,5 @@
 {
-    "name": "@rumbelo/ui",
+    "name": "@rumtelo/ui",
     "version": "0.0.0",
     "private": true,
     "type": "module",
@@ -26,8 +26,8 @@
         "@radix-ui/react-separator": "^1.1.8",
         "@radix-ui/react-slot": "^1.2.4",
         "@radix-ui/react-tabs": "^1.1.13",
-        "@rumbelo/config": "workspace:*",
-        "@rumbelo/utils": "workspace:*",
+        "@rumtelo/config": "workspace:*",
+        "@rumtelo/utils": "workspace:*",
         "class-variance-authority": "^0.7.1",
         "lucide-react": "^0.511.0",
         "next-themes": "^0.4.6",
@@ -39,7 +39,7 @@
         "zod": "^4.4.3"
     },
     "devDependencies": {
-        "@rumbelo/typescript-config": "workspace:*",
+        "@rumtelo/typescript-config": "workspace:*",
         "@types/node": "26.3.0",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",

@@ -1,5 +1,5 @@
 import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
-import { Cadence, IncomeKind } from '@rumbelo/contracts';
+import { Cadence, IncomeKind } from '@rumtelo/contracts';
 
 import { BaseEntity } from '../../../../../../common/database/base.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';

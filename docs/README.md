@@ -1,4 +1,4 @@
-# Rumbelo docs
+# Rumtelo docs
 
 Start here to understand the whole project — product direction, brand, research, and engineering.
 
@@ -6,7 +6,7 @@ Start here to understand the whole project — product direction, brand, researc
 
 | Path | What it is |
 |---|---|
-| [product/overview.md](./product/overview.md) | What Rumbelo is, the loop, four portals |
+| [product/overview.md](./product/overview.md) | What Rumtelo is, the loop, four portals |
 | [product/principles.md](./product/principles.md) | Non-negotiable product principles |
 | [product/audience.md](./product/audience.md) | Who we build for |
 | [brand/positioning.md](./brand/positioning.md) | Name, voice, visual direction |

@@ -1,7 +1,7 @@
-# Research brief — The problem Rumbelo solves
+# Research brief — The problem Rumtelo solves
 
 **For:** Brand, product, and website  
-**Product:** Rumbelo  
+**Product:** Rumtelo  
 **Length:** One page  
 **Date:** September 2026  
 **Part of:** [`docs/`](../README.md)
@@ -10,7 +10,7 @@
 
 ## Who this is for
 
-Rumbelo is for people who take their life seriously — not only those already “winning,” and not only those in crisis.
+Rumtelo is for people who take their life seriously — not only those already “winning,” and not only those in crisis.
 
 | Audience | What they feel | What they need |
 |---|---|---|
@@ -52,7 +52,7 @@ Facing every amount can mean facing shortfall, shame, or the gap between ambitio
 
 ---
 
-## What this means for Rumbelo
+## What this means for Rumtelo
 
 | Don’t | Do |
 |---|---|
@@ -62,7 +62,7 @@ Facing every amount can mean facing shortfall, shame, or the gap between ambitio
 | Lead with shame or complexity | Lead with calm clarity and intention |
 | Sell “better budgeting discipline” | Sell **intention before chaos** — every amount already has a place |
 
-**Brand implication:** The problem isn’t that people lack willpower. It’s that life (and success itself) can decide their cash flow before they do. Rumbelo exists so they can see direction — and act — before that happens.
+**Brand implication:** The problem isn’t that people lack willpower. It’s that life (and success itself) can decide their cash flow before they do. Rumtelo exists so they can see direction — and act — before that happens.
 
 **Suggested proof language (website):**  
 *Most people don’t lose the plot because they don’t care. They lose the picture because income, expenses, and priorities keep moving — and tracking every detail costs attention they need to build the life they want.*
@@ -81,7 +81,7 @@ Facing every amount can mean facing shortfall, shame, or the gap between ambitio
 
 ## One-line takeaway
 
-**Rumbelo solves the missing picture: for people who are successful, people who want change, and people who want success but don’t yet know the exact next move — so intention leads, and life doesn’t decide first.**
+**Rumtelo solves the missing picture: for people who are successful, people who want change, and people who want success but don’t yet know the exact next move — so intention leads, and life doesn’t decide first.**
 
 ---
 

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { HelperGate } from './helper-gate';
 import { CoachMark } from './helper-mark';

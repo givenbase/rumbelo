@@ -1,8 +1,8 @@
-# Rumbelo CI/CD (GitHub Actions)
+# Rumtelo CI/CD (GitHub Actions)
 
-**Repo:** [github.com/givenbase/rumbelo](https://github.com/givenbase/rumbelo)
+**Repo:** [github.com/givenbase/rumtelo](https://github.com/givenbase/rumtelo)
 
-Ported from Galighticus directions — **only what Rumbelo needs today**. No Docker image
+Ported from Galighticus directions — **only what Rumtelo needs today**. No Docker image
 build / single-app deploy / GHCR cleanup yet (no app Dockerfiles). Add those when images exist.
 
 ## GitHub Environments
@@ -56,7 +56,7 @@ Templates: `.env.github.secrets.example`, `.env.github.vars.example`. Script: `s
 | `api-smoke.yml` | `/health*` must not 5xx (strict ready after migrate) |
 | `e2e-smoke.yml` | Playwright `@smoke` against staging application |
 
-`db:push` / `db:seed` run via `tsx` scripts (not `@mikro-orm/cli`) so CI is not hit by the Node 22.22.3+ `yargonaut` / `require.cache` crash under `--import tsx/esm`. They also build `@rumbelo/contracts` first (`dist/` is required by package exports). Workflows pin Node **22.22.2**.
+`db:push` / `db:seed` run via `tsx` scripts (not `@mikro-orm/cli`) so CI is not hit by the Node 22.22.3+ `yargonaut` / `require.cache` crash under `--import tsx/esm`. They also build `@rumtelo/contracts` first (`dist/` is required by package exports). Workflows pin Node **22.22.2**.
 
 Manual runs: **Actions** → pick workflow → choose `staging` or `production`.
 

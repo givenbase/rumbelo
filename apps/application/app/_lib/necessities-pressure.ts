@@ -1,4 +1,4 @@
-import { DEFAULT_JAR_SPLIT, JarKey } from '@rumbelo/contracts';
+import { DEFAULT_JAR_SPLIT, JarKey } from '@rumtelo/contracts';
 
 /**
  * When fixed costs / Necessities blow past the Eker envelope.

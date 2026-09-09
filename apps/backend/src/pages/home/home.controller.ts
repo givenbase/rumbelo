@@ -23,7 +23,7 @@ export class HomeController {
             const html = renderBrandPage({
                 title: 'API',
                 eyebrow: 'Online',
-                headline: 'Rumbelo API',
+                headline: 'Rumtelo API',
                 message: 'This API is running. Documentation and developer tools are not public.',
                 code: 'OK',
                 primaryHref: '/health',
@@ -55,7 +55,7 @@ export class HomeController {
         const html = renderBrandPage({
             title: 'API',
             eyebrow: env.NODE_ENV,
-            headline: 'Rumbelo API',
+            headline: 'Rumtelo API',
             message: 'Developer surface for this environment — docs, health, and previews.',
             primaryHref: '/api/docs',
             primaryLabel: 'Open Swagger',

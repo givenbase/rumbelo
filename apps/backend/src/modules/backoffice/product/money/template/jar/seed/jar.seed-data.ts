@@ -1,7 +1,7 @@
-import { JarKey, JAR_CAPABILITIES } from '@rumbelo/contracts';
+import { JarKey, JAR_CAPABILITIES } from '@rumtelo/contracts';
 
 /**
- * Canonical jar catalog seed data — Rumbelo-owned defaults.
+ * Canonical jar catalog seed data — Rumtelo-owned defaults.
  * Loaded into backoffice.reference_money_jar_template by JarTemplateSeeder.
  * Capabilities mirror contracts JAR_CAPABILITIES.
  */

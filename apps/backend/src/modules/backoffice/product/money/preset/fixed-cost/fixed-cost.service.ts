@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
 
-import type { JarKey } from '@rumbelo/contracts';
+import type { JarKey } from '@rumtelo/contracts';
 
 import { FixedCostPreset } from './fixed-cost.entity';
 

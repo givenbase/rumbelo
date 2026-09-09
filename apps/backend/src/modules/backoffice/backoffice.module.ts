@@ -5,7 +5,7 @@ import { PlanModule } from './plan';
 import { ProductModule } from './product';
 
 /**
- * Backoffice plane — Rumbelo writes; households/users do not.
+ * Backoffice plane — Rumtelo writes; households/users do not.
  *
  *   product/        catalogs tied to a product line (money, growth, …)
  *   reference/      reserved — cross-product lookups (countries, FAQ, …)

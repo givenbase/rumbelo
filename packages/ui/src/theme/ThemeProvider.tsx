@@ -4,7 +4,7 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import type { ComponentProps } from 'react';
 
 /** Matches CSS `[data-theme]` + existing localStorage key. */
-export const THEME_STORAGE_KEY = 'rumbelo-theme';
+export const THEME_STORAGE_KEY = 'rumtelo-theme';
 
 type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>;
 

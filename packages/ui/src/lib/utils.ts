@@ -1,1 +1,1 @@
-export { cn } from '@rumbelo/utils';
+export { cn } from '@rumtelo/utils';

@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { controlClasses } from '../Input';
 
-/** Native select — default for Rumbelo forms. Use SelectMenu for Radix menus. */
+/** Native select — default for Rumtelo forms. Use SelectMenu for Radix menus. */
 export function Select({
     className,
     children,

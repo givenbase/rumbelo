@@ -1,4 +1,4 @@
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 export const meterTrackClass = 'h-2 w-full overflow-hidden rounded-full bg-sunken';
 

@@ -1,5 +1,5 @@
 /**
- * Create Rumbelo Plus / Max Stripe Products + recurring Prices (idempotent).
+ * Create Rumtelo Plus / Max Stripe Products + recurring Prices (idempotent).
  *
  * Mirrors Meltizo's website-plan-package.stripe.ts pattern: stable lookup_keys
  * so test and live accounts share the same code paths after seeding each one.
@@ -42,7 +42,7 @@ async function ensureProduct(stripe: Stripe, planKey: PaidPlanKey): Promise<Stri
         metadata: {
             plan_key: planKey,
             product_type: 'subscription',
-            category: 'rumbelo',
+            category: 'rumtelo',
         },
     };
 
@@ -159,7 +159,7 @@ async function main() {
     }
 
     const stripe = new Stripe(secret);
-    console.log(`\n💳 Seeding Rumbelo Stripe catalog`);
+    console.log(`\n💳 Seeding Rumtelo Stripe catalog`);
     console.log(`   NODE_ENV=${nodeEnv} · Stripe=${stripeMode}`);
     if (loadedEnvPath) console.log(`   env file → ${loadedEnvPath}`);
     console.log('');

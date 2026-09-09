@@ -4,10 +4,10 @@ import { apiQuery } from '@/app/_lib/api-hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import type { JarKey } from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Button, Card } from '@rumbelo/ui';
-import { cn, formatMoney, monthlyAmount, toPeriodKey } from '@rumbelo/utils';
+import type { JarKey } from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Button, Card } from '@rumtelo/ui';
+import { cn, formatMoney, monthlyAmount, toPeriodKey } from '@rumtelo/utils';
 
 import { createMoveHref, createTxHref, updateHref } from '@/app/_lib/create-routes';
 import { cadenceLabel } from '@/app/_lib/jar-chrome';

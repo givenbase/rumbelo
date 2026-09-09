@@ -123,7 +123,7 @@ export function LandingHero() {
                         You earn fine. So where does it go?
                     </h1>
                     <p className="mb-7 max-w-prose text-base leading-relaxed text-fg-muted lg:text-lg">
-                        Rumbelo splits your income across six jars the second it lands — the ones
+                        Rumtelo splits your income across six jars the second it lands — the ones
                         you must pay, the ones that grow, and the one you are allowed to enjoy.
                         Every euro gets a job before it arrives.
                     </p>

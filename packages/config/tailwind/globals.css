@@ -7,7 +7,7 @@
 @source "../../../apps/website/app/**/*.{ts,tsx}";
 
 /*
- * Shared Rumbelo stylesheet. Apps import this file only — no hex values in app CSS.
+ * Shared Rumtelo stylesheet. Apps import this file only — no hex values in app CSS.
  * Theme: explicit light, explicit dark ([data-theme]), and system (prefers-color-scheme).
  */
 

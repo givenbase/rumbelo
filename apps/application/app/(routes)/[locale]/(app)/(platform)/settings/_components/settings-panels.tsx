@@ -20,8 +20,8 @@ import {
     canAddHouseholdMember,
     canInviteOnPlan,
     type JarKey,
-} from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
+} from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
 import {
     Badge,
     Button,
@@ -33,8 +33,8 @@ import {
     StubNotice,
     Toggle,
     useTheme,
-} from '@rumbelo/ui';
-import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumbelo/utils';
+} from '@rumtelo/ui';
+import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumtelo/utils';
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
@@ -1062,7 +1062,7 @@ export function DebtSettings() {
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="How you pay off debt"
-                blurb="Sets the order Rumbelo recommends on the Debt screen for this household. Switch any time — nothing is lost."
+                blurb="Sets the order Rumtelo recommends on the Debt screen for this household. Switch any time — nothing is lost."
                 badge={
                     <SettingsPill tone="accent">
                         {strategy === PayoffStrategy.AVALANCHE ? 'Avalanche' : 'Snowball'}
@@ -1186,7 +1186,7 @@ export function BankSettings() {
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="Bank connection"
-                blurb="Read-only — Rumbelo never moves money. Disconnect any time."
+                blurb="Read-only — Rumtelo never moves money. Disconnect any time."
                 badge={<SettingsPill>Not connected</SettingsPill>}>
                 {BANK_OPTIONS.map((bank, i) => (
                     <SettingsRow key={bank} last={i === BANK_OPTIONS.length - 1}>
@@ -1450,8 +1450,8 @@ export function AutomationSettings() {
     return (
         <SettingsPanel>
             <SettingsInkCard
-                eyebrow="What Rumbelo does by itself"
-                blurb="Three rules. Everything off means Rumbelo only shows, never acts. The Coach settings live under Account.">
+                eyebrow="What Rumtelo does by itself"
+                blurb="Three rules. Everything off means Rumtelo only shows, never acts. The Coach settings live under Account.">
                 {AUTO_RULES.map((rule, i) => (
                     <button
                         key={rule.key}
@@ -1955,7 +1955,7 @@ export function ExportSettings() {
             }));
             const stamp = periodOnly ? periodKey : new Date().toISOString().slice(0, 10);
             downloadTextFile(
-                `rumbelo-transactions-${stamp}.csv`,
+                `rumtelo-transactions-${stamp}.csv`,
                 toCsv(rows),
                 'text/csv;charset=utf-8'
             );
@@ -1998,7 +1998,7 @@ export function ExportSettings() {
             };
             const stamp = new Date().toISOString().slice(0, 10);
             downloadTextFile(
-                `rumbelo-export-${stamp}.json`,
+                `rumtelo-export-${stamp}.json`,
                 JSON.stringify(payload, null, 2),
                 'application/json'
             );

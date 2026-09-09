@@ -3,9 +3,9 @@
 import { api } from '@/app/_lib/api';
 import { useEffect, useState } from 'react';
 
-import { Currency, IncomeStability, Locale, SpendingStyle } from '@rumbelo/contracts';
-import { Button, Field, Input } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Currency, IncomeStability, Locale, SpendingStyle } from '@rumtelo/contracts';
+import { Button, Field, Input } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { writeHelpersEnabled } from '@/app/_lib/feature-helpers';
@@ -15,7 +15,7 @@ import { useAuth } from '@/components/features/shell/auth-provider';
 
 const STEPS = [
     {
-        title: 'Welcome to Rumbelo',
+        title: 'Welcome to Rumtelo',
         body: 'Stop wondering where it went. Six jars, one calm overview.',
     },
     { title: 'Your income', body: 'What is your net monthly income?' },
@@ -105,7 +105,7 @@ export function OnboardingOverlay() {
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-label="Welcome to Rumbelo"
+                aria-label="Welcome to Rumtelo"
                 className="fixed top-1/2 left-1/2 z-71 w-full max-w-md -translate-1/2 animate-rise rounded-2xl border border-line-strong bg-surface p-6 shadow-xl">
                 <div className="mb-5 flex items-center justify-between">
                     <p className="font-mono text-xs font-semibold tracking-widest text-accent uppercase">

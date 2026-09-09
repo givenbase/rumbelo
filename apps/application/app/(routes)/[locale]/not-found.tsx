@@ -1,4 +1,4 @@
-import { StatusPage } from '@rumbelo/ui';
+import { StatusPage } from '@rumtelo/ui';
 
 export default function NotFound() {
     return (

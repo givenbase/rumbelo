@@ -11,7 +11,7 @@ import {
     FormMessage,
     Button,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
+} from '@rumtelo/ui';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

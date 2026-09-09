@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { Card, Eyebrow, Section } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Card, Eyebrow, Section } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 const MIND_TIE =
     'A restless mind does not steer money — it spends it and calls that a decision. Stillness ' +

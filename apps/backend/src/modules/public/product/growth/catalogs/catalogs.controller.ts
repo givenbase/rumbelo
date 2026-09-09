@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Implement, implement } from '@orpc/nest';
-import { contract, type SpendingStyle } from '@rumbelo/contracts';
+import { contract, type SpendingStyle } from '@rumtelo/contracts';
 
 import { ControllerSwagger } from '../../../../../common/decorators/controller-swagger.decorators';
 import {

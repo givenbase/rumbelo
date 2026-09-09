@@ -3,8 +3,8 @@
  * Shared across Help, Settings → Account, and page surfaces.
  */
 
-export const HELPERS_STORAGE_KEY = 'rumbelo:helpers-enabled';
-export const HELPERS_CHANGE_EVENT = 'rumbelo:helpers-change';
+export const HELPERS_STORAGE_KEY = 'rumtelo:helpers-enabled';
+export const HELPERS_CHANGE_EVENT = 'rumtelo:helpers-change';
 
 /** Default on so first-time users see guides; Help/Settings can turn off. */
 export const HELPERS_DEFAULT_ENABLED = true;

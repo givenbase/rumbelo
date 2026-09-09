@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Button, type ButtonProps } from '@rumbelo/ui';
+import { Button, type ButtonProps } from '@rumtelo/ui';
 
 type ConfirmActionButtonProps = {
     label: string;

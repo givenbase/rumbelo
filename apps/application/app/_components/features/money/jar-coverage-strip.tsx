@@ -1,6 +1,6 @@
 'use client';
 
-import { cn, formatMoney, jarCoverage } from '@rumbelo/utils';
+import { cn, formatMoney, jarCoverage } from '@rumtelo/utils';
 
 import { bgClassToCssVar } from '@/app/_lib/jar-chrome';
 

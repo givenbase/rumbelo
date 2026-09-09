@@ -1,5 +1,5 @@
 import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
-import { Cadence, FlowDirection } from '@rumbelo/contracts';
+import { Cadence, FlowDirection } from '@rumtelo/contracts';
 
 import { HouseholdEntity } from '../../../../../../common/database/household.entity';
 import { NativeEnum } from '../../../../../../common/database/native-enum.util';

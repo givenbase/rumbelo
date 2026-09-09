@@ -3,9 +3,9 @@
  * Sign-up / verify / forgot-password live on DOMAIN_WEB.
  *
  * Session identity is Better Auth `user.id` (`useAuth().userId`) — needed for
- * login / membership. Application person data uses Rumbelo `accountId`
+ * login / membership. Application person data uses Rumtelo `accountId`
  * (`auth.account`); profile DTOs map Account → User when both are needed.
- * Product row ids (`jar.id`, …) are separate Rumbelo uuids (`Id`).
+ * Product row ids (`jar.id`, …) are separate Rumtelo uuids (`Id`).
  */
 
 import { createAuthClient } from 'better-auth/react';
@@ -43,7 +43,7 @@ export async function changePassword(data: {
     return client.changePassword(data);
 }
 
-/** BA organization plugin — SDK still says organization; Rumbelo calls it household. */
+/** BA organization plugin — SDK still says organization; Rumtelo calls it household. */
 export async function setActiveOrganization(organizationId: string) {
     await client.organization.setActive({ organizationId });
 }
@@ -68,7 +68,7 @@ export function activeHouseholdId(session: Session | null | undefined): string |
     return session.session?.activeOrganizationId ?? null;
 }
 
-/** Better Auth `user.id` — opaque AuthId, not Rumbelo uuid. */
+/** Better Auth `user.id` — opaque AuthId, not Rumtelo uuid. */
 export function sessionUserId(session: Session | null | undefined): string | null {
     return session?.user?.id ?? null;
 }

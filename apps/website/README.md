@@ -1,4 +1,4 @@
-# @rumbelo/website
+# @rumtelo/website
 
 Marketing site. Next.js 16, Tailwind v4.
 
@@ -9,7 +9,7 @@ Shares the same token block as the application so the brand reads identically
 across both.
 
 ```bash
-pnpm --filter @rumbelo/website dev   # :3001
+pnpm --filter @rumtelo/website dev   # :3001
 ```
 
 Railway: bake the three `NEXT_PUBLIC_DOMAIN_*` vars at build time. Also set

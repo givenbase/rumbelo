@@ -1,4 +1,4 @@
-import { LocalesEnum, locales, type Locale } from '@rumbelo/i18n';
+import { LocalesEnum, locales, type Locale } from '@rumtelo/i18n';
 import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
 
@@ -7,7 +7,7 @@ import { getRequestConfig } from 'next-intl/server';
  *
  * Uses `requestLocale` (middleware / segment), not `next/root-params`:
  * root-params has no exports in the proxy/middleware graph and breaks
- * `createNavigation` when `@rumbelo/i18n` is imported from `proxy.ts`.
+ * `createNavigation` when `@rumtelo/i18n` is imported from `proxy.ts`.
  */
 export default getRequestConfig(async ({ locale, requestLocale }) => {
     // Prefer an explicit override (Server Actions / Route Handlers).

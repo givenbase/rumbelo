@@ -1,4 +1,4 @@
-import { LocalesEnum, locales, type Locale } from '@rumbelo/i18n';
+import { LocalesEnum, locales, type Locale } from '@rumtelo/i18n';
 import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
 

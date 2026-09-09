@@ -1,4 +1,4 @@
-import { JarKey } from '@rumbelo/contracts';
+import { JarKey } from '@rumtelo/contracts';
 
 export const GOAL_PRESET_SEED = [
     {

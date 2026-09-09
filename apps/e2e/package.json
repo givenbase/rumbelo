@@ -1,9 +1,9 @@
 {
-    "name": "@rumbelo/e2e",
+    "name": "@rumtelo/e2e",
     "version": "0.0.0",
     "private": true,
     "type": "module",
-    "description": "Playwright smoke + plan-gating tests for the Rumbelo application",
+    "description": "Playwright smoke + plan-gating tests for the Rumtelo application",
     "scripts": {
         "test": "playwright test",
         "test:smoke": "playwright test --grep @smoke",
@@ -15,7 +15,7 @@
     },
     "devDependencies": {
         "@playwright/test": "^1.52.0",
-        "@rumbelo/typescript-config": "workspace:*",
+        "@rumtelo/typescript-config": "workspace:*",
         "dotenv": "^17.4.1",
         "typescript": "5.9.3"
     }

@@ -13,7 +13,7 @@ export class AuthUser {
     @PrimaryKey({ type: 'uuid' })
     id!: string;
 
-    /** Display name — how Rumbelo greets the person (not legal first/last). */
+    /** Display name — how Rumtelo greets the person (not legal first/last). */
     @Property({ type: 'text' })
     name!: string;
 

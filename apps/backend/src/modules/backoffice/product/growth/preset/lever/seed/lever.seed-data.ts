@@ -3,10 +3,10 @@ import {
     SpendingStyle,
     WEALTH_STAGE_KEYS,
     type GrowthLeverPreset,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 /**
- * Canonical growth lever catalog — Rumbelo-owned methods (not third-party frameworks).
+ * Canonical growth lever catalog — Rumtelo-owned methods (not third-party frameworks).
  * Loaded into backoffice.reference_growth_lever_preset.
  * Tags use posture / stage catalog keys (scalable — not Postgres enums).
  */

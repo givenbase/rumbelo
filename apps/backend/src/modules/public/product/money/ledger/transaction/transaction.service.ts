@@ -9,7 +9,7 @@ import { Jar } from '../../plan/jar/jar.entity';
 import { BankAccount } from '../account/bank-account.entity';
 import { RuleService } from '../rule/rule.service';
 import { parseStatementCsv } from './csv/csv-parser';
-import { TransactionSource, TransactionStatus } from '@rumbelo/contracts';
+import { TransactionSource, TransactionStatus } from '@rumtelo/contracts';
 
 import { Transaction } from './transaction.entity';
 

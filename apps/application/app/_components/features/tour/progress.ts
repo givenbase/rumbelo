@@ -3,7 +3,7 @@ import {
     type AccountTourChapterStatus,
     type AccountTourOfferStatus,
     type AccountTourProgress,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 /** App alias for account-settings `tour` bag. */
 export type TourProgressState = AccountTourProgress;

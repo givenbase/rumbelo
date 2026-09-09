@@ -16,7 +16,7 @@ import {
     TransactionSource,
     TransactionStatus,
     EnergyMetric,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { loadEnv } from '../../../common/config/env.config';
 import { loadEnvFiles } from '../../../common/config/load-env';
@@ -88,10 +88,10 @@ export class DemoHouseholdSeeder extends Seeder {
             user = await em.findOneOrFail(AuthUser, { id: userId });
         }
 
-        let rumbeloAccount = await em.findOne(Account, { user }, { populate: ['settings'] });
-        if (!rumbeloAccount) {
-            rumbeloAccount = em.create(Account, { user } as never);
-            em.persist(rumbeloAccount);
+        let rumteloAccount = await em.findOne(Account, { user }, { populate: ['settings'] });
+        if (!rumteloAccount) {
+            rumteloAccount = em.create(Account, { user } as never);
+            em.persist(rumteloAccount);
             const spendingStyle =
                 demo.persona === 'max'
                     ? SpendingStyle.SAVER
@@ -99,7 +99,7 @@ export class DemoHouseholdSeeder extends Seeder {
                       ? SpendingStyle.BALANCED
                       : SpendingStyle.SPENDER;
             em.create(AccountSettings, {
-                account: rumbeloAccount,
+                account: rumteloAccount,
                 locale: Locale.NL,
                 theme: Theme.SYSTEM,
                 spendingStyle,
@@ -302,7 +302,7 @@ export class DemoHouseholdSeeder extends Seeder {
 
                 em.create(EnergyLog, {
                     household: householdId,
-                    account: rumbeloAccount.id,
+                    account: rumteloAccount.id,
                     metric: EnergyMetric.SLEEP,
                     value: '72.00',
                     loggedOn: today,
@@ -310,7 +310,7 @@ export class DemoHouseholdSeeder extends Seeder {
 
                 em.create(Gratitude, {
                     household: householdId,
-                    account: rumbeloAccount.id,
+                    account: rumteloAccount.id,
                     week,
                     text: 'Rustige ochtend zonder haast.',
                 } as never);

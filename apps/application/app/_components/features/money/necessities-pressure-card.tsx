@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 
-import { Button } from '@rumbelo/ui';
-import { formatMoney } from '@rumbelo/utils';
+import { Button } from '@rumtelo/ui';
+import { formatMoney } from '@rumtelo/utils';
 
 import { CREATE_HREF } from '@/app/_lib/create-routes';
 import type { NecessitiesPressure } from '@/app/_lib/necessities-pressure';

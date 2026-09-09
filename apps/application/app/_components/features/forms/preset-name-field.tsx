@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { cn } from '@rumbelo/utils';
+import { cn } from '@rumtelo/utils';
 
 import { FormInput } from './form-input';
 
@@ -205,7 +205,7 @@ export function PresetNameField({
                     <FormInput
                         ref={inputRef}
                         id={id}
-                        name="rumbelo-preset-label"
+                        name="rumtelo-preset-label"
                         value={inputValue}
                         disabled={disabled}
                         placeholder={inputPlaceholder}

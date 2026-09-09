@@ -6,10 +6,10 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { GoalKind, GoalStatus } from '@rumbelo/contracts';
-import { useLiveQuery } from '@rumbelo/hooks';
-import { AccentCard, Button, Card, Eyebrow } from '@rumbelo/ui';
-import { formatMoney, incomeDelta, monthlyNetAsOf, sumMonthly, toPeriodKey } from '@rumbelo/utils';
+import { GoalKind, GoalStatus } from '@rumtelo/contracts';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { AccentCard, Button, Card, Eyebrow } from '@rumtelo/ui';
+import { formatMoney, incomeDelta, monthlyNetAsOf, sumMonthly, toPeriodKey } from '@rumtelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';

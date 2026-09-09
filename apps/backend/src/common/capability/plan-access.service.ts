@@ -5,7 +5,7 @@ import {
     type CapabilityKey,
     type PlanKey,
     type PlanLimitKey,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { HouseholdBillingService } from '../../modules/auth/household/household-billing/household-billing.service';
 import { currentHouseholdId } from '../household/household.context';

@@ -33,10 +33,10 @@ export const Household = z.object({
 export type Household = z.infer<typeof Household>;
 
 export const HouseholdMember = z.object({
-    /** Better Auth `auth.member.id` — uuid (BA-owned, not Rumbelo {@link Id}). */
+    /** Better Auth `auth.member.id` — uuid (BA-owned, not Rumtelo {@link Id}). */
     id: MemberId,
     householdId: HouseholdId,
-    /** Rumbelo `auth.account.id` — application person (profile / prefs). */
+    /** Rumtelo `auth.account.id` — application person (profile / prefs). */
     accountId: Id,
     /** Better Auth `auth.user.id` — login identity (session / membership). */
     userId: UserId,

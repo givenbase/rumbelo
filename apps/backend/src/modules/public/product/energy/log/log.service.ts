@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
-import { CAPABILITIES, EnergyMetric, EnergyTrend } from '@rumbelo/contracts';
+import { CAPABILITIES, EnergyMetric, EnergyTrend } from '@rumtelo/contracts';
 
 import { PlanAccessService } from '../../../../../common/capability';
 import { HouseholdScopedRepository } from '../../../../../common/household/household-scoped.repository';

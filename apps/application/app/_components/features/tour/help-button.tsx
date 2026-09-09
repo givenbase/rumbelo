@@ -9,8 +9,8 @@ import {
     SheetDescription,
     SheetHeader,
     SheetTitle,
-} from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+} from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { useFeatureHelpers } from '@/components/features/helpers';
 

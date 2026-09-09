@@ -4,9 +4,9 @@ import { api } from '@/app/_lib/api';
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { Button, Eyebrow } from '@rumbelo/ui';
-import { toPeriodKey } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { Button, Eyebrow } from '@rumtelo/ui';
+import { toPeriodKey } from '@rumtelo/utils';
 
 import Link from 'next/link';
 

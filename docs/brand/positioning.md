@@ -2,7 +2,7 @@
 
 ## Name
 
-**Rumbelo** — from Spanish *rumbo*, “course / heading.”  
+**Rumtelo** — from Spanish *rumbo*, “course / heading” (with a distinctive *t*).  
 Chosen because it means **direction**, which is what the product does.
 
 `.com` and `.nl` were verified free at choosing (verify with **whois**, never DNS alone). Before further commitment: BOIP (Benelux) and EUIPO trademark search, classes 36 and 42.

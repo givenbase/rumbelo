@@ -13,7 +13,7 @@ import {
     canInviteOnPlan,
     canUseHouseholdKind,
     capabilitiesFor,
-} from '@rumbelo/contracts';
+} from '@rumtelo/contracts';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, BadRequestException, Injectable } from '@nestjs/common';
@@ -37,7 +37,7 @@ import { AuthMember } from './managed/member/auth-member.entity';
 
 /**
  * Household aggregate — orchestrates Better Auth's organization plugin
- * (`auth.household`, `auth.member`, `auth.invitation`) for Rumbelo.
+ * (`auth.household`, `auth.member`, `auth.invitation`) for Rumtelo.
  *
  * Better Auth writes those tables; this service calls its API for create /
  * invite / set-active and reads the managed entities for lists. Board prefs
@@ -98,7 +98,7 @@ export class HouseholdService {
         const org = await this.em.findOne(AuthHousehold, { id: householdId });
         await this.email.sendHouseholdInvite({
             to: email,
-            householdName: org?.name ?? 'Rumbelo',
+            householdName: org?.name ?? 'Rumtelo',
             inviteUrl: this.email.inviteUrl(result.id),
             role,
         });

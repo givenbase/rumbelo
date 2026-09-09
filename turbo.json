@@ -43,7 +43,7 @@
         },
         "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
         // Watch reuses the same dist/ as build — never race them (ENOENT on unlink).
-        "@rumbelo/contracts#dev": {
+        "@rumtelo/contracts#dev": {
             "cache": false,
             "persistent": true,
             "dependsOn": ["build"]

@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable } from '@nestjs/common';
-import { CAPABILITIES, GoalKind, GoalStatus } from '@rumbelo/contracts';
-import { earnGoalProgress } from '@rumbelo/utils';
+import { CAPABILITIES, GoalKind, GoalStatus } from '@rumtelo/contracts';
+import { earnGoalProgress } from '@rumtelo/utils';
 
 import { PlanAccessService } from '../../../../../../common/capability';
 import { HouseholdScopedRepository } from '../../../../../../common/household/household-scoped.repository';

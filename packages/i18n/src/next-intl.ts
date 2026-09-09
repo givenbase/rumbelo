@@ -3,7 +3,7 @@ import { createNavigation } from 'next-intl/navigation';
 import { defineRouting } from 'next-intl/routing';
 
 /**
- * Rumbelo locales — match `packages/i18n/languages/*.json`.
+ * Rumtelo locales — match `packages/i18n/languages/*.json`.
  * Product is NL-first; English is the translation source of truth (Galighticus pattern).
  */
 export enum LocalesEnum {

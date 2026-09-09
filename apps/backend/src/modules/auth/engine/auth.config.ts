@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { organization, twoFactor } from 'better-auth/plugins';
-import { buildBetterAuthTrustedOrigins, resolveCrossSubdomainCookieDomain } from '@rumbelo/utils';
+import { buildBetterAuthTrustedOrigins, resolveCrossSubdomainCookieDomain } from '@rumtelo/utils';
 import { Pool } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 
@@ -39,10 +39,10 @@ function authUserFirstName(user: { name?: string | null; email: string }): strin
  *
  * Acquisition / recovery emails (verify, reset) land on DOMAIN_WEB; product
  * sessions bind on DOMAIN_APP via `/api/auth` proxies. Production/staging use
- * cross-subdomain cookies on `.rumbelo.com` (no www).
+ * cross-subdomain cookies on `.rumtelo.com` (no www).
  *
  * IDs: Better Auth mints uuidv7 via `advanced.database.generateId` (same as BaseEntity).
- * Columns stay Postgres `uuid`. Personal profile lives on Rumbelo `auth.account`, not BA.
+ * Columns stay Postgres `uuid`. Personal profile lives on Rumtelo `auth.account`, not BA.
  */
 export function createAuth(env: Env) {
     const pool = new Pool({
@@ -158,7 +158,7 @@ export function createAuth(env: Env) {
             accountLinking: { enabled: true },
             // better-auth's "account" is really the sign-in provider link
             // (password hash, OAuth tokens). Renamed to `provider` so the
-            // `account` name stays free for Rumbelo's own profile data.
+            // `account` name stays free for Rumtelo's own profile data.
             modelName: 'provider',
             fields: {
                 accountId: 'account_id',
@@ -219,7 +219,7 @@ export function createAuth(env: Env) {
             }),
             // A finance app should not treat second-factor as optional plumbing.
             twoFactor({
-                issuer: 'Rumbelo',
+                issuer: 'Rumtelo',
                 schema: {
                     twoFactor: {
                         modelName: 'two_factor',
@@ -239,7 +239,7 @@ export function createAuth(env: Env) {
         ],
 
         /**
-         * Cross-subdomain SSO (`rumbelo.com` + `app.rumbelo.com`, no www).
+         * Cross-subdomain SSO (`rumtelo.com` + `app.rumtelo.com`, no www).
          * Better Auth only applies Domain via `advanced.crossSubDomainCookies` —
          * a top-level `cookie.domain` is ignored (host-only → re-login per app).
          * @see https://www.better-auth.com/docs/concepts/cookies#cross-subdomain-cookies
@@ -253,13 +253,13 @@ export function createAuth(env: Env) {
                  */
                 generateId: () => uuidv7(),
             },
-            cookiePrefix: 'rumbelo',
+            cookiePrefix: 'rumtelo',
             useSecureCookies: isSecureCookieEnv,
             ...(cookieDomain
                 ? {
                       crossSubDomainCookies: {
                           enabled: true,
-                          // Root domain without leading dot — e.g. `rumbelo.com`
+                          // Root domain without leading dot — e.g. `rumtelo.com`
                           domain: cookieDomain.replace(/^\./, ''),
                       },
                   }

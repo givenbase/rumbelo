@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@rumbelo/ui';
+import { Button } from '@rumtelo/ui';
 
 import { offer } from './content';
 

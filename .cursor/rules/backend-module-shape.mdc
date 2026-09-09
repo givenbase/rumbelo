@@ -32,7 +32,7 @@ Audience groups: `auth/` (identity), `public/` (platform + product → Postgres 
 - Short JSDoc on every property and relation
 - Explicit MikroORM `type` / `Enum` / relation options — never bare `@Property()` on `string | null` unions when Reflect metadata is involved
 - Household money rows extend `HouseholdEntity` and go through `HouseholdScopedRepository`
-- Enums from `@rumbelo/contracts` only — `@Enum(NativeEnum({ DebtKind, domain: 'money', … }))`, never local `export enum`
+- Enums from `@rumtelo/contracts` only — `@Enum(NativeEnum({ DebtKind, domain: 'money', … }))`, never local `export enum`
 - Persistence: `await em.persist(e).flush()` / `await em.remove(e).flush()` — never deprecated `persistAndFlush` / `removeAndFlush`
 - Naming: no single-letter locals; prefer domain words (`goal`/`debt`/`transaction`, not `g`/`d`/`tx`) — ESLint `id-length`
 
@@ -107,9 +107,9 @@ Re-export module, service, entity, controller.
 
 - `modules/auth/engine/` — Better Auth config only (no tables)
 - `modules/auth/user/managed/`, `modules/auth/household/managed/` — library tables as read-only entity mirrors, one folder per entity, entity file only; better-auth is the single writer
-- `modules/auth/user/account/` — Rumbelo-owned person data (`account`, `account-settings`, …) — **user** writes prefs
+- `modules/auth/user/account/` — Rumtelo-owned person data (`account`, `account-settings`, …) — **user** writes prefs
 - `modules/auth/household/` — onboard / invite / members over Better Auth's organization API; `household-settings/` holds board prefs (**household** writes)
-- Every Rumbelo-owned entity is a full aggregate folder (entity + service + controller + module + index); only `managed/` entities skip module/controller
+- Every Rumtelo-owned entity is a full aggregate folder (entity + service + controller + module + index); only `managed/` entities skip module/controller
 - Person UI prefs (theme, locale) → `account-settings` (**user** writes)
 - Never name better-auth's credential store `account` — it is `provider`
 
@@ -118,7 +118,7 @@ Re-export module, service, entity, controller.
 | Control | Module |
 |---|---|
 | Household / user writes | `public/product/*`, `public/platform/*`, `auth/user/account`, `auth/household/household-settings` |
-| We (Rumbelo) write | `backoffice/product/{money\|growth}/…` (kinds: `template` \| `preset` \| `catalog`), `backoffice/plan` (Basic/Plus/Max), `communication/`; reserved `reference/` for cross-product lookups |
+| We (Rumtelo) write | `backoffice/product/{money\|growth}/…` (kinds: `template` \| `preset` \| `catalog`), `backoffice/plan` (Basic/Plus/Max), `communication/`; reserved `reference/` for cross-product lookups |
 | Library writes | `auth/*/managed/` |
 
 `public/` = app/household data (Postgres `public` schema). Company-authored catalogs live in `backoffice/`. Table names: `reference_{money|growth}_{table}` via `entityConfig({ domain: 'reference', group })`.

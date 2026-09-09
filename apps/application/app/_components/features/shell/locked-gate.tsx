@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@rumbelo/ui';
+import { Button } from '@rumtelo/ui';
 
 import { lockCopyFor, PLAN_LABELS, type PlanKey } from '@/app/_lib/plan';
 

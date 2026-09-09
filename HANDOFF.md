@@ -1,10 +1,10 @@
-# Rumbelo — direction & handoff
+# Rumtelo — direction & handoff
 
 **Stop wondering where it went.** Six jars, one calm overview.
 
 > Rijkdom is geen getal. Het zijn de teugels in jouw handen.
 
-Rumbelo is not a bookkeeping app. It is a single quiet view of where your money,
+Rumtelo is not a bookkeeping app. It is a single quiet view of where your money,
 energy and time go — so intention leads, and life doesn’t decide first.
 
 **Organized docs (product, brand, research, engineering):** [`docs/`](./docs/README.md)
@@ -88,7 +88,7 @@ This is the real fix for what `galighticus-platform/ORPC_MIGRATION_PLAN.md`
 worked around with an internal HTTP hop. **That hop is not needed. Do not
 reintroduce it.**
 
-**Household isolation is row-level, not schema-per-tenant.** Rumbelo's "tenant"
+**Household isolation is row-level, not schema-per-tenant.** Rumtelo's "tenant"
 is a *household*. A B2C product would reach tens of thousands of schemas,
 O(households) migrations and catalog bloat. Every financial row carries
 `household_id`, and the filter is injected in exactly one place —
@@ -147,7 +147,7 @@ not at all.**
 ## 6. Conventions — non-negotiable
 
 **Who owns the row.** Household/user writes → `public/product/*`, `public/platform/*`,
-`auth/account`. Rumbelo writes → `backoffice/*` (`product/{money|growth}/…` with kinds
+`auth/account`. Rumtelo writes → `backoffice/*` (`product/{money|growth}/…` with kinds
 `template` | `preset` | `catalog`, plus root `plan/` for Basic/Plus/Max tiers and
 `communication/`; reserved `reference/` for cross-product lookups later).
 better-auth library writes → `auth/*/managed/`. `public/` is the app/household
@@ -169,11 +169,11 @@ before `create`. Never put create-like ops (`onboard`, `invite`, `importCsv`,
 `style` attributes. When porting the design, **transform** its inline styles into
 Tailwind utilities — do not copy them across. Design tokens live in
 `packages/config/tailwind/theme.css` (`@theme`) — the **single source of truth**
-for all hex/rgb values. Apps import only `@rumbelo/config/tailwind/globals.css`
+for all hex/rgb values. Apps import only `@rumtelo/config/tailwind/globals.css`
 in `app/globals.css` (no duplicate palette). shadcn semantic aliases
 (`--color-background`, `--color-primary`, …) are `var()` references in the same
-`@theme` block. Primitives come from `@rumbelo/ui` (shadcn CLI + Radix); Rumbelo
-product widgets from `@rumbelo/ui` widget barrel; domain composition in
+`@theme` block. Primitives come from `@rumtelo/ui` (shadcn CLI + Radix); Rumtelo
+product widgets from `@rumtelo/ui` widget barrel; domain composition in
 `app/_components/{layout,features}/` and route `./_components/`.
 
 **Code English, copy Dutch.** Every folder, route, identifier, table and column is
@@ -237,7 +237,7 @@ tell.
 **Unblock it, in your own terminal:**
 
 ```bash
-xattr -cr "/Users/givenloyiso/Desktop/DEV/rumbelo/design" && ls rumbelo/design
+xattr -cr "/Users/givenloyiso/Desktop/DEV/rumtelo/design" && ls rumtelo/design
 ```
 
 If it still errors, re-copy without the attributes:
@@ -245,7 +245,7 @@ If it still errors, re-copy without the attributes:
 ```bash
 ditto --norsrc --noextattr --noacl \
   "/Users/givenloyiso/Downloads/Finance app with Monopoly concept" \
-  "/Users/givenloyiso/Desktop/DEV/rumbelo/design"
+  "/Users/givenloyiso/Desktop/DEV/rumtelo/design"
 ```
 
 **Then, in order:**
@@ -297,13 +297,13 @@ pnpm db:seed                  # catalogs + Basic/Plus/Max demo accounts
 pnpm dev
 ```
 
-Demo sign-in (password `RumbeloDemo1!` for all):
+Demo sign-in (password `RumteloDemo1!` for all):
 
 | Plan key | Email |
 |----------|-------|
-| BASIC | basic@rumbelo.com |
-| PLUS | plus@rumbelo.com |
-| MAX | max@rumbelo.com |
+| BASIC | basic@rumtelo.com |
+| PLUS | plus@rumtelo.com |
+| MAX | max@rumtelo.com |
 
 ```bash
 pnpm test:e2e:smoke
@@ -360,9 +360,9 @@ node scripts/rename-project.mjs <new-name>
 
 ## 12. Naming
 
-`Rumbelo` — Spanish *rumbo*, "course / heading". Chosen because it is the one
+`Rumtelo` — Spanish *rumbo*, "course / heading" (distinctive *t*). Chosen because it is the one
 candidate that means **direction**, which is what the product does. `.com` and
-`.nl` were both verified free at the time of choosing.
+`.nl` claimed at rename time.
 
 Verify with **whois**, never DNS alone: a registered-but-unconfigured domain has
 no NS records and reads as available. SIDN (`.nl`) rate-limits aggressively and

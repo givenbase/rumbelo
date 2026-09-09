@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useLiveQuery } from '@rumbelo/hooks';
-import { AccentCard, Badge, Card, Eyebrow } from '@rumbelo/ui';
-import { cn, formatMoney } from '@rumbelo/utils';
+import { useLiveQuery } from '@rumtelo/hooks';
+import { AccentCard, Badge, Card, Eyebrow } from '@rumtelo/ui';
+import { cn, formatMoney } from '@rumtelo/utils';
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';

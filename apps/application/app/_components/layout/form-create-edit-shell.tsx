@@ -2,8 +2,8 @@
 
 import type { FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form';
 
-import { Form, FormErrorBox, bindFormSubmit, createFormInvalidHandler } from '@rumbelo/ui';
-import { cn } from '@rumbelo/utils';
+import { Form, FormErrorBox, bindFormSubmit, createFormInvalidHandler } from '@rumtelo/ui';
+import { cn } from '@rumtelo/utils';
 
 import { ignorePasswordManagersForm } from '@/app/_lib/ignore-password-managers';
 

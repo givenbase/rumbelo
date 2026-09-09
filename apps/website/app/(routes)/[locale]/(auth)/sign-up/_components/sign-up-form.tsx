@@ -17,9 +17,9 @@ import {
     Input,
     bindFormSubmit,
     createFormInvalidHandler,
-} from '@rumbelo/ui';
-import { AUTH_MIN_PASSWORD_LENGTH, SignUpForm as SignUpFormSchema } from '@rumbelo/contracts';
-import { AUTH_SIGN_UP } from '@rumbelo/i18n';
+} from '@rumtelo/ui';
+import { AUTH_MIN_PASSWORD_LENGTH, SignUpForm as SignUpFormSchema } from '@rumtelo/contracts';
+import { AUTH_SIGN_UP } from '@rumtelo/i18n';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 

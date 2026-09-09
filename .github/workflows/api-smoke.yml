@@ -1,4 +1,4 @@
-name: 🩺 Rumbelo CI - API Smoke
+name: 🩺 Rumtelo CI - API Smoke
 
 # Fast HTTP gate: health endpoints must not return 5xx / not-ready (when strict).
 # No Playwright — only DOMAIN_BACK_PUBLIC (or DOMAIN_BACK fallback / BACKEND_URL).

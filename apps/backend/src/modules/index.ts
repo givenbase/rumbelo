@@ -7,6 +7,6 @@ import { PublicModule } from './public/public.module';
  *
  *   auth/        identity — better-auth + account prefs
  *   public/      platform + product (household / user) — schema `public`
- *   backoffice/  catalogs we publish (Rumbelo)
+ *   backoffice/  catalogs we publish (Rumtelo)
  */
 export const FeatureModules = [AuthModule, PublicModule, BackofficeModule];

@@ -3,7 +3,7 @@
 import { startTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { StatusPage } from '@rumbelo/ui';
+import { StatusPage } from '@rumtelo/ui';
 
 export default function Error({
     error,

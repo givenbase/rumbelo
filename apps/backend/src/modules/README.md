@@ -19,7 +19,7 @@ with its `*.entity.ts`, service, controller and module as flat siblings.
 | **We write** | `backoffice/*` | Basic/Plus/Max **plan** catalog, countries, question bank, FAQ, coach tip **templates** (+ billing later if Stripe needs it) |
 | **Library writes** | `auth/*/managed/` | sessions, members, provider credentials |
 
-`public/platform/` is shared app runtime (coach) — **not** company catalogs. If Rumbelo authors it, it lives under `backoffice/`.
+`public/platform/` is shared app runtime (coach) — **not** company catalogs. If Rumtelo authors it, it lives under `backoffice/`.
 
 | Module | Children |
 |---|---|
@@ -63,7 +63,7 @@ Under **each** `backoffice/product/{money\|growth\|…}` only these kind folders
 Grouped by **concept** (person, group), not by vendor. Inside each concept the
 `managed/` folder holds Better Auth's tables as read-only entity mirrors (one
 folder per entity, entity file only — no module/controller, the library writes);
-the sibling folders are Rumbelo aggregates with the full entity + service +
+the sibling folders are Rumtelo aggregates with the full entity + service +
 controller + module shape.
 
 ```
@@ -89,10 +89,10 @@ auth/
 | Kind | Contract | Storage | Example consumers |
 |---|---|---|---|
 | Better Auth identity | `AuthId` / `UserId` / `HouseholdId` / `MemberId` | Postgres `uuid` (BA `generateId` → uuidv7) | `useAuth().userId`, `useAuth().householdId`, `x-household-id` |
-| Rumbelo person profile | `Id` as `accountId` | Postgres `uuid` (`auth.account`) | energy/gratitude attribution, account settings |
-| Rumbelo product rows | `Id` | Postgres `uuid` (BaseEntity uuidv7) | jar, transaction, goal |
+| Rumtelo person profile | `Id` as `accountId` | Postgres `uuid` (`auth.account`) | energy/gratitude attribution, account settings |
+| Rumtelo product rows | `Id` | Postgres `uuid` (BaseEntity uuidv7) | jar, transaction, goal |
 
-Both BA and Rumbelo ids validate as `z.uuid()` and share uuidv7 minting going forward, but they are still **different id spaces**.
+Both BA and Rumtelo ids validate as `z.uuid()` and share uuidv7 minting going forward, but they are still **different id spaces**.
 
 **Rule:** application / product person FKs on entities use **`account`** (`@ManyToOne mapToPk`); DTOs map it back as **`accountId: row.account`**. Better Auth **`userId`** stays for session, membership (`auth.member`), and the `Account.user` link. When you need profile + login fields together, resolve Account and map `account.user` (see `AccountService.ensureCurrentAccount` / `HouseholdMember`).
 
@@ -107,7 +107,7 @@ Frontend session field stays `activeOrganizationId` (BA SDK name); DB column is 
 
 ### Table naming (`entityConfig`)
 
-Every Rumbelo-owned entity uses `entityConfig({ schema, domain?, tableName })` from
+Every Rumtelo-owned entity uses `entityConfig({ schema, domain?, tableName })` from
 `common/database/entity-config.util.ts`:
 
 - `auth` / `backoffice` / `public` schemas
@@ -240,14 +240,14 @@ Managed entities: mutate properties, then `await this.em.flush()`.
 
 ### Enums
 
-- Source of truth: `@rumbelo/contracts` (`packages/contracts/src/enums/`) — ALL_CAPS.
+- Source of truth: `@rumtelo/contracts` (`packages/contracts/src/enums/`) — ALL_CAPS.
 - Entities: `@Enum(NativeEnum({ SomeEnum, domain: 'money' | 'auth' | … }))` — never local `export enum`.
 - Contracts Zod: `z.enum(SomeEnum)` (Zod 4 — not `z.nativeEnum`).
 
 ### Auth vs account
 
 - `auth/engine/` — Better Auth config; `auth/*/managed/` — better-auth owns writes; we map read entities
-- `auth/user/account/` — Rumbelo-owned person rows (`account`, `account-settings`)
+- `auth/user/account/` — Rumtelo-owned person rows (`account`, `account-settings`)
 - Board prefs (currency, period, week-check, kind) → `auth/household/household-settings`
 - Person prefs (theme, locale) → `account-settings`
 - better-auth credential store table is `provider`, not `account`

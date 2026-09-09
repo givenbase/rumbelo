@@ -1,5 +1,5 @@
-import { RumbeloLogo } from '@rumbelo/brand';
-import { BRAND_TAGLINE } from '@rumbelo/i18n';
+import { RumteloLogo } from '@rumtelo/brand';
+import { BRAND_TAGLINE } from '@rumtelo/i18n';
 import { FOOT_COLS, TRUST_BADGES, TRUST_CARDS } from '@/lib/landing-content';
 
 import { LandingIcon } from './landing-icon';
@@ -37,19 +37,19 @@ export function LandingFooter() {
                 {/* Brand blurb */}
                 <div className="grid max-w-prose min-w-0 flex-1 basis-72 gap-3">
                     <div className="flex items-center gap-2">
-                        <RumbeloLogo variant="wordmark" className="h-6 w-auto max-w-[8.5rem]" />
+                        <RumteloLogo variant="wordmark" className="h-6 w-auto max-w-[8.5rem]" />
                         <span className="font-mono text-xs font-medium tracking-wide text-fg-faint">
                             {BRAND_TAGLINE}
                         </span>
                     </div>
                     <span className="text-sm leading-relaxed text-fg-faint">
-                        Rumbelo B.V. · Amsterdam, the Netherlands. Inspired by the six-jar money
+                        Rumtelo B.V. · Amsterdam, the Netherlands. Inspired by the six-jar money
                         method popularised by T. Harv Eker, and the asset-versus-liability thinking
-                        of Robert Kiyosaki. Rumbelo is an independent product and is not affiliated
+                        of Robert Kiyosaki. Rumtelo is an independent product and is not affiliated
                         with, endorsed by, or licensed from either.
                     </span>
                     <span className="text-xs leading-relaxed text-fg-faint">
-                        Rumbelo is a money-insight tool, not a bank and not a licensed financial
+                        Rumtelo is a money-insight tool, not a bank and not a licensed financial
                         adviser. Suggestions are education, not personal investment advice.
                     </span>
                 </div>
@@ -78,7 +78,7 @@ export function LandingFooter() {
             <div className="border-t border-line">
                 <div className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between lg:px-6">
                     <span className="font-mono text-xs font-medium tracking-normal text-fg-faint">
-                        © 2026 Rumbelo B.V. · KvK 00000000 · All rights reserved
+                        © 2026 Rumtelo B.V. · KvK 00000000 · All rights reserved
                     </span>
                     <div className="flex flex-wrap gap-2">
                         {TRUST_BADGES.map(badge => (

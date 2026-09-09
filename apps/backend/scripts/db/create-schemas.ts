@@ -1,5 +1,5 @@
 /**
- * Creates PostgreSQL schemas required by Rumbelo before migrations.
+ * Creates PostgreSQL schemas required by Rumtelo before migrations.
  *
  * Planes: auth | public | backoffice
  *

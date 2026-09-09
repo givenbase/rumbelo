@@ -1,8 +1,8 @@
-# Rumbelo
+# Rumtelo
 
 **Stop wondering where it went.** Six jars, one calm overview.
 
-Rumbelo is not a bookkeeping app. It is a single quiet view of where your money,
+Rumtelo is not a bookkeeping app. It is a single quiet view of where your money,
 energy and time go — so intention leads, and life doesn’t decide first.
 
 > Rijkdom is geen getal. Het zijn de teugels in jouw handen.
@@ -35,7 +35,7 @@ to dual CJS+ESM by tsup so both the ESM backend and the Next apps consume one
 contract definition. This is the fix for the problem `ORPC_MIGRATION_PLAN.md`
 worked around with an internal HTTP hop; that hop is not needed.
 
-**Household isolation is row-level, not schema-per-tenant.** Rumbelo's "tenant"
+**Household isolation is row-level, not schema-per-tenant.** Rumtelo's "tenant"
 is a *household*, and a B2C product would end up with tens of thousands of
 schemas, O(households) migrations and catalog bloat. Every financial row carries
 `household_id` and the filter is injected in exactly one place —
@@ -118,9 +118,9 @@ After migrate + auth migrate + seed:
 
 | Plan | Email | Password |
 |------|-------|----------|
-| Basic | `basic@rumbelo.com` | `RumbeloDemo1!` |
-| Plus | `plus@rumbelo.com` | `RumbeloDemo1!` |
-| Max | `max@rumbelo.com` | `RumbeloDemo1!` |
+| Basic | `basic@rumtelo.com` | `RumteloDemo1!` |
+| Plus | `plus@rumtelo.com` | `RumteloDemo1!` |
+| Max | `max@rumtelo.com` | `RumteloDemo1!` |
 
 ```bash
 pnpm infra:up && pnpm db:migrate && pnpm auth:migrate && pnpm db:seed

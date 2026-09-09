@@ -1,4 +1,4 @@
-import { WEALTH_STAGE_KEYS } from '@rumbelo/contracts';
+import { WEALTH_STAGE_KEYS } from '@rumtelo/contracts';
 
 /** Seed rows for backoffice.reference_growth_wealth_stage. */
 export const WEALTH_STAGE_SEED = [

@@ -1,6 +1,6 @@
 /**
  * Energy product contracts — enums + schemas.
- * Prefer: `import { EnergyMetric } from '@rumbelo/contracts/energy'`
+ * Prefer: `import { EnergyMetric } from '@rumtelo/contracts/energy'`
  *
  * Mirror: apps/backend/src/modules/public/product/energy/
  */

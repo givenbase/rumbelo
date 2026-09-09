@@ -5,7 +5,7 @@ import { Migration } from '@mikro-orm/migrations';
  *
  * Better Auth owns id generation (opaque text). App rows keep native `uuid`
  * via BaseEntity. FKs (`user_id`, `household_id`) stay text/varchar — they
- * store BA ids, not Rumbelo uuids.
+ * store BA ids, not Rumtelo uuids.
  */
 export class Migration20260906110000_DropAuthUuidDefaults extends Migration {
     override async up(): Promise<void> {
