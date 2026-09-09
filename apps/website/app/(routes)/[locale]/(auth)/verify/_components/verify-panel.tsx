@@ -27,6 +27,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { sendVerificationEmail } from '@/lib/auth';
 import { appSignInAfterAuthUrl, appSignInUrl } from '@/lib/portal-urls';
 import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
+import { useOptionalSignUpDraft } from '@/app/_components/sign-up-draft-provider';
 import { planIntentQuery } from '@rumtelo/utils';
 
 const RESEND_COOLDOWN_SEC = 60;
@@ -38,7 +39,10 @@ function withEmail(template: string, email: string): string {
 export function VerifyPanel() {
     const searchParams = useSearchParams();
     const planIntent = useOptionalPlanIntent();
+    const signUpDraft = useOptionalSignUpDraft();
+    const emailFromDraft = signUpDraft?.draft?.email?.trim() ?? '';
     const emailFromQuery = searchParams.get('email')?.trim() ?? '';
+    const emailDefault = emailFromDraft || emailFromQuery;
     const status = searchParams.get('status');
     const confirmed = status === 'confirmed' || status === 'ok';
     const continueQuery = {
@@ -50,7 +54,7 @@ export function VerifyPanel() {
     const [cooldown, setCooldown] = useState(0);
 
     const form = useForm<VerifyEmailFormSchema>({
-        defaultValues: { email: emailFromQuery },
+        defaultValues: { email: emailDefault },
         mode: 'onTouched',
         resolver: zodResolver(VerifyEmailFormSchema),
     });
@@ -58,10 +62,10 @@ export function VerifyPanel() {
     const onInvalid = createFormInvalidHandler();
 
     useEffect(() => {
-        if (emailFromQuery) {
-            form.reset({ email: emailFromQuery });
+        if (emailDefault) {
+            form.reset({ email: emailDefault });
         }
-    }, [emailFromQuery, form]);
+    }, [emailDefault, form]);
 
     useEffect(() => {
         if (cooldown <= 0) return;
@@ -105,7 +109,11 @@ export function VerifyPanel() {
             </div>
 
             {confirmed ? (
-                <Button as="a" href={appSignInAfterAuthUrl(continueQuery)} className="w-full">
+                <Button
+                    as="a"
+                    href={appSignInAfterAuthUrl(continueQuery)}
+                    className="w-full"
+                    onClick={() => signUpDraft?.clearDraft()}>
                     {AUTH_VERIFY.continue}
                 </Button>
             ) : (

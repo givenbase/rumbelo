@@ -631,7 +631,7 @@ export const SIGNUP_SECTION = {
     eyebrow: 'CREATE YOUR ACCOUNT',
     headline: 'Split first. Spend second.',
     lead: 'Built for people who are doing well — and for people who are ready to. Tell us what lands each month; Rumtelo assigns it from there.',
-    submit: 'Create my free account',
+    submit: 'Continue to create account',
     terms: 'I agree to the terms and privacy policy. Rumtelo only ever reads bank data — and only after I connect it myself.',
 } as const;
 

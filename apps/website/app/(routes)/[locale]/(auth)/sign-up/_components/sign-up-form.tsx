@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import {
     Button,
@@ -30,24 +30,25 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signUp } from '@/lib/auth';
 import { appSignInUrl } from '@/lib/portal-urls';
 import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
-import { planIntentQuery } from '@rumtelo/utils';
+import { useOptionalSignUpDraft } from '@/app/_components/sign-up-draft-provider';
 
 const PLAN_LABELS = { PLUS: 'Plus', MAX: 'Max' } as const;
 
 export function SignUpForm() {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const planIntent = useOptionalPlanIntent();
+    const signUpDraft = useOptionalSignUpDraft();
     const [apiError, setApiError] = useState<unknown>(null);
 
     const intent = planIntent?.intent ?? null;
+    const draft = signUpDraft?.draft ?? null;
 
     const form = useForm<SignUpFormSchema>({
         defaultValues: {
-            firstName: searchParams.get('firstName')?.trim() ?? '',
+            firstName: draft?.firstName ?? '',
             middleName: '',
-            lastName: searchParams.get('lastName')?.trim() ?? '',
-            email: searchParams.get('email')?.trim() ?? '',
+            lastName: draft?.lastName ?? '',
+            email: draft?.email ?? '',
             password: '',
             phone: '',
             dateOfBirth: '',
@@ -56,6 +57,18 @@ export function SignUpForm() {
         resolver: zodResolver(SignUpFormSchema),
     });
 
+    useEffect(() => {
+        if (!draft) return;
+        const current = form.getValues();
+        if (current.firstName || current.lastName || current.email) return;
+        form.reset({
+            ...current,
+            firstName: draft.firstName,
+            lastName: draft.lastName,
+            email: draft.email,
+        });
+    }, [draft, form]);
+
     const onError = createFormInvalidHandler();
 
     async function onSubmit(values: SignUpFormSchema) {
@@ -63,11 +76,18 @@ export function SignUpForm() {
 
         const name = composeDisplayName(values.firstName, values.middleName, values.lastName);
 
+        // Keep draft for verify (email) without putting PII in the URL.
+        signUpDraft?.setDraft({
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+        });
+
         const result = await signUp.email({
             name,
             email: values.email,
             password: values.password,
-            callbackURL: `/verify?status=confirmed${intent ? `&plan=${intent.planKey}&interval=${intent.interval}` : ''}`,
+            callbackURL: '/verify?status=confirmed',
             // Forwarded to Nest → stashed → `auth.account` (not Better Auth user columns).
             firstName: values.firstName,
             middleName: values.middleName || undefined,
@@ -82,11 +102,7 @@ export function SignUpForm() {
             return;
         }
 
-        const verifyParams = new URLSearchParams({
-            email: values.email,
-            ...planIntentQuery(intent),
-        });
-        router.push(`/verify?${verifyParams.toString()}`);
+        router.push('/verify');
         router.refresh();
     }
 

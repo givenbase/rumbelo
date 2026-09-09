@@ -3,11 +3,10 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import { AUTH_MIN_PASSWORD_LENGTH, LandingSignUpForm } from '@rumtelo/contracts';
-import { planIntentQuery } from '@rumtelo/utils';
+import { LandingSignUpForm } from '@rumtelo/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
+import { useOptionalSignUpDraft } from '@/app/_components/sign-up-draft-provider';
 import { ASSURANCES, SIGNUP_SECTION } from '@/lib/landing-content';
 import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 
@@ -36,20 +35,17 @@ const FIELDS = [
         ph: 'you@example.com',
         autoComplete: 'email',
     },
-    {
-        name: 'password' as const,
-        label: 'Password',
-        type: 'password',
-        ph: `at least ${AUTH_MIN_PASSWORD_LENGTH} characters`,
-        autoComplete: 'new-password',
-    },
 ];
 
+/**
+ * Landing hand-off — collects name + email + terms, then routes to `/sign-up`.
+ * Password and optional profile fields are completed on the register page.
+ */
 export function LandingSignupForm() {
     const router = useRouter();
-    const planIntent = useOptionalPlanIntent();
+    const signUpDraft = useOptionalSignUpDraft();
     const form = useForm<LandingSignUpForm>({
-        defaultValues: { firstName: '', lastName: '', email: '', password: '', terms: false },
+        defaultValues: { firstName: '', lastName: '', email: '', terms: false },
         mode: 'onTouched',
         resolver: zodResolver(LandingSignUpForm),
     });
@@ -64,13 +60,12 @@ export function LandingSignupForm() {
     const terms = useWatch({ control, name: 'terms' }) ?? false;
 
     function onSubmit(values: LandingSignUpForm) {
-        const params = new URLSearchParams({
+        signUpDraft?.setDraft({
             firstName: values.firstName,
             lastName: values.lastName,
             email: values.email,
-            ...planIntentQuery(planIntent?.intent ?? null),
         });
-        router.push(`${webSignUpPath()}?${params.toString()}`);
+        router.push(webSignUpPath());
     }
 
     function fieldError(name: keyof LandingSignUpForm) {
@@ -142,9 +137,7 @@ export function LandingSignupForm() {
                                 })}
                             </div>
 
-                            {FIELDS.filter(
-                                field => field.name === 'email' || field.name === 'password'
-                            ).map(field => {
+                            {FIELDS.filter(field => field.name === 'email').map(field => {
                                 const message = fieldError(field.name);
                                 return (
                                     <label key={field.name} className="grid gap-1.5">
