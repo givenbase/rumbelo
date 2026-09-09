@@ -33,7 +33,8 @@ import {
  * Stripe Checkout for Plus / Max + webhook sync of planKey.
  * Downgrades / cancel keep entitlements until period end (industry standard).
  * Prices resolve via stable lookup keys (seed with `pnpm stripe:seed-plans`).
- * When the secret key is unset (or BILLING_PREVIEW_BYPASS), plan changes stay free.
+ * Without STRIPE_SECRET_KEY, paid upgrades are blocked (stay on Basic) unless
+ * BILLING_PREVIEW_BYPASS is explicitly true for local/preview.
  */
 @Injectable()
 export class BillingService {
@@ -57,10 +58,12 @@ export class BillingService {
         return Boolean(this.stripe) && !this.isPreviewBypass();
     }
 
-    /** Free planKey updates allowed (local / preview). */
+    /**
+     * Explicit local/preview free plan switching (BILLING_PREVIEW_BYPASS).
+     * Missing Stripe alone does **not** enable free paid upgrades.
+     */
     isPreviewBypass(): boolean {
-        if (this.config.get('BILLING_PREVIEW_BYPASS', { infer: true })) return true;
-        return !this.stripe;
+        return this.config.get('BILLING_PREVIEW_BYPASS', { infer: true });
     }
 
     async status(householdId: string) {
@@ -138,20 +141,29 @@ export class BillingService {
     }
 
     /**
-     * Reject client-driven upgrades to paid tiers when Stripe is live.
-     * Downgrades must use {@link schedulePlanChange}.
+     * Reject client-driven plan changes that must go through Stripe,
+     * or paid upgrades when billing is not configured.
      */
     assertFreePlanChangeAllowed(from: PlanKey, to: PlanKey): void {
         if (this.isPreviewBypass()) return;
         if (from === to) return;
-        if (PLAN_RANK[to] > PLAN_RANK[from]) {
+        const upgrading = PLAN_RANK[to] > PLAN_RANK[from];
+        if (upgrading) {
+            if (!this.stripe) {
+                throw new ServiceUnavailableException(
+                    'Paid plans are unavailable — Stripe billing is not configured'
+                );
+            }
             throw new ServiceUnavailableException(
                 'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
             );
         }
-        throw new ServiceUnavailableException(
-            'Plan downgrades take effect at period end — use billing.schedulePlanChange'
-        );
+        if (this.stripe) {
+            throw new ServiceUnavailableException(
+                'Plan downgrades take effect at period end — use billing.schedulePlanChange'
+            );
+        }
+        // No Stripe: allow free downgrade back to a lower plan via updateSettings.
     }
 
     async createCheckoutSession(input: {

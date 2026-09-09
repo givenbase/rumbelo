@@ -67,7 +67,8 @@ const EnvSchema = z.object({
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SIGNING_SECRET: z.string().optional(),
     /**
-     * When true, allow free planKey changes via updateSettings even if Stripe is configured.
+     * When true, allow free planKey changes via updateSettings (local/preview only).
+     * When false and Stripe is unset, paid upgrades are blocked — stay on Basic.
      * Use with app NEXT_PUBLIC_PREVIEW_MODE for local design / demo (never in production).
      */
     BILLING_PREVIEW_BYPASS: boolish(false),

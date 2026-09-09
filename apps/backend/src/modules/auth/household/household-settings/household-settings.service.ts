@@ -173,22 +173,36 @@ export class HouseholdSettingsService {
     }
 
     /**
-     * When Stripe is live, plan changes must not go through updateSettings:
-     * upgrades → Checkout / in-place proration; downgrades → schedulePlanChange.
+     * Plan changes via updateSettings:
+     * - BILLING_PREVIEW_BYPASS → free switch (local/preview only)
+     * - No Stripe → paid upgrades blocked; downgrades to Basic allowed
+     * - Stripe live → upgrades → Checkout; downgrades → schedulePlanChange
      */
     private assertClientPlanChangeAllowed(from: PlanKey, to: PlanKey): void {
         const bypass = this.config.get('BILLING_PREVIEW_BYPASS', { infer: true });
-        const stripeKey = this.config.get('STRIPE_SECRET_KEY', { infer: true });
-        if (bypass || !stripeKey) return;
+        if (bypass) return;
         if (from === to) return;
-        if (PLAN_RANK[to] > PLAN_RANK[from]) {
+
+        const stripeKey = this.config.get('STRIPE_SECRET_KEY', { infer: true });
+        const upgrading = PLAN_RANK[to] > PLAN_RANK[from];
+
+        if (upgrading) {
+            if (!stripeKey) {
+                throw new ServiceUnavailableException(
+                    'Paid plans are unavailable — Stripe billing is not configured'
+                );
+            }
             throw new ServiceUnavailableException(
                 'Paid upgrades require Stripe Checkout — use billing.createCheckoutSession'
             );
         }
-        throw new ServiceUnavailableException(
-            'Plan downgrades take effect at period end — use billing.schedulePlanChange'
-        );
+
+        if (stripeKey) {
+            throw new ServiceUnavailableException(
+                'Plan downgrades take effect at period end — use billing.schedulePlanChange'
+            );
+        }
+        // No Stripe: allow free downgrade via updateSettings.
     }
 
     /** Seeded demo households keep their plan fixed for product walkthroughs. */

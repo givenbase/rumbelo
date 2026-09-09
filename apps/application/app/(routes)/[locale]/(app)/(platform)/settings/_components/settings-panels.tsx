@@ -1520,7 +1520,7 @@ export function PlanSettings() {
         apiQuery.billing.status.queryOptions({ input: { householdId: householdId! } }),
         {
             stripeEnabled: false,
-            previewBypass: true,
+            previewBypass: false,
             planKey: PlanKey.BASIC,
             periodEndsAt: null,
             periodStartedAt: null,
@@ -1535,15 +1535,19 @@ export function PlanSettings() {
 
     /** Stripe Checkout / Portal when backend reports stripeEnabled. */
     const stripeLive = !PREVIEW_MODE && billingStatus.data?.stripeEnabled === true;
-    const freePlanSwitch = !stripeLive;
+    /** Explicit free switches (preview mode or BILLING_PREVIEW_BYPASS). */
+    const freePlanSwitch =
+        PREVIEW_MODE || billingStatus.data?.previewBypass === true;
+    /** No Stripe and no bypass — paid upgrades blocked; stay on Basic. */
+    const billingUnavailable = !stripeLive && !freePlanSwitch;
     const pendingDiff = pendingPlan ? diffPlans(plan, pendingPlan) : null;
     const pendingNeedsCheckout =
         Boolean(pendingPlan) &&
         pendingPlan !== PlanKey.BASIC &&
-        !freePlanSwitch &&
+        stripeLive &&
         pendingDiff?.direction === 'upgrade';
     const pendingPeriodEndDowngrade =
-        Boolean(pendingPlan) && !freePlanSwitch && pendingDiff?.direction === 'downgrade';
+        Boolean(pendingPlan) && stripeLive && pendingDiff?.direction === 'downgrade';
 
     // Return from Checkout or Customer Portal — refresh entitlement from webhooks.
     useEffect(() => {
@@ -1657,11 +1661,27 @@ export function PlanSettings() {
             showToast(`Already on ${PLAN_LABELS[next]}`, 'info');
             return;
         }
+        const upgrading = PLAN_RANK[next] > PLAN_RANK[plan];
+        if (upgrading && billingUnavailable) {
+            showToast(
+                'Paid plans are unavailable until Stripe billing is configured',
+                'error'
+            );
+            return;
+        }
         setPendingPlan(next);
     }
 
     function confirmPlanChange() {
         if (!pendingPlan || !pendingDiff) return;
+        if (pendingDiff.direction === 'upgrade' && billingUnavailable) {
+            showToast(
+                'Paid plans are unavailable until Stripe billing is configured',
+                'error'
+            );
+            setPendingPlan(null);
+            return;
+        }
         if (pendingNeedsCheckout && (pendingPlan === PlanKey.PLUS || pendingPlan === PlanKey.MAX)) {
             checkout.mutate(pendingPlan);
             return;
@@ -1673,6 +1693,7 @@ export function PlanSettings() {
             scheduleDowngrade.mutate(pendingPlan);
             return;
         }
+        // Free preview bypass, or downgrade without Stripe
         savePlan.mutate(pendingPlan);
     }
 
@@ -1820,19 +1841,28 @@ export function PlanSettings() {
                                     variant={cur ? 'secondary' : 'primary'}
                                     size="sm"
                                     className="shrink-0 rounded-full font-mono text-[10px] tracking-widest uppercase"
-                                    disabled={busy || isDemoAccount || cur}
+                                    disabled={
+                                        busy ||
+                                        isDemoAccount ||
+                                        cur ||
+                                        (billingUnavailable &&
+                                            PLAN_RANK[card.key] > PLAN_RANK[plan])
+                                    }
                                     onClick={() => choosePlan(card.key)}>
                                     {cur
                                         ? 'Current'
                                         : isDemoAccount
                                           ? 'Locked'
-                                          : busy
-                                            ? '…'
-                                            : PLAN_RANK[card.key] < PLAN_RANK[plan]
-                                              ? 'Downgrade'
-                                              : card.key === PlanKey.BASIC
-                                                ? 'Choose Basic'
-                                                : 'Upgrade'}
+                                          : billingUnavailable &&
+                                              PLAN_RANK[card.key] > PLAN_RANK[plan]
+                                            ? 'Unavailable'
+                                            : busy
+                                              ? '…'
+                                              : PLAN_RANK[card.key] < PLAN_RANK[plan]
+                                                ? 'Downgrade'
+                                                : card.key === PlanKey.BASIC
+                                                  ? 'Choose Basic'
+                                                  : 'Upgrade'}
                                 </Button>
                             </div>
                         );
@@ -1883,10 +1913,10 @@ export function PlanSettings() {
                 what={
                     isDemoAccount
                         ? 'Demo account — plan is fixed for this persona. Sign up with your own email to change plans.'
-                        : PREVIEW_MODE
-                          ? 'Preview mode — plan switches are free (no Stripe).'
-                          : freePlanSwitch
-                            ? 'Stripe not configured — plan switches are free locally. Set STRIPE_SECRET_KEY and run pnpm stripe:seed-plans to charge.'
+                        : PREVIEW_MODE || freePlanSwitch
+                          ? 'Preview / bypass — plan switches are free (no Stripe Checkout).'
+                          : billingUnavailable
+                            ? 'Stripe not configured — paid upgrades are locked. Households stay on Basic until billing is enabled.'
                             : 'Upgrades charge now. Downgrades keep your current plan until the paid period ends. Manage card & invoices via Stripe Portal.'
                 }
             />
