@@ -17819,6 +17819,22 @@
           "enumItems": [],
           "mappedType": "string"
         },
+        "icon": {
+          "name": "icon",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
+        },
         "sort_order": {
           "name": "sort_order",
           "type": "int4",

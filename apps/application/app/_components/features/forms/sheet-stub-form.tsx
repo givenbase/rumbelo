@@ -1,5 +1,6 @@
 'use client';
 
+import { FormInput } from './form-input';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -9,7 +10,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 
@@ -102,7 +102,7 @@ export function SheetStubForm({
                     <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                            <Input placeholder={copy.labelPlaceholder} {...field} />
+                            <FormInput placeholder={copy.labelPlaceholder} {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -117,7 +117,7 @@ export function SheetStubForm({
                         <FormItem>
                             <FormLabel>{copy.amountLabel}</FormLabel>
                             <FormControl>
-                                <Input inputMode="decimal" placeholder="0,00" {...field} />
+                                <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

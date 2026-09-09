@@ -1,5 +1,6 @@
 'use client';
 
+import { FormInput } from './form-input';
 import { api } from '@/app/_lib/api';
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,7 +15,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 import { cn, formatMoney, toPeriodKey } from '@rumbelo/utils';
@@ -462,7 +462,7 @@ export function MoveMoneyForm({
                             ) : null}
                         </div>
                         <FormControl>
-                            <Input
+                            <FormInput
                                 type="number"
                                 inputMode="decimal"
                                 step="0.01"
@@ -490,7 +490,7 @@ export function MoveMoneyForm({
                     <FormItem>
                         <FormLabel>Note</FormLabel>
                         <FormControl>
-                            <Input placeholder="Optional — why this move" {...field} />
+                            <FormInput placeholder="Optional — why this move" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

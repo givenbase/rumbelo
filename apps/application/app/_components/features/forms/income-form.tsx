@@ -14,7 +14,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 
@@ -30,7 +29,27 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 import { ConfirmActionButton } from './confirm-action-button';
+import { FormInput } from './form-input';
 import { PresetNameField } from './preset-name-field';
+
+/** Picker groups — same role as fixed-cost category names. */
+const INCOME_KIND_GROUP: Record<IncomeKind, string> = {
+    [IncomeKind.SALARY]: 'Employment',
+    [IncomeKind.FREELANCE]: 'Freelance',
+    [IncomeKind.BENEFIT]: 'Benefits',
+    [IncomeKind.RENTAL]: 'Rental',
+    [IncomeKind.DIVIDEND]: 'Investments',
+    [IncomeKind.OTHER]: 'Other',
+};
+
+const INCOME_KIND_ICON: Record<IncomeKind, string> = {
+    [IncomeKind.SALARY]: '💼',
+    [IncomeKind.FREELANCE]: '🛠️',
+    [IncomeKind.BENEFIT]: '🏛️',
+    [IncomeKind.RENTAL]: '🔑',
+    [IncomeKind.DIVIDEND]: '📊',
+    [IncomeKind.OTHER]: '✨',
+};
 
 const incomeFormSchema = z.object({
     name: z.string().min(1, 'Name is required').max(120),
@@ -91,13 +110,15 @@ export function IncomeForm({
             input: { householdId: householdId! },
         }),
         [],
-        live && mode === 'create'
+        live
     );
     const presetOptions = useMemo(
         () =>
             (presetsQuery.data ?? []).map(preset => ({
                 key: preset.key,
                 name: preset.name,
+                group: INCOME_KIND_GROUP[preset.kind] ?? preset.kind,
+                icon: preset.icon ?? INCOME_KIND_ICON[preset.kind] ?? null,
                 kind: preset.kind,
                 defaultCadence: preset.defaultCadence,
             })),
@@ -238,7 +259,7 @@ export function IncomeForm({
                                     }}
                                 />
                             ) : (
-                                <Input placeholder="e.g. salary" {...field} />
+                                <FormInput placeholder="e.g. salary" {...field} />
                             )}
                         </FormControl>
                         <FormMessage />
@@ -253,7 +274,7 @@ export function IncomeForm({
                     <FormItem>
                         <FormLabel>{mode === 'edit' ? 'New amount (€)' : 'Amount (€)'}</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
+                            <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -268,7 +289,7 @@ export function IncomeForm({
                         <FormItem>
                             <FormLabel>Effective from</FormLabel>
                             <FormControl>
-                                <Input type="date" {...field} />
+                                <FormInput type="date" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

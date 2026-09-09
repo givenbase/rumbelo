@@ -8,11 +8,32 @@ import { INCOME_SOURCE_PRESET_SEED } from '../../../../modules/backoffice/produc
 export class IncomeSourcePresetSeeder extends Seeder {
     async run(em: EntityManager): Promise<void> {
         const keys = INCOME_SOURCE_PRESET_SEED.map(row => row.key);
-        const existingRows = await em.find(IncomeSourcePreset, { key: { $in: keys } });
-        const existingKeys = new Set(existingRows.map(row => row.key));
+        const seedKeys = new Set<string>(keys);
+        const existingRows = await em.find(IncomeSourcePreset, {});
+        const existingByKey = new Map(existingRows.map(row => [row.key, row]));
         for (const [sortOrder, row] of INCOME_SOURCE_PRESET_SEED.entries()) {
-            if (existingKeys.has(row.key)) continue;
-            em.create(IncomeSourcePreset, { ...row, sortOrder, isActive: true } as never);
+            const existing = existingByKey.get(row.key);
+            if (existing) {
+                existing.name = row.name;
+                existing.kind = row.kind;
+                existing.defaultCadence = row.defaultCadence;
+                existing.icon = row.icon;
+                existing.sortOrder = sortOrder;
+                existing.isActive = true;
+                continue;
+            }
+            em.create(IncomeSourcePreset, {
+                key: row.key,
+                name: row.name,
+                kind: row.kind,
+                defaultCadence: row.defaultCadence,
+                icon: row.icon,
+                sortOrder,
+                isActive: true,
+            } as never);
+        }
+        for (const row of existingRows) {
+            if (!seedKeys.has(row.key)) row.isActive = false;
         }
         await em.flush();
     }

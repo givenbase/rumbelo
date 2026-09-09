@@ -14,7 +14,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 
@@ -29,6 +28,7 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 import { ConfirmActionButton } from './confirm-action-button';
+import { FormInput } from './form-input';
 import { PresetNameField } from './preset-name-field';
 
 const euros = z
@@ -285,7 +285,7 @@ export function GoalForm({
                                     }}
                                 />
                             ) : (
-                                <Input
+                                <FormInput
                                     placeholder={
                                         isEarn ? 'e.g. €5k net income' : 'e.g. emergency fund'
                                     }
@@ -305,7 +305,7 @@ export function GoalForm({
                     <FormItem>
                         <FormLabel>{isEarn ? 'Monthly net (€)' : 'Target amount (€)'}</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
+                            <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -321,7 +321,7 @@ export function GoalForm({
                             <FormItem>
                                 <FormLabel>Monthly contribution (€)</FormLabel>
                                 <FormControl>
-                                    <Input inputMode="decimal" placeholder="0,00" {...field} />
+                                    <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -360,7 +360,7 @@ export function GoalForm({
                     <FormItem>
                         <FormLabel>Why (optional)</FormLabel>
                         <FormControl>
-                            <Input placeholder="Briefly why this matters" {...field} />
+                            <FormInput placeholder="Briefly why this matters" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

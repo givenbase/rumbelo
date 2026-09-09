@@ -5,6 +5,8 @@ import type { FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form';
 import { Form, FormErrorBox, bindFormSubmit, createFormInvalidHandler } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
 
+import { ignorePasswordManagersForm } from '@/app/_lib/ignore-password-managers';
+
 type FormCreateEditShellProps<T extends FieldValues> = {
     /** Optional API/mutation error shown above the fields. */
     apiError?: unknown;
@@ -33,6 +35,24 @@ export const embeddedFormSurfaceClass = [
 
 export const formFieldStackClass = 'grid gap-4';
 
+function AutofillDecoys() {
+    return (
+        <div
+            aria-hidden
+            className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0"
+            tabIndex={-1}>
+            <input type="text" name="username" autoComplete="username" tabIndex={-1} defaultValue="" />
+            <input
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                tabIndex={-1}
+                defaultValue=""
+            />
+        </div>
+    );
+}
+
 /**
  * Form + layout for create/edit.
  * In embedded (sheet) mode: full-width fields with a sticky footer action bar.
@@ -53,9 +73,11 @@ export function FormCreateEditShell<T extends FieldValues>({
         return (
             <Form {...form}>
                 <form
-                    className={cn('flex min-h-full flex-col', embeddedFormSurfaceClass)}
+                    className={cn('relative flex min-h-full flex-col', embeddedFormSurfaceClass)}
                     method="post"
+                    {...ignorePasswordManagersForm}
                     onSubmit={handleSubmit}>
+                    <AutofillDecoys />
                     <div className="min-w-0 flex-1 space-y-4">
                         <FormErrorBox apiError={apiError} form={form} />
                         <fieldset className={cn('min-w-0 border-0 p-0', formFieldStackClass)}>
@@ -74,11 +96,13 @@ export function FormCreateEditShell<T extends FieldValues>({
         <Form {...form}>
             <form
                 method="post"
+                {...ignorePasswordManagersForm}
                 onSubmit={handleSubmit}
                 className={cn(
-                    'flex flex-col gap-6 lg:flex-row lg:items-start',
+                    'relative flex flex-col gap-6 lg:flex-row lg:items-start',
                     embeddedFormSurfaceClass
                 )}>
+                <AutofillDecoys />
                 <div className="min-w-0 flex-1 space-y-4">
                     <FormErrorBox apiError={apiError} form={form} />
                     <fieldset className={cn('min-w-0 border-0 p-0', formFieldStackClass)}>

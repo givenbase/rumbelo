@@ -14,7 +14,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 
@@ -30,6 +29,7 @@ import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell'
 import { ConfirmActionButton } from './confirm-action-button';
 import { resolveCategoryId, useCategoryTemplates } from './catalog-helpers';
 import { ExpenseIntentField, type ExpenseIntentSelection } from './expense-intent-field';
+import { FormInput } from './form-input';
 import { PresetNameField } from './preset-name-field';
 import { resolveInflowKey, TRANSACTION_IN_PRESETS } from './transaction-in-presets';
 
@@ -537,7 +537,7 @@ export function ExpenseForm({
                     <FormItem>
                         <FormLabel>Amount (€)</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
+                            <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -579,7 +579,7 @@ export function ExpenseForm({
                         <FormItem>
                             <FormLabel>Note</FormLabel>
                             <FormControl>
-                                <Input
+                                <FormInput
                                     placeholder={
                                         isIn
                                             ? 'Optional — e.g. from aunt'

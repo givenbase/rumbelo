@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { Input } from '@rumbelo/ui';
+import { FormInput } from './form-input';
 
 export type ExpenseMerchantOption = {
     key: string;
@@ -192,12 +192,12 @@ export function ExpenseIntentField({
                 </div>
             ) : (
                 <div className="relative">
-                    <Input
+                    <FormInput
                         id={id}
+                        name="rumbelo-expense-vendor"
                         value={query}
                         disabled={disabled}
                         placeholder="Vendor or type — e.g. AH, groceries"
-                        autoComplete="off"
                         role="combobox"
                         aria-expanded={open}
                         aria-controls={listboxId}
@@ -394,7 +394,7 @@ export function ExpenseIntentField({
                         </div>
                     )}
                     {customVendor ? (
-                        <Input
+                        <FormInput
                             placeholder="Type vendor name"
                             disabled={disabled}
                             value={query}

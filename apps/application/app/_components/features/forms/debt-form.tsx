@@ -14,7 +14,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 
@@ -29,6 +28,7 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell';
 import { ConfirmActionButton } from './confirm-action-button';
+import { FormInput } from './form-input';
 import { PresetNameField } from './preset-name-field';
 
 const euros = z
@@ -321,7 +321,7 @@ export function DebtForm({
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input
+                                                <FormInput
                                                     placeholder={
                                                         lendersForType.length > 0
                                                             ? 'Lender name'
@@ -357,7 +357,7 @@ export function DebtForm({
                             <FormItem>
                                 <FormLabel>Who do you owe?</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="e.g. DUO" {...field} />
+                                    <FormInput placeholder="e.g. DUO" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -395,7 +395,7 @@ export function DebtForm({
                     <FormItem>
                         <FormLabel>Balance (€)</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
+                            <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -409,7 +409,7 @@ export function DebtForm({
                     <FormItem>
                         <FormLabel>Interest rate (% per year)</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="12,9" {...field} />
+                            <FormInput inputMode="decimal" placeholder="12,9" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -423,7 +423,7 @@ export function DebtForm({
                     <FormItem>
                         <FormLabel>Minimum payment (€)</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
+                            <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

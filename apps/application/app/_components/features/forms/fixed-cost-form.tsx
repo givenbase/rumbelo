@@ -14,7 +14,6 @@ import {
     FormLabel,
     FormMessage,
     Button,
-    Input,
     createFormInvalidHandler,
 } from '@rumbelo/ui';
 
@@ -31,6 +30,7 @@ import { FormCreateEditShell } from '@/components/layout/form-create-edit-shell'
 
 import { ConfirmActionButton } from './confirm-action-button';
 import { resolveCategoryId, useCategoryTemplates } from './catalog-helpers';
+import { FormInput } from './form-input';
 import { PresetNameField } from './preset-name-field';
 
 const euros = z
@@ -313,7 +313,7 @@ export function FixedCostForm({
                                     }}
                                 />
                             ) : (
-                                <Input placeholder="e.g. rent" {...field} />
+                                <FormInput placeholder="e.g. rent" {...field} />
                             )}
                         </FormControl>
                         <FormMessage />
@@ -328,7 +328,7 @@ export function FixedCostForm({
                     <FormItem>
                         <FormLabel>Amount per month (€)</FormLabel>
                         <FormControl>
-                            <Input inputMode="decimal" placeholder="0,00" {...field} />
+                            <FormInput inputMode="decimal" placeholder="0,00" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -404,7 +404,7 @@ export function FixedCostForm({
                     <FormItem>
                         <FormLabel>Due day (day of month)</FormLabel>
                         <FormControl>
-                            <Input type="number" min={1} max={31} placeholder="1" {...field} />
+                            <FormInput type="number" min={1} max={31} placeholder="1" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

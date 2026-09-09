@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { Input } from '@rumbelo/ui';
 import { cn } from '@rumbelo/utils';
+
+import { FormInput } from './form-input';
 
 export type NamePresetOption = {
     key: string;
@@ -189,13 +190,13 @@ export function PresetNameField({
                 </div>
             ) : (
                 <div className="relative">
-                    <Input
+                    <FormInput
                         ref={inputRef}
                         id={id}
+                        name="rumbelo-preset-label"
                         value={value}
                         disabled={disabled}
                         placeholder={inputPlaceholder}
-                        autoComplete="off"
                         role="combobox"
                         aria-expanded={open}
                         aria-controls={listboxId}

@@ -96,6 +96,7 @@ export class MoneyCatalogsController {
                     sortOrder: preset.sortOrder,
                     kind: preset.kind,
                     defaultCadence: preset.defaultCadence,
+                    icon: preset.icon,
                 }));
             }
         );
