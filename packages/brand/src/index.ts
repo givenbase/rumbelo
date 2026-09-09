@@ -11,10 +11,12 @@ export { RumteloLogo, type RumteloLogoProps, type RumteloLogoVariant } from './R
 export const BRAND_PUBLIC_BASE = '/brand' as const;
 
 export const BRAND_ASSETS = {
-    mark: `${BRAND_PUBLIC_BASE}/rumtelo-mark.png`,
-    markSvg: `${BRAND_PUBLIC_BASE}/rumtelo-mark.svg`,
-    wordmark: `${BRAND_PUBLIC_BASE}/rumtelo-wordmark.png`,
-    wordmarkSvg: `${BRAND_PUBLIC_BASE}/rumtelo-wordmark.svg`,
-    wordmarkOnDark: `${BRAND_PUBLIC_BASE}/rumtelo-wordmark-on-dark.jpg`,
-    lockup: `${BRAND_PUBLIC_BASE}/rumtelo-lockup.jpg`,
+    /** App UI — SVG lockup for light surfaces. */
+    wordmarkOnLight: `${BRAND_PUBLIC_BASE}/rumtelo-logo-wordmark-on-light.svg`,
+    /** App UI — SVG lockup for dark surfaces. */
+    wordmarkOnDark: `${BRAND_PUBLIC_BASE}/rumtelo-logo-wordmark-on-dark.svg`,
+    /** Email / raster clients — PNG lockup for light surfaces. */
+    wordmarkOnLightPng: `${BRAND_PUBLIC_BASE}/rumtelo-logo-wordmark-on-light.png`,
+    /** Email / raster clients — PNG lockup for dark surfaces. */
+    wordmarkOnDarkPng: `${BRAND_PUBLIC_BASE}/rumtelo-logo-wordmark-on-dark.png`,
 } as const;

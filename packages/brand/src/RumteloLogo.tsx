@@ -1,17 +1,27 @@
 import type { ImgHTMLAttributes } from 'react';
 
-export type RumteloLogoVariant = 'wordmark' | 'mark' | 'wordmarkOnDark';
+export type RumteloLogoVariant = 'wordmark' | 'wordmarkOnLight' | 'wordmarkOnDark';
 
 export type RumteloLogoProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> & {
-    /** Full lockup, icon only, or lockup tuned for dark surfaces. */
+    /**
+     * `wordmark` follows the page theme (light/dark).
+     * `wordmarkOnLight` / `wordmarkOnDark` force a surface.
+     */
     variant?: RumteloLogoVariant;
     /** Accessible name — defaults to “Rumtelo”. */
     alt?: string;
 };
 
+/** App UI — SVG. Email keeps PNG (see BRAND_ASSETS). */
+const WORDMARK_ON_LIGHT = '/brand/rumtelo-logo-wordmark-on-light.svg';
+const WORDMARK_ON_DARK = '/brand/rumtelo-logo-wordmark-on-dark.svg';
+
 /**
- * Shared brand mark — assets live in `@rumtelo/brand/assets` and are served
- * from each app via `public/brand` → that folder (symlink, no duplicates).
+ * Shared brand lockup — designer files in `@rumtelo/brand/assets`, served
+ * from each app via `public/brand` (symlink, no duplicates).
+ *
+ * Default wordmark swaps on-light / on-dark via `.rumtelo-logo-*` rules in
+ * `packages/config/tailwind/dark.css`.
  */
 export function RumteloLogo({
     variant = 'wordmark',
@@ -19,12 +29,46 @@ export function RumteloLogo({
     className,
     ...rest
 }: RumteloLogoProps) {
-    const src =
-        variant === 'mark'
-            ? '/brand/rumtelo-mark.png'
-            : variant === 'wordmarkOnDark'
-              ? '/brand/rumtelo-wordmark-on-dark.jpg'
-              : '/brand/rumtelo-wordmark.png';
+    if (variant === 'wordmarkOnLight') {
+        return (
+            <img
+                src={WORDMARK_ON_LIGHT}
+                alt={alt}
+                className={className}
+                decoding="async"
+                {...rest}
+            />
+        );
+    }
 
-    return <img src={src} alt={alt} className={className} decoding="async" {...rest} />;
+    if (variant === 'wordmarkOnDark') {
+        return (
+            <img
+                src={WORDMARK_ON_DARK}
+                alt={alt}
+                className={className}
+                decoding="async"
+                {...rest}
+            />
+        );
+    }
+
+    return (
+        <span className={['rumtelo-logo', 'inline-grid', className].filter(Boolean).join(' ')}>
+            <img
+                src={WORDMARK_ON_LIGHT}
+                alt={alt}
+                className="rumtelo-logo-on-light col-start-1 row-start-1 h-full w-auto max-w-full"
+                decoding="async"
+                {...rest}
+            />
+            <img
+                src={WORDMARK_ON_DARK}
+                alt=""
+                aria-hidden
+                className="rumtelo-logo-on-dark col-start-1 row-start-1 h-full w-auto max-w-full"
+                decoding="async"
+            />
+        </span>
+    );
 }

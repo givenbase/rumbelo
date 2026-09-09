@@ -85,3 +85,30 @@
         );
     }
 }
+
+/* Rumtelo wordmark — on-light by default; flip with system + explicit dark. */
+@layer components {
+    .rumtelo-logo-on-dark {
+        display: none;
+    }
+
+    :root:not([data-theme='light']) {
+        @media (prefers-color-scheme: dark) {
+            .rumtelo-logo-on-light {
+                display: none;
+            }
+
+            .rumtelo-logo-on-dark {
+                display: block;
+            }
+        }
+    }
+
+    [data-theme='dark'] .rumtelo-logo-on-light {
+        display: none;
+    }
+
+    [data-theme='dark'] .rumtelo-logo-on-dark {
+        display: block;
+    }
+}

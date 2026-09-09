@@ -1,6 +1,6 @@
 # @rumtelo/brand
 
-Single source of truth for Rumtelo logos and lockups.
+Single source of truth for Rumtelo logos.
 
 ## Why here (not `apps/*/public`)
 
@@ -9,19 +9,20 @@ and **symlinking** each app’s `public/brand` → `packages/brand/assets` means
 
 - no duplicated binaries
 - same `/brand/...` URLs in both Next apps
-- one place to drop a real designer SVG later
 
-## Layout
+## Assets
+
+Drop designer files here as-is. Do not crop, re-encode, or invent variants.
 
 ```
 packages/brand/assets/
-  rumtelo-mark.png              # icon only
-  rumtelo-mark.svg              # points at the PNG until we have vectors
-  rumtelo-wordmark.png          # horizontal lockup (light)
-  rumtelo-wordmark.svg
-  rumtelo-wordmark-on-dark.jpg  # horizontal lockup on dark
-  rumtelo-lockup.jpg            # square presentation asset
+  rumtelo-logo-wordmark-on-light.svg    # app — light surfaces
+  rumtelo-logo-wordmark-on-dark.svg     # app — dark surfaces
+  rumtelo-logo-wordmark-on-light.png    # email — light surfaces
+  rumtelo-logo-wordmark-on-dark.png     # email — dark surfaces
 ```
+
+**App:** SVG. **Email:** PNG (clients don’t reliably render SVG).
 
 ## Usage
 
@@ -29,12 +30,10 @@ packages/brand/assets/
 import { RumteloLogo, BRAND_ASSETS } from '@rumtelo/brand';
 
 <RumteloLogo variant="wordmark" className="h-7 w-auto" />
-<img src={BRAND_ASSETS.mark} alt="" />
+<RumteloLogo variant="wordmarkOnDark" className="h-7 w-auto" />
 ```
 
 ## Symlinks
-
-From the repo root (already created for website + application):
 
 ```bash
 ln -sfn ../../../packages/brand/assets apps/website/public/brand

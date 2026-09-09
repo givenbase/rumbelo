@@ -1,8 +1,8 @@
-import { Link, Section, Text } from '@react-email/components';
+import { Img, Link, Section, Text } from '@react-email/components';
 
 import * as React from 'react';
 
-import { emailBrand, emailFonts, emailLayout, emailRadii } from '../styles/email-tokens';
+import { emailBrand, emailFonts, emailLayout } from '../styles/email-tokens';
 import { getTheme } from '../styles/theme-styles';
 import { EMAIL_BRAND } from '../utils/brand.constants';
 
@@ -40,42 +40,30 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
                     textAlign: 'center',
                 }}>
                 <Link href={websiteUrl} style={{ textDecoration: 'none', display: 'inline-block' }}>
-                    <div
+                    <Img
+                        src={`${websiteUrl.replace(/\/$/, '')}${
+                            darkMode
+                                ? EMAIL_BRAND.logoWordmarkOnDark
+                                : EMAIL_BRAND.logoWordmarkOnLight
+                        }`}
+                        alt={EMAIL_BRAND.name}
+                        width="192"
+                        height="32"
                         style={{
-                            backgroundColor: emailBrand.accent,
-                            borderRadius: emailRadii.sm,
-                            color: emailBrand.buttonText,
-                            display: 'inline-block',
-                            fontFamily: emailFonts.display,
-                            fontSize: '14px',
-                            fontWeight: 600,
+                            display: 'block',
                             height: '32px',
-                            lineHeight: '32px',
-                            textAlign: 'center',
-                            width: '32px',
-                        }}>
-                        R
-                    </div>
+                            margin: '0 auto',
+                            width: '192px',
+                        }}
+                    />
                 </Link>
-                <Text
-                    style={{
-                        color: emailBrand.ink,
-                        fontFamily: emailFonts.display,
-                        fontSize: '18px',
-                        fontWeight: 600,
-                        letterSpacing: '-0.02em',
-                        lineHeight: '24px',
-                        margin: '12px 0 4px',
-                    }}>
-                    {EMAIL_BRAND.name}
-                </Text>
                 <Text
                     style={{
                         color: darkMode ? '#5eead4' : emailBrand.inkMuted,
                         fontFamily: emailFonts.sans,
                         fontSize: '12px',
                         lineHeight: '16px',
-                        margin: '0',
+                        margin: '12px 0 0',
                     }}>
                     {EMAIL_BRAND.tagline}
                 </Text>
