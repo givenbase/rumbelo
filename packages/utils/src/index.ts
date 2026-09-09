@@ -42,3 +42,20 @@ export {
     normalizeOrigin,
     resolveCrossSubdomainCookieDomain,
 } from './better-auth-domains';
+export {
+    PLAN_INTENT_COOKIE,
+    PLAN_INTENT_STORAGE_KEY,
+    PLAN_INTENT_CHANGE_EVENT,
+    clearPlanIntent,
+    getPlanIntentServerSnapshot,
+    getPlanIntentSnapshot,
+    parsePlanIntent,
+    planIntentFromPlanKey,
+    planIntentFromSearchParams,
+    planIntentQuery,
+    readPlanIntentFromDocument,
+    serializePlanIntent,
+    subscribePlanIntent,
+    writePlanIntent,
+    type PendingPlanIntent,
+} from './plan-intent';

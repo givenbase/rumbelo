@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useState, type ReactNode } from 'react';
 
 import { ThemeProvider } from '@rumtelo/ui';
 
@@ -9,6 +9,7 @@ import { setClientHouseholdId } from '@/app/_lib/household-api-context';
 import { AccountThemeProvider } from '@/components/features/shell/account-theme-sync';
 import { AppShellProvider } from '@/components/features/shell/app-shell-context';
 import { AuthProvider, useAuth } from '@/components/features/shell/auth-provider';
+import { PlanIntentProvider } from '@/components/features/shell/plan-intent-provider';
 
 /** Keeps OpenAPILink headers in sync without remounting the oRPC client. */
 function HouseholdHeaderSync({ children }: { children: ReactNode }) {
@@ -39,13 +40,17 @@ export function Providers({ children }: { children: ReactNode }) {
     return (
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
-                <AuthProvider>
-                    <HouseholdHeaderSync>
-                        <AccountThemeProvider>
-                            <AppShellProvider>{children}</AppShellProvider>
-                        </AccountThemeProvider>
-                    </HouseholdHeaderSync>
-                </AuthProvider>
+                <Suspense fallback={null}>
+                    <PlanIntentProvider>
+                        <AuthProvider>
+                            <HouseholdHeaderSync>
+                                <AccountThemeProvider>
+                                    <AppShellProvider>{children}</AppShellProvider>
+                                </AccountThemeProvider>
+                            </HouseholdHeaderSync>
+                        </AuthProvider>
+                    </PlanIntentProvider>
+                </Suspense>
             </QueryClientProvider>
         </ThemeProvider>
     );

@@ -2,6 +2,16 @@ import { z } from 'zod';
 
 import { PlanKey } from '../../../enums';
 
+export const BillingInterval = z.enum(['month', 'year']);
+export type BillingInterval = z.infer<typeof BillingInterval>;
+
+/** Paid plan chosen on marketing pricing — remembered through sign-up → Stripe Checkout. */
+export const PendingPlanIntent = z.object({
+    planKey: z.enum([PlanKey.PLUS, PlanKey.MAX]),
+    interval: BillingInterval.default('month'),
+});
+export type PendingPlanIntent = z.infer<typeof PendingPlanIntent>;
+
 /** Display fields from `stripe.prices.retrieve` (plus expanded product name). */
 export const BillingPriceDisplay = z.object({
     priceId: z.string(),

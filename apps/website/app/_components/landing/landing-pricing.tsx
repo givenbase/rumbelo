@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PlanKey } from '@rumtelo/contracts';
+import { planIntentFromPlanKey, planIntentQuery } from '@rumtelo/utils';
 
 import { PLANS, PRICING_SECTION } from '@/lib/landing-content';
 import { webSignUpPath } from '@/lib/portal-urls';
@@ -134,7 +135,11 @@ export function LandingPricing() {
                             </ul>
 
                             <Cta
-                                href={webSignUpPath()}
+                                href={webSignUpPath(
+                                    plan.key === PlanKey.BASIC
+                                        ? { plan: PlanKey.BASIC }
+                                        : planIntentQuery(planIntentFromPlanKey(plan.key, billing))
+                                )}
                                 variant={rec ? 'primary' : 'ghost'}
                                 size="lg"
                                 className={`mx-6 mt-auto mb-6 ${rec ? '' : 'text-fg-strong'}`}>

@@ -11,7 +11,7 @@ import { AuthUser } from '../managed/user/auth-user.entity';
  *
  * Better Auth owns login identity only (`auth.user`: email, password/OAuth,
  * display `name`, image, verification, 2FA). Everything personal for the product
- * lives here: legal names, date of birth, and (later) address / contact facts.
+ * lives here: legal names, phone, date of birth, and (later) address facts.
  *
  *   user/managed/*            auth machinery (library-owned tables)
  *   auth.account              personal information for the application
@@ -41,6 +41,10 @@ export class Account extends BaseEntity {
 
     @Property({ type: 'varchar', length: 80, nullable: true })
     middleName: string | null = null;
+
+    /** Optional contact phone — not used for Better Auth login. */
+    @Property({ type: 'varchar', length: 32, nullable: true })
+    phone: string | null = null;
 
     /** Calendar date only (no time zone), ISO `YYYY-MM-DD`. */
     @Property({ type: 'date', nullable: true })

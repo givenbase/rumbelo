@@ -33,9 +33,17 @@ import {
     StubNotice,
     Toggle,
 } from '@rumtelo/ui';
-import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumtelo/utils';
+import {
+    clearPlanIntent,
+    cn,
+    formatMoney,
+    formatPercent,
+    sumMonthly,
+    toPeriodKey,
+} from '@rumtelo/utils';
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
+import { env } from '@/app/_utils/get-env';
 import { useAccountTheme } from '@/components/features/shell/account-theme-sync';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import {
@@ -122,6 +130,7 @@ export function AccountSettings() {
     const [firstNameDraft, setFirstNameDraft] = useState('');
     const [middleNameDraft, setMiddleNameDraft] = useState('');
     const [lastNameDraft, setLastNameDraft] = useState('');
+    const [phoneDraft, setPhoneDraft] = useState('');
     const [dobDraft, setDobDraft] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -167,6 +176,7 @@ export function AccountSettings() {
                 firstName: firstNameDraft.trim() || null,
                 middleName: middleNameDraft.trim() || null,
                 lastName: lastNameDraft.trim() || null,
+                phone: phoneDraft.trim() || null,
                 dateOfBirth: dobDraft.trim() || null,
             });
         },
@@ -319,6 +329,7 @@ export function AccountSettings() {
         setFirstNameDraft(profileQuery.data?.firstName ?? '');
         setMiddleNameDraft(profileQuery.data?.middleName ?? '');
         setLastNameDraft(profileQuery.data?.lastName ?? '');
+        setPhoneDraft(profileQuery.data?.phone ?? '');
         setDobDraft(profileQuery.data?.dateOfBirth ?? '');
         setEditingName(true);
     }
@@ -327,7 +338,7 @@ export function AccountSettings() {
         <SettingsPanel>
             <SettingsInkCard
                 eyebrow="Profile"
-                blurb="Display name for the product; legal name and date of birth on your account.">
+                blurb="Greeting name starts from your legal name at signup — change it anytime. Legal name, phone, and birthday live on your account.">
                 <SettingsRow>
                     <div className="flex min-w-0 items-center gap-3.5">
                         <div className="grid size-8 shrink-0 place-items-center rounded-full bg-accent font-mono text-[10px] font-bold text-on-accent">
@@ -398,6 +409,13 @@ export function AccountSettings() {
                             placeholder="Last name"
                         />
                         <Input
+                            type="tel"
+                            value={phoneDraft}
+                            onChange={event => setPhoneDraft(event.target.value)}
+                            aria-label="Phone"
+                            placeholder="Phone (optional)"
+                        />
+                        <Input
                             type="date"
                             value={dobDraft}
                             onChange={event => setDobDraft(event.target.value)}
@@ -413,9 +431,14 @@ export function AccountSettings() {
                                     .join(' ') || 'Legal name'
                             }
                             sub={
-                                profileQuery.data.dateOfBirth
-                                    ? `Born ${profileQuery.data.dateOfBirth}`
-                                    : 'Add first / last name and date of birth'
+                                [
+                                    profileQuery.data.phone,
+                                    profileQuery.data.dateOfBirth
+                                        ? `Born ${profileQuery.data.dateOfBirth}`
+                                        : null,
+                                ]
+                                    .filter(Boolean)
+                                    .join(' · ') || 'Add name, phone, and date of birth'
                             }
                         />
                     </SettingsRow>
@@ -1576,6 +1599,9 @@ export function PlanSettings() {
 
         if (checkoutResult === 'success') {
             showToast('Payment received — plan updates when Stripe confirms', 'success');
+            clearPlanIntent({
+                domainUrls: [env.NEXT_PUBLIC_DOMAIN_WEB, env.NEXT_PUBLIC_DOMAIN_APP],
+            });
         } else if (billingReturn === 'return') {
             showToast('Billing updated — syncing from Stripe', 'info');
         }

@@ -1,7 +1,11 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import type { AccountProfile as AccountProfileDto, AccountProfilePatch } from '@rumtelo/contracts';
+import type {
+    AccountProfile as AccountProfileDto,
+    AccountProfilePatch,
+    AccountProfileSeed,
+} from '@rumtelo/contracts';
 
 import { currentUserId } from '../../../../common/household/household.context';
 import { AuthUser } from '../managed/user/auth-user.entity';
@@ -37,6 +41,7 @@ export class AccountService {
         if (patch.firstName !== undefined) account.firstName = emptyToNull(patch.firstName);
         if (patch.middleName !== undefined) account.middleName = emptyToNull(patch.middleName);
         if (patch.lastName !== undefined) account.lastName = emptyToNull(patch.lastName);
+        if (patch.phone !== undefined) account.phone = emptyToNull(patch.phone);
         if (patch.dateOfBirth !== undefined) account.dateOfBirth = patch.dateOfBirth;
 
         await this.em.flush();
@@ -55,15 +60,47 @@ export class AccountService {
     /**
      * Ensure the Account row exists for a Better Auth user (onboarding / members).
      * Does not create settings — that stays in AccountSettingsService.
+     * Optional {@link seed} fills empty profile fields when creating or when still null.
      */
-    async ensureAccountForUser(userId: string): Promise<{ account: Account; user: AuthUser }> {
+    async ensureAccountForUser(
+        userId: string,
+        seed?: AccountProfileSeed
+    ): Promise<{ account: Account; user: AuthUser }> {
         const user = await this.em.findOneOrFail(AuthUser, { id: userId });
         let account = await this.em.findOne(Account, { user: userId }, { populate: ['user'] });
         if (!account) {
-            account = this.em.create(Account, { user } as never);
+            account = this.em.create(Account, {
+                user,
+                firstName: emptyToNull(seed?.firstName),
+                middleName: emptyToNull(seed?.middleName),
+                lastName: emptyToNull(seed?.lastName),
+                phone: emptyToNull(seed?.phone),
+                dateOfBirth: seed?.dateOfBirth ?? null,
+            } as never);
             await this.em.persist(account).flush();
+        } else if (seed) {
+            applySeedIfEmpty(account, seed);
+            await this.em.flush();
         }
         return { account, user };
+    }
+}
+
+function applySeedIfEmpty(account: Account, seed: AccountProfileSeed): void {
+    if (account.firstName === null && seed.firstName !== undefined) {
+        account.firstName = emptyToNull(seed.firstName);
+    }
+    if (account.middleName === null && seed.middleName !== undefined) {
+        account.middleName = emptyToNull(seed.middleName);
+    }
+    if (account.lastName === null && seed.lastName !== undefined) {
+        account.lastName = emptyToNull(seed.lastName);
+    }
+    if (account.phone === null && seed.phone !== undefined) {
+        account.phone = emptyToNull(seed.phone);
+    }
+    if (account.dateOfBirth === null && seed.dateOfBirth !== undefined) {
+        account.dateOfBirth = seed.dateOfBirth;
     }
 }
 
@@ -81,6 +118,7 @@ function toProfileDto(account: Account, user: AuthUser): AccountProfileDto {
         firstName: account.firstName ?? null,
         middleName: account.middleName ?? null,
         lastName: account.lastName ?? null,
+        phone: account.phone ?? null,
         dateOfBirth: account.dateOfBirth ?? null,
         email: user.email,
         image: user.image ?? null,

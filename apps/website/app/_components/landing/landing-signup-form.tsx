@@ -4,8 +4,10 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
 import { AUTH_MIN_PASSWORD_LENGTH, LandingSignUpForm } from '@rumtelo/contracts';
+import { planIntentQuery } from '@rumtelo/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
 import { ASSURANCES, SIGNUP_SECTION } from '@/lib/landing-content';
 import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 
@@ -14,24 +16,40 @@ import { SectionHeading } from './landing-primitives';
 
 const FIELDS = [
     {
-        name: 'displayName' as const,
-        label: 'Display name',
+        name: 'firstName' as const,
+        label: 'First name',
         type: 'text',
-        ph: 'How should the Coach greet you?',
+        ph: 'Given name',
+        autoComplete: 'given-name',
     },
-    { name: 'email' as const, label: 'Email', type: 'email', ph: 'you@example.com' },
+    {
+        name: 'lastName' as const,
+        label: 'Last name',
+        type: 'text',
+        ph: 'Family name',
+        autoComplete: 'family-name',
+    },
+    {
+        name: 'email' as const,
+        label: 'Email',
+        type: 'email',
+        ph: 'you@example.com',
+        autoComplete: 'email',
+    },
     {
         name: 'password' as const,
         label: 'Password',
         type: 'password',
         ph: `at least ${AUTH_MIN_PASSWORD_LENGTH} characters`,
+        autoComplete: 'new-password',
     },
 ];
 
 export function LandingSignupForm() {
     const router = useRouter();
+    const planIntent = useOptionalPlanIntent();
     const form = useForm<LandingSignUpForm>({
-        defaultValues: { displayName: '', email: '', password: '', terms: false },
+        defaultValues: { firstName: '', lastName: '', email: '', password: '', terms: false },
         mode: 'onTouched',
         resolver: zodResolver(LandingSignUpForm),
     });
@@ -47,8 +65,10 @@ export function LandingSignupForm() {
 
     function onSubmit(values: LandingSignUpForm) {
         const params = new URLSearchParams({
-            name: values.displayName,
+            firstName: values.firstName,
+            lastName: values.lastName,
             email: values.email,
+            ...planIntentQuery(planIntent?.intent ?? null),
         });
         router.push(`${webSignUpPath()}?${params.toString()}`);
     }
@@ -91,7 +111,40 @@ export function LandingSignupForm() {
 
                     <div className="w-full max-w-md min-w-0 flex-1 md:basis-80">
                         <form className="grid gap-3" onSubmit={handleSubmit(onSubmit)} noValidate>
-                            {FIELDS.map(field => {
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                {FIELDS.filter(
+                                    field => field.name === 'firstName' || field.name === 'lastName'
+                                ).map(field => {
+                                    const message = fieldError(field.name);
+                                    return (
+                                        <label key={field.name} className="grid gap-1.5">
+                                            <span className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
+                                                {field.label}
+                                            </span>
+                                            <input
+                                                type={field.type}
+                                                autoComplete={field.autoComplete}
+                                                placeholder={field.ph}
+                                                disabled={isSubmitting}
+                                                aria-invalid={Boolean(message)}
+                                                className={`w-full rounded-lg border bg-raised px-3.5 py-3 text-sm text-fg transition-colors outline-none focus:border-accent ${
+                                                    message ? 'border-danger' : 'border-line'
+                                                }`}
+                                                {...register(field.name)}
+                                            />
+                                            {message ? (
+                                                <span className="font-mono text-xs font-medium text-danger">
+                                                    {message}
+                                                </span>
+                                            ) : null}
+                                        </label>
+                                    );
+                                })}
+                            </div>
+
+                            {FIELDS.filter(
+                                field => field.name === 'email' || field.name === 'password'
+                            ).map(field => {
                                 const message = fieldError(field.name);
                                 return (
                                     <label key={field.name} className="grid gap-1.5">
@@ -100,13 +153,7 @@ export function LandingSignupForm() {
                                         </span>
                                         <input
                                             type={field.type}
-                                            autoComplete={
-                                                field.name === 'password'
-                                                    ? 'new-password'
-                                                    : field.name === 'email'
-                                                      ? 'email'
-                                                      : 'nickname'
-                                            }
+                                            autoComplete={field.autoComplete}
                                             placeholder={field.ph}
                                             disabled={isSubmitting}
                                             aria-invalid={Boolean(message)}

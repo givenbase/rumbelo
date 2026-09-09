@@ -1,5 +1,7 @@
 import { betterAuth } from 'better-auth';
+import { createAuthMiddleware } from 'better-auth/api';
 import { organization, twoFactor } from 'better-auth/plugins';
+import { SignUpAccountProfile, toSignUpAccountProfile } from '@rumtelo/contracts';
 import { buildBetterAuthTrustedOrigins, resolveCrossSubdomainCookieDomain } from '@rumtelo/utils';
 import { Pool } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -9,6 +11,8 @@ import { EmailService } from '../../backoffice/communication/email';
 
 import { householdAccessControl, householdRoles } from './access-control.config';
 import { rewriteBetterAuthUrlToOrigin } from './auth-url.util';
+import { insertAccountForSignUp } from './sign-up-account.util';
+import { stashSignUpAccountProfile, takeSignUpAccountProfile } from './sign-up-profile.store';
 
 /** Better Auth verification links expire after this many hours (product copy). */
 const EMAIL_VERIFICATION_EXPIRES_HOURS = 48;
@@ -77,6 +81,40 @@ export function createAuth(env: Env) {
         // Public origin — private DOMAIN_BACK is for service-to-service only.
         baseURL: env.DOMAIN_BACK_PUBLIC,
         trustedOrigins,
+
+        /**
+         * Sign-up body may include Account profile fields (firstName, …).
+         * Better Auth ignores undeclared user fields; we stash them here and
+         * create `auth.account` in `databaseHooks.user.create.after`.
+         */
+        hooks: {
+            before: createAuthMiddleware(async ctx => {
+                if (ctx.path !== '/sign-up/email') return;
+                const body = ctx.body as Record<string, unknown> | undefined;
+                if (!body || typeof body.email !== 'string') return;
+                const parsed = SignUpAccountProfile.safeParse(body);
+                if (!parsed.success) return;
+                stashSignUpAccountProfile(body.email, toSignUpAccountProfile(parsed.data));
+            }),
+        },
+
+        databaseHooks: {
+            user: {
+                create: {
+                    after: async user => {
+                        const profile = takeSignUpAccountProfile(user.email);
+                        try {
+                            await insertAccountForSignUp(pool, user.id, profile);
+                        } catch (error) {
+                            console.error(
+                                '[Better Auth] Failed to create auth.account on sign-up',
+                                error
+                            );
+                        }
+                    },
+                },
+            },
+        },
 
         emailAndPassword: {
             enabled: true,

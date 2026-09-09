@@ -15,20 +15,26 @@ export function appSignInUrl(query?: Record<string, string>): string {
     const url = new URL('/sign-in', `${appOrigin()}/`);
     if (query) {
         for (const [key, value] of Object.entries(query)) {
-            url.searchParams.set(key, value);
+            if (value) url.searchParams.set(key, value);
         }
     }
     return url.toString();
 }
 
-/** Local marketing sign-up (same origin). */
-export function webSignUpPath(): string {
-    return '/sign-up';
+/** Local marketing sign-up (same origin), optionally with remembered plan intent. */
+export function webSignUpPath(query?: Record<string, string>): string {
+    if (!query || Object.keys(query).length === 0) return '/sign-up';
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+        if (value) params.set(key, value);
+    }
+    const qs = params.toString();
+    return qs ? `/sign-up?${qs}` : '/sign-up';
 }
 
 /** Post-verify / post-reset landing on the product. */
-export function appSignInAfterAuthUrl(): string {
-    return appSignInUrl({ verified: '1' });
+export function appSignInAfterAuthUrl(query?: Record<string, string>): string {
+    return appSignInUrl({ verified: '1', ...query });
 }
 
 export function portalDomains() {

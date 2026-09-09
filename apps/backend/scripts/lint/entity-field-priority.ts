@@ -275,6 +275,7 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
     subject: 2,
     firstName: 2,
     lastName: 2,
+    middleName: 2,
     label: 2,
 
     slug: 3,
@@ -368,7 +369,7 @@ export const EXACT_FIELD_PRIORITY: Record<string, number> = {
 
 /** When priorities tie, earlier names in each tuple must appear first. */
 export const SAME_PRIORITY_ORDER: readonly (readonly string[])[] = [
-    ['firstName', 'lastName'],
+    ['firstName', 'lastName', 'middleName'],
     ['entityId', 'entityType', 'fieldName'],
     ['household', 'account'],
     ['key', 'name', 'slug'],

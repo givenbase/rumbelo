@@ -25,7 +25,9 @@ import { VerifyEmailForm as VerifyEmailFormSchema } from '@rumtelo/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { sendVerificationEmail } from '@/lib/auth';
-import { appSignInUrl } from '@/lib/portal-urls';
+import { appSignInAfterAuthUrl, appSignInUrl } from '@/lib/portal-urls';
+import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
+import { planIntentQuery } from '@rumtelo/utils';
 
 const RESEND_COOLDOWN_SEC = 60;
 
@@ -35,9 +37,13 @@ function withEmail(template: string, email: string): string {
 
 export function VerifyPanel() {
     const searchParams = useSearchParams();
+    const planIntent = useOptionalPlanIntent();
     const emailFromQuery = searchParams.get('email')?.trim() ?? '';
     const status = searchParams.get('status');
     const confirmed = status === 'confirmed' || status === 'ok';
+    const continueQuery = {
+        ...planIntentQuery(planIntent?.intent ?? null),
+    };
 
     const [apiError, setApiError] = useState<unknown>(null);
     const [sent, setSent] = useState(false);
@@ -99,7 +105,7 @@ export function VerifyPanel() {
             </div>
 
             {confirmed ? (
-                <Button as="a" href={appSignInUrl({ verified: '1' })} className="w-full">
+                <Button as="a" href={appSignInAfterAuthUrl(continueQuery)} className="w-full">
                     {AUTH_VERIFY.continue}
                 </Button>
             ) : (
@@ -151,7 +157,7 @@ export function VerifyPanel() {
                             </Button>
                             <Button
                                 as="a"
-                                href={appSignInUrl()}
+                                href={appSignInAfterAuthUrl(continueQuery)}
                                 variant="secondary"
                                 className="sm:flex-1">
                                 {AUTH_VERIFY.continue}
@@ -162,11 +168,19 @@ export function VerifyPanel() {
             )}
 
             <p className="text-center text-sm text-fg-muted">
-                <Link href="/sign-up" className="font-semibold text-accent hover:underline">
+                <Link
+                    href={`/sign-up${
+                        Object.keys(continueQuery).length
+                            ? `?${new URLSearchParams(continueQuery).toString()}`
+                            : ''
+                    }`}
+                    className="font-semibold text-accent hover:underline">
                     {AUTH_VERIFY.back_to_sign_up}
                 </Link>
                 {' · '}
-                <a href={appSignInUrl()} className="font-semibold text-accent hover:underline">
+                <a
+                    href={appSignInUrl(continueQuery)}
+                    className="font-semibold text-accent hover:underline">
                     {AUTH_VERIFY.back_to_sign_in}
                 </a>
             </p>

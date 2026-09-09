@@ -9,8 +9,9 @@ const PersonName = z.string().trim().min(1).max(80);
 const OptionalPersonName = PersonName.nullable().optional();
 
 /**
- * Application personal profile on `auth.account` (names, DOB; address later).
- * Display name lives on Better Auth `user.name` (synced when patched here).
+ * Application personal profile on `auth.account` (names, phone, DOB; address later).
+ * Display name lives on Better Auth `user.name` — seeded from first/last at signup,
+ * then independently editable via {@link AccountProfilePatch.displayName}.
  * Better Auth stays auth-only — this is product data.
  */
 export const AccountProfile = z.object({
@@ -22,6 +23,7 @@ export const AccountProfile = z.object({
     firstName: z.string().trim().max(80).nullable(),
     middleName: z.string().trim().max(80).nullable(),
     lastName: z.string().trim().max(80).nullable(),
+    phone: z.string().trim().max(32).nullable(),
     /** ISO calendar date `YYYY-MM-DD`. */
     dateOfBirth: z.iso.date().nullable(),
     email: z.email(),
@@ -34,9 +36,14 @@ export const AccountProfilePatch = z.object({
     firstName: OptionalPersonName,
     middleName: OptionalPersonName,
     lastName: OptionalPersonName,
+    phone: z.string().trim().max(32).nullable().optional(),
     dateOfBirth: z.iso.date().nullable().optional(),
 });
 export type AccountProfilePatch = z.infer<typeof AccountProfilePatch>;
+
+/** Legal / contact fields only — used when creating or backfilling `auth.account`. */
+export const AccountProfileSeed = AccountProfilePatch.omit({ displayName: true });
+export type AccountProfileSeed = z.infer<typeof AccountProfileSeed>;
 
 /**
  * Person UI prefs. Currency is NOT here — the household board has one accounting

@@ -12,6 +12,8 @@ import { Module } from '@nestjs/common';
  *   auth.cli.config.ts        entry for `@better-auth/cli`
  *   auth.migrate.ts           `pnpm auth:migrate`
  *   auth-url.util.ts          origin rewriting for links Better Auth builds
+ *   sign-up-profile.store.ts  stash Account fields across Better Auth sign-up hooks
+ *   sign-up-account.util.ts   insert `auth.account` after Better Auth creates the user
  *
  * Tables Better Auth writes are mirrored as read-only entities under
  * `../user/managed/` (person) and `../household/managed/` (group).
