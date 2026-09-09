@@ -3,7 +3,6 @@
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 
-import { BRAND_TAGLINE } from '@rumtelo/i18n';
 import { RumteloLogo } from '@rumtelo/brand';
 import { ThemeToggle } from '@rumtelo/ui';
 
@@ -12,11 +11,8 @@ import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 import { Cta } from './landing-primitives';
 
 const NAV_LINKS = [
-    { href: '#portals', label: 'The portals' },
-    { href: '#loop', label: 'The loop' },
-    { href: '#coach', label: 'The Coach' },
+    { href: '#loop', label: 'How it works' },
     { href: '#pricing', label: 'Pricing' },
-    { href: '#faq', label: 'Questions' },
 ] as const;
 
 export function LandingHeader() {
@@ -50,17 +46,12 @@ export function LandingHeader() {
 
     return (
         <header className="sticky top-0 z-20 border-b border-line bg-chrome backdrop-blur-md">
-            <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-3 px-4 py-3 lg:gap-5 lg:px-6">
-                <div className="flex min-w-0 flex-1 items-center gap-2 lg:flex-none">
-                    <Link href="/" className="flex min-w-0 items-center gap-2">
-                        <RumteloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
-                    </Link>
-                    <span className="hidden font-mono text-xs font-medium tracking-wide whitespace-nowrap text-fg-faint sm:inline">
-                        {BRAND_TAGLINE}
-                    </span>
-                </div>
+            <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-4 px-4 py-3 lg:px-6">
+                <Link href="/" className="min-w-0 shrink-0">
+                    <RumteloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
+                </Link>
 
-                <nav className="ml-auto hidden items-center gap-5 lg:flex">
+                <nav className="ml-auto hidden items-center gap-6 lg:flex">
                     {NAV_LINKS.map(link => (
                         <a
                             key={link.href}
@@ -71,14 +62,12 @@ export function LandingHeader() {
                     ))}
                 </nav>
 
-                <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+                <div className="flex shrink-0 items-center gap-2 sm:ml-2">
                     <ThemeToggle className="size-8 rounded-full bg-transparent text-sm text-fg-muted hover:border-accent hover:bg-transparent hover:text-accent" />
 
-                    <a
-                        href={appSignInUrl()}
-                        className="hidden text-sm text-fg-muted transition-colors hover:text-accent md:inline">
+                    <Cta href={appSignInUrl()} variant="ghost" className="hidden sm:inline-flex">
                         Sign in
-                    </a>
+                    </Cta>
 
                     <Cta href={webSignUpPath()} className="hidden sm:inline-flex">
                         Start free
@@ -112,7 +101,6 @@ export function LandingHeader() {
                 </div>
             </div>
 
-            {/* Mobile menu */}
             <div
                 id={menuId}
                 className={`border-t border-line bg-chrome lg:hidden ${open ? 'block' : 'hidden'}`}>
@@ -126,19 +114,14 @@ export function LandingHeader() {
                             {link.label}
                         </a>
                     ))}
-                    <a
-                        href={appSignInUrl()}
-                        onClick={close}
-                        className="rounded-lg px-3 py-3 text-base text-fg-muted transition-colors hover:bg-raised hover:text-accent">
-                        Sign in
-                    </a>
-                    <Cta
-                        href={webSignUpPath()}
-                        size="lg"
-                        onClick={close}
-                        className="mt-2 sm:hidden">
-                        Start free — no card
-                    </Cta>
+                    <div className="mt-2 flex flex-col gap-2 sm:hidden">
+                        <Cta href={appSignInUrl()} variant="ghost" size="lg" onClick={close}>
+                            Sign in
+                        </Cta>
+                        <Cta href={webSignUpPath()} size="lg" onClick={close}>
+                            Start free — no card
+                        </Cta>
+                    </div>
                 </nav>
             </div>
         </header>
