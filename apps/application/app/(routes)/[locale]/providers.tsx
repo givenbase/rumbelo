@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { ThemeProvider } from '@rumtelo/ui';
 
 import { setClientHouseholdId } from '@/app/_lib/household-api-context';
+import { AccountThemeProvider } from '@/components/features/shell/account-theme-sync';
 import { AppShellProvider } from '@/components/features/shell/app-shell-context';
 import { AuthProvider, useAuth } from '@/components/features/shell/auth-provider';
 
@@ -40,7 +41,9 @@ export function Providers({ children }: { children: ReactNode }) {
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
                     <HouseholdHeaderSync>
-                        <AppShellProvider>{children}</AppShellProvider>
+                        <AccountThemeProvider>
+                            <AppShellProvider>{children}</AppShellProvider>
+                        </AccountThemeProvider>
                     </HouseholdHeaderSync>
                 </AuthProvider>
             </QueryClientProvider>

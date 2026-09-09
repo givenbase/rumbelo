@@ -9,6 +9,11 @@ type ThemeToggleProps = {
     className?: string;
     /** Accessible name when icon alone is not enough. */
     'aria-label'?: string;
+    /**
+     * Called after the local theme flips. Use to persist when signed in
+     * (e.g. account settings). Receives the preference being applied.
+     */
+    onThemeChange?: (next: 'light' | 'dark') => void;
 };
 
 function subscribe() {
@@ -19,7 +24,11 @@ function subscribe() {
  * Light / dark toggle via `next-themes`. Waits for client mount so the icon
  * matches the resolved theme without a hydration mismatch.
  */
-export function ThemeToggle({ className, 'aria-label': ariaLabel }: ThemeToggleProps) {
+export function ThemeToggle({
+    className,
+    'aria-label': ariaLabel,
+    onThemeChange,
+}: ThemeToggleProps) {
     const { resolvedTheme, setTheme } = useTheme();
     const mounted = useSyncExternalStore(
         subscribe,
@@ -36,7 +45,11 @@ export function ThemeToggle({ className, 'aria-label': ariaLabel }: ThemeToggleP
             aria-label={label}
             title={label}
             disabled={!mounted}
-            onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            onClick={() => {
+                const next = isDark ? 'light' : 'dark';
+                setTheme(next);
+                onThemeChange?.(next);
+            }}
             className={cn(
                 'grid size-9 place-items-center rounded-lg border border-line text-fg-secondary transition-colors hover:bg-raised hover:text-fg disabled:opacity-60',
                 className

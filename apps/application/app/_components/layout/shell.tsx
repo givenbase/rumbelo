@@ -7,7 +7,6 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { RumteloLogo } from '@rumtelo/brand';
 import { BRAND_TAGLINE } from '@rumtelo/i18n';
-import { ThemeToggle } from '@rumtelo/ui';
 import { cn } from '@rumtelo/utils';
 import { Locale } from '@rumtelo/contracts';
 
@@ -20,6 +19,7 @@ import {
     resolveNavGroupForPath,
 } from '@/app/_lib/nav';
 import { settingsHrefForNavGroup } from '@/app/_lib/settings-tabs';
+import { AccountThemeToggle } from '@/components/features/shell/account-theme-sync';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
@@ -191,7 +191,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             {locale === Locale.NL ? 'NL' : 'EN'}
                         </button>
 
-                        <ThemeToggle />
+                        <AccountThemeToggle />
 
                         <button
                             type="button"

@@ -32,11 +32,11 @@ import {
     Select,
     StubNotice,
     Toggle,
-    useTheme,
 } from '@rumtelo/ui';
 import { cn, formatMoney, formatPercent, sumMonthly, toPeriodKey } from '@rumtelo/utils';
 
 import { changePassword, signOut, updateOrganization } from '@/app/_lib/auth';
+import { useAccountTheme } from '@/components/features/shell/account-theme-sync';
 import { downloadTextFile, toCsv } from '@/app/_lib/download';
 import {
     CAPABILITIES,
@@ -155,8 +155,8 @@ export function AccountSettings() {
     const [currencyDraft, setCurrencyDraft] = useState<string | null>(null);
     const activeCurrency = currencyDraft ?? currency;
 
-    const { resolvedTheme, setTheme } = useTheme();
-    const dark = resolvedTheme === 'dark';
+    const { accountTheme, setAccountTheme } = useAccountTheme();
+    const activeTheme = accountTheme ?? Theme.SYSTEM;
     const [periodDayDraft, setPeriodDayDraft] = useState<number | null>(null);
     const periodDay = periodDayDraft ?? settingsQuery.data?.money?.periodStartDay ?? 1;
 
@@ -258,14 +258,7 @@ export function AccountSettings() {
     });
 
     const saveTheme = useMutation({
-        mutationFn: async (next: Theme) => {
-            const css = next === Theme.DARK ? 'dark' : next === Theme.SYSTEM ? 'system' : 'light';
-            setTheme(css);
-            return api.account.updateSettings({ theme: next });
-        },
-        onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: apiQuery.account.settings.key() });
-        },
+        mutationFn: async (next: Theme) => setAccountTheme(next),
         onError: () => showToast('Theme save failed', 'error'),
     });
 
@@ -714,14 +707,38 @@ export function AccountSettings() {
             <SettingsInkCard
                 eyebrow="Display"
                 blurb="Theme and the day the budget month rolls over.">
-                <div className="border-b border-line px-0">
-                    <Toggle
-                        checked={dark}
-                        label="Dark mode"
-                        hint="Saved on this device and in your account settings."
-                        onCheckedChange={next => saveTheme.mutate(next ? Theme.DARK : Theme.LIGHT)}
+                <SettingsRow>
+                    <SettingsRowLabel
+                        title="Appearance"
+                        sub="Synced to your account across browsers and devices."
                     />
-                </div>
+                    <div className="flex gap-1 rounded-full border border-line bg-raised p-0.5">
+                        {(
+                            [
+                                { value: Theme.SYSTEM, label: 'System' },
+                                { value: Theme.LIGHT, label: 'Light' },
+                                { value: Theme.DARK, label: 'Dark' },
+                            ] as const
+                        ).map(option => {
+                            const on = activeTheme === option.value;
+                            return (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    disabled={!live || saveTheme.isPending}
+                                    onClick={() => saveTheme.mutate(option.value)}
+                                    className={cn(
+                                        'rounded-full px-3.5 py-1.5 font-mono text-[10px] font-medium tracking-[0.12em] uppercase transition-colors',
+                                        on
+                                            ? 'bg-accent text-on-accent'
+                                            : 'text-fg-muted hover:text-fg'
+                                    )}>
+                                    {option.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </SettingsRow>
                 <SettingsRow last>
                     <div className="grid w-full gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
                         <Field
