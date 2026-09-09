@@ -37,7 +37,6 @@
                 "ENABLE_SWAGGER",
                 "EMAIL_PROVIDER",
                 "EMAIL_FROM",
-                "EMAIL_DEFAULT_FROM",
                 "EMAIL_LOG_ONLY",
                 "RESEND_API_KEY"
             ]

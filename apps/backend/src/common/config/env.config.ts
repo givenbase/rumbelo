@@ -58,9 +58,7 @@ const EnvSchema = z.object({
     RESEND_API_KEY: z.string().optional(),
     /** When true, never call the provider — log only (even if provider is resend). */
     EMAIL_LOG_ONLY: boolish(false),
-    /** Shared default From (Railway shared var). */
-    EMAIL_DEFAULT_FROM: z.string().optional(),
-    /** Optional override; wins over EMAIL_DEFAULT_FROM when set. */
+    /** From address for outbound mail. */
     EMAIL_FROM: z.string().optional(),
 
     // ── Payments (optional — Checkout when STRIPE_SECRET_KEY is set) ──────
@@ -95,7 +93,7 @@ const EnvSchema = z.object({
 export type Env = z.infer<typeof EnvSchema> & {
     /** Resolved public backend origin (DOMAIN_BACK_PUBLIC ?? DOMAIN_BACK). */
     DOMAIN_BACK_PUBLIC: string;
-    /** Resolved From address (EMAIL_FROM ?? EMAIL_DEFAULT_FROM ?? default). */
+    /** Resolved From address (EMAIL_FROM ?? default). */
     EMAIL_FROM: string;
 };
 
@@ -115,7 +113,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
         DATABASE_URL: blankToUndefined(source.DATABASE_URL),
         DATABASE_REDIS_URL: blankToUndefined(source.DATABASE_REDIS_URL ?? source.REDIS_URL),
         EMAIL_FROM: blankToUndefined(source.EMAIL_FROM),
-        EMAIL_DEFAULT_FROM: blankToUndefined(source.EMAIL_DEFAULT_FROM),
         RESEND_API_KEY: blankToUndefined(source.RESEND_API_KEY),
         ENABLE_SWAGGER: blankToUndefined(source.ENABLE_SWAGGER),
         SENTRY_DSN: blankToUndefined(source.SENTRY_DSN),
@@ -152,6 +149,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     return {
         ...data,
         DOMAIN_BACK_PUBLIC: data.DOMAIN_BACK_PUBLIC ?? data.DOMAIN_BACK,
-        EMAIL_FROM: data.EMAIL_FROM ?? data.EMAIL_DEFAULT_FROM ?? 'Rumbelo <info@rumbelo.app>',
+        EMAIL_FROM: data.EMAIL_FROM ?? 'Rumbelo <info@rumbelo.app>',
     };
 }

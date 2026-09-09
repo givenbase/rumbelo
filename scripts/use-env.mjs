@@ -127,7 +127,6 @@ function main() {
         'EMAIL_PROVIDER',
         'RESEND_API_KEY',
         'EMAIL_LOG_ONLY',
-        'EMAIL_DEFAULT_FROM',
         'EMAIL_FROM',
     ];
 
