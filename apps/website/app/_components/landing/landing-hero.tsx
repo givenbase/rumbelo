@@ -2,8 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { DEMO_INCOME_DEFAULT, FLOATERS, JARS, PROOF, TICKER } from '@/lib/landing-content';
+import {
+    DEMO_INCOME_DEFAULT,
+    DEMO_INCOME_LINE,
+    FLOATERS,
+    HERO,
+    JARS,
+    PROOF,
+    TICKER,
+} from '@/lib/landing-content';
 import { webSignUpPath } from '@/lib/portal-urls';
+
+import { Cta, Eyebrow } from './landing-primitives';
 
 function fmt(value: number) {
     return '€' + Number(value).toLocaleString('en-IE');
@@ -48,20 +58,14 @@ export function LandingHero() {
     const demoPct = Math.round(100 * splitP) + '%';
     const demoStage =
         splitP >= 1
-            ? 'THIS MONTH · SPLIT AUTOMATICALLY'
+            ? 'THIS MONTH · EVERY AMOUNT HAS A JOB'
             : landP >= 1
               ? 'SPLITTING ACROSS SIX JARS…'
               : 'INCOME LANDING…';
 
     return (
         <section className="relative overflow-hidden">
-            <span
-                className="pointer-events-none absolute inset-[-20%_-10%]"
-                style={{
-                    background: 'var(--gradient-page)',
-                    animation: 'drift 16s ease-in-out infinite',
-                }}
-            />
+            <span className="pointer-events-none absolute inset-[-20%_-10%] animate-[drift_16s_ease-in-out_infinite] bg-(image:--gradient-page)" />
 
             {/* Floating labels — desktop only to keep the mobile hero clear */}
             <div
@@ -85,16 +89,10 @@ export function LandingHero() {
                 ))}
 
                 {/* Ticker */}
-                <div
-                    className="absolute inset-x-0 bottom-2.5 overflow-hidden"
-                    style={{
-                        maskImage:
-                            'linear-gradient(90deg, transparent, black 12%, black 88%, transparent)',
-                    }}>
+                <div className="absolute inset-x-0 bottom-2.5 overflow-hidden mask-x-from-88% mask-x-to-100%">
                     <div
                         data-ticker
-                        className="inline-flex gap-10 pr-10 whitespace-nowrap"
-                        style={{ animation: 'tickerX 46s linear infinite' }}>
+                        className="inline-flex animate-[tickerX_52s_linear_infinite] gap-10 pr-10 whitespace-nowrap">
                         {TICKER.map(tk => (
                             <span
                                 key={tk.key}
@@ -111,41 +109,30 @@ export function LandingHero() {
             </div>
 
             {/* Content */}
-            <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-8 px-4 py-12 pb-10 md:flex-row md:flex-wrap md:items-center lg:gap-16 lg:px-6 lg:py-24 lg:pb-16">
+            <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-8 px-4 py-12 pb-14 md:flex-row md:flex-wrap md:items-center lg:gap-16 lg:px-6 lg:py-24 lg:pb-20">
                 {/* Left column */}
-                <div
-                    className="min-w-0 flex-1 md:basis-96"
-                    style={{ animation: 'rise 520ms var(--ease-out) both' }}>
-                    <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                        ✦ MONEY · GROWTH · ENERGY · SOUL
-                    </span>
-                    <h1 className="my-4 mb-4 max-w-md font-display text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:max-w-xs lg:text-6xl">
-                        You earn fine. So where does it go?
+                <div className="min-w-0 flex-1 animate-[rise_520ms_var(--ease-out)_both] md:basis-96">
+                    <Eyebrow>{HERO.eyebrow}</Eyebrow>
+                    <h1 className="my-4 max-w-md font-display text-5xl leading-[1.02] font-semibold tracking-tight text-balance text-fg sm:text-6xl lg:max-w-lg lg:text-7xl">
+                        {HERO.headline}
                     </h1>
-                    <p className="mb-7 max-w-prose text-base leading-relaxed text-fg-muted lg:text-lg">
-                        Rumtelo splits your income across six jars the second it lands — the ones
-                        you must pay, the ones that grow, and the one you are allowed to enjoy.
-                        Every euro gets a job before it arrives.
+                    <p className="mb-7 max-w-prose text-base leading-relaxed text-pretty text-fg-muted lg:text-lg">
+                        {HERO.lead}
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                        <a
-                            href={webSignUpPath()}
-                            className="rounded-full px-6 py-4 text-center font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95"
-                            style={{ background: 'var(--gradient-accent)' }}>
-                            Start free — no card
-                        </a>
-                        <a
-                            href="#how"
-                            className="rounded-full border border-line-strong px-6 py-4 text-center font-mono text-xs font-medium tracking-wide text-fg-secondary uppercase transition-colors hover:border-accent hover:text-accent">
-                            See how it works
-                        </a>
+                        <Cta href={webSignUpPath()} size="lg">
+                            {HERO.ctaPrimary}
+                        </Cta>
+                        <Cta href="#loop" variant="ghost" size="lg">
+                            {HERO.ctaSecondary}
+                        </Cta>
                     </div>
 
                     {/* Proof stats */}
-                    <div className="mt-8 flex flex-wrap gap-5">
+                    <div className="mt-9 grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap">
                         {PROOF.map(item => (
                             <span key={item.label} className="grid gap-0.5">
-                                <span className="font-display text-2xl font-semibold tracking-tight">
+                                <span className="font-display text-2xl font-semibold tracking-tight text-fg">
                                     {item.value}
                                 </span>
                                 <span className="font-mono text-xs font-medium tracking-wide text-fg-faint uppercase">
@@ -157,14 +144,8 @@ export function LandingHero() {
                 </div>
 
                 {/* Demo card */}
-                <div
-                    className="w-full min-w-0 flex-1 overflow-hidden rounded-2xl border border-line bg-surface md:basis-96"
-                    style={{
-                        boxShadow: 'var(--shadow-lg), inset 0 0 0 1px rgb(14 17 22 / 0.08)',
-                        animation:
-                            'rise 620ms var(--ease-out) both, floaty 7s ease-in-out 1.4s infinite',
-                    }}>
-                    <span className="block h-1" style={{ background: 'var(--gradient-accent)' }} />
+                <div className="w-full min-w-0 flex-1 animate-[rise_620ms_var(--ease-out)_both,floaty_7s_ease-in-out_1.4s_infinite] overflow-hidden rounded-2xl border border-line bg-surface shadow-lg ring-1 ring-fg/8 ring-inset md:basis-96 dark:ring-white/8">
+                    <span className="block h-1 bg-(image:--gradient-accent)" />
                     <div className="p-5 lg:p-7">
                         <div className="flex flex-wrap items-baseline justify-between gap-3">
                             <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
@@ -174,12 +155,10 @@ export function LandingHero() {
                                 {demoPct}
                             </span>
                         </div>
-                        <div className="my-2.5 mb-1 font-display text-4xl font-semibold tracking-tight lg:text-5xl">
+                        <div className="my-2.5 mb-1 font-display text-4xl font-semibold tracking-tight text-fg lg:text-5xl">
                             {demoIncome}
                         </div>
-                        <div className="mb-5 text-sm text-fg-muted">
-                            Salary €3,450 · Freelance €850
-                        </div>
+                        <div className="mb-5 text-sm text-fg-muted">{DEMO_INCOME_LINE}</div>
 
                         {/* Bar */}
                         <div className="mb-5 flex h-2.5 gap-0.5 overflow-hidden rounded-full bg-sunken">
@@ -197,8 +176,7 @@ export function LandingHero() {
                             {JARS.map(j => (
                                 <span
                                     key={j.key}
-                                    className="grid items-center gap-2.5"
-                                    style={{ gridTemplateColumns: '10px minmax(0,1fr) auto auto' }}>
+                                    className="grid grid-cols-[10px_minmax(0,1fr)_auto_auto] items-center gap-2.5">
                                     <span
                                         className="size-2 rounded-sm"
                                         style={{ background: j.colorVar }}
@@ -212,6 +190,21 @@ export function LandingHero() {
                                     </span>
                                 </span>
                             ))}
+                        </div>
+
+                        {/* Coach one-liner — the hero already hints that the app talks back */}
+                        <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-line bg-raised px-3.5 py-3">
+                            <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" />
+                            <span className="grid gap-0.5">
+                                <span className="font-mono text-[10px] font-medium tracking-widest text-accent uppercase">
+                                    The Coach · this week
+                                </span>
+                                <span className="text-sm leading-snug text-fg-secondary">
+                                    Every amount has a job. Safe to spend today:{' '}
+                                    <span className="font-mono font-medium text-fg">€64</span>.
+                                    Sleep was 7h20 — a good week to decide things.
+                                </span>
+                            </span>
                         </div>
                     </div>
                 </div>

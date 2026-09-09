@@ -28,10 +28,38 @@ const mono = IBM_Plex_Mono({
     display: 'swap',
 });
 
+const TITLE = 'Rumtelo — Stop wondering where it went.';
+const DESCRIPTION =
+    'Money leaves. You’ll know why. Rumtelo gives every amount a job the second it lands, then widens the picture to your energy, growth and why — with a Coach, in ten minutes a week. Built in Amsterdam. Free to start.';
+
 export const metadata: Metadata = {
-    title: 'Rumtelo — Stop wondering where it went.',
-    description:
-        'Six jars, one calm overview. Rumtelo splits your income the second it lands — every amount gets a job before it arrives.',
+    title: TITLE,
+    description: DESCRIPTION,
+    applicationName: 'Rumtelo',
+    keywords: [
+        'money overview',
+        'six jars',
+        'jar budgeting',
+        'personal finance coach',
+        'financial freedom',
+        'week check',
+        'energy sleep money',
+        'geld overzicht',
+        'potjes methode',
+    ],
+    openGraph: {
+        type: 'website',
+        siteName: 'Rumtelo',
+        title: TITLE,
+        description: DESCRIPTION,
+        locale: 'en',
+        alternateLocale: ['nl'],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: TITLE,
+        description: DESCRIPTION,
+    },
 };
 
 export const viewport: Viewport = {

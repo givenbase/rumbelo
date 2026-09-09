@@ -41,7 +41,13 @@ function AutofillDecoys() {
             aria-hidden
             className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0"
             tabIndex={-1}>
-            <input type="text" name="username" autoComplete="username" tabIndex={-1} defaultValue="" />
+            <input
+                type="text"
+                name="username"
+                autoComplete="username"
+                tabIndex={-1}
+                defaultValue=""
+            />
             <input
                 type="password"
                 name="password"

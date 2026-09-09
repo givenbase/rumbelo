@@ -2,17 +2,25 @@
 
 import { useEffect, useRef } from 'react';
 
-import { LandingCoachGlance } from './landing-coach-glance';
+import { LandingCoach } from './landing-coach';
+import { LandingFaq } from './landing-faq';
 import { LandingFooter } from './landing-footer';
 import { LandingHeader } from './landing-header';
 import { LandingHero } from './landing-hero';
-import { LandingHowItWorks } from './landing-how-it-works';
 import { LandingJars } from './landing-jars';
-import { LandingPillars } from './landing-pillars';
+import { LandingLoop } from './landing-loop';
+import { LandingPortals } from './landing-portals';
 import { LandingPricing } from './landing-pricing';
+import { LandingPrinciples } from './landing-principles';
+import { LandingProblem } from './landing-problem';
 import { LandingSignupForm } from './landing-signup-form';
-import { LandingWhyBand } from './landing-why-band';
+import { LandingWhy } from './landing-why';
 
+/**
+ * Narrative order (docs/brand/quotes.md → "How to use"):
+ *   hook (money punch) → name the problem → widen to four portals → the loop →
+ *   the Coach (aspirant ↔ mentor) → principles → jars → why we exist → pricing → FAQ → sign-up.
+ */
 export function LandingPage() {
     const rootRef = useRef<HTMLDivElement>(null);
 
@@ -53,14 +61,19 @@ export function LandingPage() {
     return (
         <div ref={rootRef} className="min-h-screen">
             <LandingHeader />
-            <LandingHero />
-            <LandingPillars />
-            <LandingJars />
-            <LandingHowItWorks />
-            <LandingCoachGlance />
-            <LandingWhyBand />
-            <LandingPricing />
-            <LandingSignupForm />
+            <main>
+                <LandingHero />
+                <LandingProblem />
+                <LandingPortals />
+                <LandingLoop />
+                <LandingCoach />
+                <LandingPrinciples />
+                <LandingJars />
+                <LandingWhy />
+                <LandingPricing />
+                <LandingFaq />
+                <LandingSignupForm />
+            </main>
             <LandingFooter />
         </div>
     );

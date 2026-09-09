@@ -1536,8 +1536,7 @@ export function PlanSettings() {
     /** Stripe Checkout / Portal when backend reports stripeEnabled. */
     const stripeLive = !PREVIEW_MODE && billingStatus.data?.stripeEnabled === true;
     /** Explicit free switches (preview mode or BILLING_PREVIEW_BYPASS). */
-    const freePlanSwitch =
-        PREVIEW_MODE || billingStatus.data?.previewBypass === true;
+    const freePlanSwitch = PREVIEW_MODE || billingStatus.data?.previewBypass === true;
     /** No Stripe and no bypass — paid upgrades blocked; stay on Basic. */
     const billingUnavailable = !stripeLive && !freePlanSwitch;
     const pendingDiff = pendingPlan ? diffPlans(plan, pendingPlan) : null;
@@ -1663,10 +1662,7 @@ export function PlanSettings() {
         }
         const upgrading = PLAN_RANK[next] > PLAN_RANK[plan];
         if (upgrading && billingUnavailable) {
-            showToast(
-                'Paid plans are unavailable until Stripe billing is configured',
-                'error'
-            );
+            showToast('Paid plans are unavailable until Stripe billing is configured', 'error');
             return;
         }
         setPendingPlan(next);
@@ -1675,10 +1671,7 @@ export function PlanSettings() {
     function confirmPlanChange() {
         if (!pendingPlan || !pendingDiff) return;
         if (pendingDiff.direction === 'upgrade' && billingUnavailable) {
-            showToast(
-                'Paid plans are unavailable until Stripe billing is configured',
-                'error'
-            );
+            showToast('Paid plans are unavailable until Stripe billing is configured', 'error');
             setPendingPlan(null);
             return;
         }

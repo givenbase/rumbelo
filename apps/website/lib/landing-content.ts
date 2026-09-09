@@ -1,4 +1,17 @@
-import { DEFAULT_JAR_SPLIT, JarKey } from '@rumtelo/contracts';
+/**
+ * Landing copy — single source of truth for the marketing home.
+ *
+ * Voice: docs/brand/quotes.md (direct, punchy, product-clear; names the problem; no shame).
+ * Strategy: lead with the money punch (the door) → name the problem → widen to the four
+ * portals → show the loop → the Coach (aspirant ↔ mentor) → principles → jars → why we
+ * exist → pricing (aligned with PLAN_ACCESS) → FAQ → sign-up.
+ *
+ * Feature claims come from `@rumtelo/contracts` (capabilities + plan limits) so the site
+ * cannot drift from what the product actually gates.
+ */
+import { DEFAULT_JAR_SPLIT, JarKey, PLAN_LIMITS, PlanKey } from '@rumtelo/contracts';
+
+/* ─────────────────────────── icons ─────────────────────────── */
 
 export type IconName =
     | 'home'
@@ -7,12 +20,16 @@ export type IconName =
     | 'lock'
     | 'sparkle'
     | 'heart'
-    | 'down'
-    | 'divide'
     | 'wallet'
     | 'shield'
     | 'eye'
-    | 'db';
+    | 'db'
+    | 'moon'
+    | 'compass'
+    | 'inbox'
+    | 'clock'
+    | 'flag'
+    | 'users';
 
 export const ICON_PATHS: Record<IconName, string[]> = {
     home: ['M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z', 'M9 22V12h6v10'],
@@ -31,8 +48,6 @@ export const ICON_PATHS: Record<IconName, string[]> = {
     heart: [
         'M19 14c1.5-1.4 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.1 3 5.5l7 7z',
     ],
-    down: ['M12 8v8', 'M8 12l4 4 4-4', 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z'],
-    divide: ['M5 12h14', 'M12 5.5h.01', 'M12 18.5h.01'],
     wallet: [
         'M21 12V7H5a2 2 0 0 1 0-4h14v4',
         'M3 5v14a2 2 0 0 0 2 2h16v-5',
@@ -50,12 +65,60 @@ export const ICON_PATHS: Record<IconName, string[]> = {
         'M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5',
         'M3 12c0 1.7 4 3 9 3s9-1.3 9-3',
     ],
+    moon: ['M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'],
+    compass: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M16.2 7.8l-2.1 6.3-6.3 2.1 2.1-6.3z'],
+    inbox: [
+        'M22 12h-6l-2 3h-4l-2-3H2',
+        'M5.5 5.1L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1z',
+    ],
+    clock: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 6v6l4 2'],
+    flag: ['M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z', 'M4 22v-7'],
+    users: [
+        'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2',
+        'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+        'M23 21v-2a4 4 0 0 0-3-3.9',
+        'M16 3.1a4 4 0 0 1 0 7.8',
+    ],
 };
+
+/* ─────────────────────────── brand ─────────────────────────── */
+
+export const BRAND = 'Rumtelo';
+
+/** The four portals in nav order — one switch, one focus at a time. */
+export const PORTAL_STRIP = ['Money', 'Growth', 'Energy', 'Soul'] as const;
+
+/* ─────────────────────────── hero ─────────────────────────── */
+
+export const HERO = {
+    eyebrow: 'MONEY · GROWTH · ENERGY · SOUL',
+    /** docs/brand/quotes.md — primary. One line per surface. */
+    headline: 'Stop wondering where it went.',
+    /** Support + one short widener. */
+    lead: 'Money leaves. You’ll know why. Rumtelo gives every amount a job the second it lands — then widens the picture to your energy, your growth and your why. Ten minutes a week. Information, never shame.',
+    ctaPrimary: 'Start free — no card',
+    ctaSecondary: 'See the loop',
+} as const;
+
+export const PROOF = [
+    { value: '10 min', label: 'a week — not daily homework' },
+    { value: '6 jars', label: 'filled the second income lands' },
+    { value: '4 portals', label: 'money · growth · energy · soul' },
+    { value: 'Free', label: 'to start · no card' },
+];
+
+export const DEMO_INCOME_DEFAULT = 4300;
+
+/** Demo card income breakdown (display only — amounts follow the locale). */
+export const DEMO_INCOME_LINE = 'Salary €3,450 · Freelance €850';
+
+/* ─────────────────────────── jars ─────────────────────────── */
 
 export interface Jar {
     key: string;
     name: string;
     pct: number;
+    /** Theme token — `--color-jar-*` in packages/config/tailwind/theme.css. */
     colorVar: string;
     line: string;
     not: string;
@@ -77,7 +140,7 @@ export const JARS: Jar[] = [
         name: 'Financial Freedom',
         pct: DEFAULT_JAR_SPLIT[JarKey.FINANCIAL_FREEDOM],
         colorVar: 'var(--color-jar-ff)',
-        line: 'Index funds, stocks, a property deposit, your own company. This jar buys things that pay you back.',
+        line: 'Index funds, a property deposit, your own company. This jar buys things that pay you back.',
         not: 'Never spent. Only invested.',
         icon: 'trend',
     },
@@ -85,8 +148,8 @@ export const JARS: Jar[] = [
         key: 'edu',
         name: 'Education',
         pct: DEFAULT_JAR_SPLIT[JarKey.EDUCATION],
-        colorVar: '#0891B2',
-        line: 'Books, courses, tools, a mentor. The only jar where spending makes you worth more.',
+        colorVar: 'var(--color-jar-edu)',
+        line: 'Books, courses, a mentor, a tool that makes you better. The one jar where spending raises what you’re worth.',
         not: 'Not for gadgets you call research.',
         icon: 'book',
     },
@@ -94,7 +157,7 @@ export const JARS: Jar[] = [
         key: 'lts',
         name: 'Long Term Savings',
         pct: DEFAULT_JAR_SPLIT[JarKey.LONG_TERM_SAVINGS],
-        colorVar: '#0369A1',
+        colorVar: 'var(--color-jar-lts)',
         line: 'Emergency fund first, then the car, the deposit, the tax bill you know is coming.',
         not: 'Not for anything you want this month.',
         icon: 'lock',
@@ -103,8 +166,8 @@ export const JARS: Jar[] = [
         key: 'play',
         name: 'Play',
         pct: DEFAULT_JAR_SPLIT[JarKey.PLAY],
-        colorVar: '#B45309',
-        line: 'Dinner out, concerts, clothes, something spontaneous. Spend it without asking permission.',
+        colorVar: 'var(--color-jar-play)',
+        line: 'Dinner out, a concert, something spontaneous. Spend it without asking permission.',
         not: 'Must be empty by month end. That is the point.',
         icon: 'sparkle',
     },
@@ -112,59 +175,143 @@ export const JARS: Jar[] = [
         key: 'give',
         name: 'Give',
         pct: DEFAULT_JAR_SPLIT[JarKey.GIVE],
-        colorVar: '#15803D',
-        line: 'Your foundation, a charity, helping someone who needs it. Generosity as a habit, not a mood.',
+        colorVar: 'var(--color-jar-give)',
+        line: 'A cause, a friend who needs it, your own foundation one day. Generosity as a habit, not a mood.',
         not: 'Not a tip you already left.',
         icon: 'heart',
     },
 ];
 
-export interface Pillar {
+export const JARS_SECTION = {
+    eyebrow: 'THE SIX JARS',
+    headline: 'Six jobs, so no amount has to decide for itself.',
+    lead: 'Every jar has a rule you can read in one line — what belongs, what doesn’t. The percentages are yours to change. The habit is the point.',
+} as const;
+
+/* ─────────────────────────── problem ─────────────────────────── */
+
+export const PROBLEM = {
+    eyebrow: 'WHY THE PICTURE GOES MISSING',
+    headline: 'It isn’t that you don’t care. It’s that everything keeps moving.',
+    /** docs/research/money-awareness.md — suggested proof language. */
+    lead: 'Most people don’t lose the plot because they don’t care. They lose the picture because income, expenses and priorities keep moving — and tracking every detail costs attention they need to build the life they want.',
+    kicker: 'Rumtelo is the missing picture. Every amount already has a place — before life decides for you.',
+    sources:
+        'Grounded in Mullainathan & Shafir (Scarcity), CFPB consumer research, US Financial Diaries and the JPMorgan Chase Institute.',
+} as const;
+
+export const PROBLEM_CARDS: { icon: IconName; head: string; line: string }[] = [
+    {
+        icon: 'trend',
+        head: 'The numbers keep moving',
+        line: 'Hours, overtime, side income, shared costs, a car, a kid. Many households swing ±25% from their average month. A fixed budget feels fake — so you stop trusting it.',
+    },
+    {
+        icon: 'clock',
+        head: 'Attention is the scarce thing',
+        line: 'Money stress — and ambition under load — capture attention and shrink the bandwidth for planning. So you manage by feel. Not by a full picture.',
+    },
+    {
+        icon: 'db',
+        head: 'Tools were built for accountants',
+        line: 'Spreadsheets add anxiety without changing the next decision. Detail only sticks when it reduces stress. Most tools do the opposite.',
+    },
+    {
+        icon: 'wallet',
+        head: 'The balance lies',
+        line: 'Cards, cash, BNPL, a partner’s account. “Available” ignores the rent that leaves on Friday. The number you see isn’t the number you have.',
+    },
+];
+
+/* ─────────────────────────── portals ─────────────────────────── */
+
+export interface Portal {
+    key: 'money' | 'growth' | 'energy' | 'soul';
     name: string;
-    metric: string;
+    dutch: string;
+    /** docs/brand/quotes.md — per-portal line. */
+    hook: string;
+    question: string;
+    /** Tint — mirrors apps/application/app/_lib/portal-hubs.ts. */
+    colorVar: string;
     icon: IconName;
-    color: string;
-    line: string;
+    /** Features from `FEATURES[product]` in @rumtelo/contracts, in product words. */
+    features: string[];
 }
 
-export const PILLARS: Pillar[] = [
+export const PORTALS: Portal[] = [
     {
+        key: 'money',
         name: 'Money',
-        metric: 'THIS MONTH',
-        icon: 'trend',
-        color: '#15803D',
-        line: 'How your money moves: six jars filled the second income lands, plus spending, fixed costs and debt. A hard ceiling on must-pays and one jar you never spend.',
+        dutch: 'Geld',
+        hook: 'Stop wondering where it went.',
+        question: 'Where does this month go?',
+        colorVar: 'var(--color-jar-give)',
+        icon: 'wallet',
+        features: [
+            'Six jars, your percentages',
+            'Inbox — sorted by rule or by hand',
+            'Fixed costs you see coming',
+            'Debt plan with an end date',
+            'The week check · the month score',
+        ],
     },
     {
+        key: 'growth',
         name: 'Growth',
-        metric: 'OVER THE YEARS',
-        icon: 'book',
-        color: '#0369A1',
-        line: 'Where your money sits: your goals, your income curve, what you learn, and your net worth. Cash flow is this month; this is the decade.',
+        dutch: 'Groei',
+        hook: 'Stop wondering how to earn more.',
+        question: 'How do I earn more?',
+        colorVar: 'var(--color-jar-lts)',
+        icon: 'compass',
+        features: [
+            'Goals with a date and a jar',
+            'Income — the curve and the four levers',
+            'Learn — books, courses, what they changed',
+            'Net worth and your freedom number',
+        ],
     },
     {
+        key: 'energy',
         name: 'Energy',
-        metric: 'YOUR CAPACITY',
-        icon: 'sparkle',
-        color: '#B45309',
-        line: 'Your week, your sleep, your training, your food. Not vanity metrics — the floor under every financial decision you make.',
+        dutch: 'Energie',
+        hook: 'Stop wondering what you’re running on.',
+        question: 'What am I running on?',
+        colorVar: 'var(--color-jar-play)',
+        icon: 'moon',
+        features: [
+            'Your 168 hours, divided on purpose',
+            'Sleep — the floor under every decision',
+            'Training and load',
+            'Food and fuel',
+        ],
     },
     {
+        key: 'soul',
         name: 'Soul',
-        metric: 'THE WHY',
-        icon: 'lock',
-        color: '#6366F1',
-        line: 'Stillness, gratitude, one intention a week, and a vocabulary for where energy gets stuck. Control without a why is just bookkeeping.',
+        dutch: 'Ziel',
+        hook: 'Stop wondering why you’re doing this.',
+        question: 'Why am I doing this?',
+        colorVar: 'var(--color-portal-soul)',
+        icon: 'sparkle',
+        features: [
+            'Stillness — one minute counts',
+            'Gratitude, written down',
+            'One intention a week',
+            'The seven centres — where energy gets stuck',
+        ],
     },
 ];
 
-export const PROOF = [
-    { value: '4', label: 'portals, one switch' },
-    { value: '55%', label: 'cap on must-pays' },
-    { value: '€0', label: 'to start' },
-];
+export const PORTALS_SECTION = {
+    eyebrow: 'NOT JUST MONEY. WHERE YOUR LIFE GOES.',
+    headline: 'Money. Growth. Energy. Soul. One overview.',
+    lead: 'Money is the door. But the picture isn’t only the bank balance. Rumtelo is four portals behind one switch — each answers one question, and a Coach holds them together. You are always inside exactly one.',
+} as const;
 
-export interface JourneyStep {
+/* ─────────────────────────── the loop ─────────────────────────── */
+
+export interface LoopStep {
     step: string;
     title: string;
     tag: string;
@@ -174,61 +321,183 @@ export interface JourneyStep {
     why: string;
 }
 
-export const JOURNEY: JourneyStep[] = [
+export const LOOP_SECTION = {
+    eyebrow: 'THE LOOP',
+    headline: 'Split first. Spend second. Ten minutes a week.',
+    lead: 'No secrets and no magic. A loop you can hold in your head: income splits, spending gets sorted, one short check a week, one score a month. You do the small part; Rumtelo does the arithmetic and speaks up when something needs a move.',
+} as const;
+
+export const LOOP: LoopStep[] = [
     {
         step: '01',
-        title: 'Tell Rumtelo what lands',
-        tag: 'THE SIX-JAR SPLIT',
-        you: 'Type one number: what arrives in your account each month. Salary, freelance, anything.',
+        title: 'Income lands. Six jars fill.',
+        tag: 'SPLIT FIRST',
+        you: 'Tell Rumtelo what lands. One number — salary, freelance, anything.',
         rumtelo:
-            'Builds your six jars around it, with a hard ceiling on living costs — every euro gets a job before it arrives.',
-        math: '€4,300 → 55% must-pays · 10% invest · 10% save · 10% learn · 10% play · 5% give',
-        why: 'The oldest budgeting idea there is. The rule that matters: the split happens on arrival, not at month end. If must-pays need more than 55%, that is the problem to fix — not your discipline.',
+            'Splits it across six jars the same second, with your percentages. Fixed costs draw from those jars, so you see them coming.',
+        math: '€4,300 → 55% Necessity · 10% Freedom · 10% Savings · 10% Education · 10% Play · 5% Give',
+        why: 'Money with a job doesn’t need defending all month. If must-pays need more than 55%, that is the thing to fix — not your discipline.',
     },
     {
         step: '02',
-        title: 'Income arrives — the split just happens',
-        tag: 'PAY YOURSELF FIRST',
-        you: 'Nothing. That is the point.',
+        title: 'Spending lands in the Inbox.',
+        tag: 'SORTED, NOT JUDGED',
+        you: 'Add it yourself, or drop in a bank statement. Live bank sync comes later — read-only, and only when you connect it.',
         rumtelo:
-            'Moves 10% into Financial Freedom before you can touch it — the jar that is never spent, only invested in things that pay you back.',
-        math: '€430/month at 7% ≈ €74,000 in 10 years · €220,000 in 20',
-        why: 'Compound growth is the whole trick. The jar exists so you never have to decide to invest — it already happened.',
+            'Sorts every amount into its jar — by rule or by hand. Re-import a statement and nothing doubles.',
+        math: 'Groceries −€38.65 → Necessity · Coffee −€5.20 → Play · rule: “supermarket → Necessity”',
+        why: 'A jar over its line is a signal, not a verdict. It shows up as information — with the one move that fixes it.',
     },
     {
         step: '03',
-        title: 'You spend from jars, not a balance',
-        tag: 'SAFE TO SPEND',
-        you: 'Live your life. Buy the coffee, book the dinner — from the jar that is for it.',
+        title: 'Ten minutes. Once a week.',
+        tag: 'THE WEEK CHECK',
+        you: 'Sit down with the Coach. Redirect what is left. Set one intention.',
         rumtelo:
-            'Shows one number every morning: what is genuinely free, after everything already promised to rent and bills.',
-        math: '(€583 + €224 left) ÷ 8 days = €64 safe to spend today',
-        why: 'A bank balance lies — it shows money that is already spoken for. Stay under the number and every jar survives the month by construction.',
+            'Shows what moved, what is safe to spend, and what to change. Then gets out of the way.',
+        math: '(€583 + €224 left) ÷ 8 days = €64 safe today · surplus €140 → Long Term Savings',
+        why: 'Ten minutes a week beats daily worry. The practice is short and repeating — not constant vigilance.',
     },
     {
         step: '04',
-        title: 'Your debts get a plan',
-        tag: 'AVALANCHE & SNOWBALL',
-        you: 'Enter each debt once: what, how much, what interest.',
+        title: 'The month closes with a score.',
+        tag: 'THE MONTH SCORE',
+        you: 'Close the turn. Read the log.',
         rumtelo:
-            'Sorts good debt from expensive debt, computes both payoff orders, and shows the month you are free.',
-        math: 'DUO 2.56% → pay minimum · credit card 14% → kill first · free: Feb 2035',
-        why: 'Debt under roughly 4–5% is cheaper than inflation — pay the minimum and invest the difference. Expensive debt gets killed first, always.',
+            'Scores the month — jars held, debt paid, intention kept — and writes it down. Next month starts clean.',
+        math: 'Month score 82 · 5 of 6 jars held · debt −€310 · debt-free: Feb 2035',
+        why: 'You can’t steer what you never look back at. One number, one log, no shame.',
     },
     {
         step: '05',
-        title: 'You watch freedom grow',
-        tag: 'THE FREEDOM NUMBER',
-        you: 'Keep going. Check in once a week.',
+        title: 'Then the picture widens.',
+        tag: 'ENERGY · GROWTH · SOUL',
+        you: 'Log a night of sleep. Name a goal. Finish a book. One minute of stillness.',
         rumtelo:
-            'Tracks what you own, what it pays you monthly, and how much of your living costs it already covers — your level, from Survival to Free.',
-        math: 'Assets pay €168/month · covers 14% of your costs → Level 2 of 5',
-        why: 'The end state this whole system points at: when what you own pays your monthly costs, a salary becomes optional.',
+            'Feeds it all to the Coach — so “a tired head spends” becomes something you can see, not just feel.',
+        math: 'Sleep 7h20 ↑ · goal “Emergency fund” 64% · 1 book · stillness day 6',
+        why: 'Energy carries money. A rested head steers. Without a why, steering is just bookkeeping.',
     },
 ];
 
+/* ─────────────────────────── the coach ─────────────────────────── */
+
+export const COACH_SECTION = {
+    eyebrow: 'THE COACH',
+    headline: 'You’re the aspirant. The Coach is the mentor.',
+    lead: 'Every screen opens with the Coach: one sentence on where you stand, one move to make. Not a wall of charts. Not a lecture. Suggestions from money, growth, energy and soul — one tip at a time, and it never speaks to shame you.',
+} as const;
+
+export const COACH_POINTS = [
+    'One verdict, one action — every tip ships a next move',
+    'Quiet until there is enough data — six noisy points are not insight',
+    'Information, never shame — an over-the-line jar is a signal, not a verdict',
+    'Ten minutes a week with the Coach — not daily homework',
+];
+
+export interface CoachDemoMessage {
+    kind: string;
+    portal: Portal['key'];
+    text: string;
+    cta: string;
+}
+
+/** Rendered mock of the in-app Coach — one card per portal, in product voice. */
+export const COACH_DEMO: CoachDemoMessage[] = [
+    {
+        kind: 'THIS WEEK',
+        portal: 'money',
+        text: 'Play is €38 over its line. Move it from Long Term Savings once — or let it ride and keep next week’s dinner in.',
+        cta: 'Open jars',
+    },
+    {
+        kind: 'THE LEVER',
+        portal: 'growth',
+        text: 'Cutting costs has a floor. Raising income does not. Your side income is 20% of the way to the goal you set.',
+        cta: 'Open income',
+    },
+    {
+        kind: 'YOUR FLOOR',
+        portal: 'energy',
+        text: 'Three nights under 6h30 — and Play spending rose on the same days. Sleep first. Then decide.',
+        cta: 'Open sleep',
+    },
+    {
+        kind: 'START SMALL',
+        portal: 'soul',
+        text: 'This week’s intention is still empty. One line is enough: what would make this a good week?',
+        cta: 'Set intention',
+    },
+];
+
+/* ─────────────────────────── principles ─────────────────────────── */
+
+export const PRINCIPLES_SECTION = {
+    eyebrow: 'FOUR PRINCIPLES WE DON’T BREAK',
+    headline: 'If a feature fights a principle, the feature loses.',
+} as const;
+
+export const PRINCIPLES: { nl: string; en: string; body: string; icon: IconName }[] = [
+    {
+        nl: 'Eerst verdelen, dan uitgeven.',
+        en: 'Split first. Spend second.',
+        body: 'Money gets a job before it gets spent.',
+        icon: 'wallet',
+    },
+    {
+        nl: 'Tien minuten per week.',
+        en: 'Ten minutes a week.',
+        body: 'A short, repeating practice beats daily worry.',
+        icon: 'clock',
+    },
+    {
+        nl: 'Energie draagt geld.',
+        en: 'Energy carries money.',
+        body: 'A tired head spends. A rested head decides.',
+        icon: 'moon',
+    },
+    {
+        nl: 'Informatie, nooit schaamte.',
+        en: 'Information, never shame.',
+        body: 'An over-the-line jar is a signal, not a verdict. Every warning carries the one move that fixes it.',
+        icon: 'shield',
+    },
+];
+
+/* ─────────────────────────── why we exist ─────────────────────────── */
+
+export const WHY = {
+    eyebrow: 'WHY RUMTELO EXISTS',
+    quoteNl: 'Rijkdom is geen getal. Het zijn de teugels in jouw handen.',
+    quoteEn: 'Wealth isn’t a number. It’s the reins in your hands.',
+    body: 'We built Rumtelo for ourselves first. We earned fine and still didn’t know where it went — or what it cost in sleep, focus and direction. Budget apps counted. Nobody coached. So we made the thing we needed: one calm overview and a mentor for the whole picture. Then we noticed we weren’t the only ones.',
+    signature: 'Given Loyiso, founder & CEO · Charissa Peroti, co-founder · Amsterdam',
+    manifesto: 'Don’t chase the number. Own the direction.',
+    audience: 'Built for people who are doing well — and for people who are ready to.',
+} as const;
+
+export const ROADMAP: { head: string; line: string; icon: IconName }[] = [
+    {
+        icon: 'eye',
+        head: 'Live bank sync',
+        line: 'PSD2, read-only, EU-licensed. Only after you connect it yourself.',
+    },
+    {
+        icon: 'flag',
+        head: 'Dutch first, English second',
+        line: 'Built for NL and EU life. Amounts and dates follow your locale.',
+    },
+    {
+        icon: 'sparkle',
+        head: 'Devices that track for you',
+        line: 'Watch, scale, ring — so sleep, training and energy arrive without typing.',
+    },
+];
+
+/* ─────────────────────────── pricing ─────────────────────────── */
+
 export interface Plan {
-    key: string;
+    key: PlanKey;
     name: string;
     monthly: number;
     yearly: number;
@@ -237,105 +506,184 @@ export interface Plan {
     feats: string[];
 }
 
+const basicLimits = PLAN_LIMITS[PlanKey.BASIC];
+const plusLimits = PLAN_LIMITS[PlanKey.PLUS];
+
+function count(value: number | null, singular: string, plural: string): string {
+    if (value === null) return `Unlimited ${plural}`;
+    return value === 1 ? `${value} ${singular}` : `${value} ${plural}`;
+}
+
+/**
+ * Feature lines mirror PLAN_ACCESS in @rumtelo/contracts:
+ *   Basic  = home + money core + growth goals/income + energy sleep + soul stillness/gratitude/intent
+ *   Plus   = + money debt/bank/import + energy week/training/food + invite
+ *   Max    = + growth net-worth/learn + soul centres
+ * Limits come from PLAN_LIMITS so the numbers cannot drift.
+ */
 export const PLANS: Plan[] = [
     {
-        key: 'basic',
+        key: PlanKey.BASIC,
         name: 'Basic',
         monthly: 0,
         yearly: 0,
-        tag: 'From €0',
-        line: 'The six jars and the practice underneath. No bank needed, no card needed — enough to start, and never a reason to stop.',
+        tag: 'Start here',
+        line: 'The whole practice, solo. Six jars, the Coach, one goal, your sleep, one minute of stillness. Enough to start — and never a reason to stop.',
         feats: [
-            'MONEY · the six jars with your own percentages',
-            'Add expenses yourself · fixed costs',
-            'Safe to spend per day',
-            'SOUL · stillness and one intention a week',
-            'The coach — ten minutes a week',
+            'MONEY · six jars, transactions, fixed costs',
+            `GROWTH · income and ${count(basicLimits.maxGoals, 'goal', 'goals')}`,
+            'ENERGY · sleep',
+            'SOUL · stillness, gratitude, one intention a week',
+            'The Coach, the week check, the month score',
+            'Solo household',
         ],
     },
     {
-        key: 'plus',
+        key: PlanKey.PLUS,
         name: 'Plus',
         monthly: 9,
         yearly: 90,
         tag: 'Most chosen',
-        line: 'The part that runs without you — plus Energy. Banks tied to jars, transactions sorted on arrival, your week and your body in view.',
+        line: 'For the part that should run without you — and for the people you share it with.',
         feats: [
-            'Connect ING, Revolut, bunq and more',
-            'Transactions arrive, Rumtelo guesses the jar',
-            'Debt plan with interest and an end date',
-            'ENERGY · your week, sleep, training, food',
-            'SOUL · gratitude and the seven centres',
-            'Unlimited history and export',
+            'Everything in Basic',
+            'MONEY · debt plan with interest and a freedom date',
+            'MONEY · bank statement import — live sync coming',
+            'ENERGY · your 168 hours, training, food',
+            `Invite up to ${plusLimits.maxMembers} — partner, family, friends`,
+            `Up to ${plusLimits.maxGoals} goals`,
         ],
     },
     {
-        key: 'max',
+        key: PlanKey.MAX,
         name: 'Max',
         monthly: 19,
         yearly: 190,
-        tag: 'All four portals',
-        line: 'Where the money starts making money. Your goals, your income curve, what you learn and your net worth — plus your devices later.',
+        tag: 'The whole picture',
+        line: 'Where money starts making money — and learning starts paying back.',
         feats: [
-            'GROWTH · goals with a date and a jar',
-            'My income — curve, target and the four levers',
-            'What I learn — books and what they changed',
-            'Net worth, returns and your freedom number',
-            'Connect devices — watch, scale, ring (coming)',
+            'Everything in Plus',
+            'GROWTH · net worth, returns and your freedom number',
+            'GROWTH · Learn — books, courses, what they changed',
+            'SOUL · the seven centres',
+            'Unlimited goals and members',
+            'Devices — watch, scale, ring (coming)',
         ],
     },
 ];
 
+export const PRICING_SECTION = {
+    eyebrow: 'PRICING',
+    headline: 'Free where it counts. Paid where it saves you work.',
+    lead: 'Start on Basic and stay as long as you like. Nothing you enter is ever locked away.',
+} as const;
+
 export const ASSURANCES: { text: string; icon: IconName }[] = [
+    { text: 'Basic is free and needs no card. It can stay that way.', icon: 'shield' },
     {
-        text: 'Basic needs no card to start — price can stay €0 or become a small fee later.',
-        icon: 'shield',
-    },
-    {
-        text: 'Bank data is read-only, via PSD2, and only after you connect it yourself.',
+        text: 'No bank required. Import a statement when you want to — read-only, always, and only after you choose to.',
         icon: 'eye',
     },
     { text: 'Cancel a paid plan and everything you entered stays readable.', icon: 'db' },
 ];
 
-export const TRUST_CARDS: { icon: IconName; head: string; line: string }[] = [
+/* ─────────────────────────── faq ─────────────────────────── */
+
+export const FAQ_SECTION = {
+    eyebrow: 'QUESTIONS',
+    headline: 'Straight answers.',
+} as const;
+
+export const FAQ: { question: string; answer: string }[] = [
     {
-        icon: 'lock',
-        head: 'Payments by Stripe',
-        line: 'Card details go to Stripe, never to Rumtelo. PCI-DSS Level 1 — the same standard your bank uses.',
+        question: 'Is Rumtelo a budgeting app?',
+        answer: 'No. Budgeting apps count what happened. Rumtelo gives money a job before it is spent, then coaches the rest — energy, growth, why. Bookkeeping is a side effect, not the point.',
     },
     {
+        question: 'Do I need to connect my bank?',
+        answer: 'No. Basic works with what you enter. Plus adds bank-statement import — re-import a statement and nothing doubles. Live bank sync (PSD2, read-only, EU-licensed) is on the roadmap, and only ever after you connect it yourself.',
+    },
+    {
+        question: 'Why are sleep, training and books in a money product?',
+        answer: 'Because a tired head spends and a rested head decides. Energy is the floor under every financial decision. Learning is the one spend that raises what you earn. Leave them out and an app becomes a spreadsheet.',
+    },
+    {
+        question: 'What does the Coach actually do?',
+        answer: 'One sentence on where you stand and one move to make — drawn from all four portals. It stays quiet until there is enough data, and it never speaks to shame you. You are the aspirant; the Coach is the mentor.',
+    },
+    {
+        question: 'Can I use it with a partner or my family?',
+        answer: `Yes — on Plus (up to ${plusLimits.maxMembers} people) and Max (unlimited). A household shares the jars. Spending style stays personal, because partners differ.`,
+    },
+    {
+        question: 'Where is my data?',
+        answer: 'On EU servers in Amsterdam, encrypted at rest. Export or delete it any time. Cancel a paid plan and every jar, transaction and goal stays readable.',
+    },
+    {
+        question: 'Dutch or English?',
+        answer: 'Both. Dutch first, English second. Rumtelo is built for NL and EU life — amounts and dates follow your locale.',
+    },
+];
+
+/* ─────────────────────────── sign-up ─────────────────────────── */
+
+export const SIGNUP_SECTION = {
+    eyebrow: 'CREATE YOUR ACCOUNT',
+    headline: 'Split first. Spend second.',
+    lead: 'Built for people who are doing well — and for people who are ready to. Tell us what lands each month; Rumtelo assigns it from there.',
+    submit: 'Create my free account',
+    terms: 'I agree to the terms and privacy policy. Rumtelo only ever reads bank data — and only after I connect it myself.',
+} as const;
+
+/* ─────────────────────────── footer ─────────────────────────── */
+
+export const TRUST_CARDS: { icon: IconName; head: string; line: string }[] = [
+    {
         icon: 'eye',
-        head: 'Read-only bank access',
-        line: 'Connected through PSD2-licensed providers. Rumtelo can look, never move money.',
+        head: 'Read-only, ever',
+        line: 'Rumtelo can look, never move money. Bank data arrives only after you connect it yourself.',
     },
     {
         icon: 'shield',
-        head: 'GDPR & EU hosting',
-        line: 'Your data lives on EU servers, encrypted at rest. Export or delete it any time.',
+        head: 'EU hosting, GDPR',
+        line: 'Amsterdam servers, encrypted at rest. Export or delete your data any time.',
     },
     {
         icon: 'db',
         head: 'Yours, always',
         line: 'Cancel and every jar, transaction and goal stays readable. No lock-in, no hostage data.',
     },
+    {
+        icon: 'compass',
+        head: 'A coach, not a bank',
+        line: 'Not a bank, not a licensed adviser. Suggestions are education, not personal investment advice.',
+    },
 ];
 
 export const TRUST_BADGES = [
-    'STRIPE VERIFIED PARTNER',
-    'PSD2 · READ-ONLY',
-    'GDPR COMPLIANT',
-    '256-BIT TLS',
+    'EU HOSTED · AMSTERDAM',
+    'READ-ONLY BANK DATA',
+    'GDPR',
+    'TLS ENCRYPTED',
 ];
 
 export const FOOT_COLS = [
     {
         head: 'Product',
         links: [
+            { text: 'The portals', href: '#portals' },
+            { text: 'The loop', href: '#loop' },
+            { text: 'The Coach', href: '#coach' },
             { text: 'The jars', href: '#jars' },
-            { text: 'How it works', href: '#how' },
             { text: 'Pricing', href: '#pricing' },
-            { text: 'Bank connections', href: '#how' },
+        ],
+    },
+    {
+        head: 'Company',
+        links: [
+            { text: 'Why Rumtelo', href: '#why' },
+            { text: 'Principles', href: '#principles' },
+            { text: 'Questions', href: '#faq' },
         ],
     },
     {
@@ -344,32 +692,41 @@ export const FOOT_COLS = [
             { text: 'Privacy policy', href: '#' },
             { text: 'Terms of service', href: '#' },
             { text: 'Data processing', href: '#' },
-            { text: 'Cookie policy', href: '#' },
         ],
     },
     {
         head: 'Contact',
         links: [
-            { text: 'support@rumtelo.app', href: 'mailto:support@rumtelo.app' },
-            { text: 'Press & partnerships', href: '#' },
-            { text: 'Status', href: '#' },
+            { text: 'support@rumtelo.com', href: 'mailto:support@rumtelo.com' },
+            { text: 'Press & partnerships', href: 'mailto:hello@rumtelo.com' },
         ],
     },
 ];
 
+export const FOOTER_BLURB = {
+    attribution:
+        'Rumtelo · Amsterdam, the Netherlands. The six-jar split stands on the method popularised by T. Harv Eker; the asset-versus-liability lens on Robert Kiyosaki. Rumtelo is an independent product and is not affiliated with, endorsed by, or licensed from either.',
+    disclaimer:
+        'Rumtelo is a coach and an overview — not a bank and not a licensed financial adviser. Suggestions are education, not personal investment advice.',
+    copyright: `© ${new Date().getFullYear()} Rumtelo · All rights reserved`,
+} as const;
+
+/* ─────────────────────────── hero ambience ─────────────────────────── */
+
+/** Floating labels — money AND life signals, so the hero already hints at the wider picture. */
 export const FLOATERS = [
-    ['+€3,450', 6, 4, 14, 0, 0.14],
-    ['−55%', 15, 46, 11, 3.5, 0.1],
-    ['+€850', 26, 22, 12, 7, 0.12],
+    ['+€3,450 · split in 0.4s', 6, 4, 14, 0, 0.14],
+    ['Sleep 7h20 ↑', 15, 46, 11, 3.5, 0.1],
+    ['+€850 freelance', 26, 22, 12, 7, 0.12],
     ['NEC → €2,365', 36, 60, 10, 1.8, 0.09],
-    ['FF → €430', 47, 12, 11, 5.2, 0.11],
-    ['−€38.65', 56, 40, 12, 9.4, 0.1],
-    ['PLAY → €430', 66, 68, 10, 2.6, 0.08],
-    ['+7% p.a.', 76, 30, 13, 6.1, 0.12],
-    ['GIVE → €215', 85, 55, 10, 8.3, 0.09],
+    ['Intention set', 47, 12, 11, 5.2, 0.11],
+    ['−€38.65 → Necessity', 56, 40, 12, 9.4, 0.1],
+    ['1 book · Education', 66, 68, 10, 2.6, 0.08],
+    ['FF → €430 · invested', 76, 30, 13, 6.1, 0.12],
+    ['Stillness · day 6', 85, 55, 10, 8.3, 0.09],
     ['55 / 10 / 10 / 10 / 10 / 5', 62, 8, 11, 4.4, 0.11],
-    ['€64 / day', 92, 18, 12, 1.1, 0.12],
-    ['LTS → €430', 10, 72, 10, 10.6, 0.08],
+    ['Week check · 9 min', 92, 18, 12, 1.1, 0.12],
+    ['Month score 82', 10, 72, 10, 10.6, 0.08],
 ].map(([text, left, top, size, delay, opacity], i) => ({
     text: text as string,
     left: `${left}%`,
@@ -384,44 +741,19 @@ export const FLOATERS = [
 const TICKER_RAW = [
     ['Salary landed · split in 0.4s', 'var(--color-success)'],
     ['Groceries −€38.65 → Necessity', 'var(--color-fg-muted)'],
+    ['Sleep 7h20 · trend ↑', 'var(--color-jar-play)'],
     ['€430 → world index fund', 'var(--color-accent)'],
+    ['Intention set: “one honest week”', 'var(--color-portal-soul)'],
     ['Coffee −€5.20 → Play', 'var(--color-fg-muted)'],
+    ['Book finished · Education jar', 'var(--color-jar-edu)'],
     ['Debt-free: Feb 2035 · on track', 'var(--color-success)'],
-    ['Freelance +€850 · split in 0.3s', 'var(--color-success)'],
+    ['Week check done · 9 min', 'var(--color-accent)'],
+    ['Stillness · day 6', 'var(--color-portal-soul)'],
     ['Safe to spend today: €64', 'var(--color-accent)'],
-    ['Gym −€32 → Play · flagged', 'var(--color-warning)'],
+    ['Gym −€32 → Play · flagged, one move', 'var(--color-warning)'],
 ];
 export const TICKER = [...TICKER_RAW, ...TICKER_RAW].map(([text, dot], index) => ({
     text: text as string,
     dot: dot as string,
     key: `${index}-${text as string}`,
-}));
-
-export const COACH_GLANCE_POINTS = [
-    'One verdict, one action — never a wall of charts',
-    'Ten minutes a week with the coach, not daily homework',
-    'Every jar over its line comes with the one move that fixes it',
-];
-
-export const DEMO_INCOME_DEFAULT = 4300;
-
-export const BRAND = 'Rumtelo';
-
-export const FOOTER_COLUMNS = FOOT_COLS;
-
-const JAR_ICONS: Record<string, string> = {
-    nec: '🏠',
-    ff: '📈',
-    edu: '📚',
-    lts: '🔒',
-    play: '✨',
-    give: '💚',
-};
-
-export const JAR_CARDS = JARS.map(j => ({
-    name: j.name,
-    pct: `${j.pct}%`,
-    line: j.line,
-    not: j.not,
-    icon: JAR_ICONS[j.key] ?? '◈',
 }));

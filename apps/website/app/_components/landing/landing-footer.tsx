@@ -1,6 +1,7 @@
 import { RumteloLogo } from '@rumtelo/brand';
 import { BRAND_TAGLINE } from '@rumtelo/i18n';
-import { FOOT_COLS, TRUST_BADGES, TRUST_CARDS } from '@/lib/landing-content';
+
+import { FOOT_COLS, FOOTER_BLURB, TRUST_BADGES, TRUST_CARDS } from '@/lib/landing-content';
 
 import { LandingIcon } from './landing-icon';
 
@@ -12,12 +13,8 @@ export function LandingFooter() {
                 <div className="grid grid-cols-1 gap-3.5 border-b border-line pb-8 sm:grid-cols-2 lg:grid-cols-4">
                     {TRUST_CARDS.map(card => (
                         <div key={card.head} className="flex min-w-0 items-start gap-3">
-                            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft">
-                                <LandingIcon
-                                    name={card.icon}
-                                    size={18}
-                                    color="var(--color-accent)"
-                                />
+                            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
+                                <LandingIcon name={card.icon} size={18} />
                             </span>
                             <span className="grid min-w-0 gap-0.5">
                                 <span className="text-sm font-semibold text-fg-strong">
@@ -33,8 +30,7 @@ export function LandingFooter() {
             </div>
 
             {/* Brand + columns */}
-            <div className="mx-auto flex max-w-6xl flex-wrap items-start gap-7 px-4 py-8 pb-8 lg:gap-14 lg:px-6">
-                {/* Brand blurb */}
+            <div className="mx-auto flex max-w-6xl flex-wrap items-start gap-7 px-4 py-8 lg:gap-14 lg:px-6">
                 <div className="grid max-w-prose min-w-0 flex-1 basis-72 gap-3">
                     <div className="flex items-center gap-2">
                         <RumteloLogo variant="wordmark" className="h-6 w-auto max-w-[8.5rem]" />
@@ -43,19 +39,16 @@ export function LandingFooter() {
                         </span>
                     </div>
                     <span className="text-sm leading-relaxed text-fg-faint">
-                        Rumtelo B.V. · Amsterdam, the Netherlands. Inspired by the six-jar money
-                        method popularised by T. Harv Eker, and the asset-versus-liability thinking
-                        of Robert Kiyosaki. Rumtelo is an independent product and is not affiliated
-                        with, endorsed by, or licensed from either.
+                        {FOOTER_BLURB.attribution}
                     </span>
                     <span className="text-xs leading-relaxed text-fg-faint">
-                        Rumtelo is a money-insight tool, not a bank and not a licensed financial
-                        adviser. Suggestions are education, not personal investment advice.
+                        {FOOTER_BLURB.disclaimer}
                     </span>
                 </div>
 
-                {/* Link columns */}
-                <div className="flex min-w-0 flex-1 flex-wrap justify-start gap-6 sm:gap-8 lg:justify-end lg:gap-12">
+                <nav
+                    aria-label="Footer"
+                    className="flex min-w-0 flex-1 flex-wrap justify-start gap-6 sm:gap-8 lg:justify-end lg:gap-12">
                     {FOOT_COLS.map(col => (
                         <div key={col.head} className="grid min-w-0 content-start gap-2.5">
                             <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
@@ -71,14 +64,14 @@ export function LandingFooter() {
                             ))}
                         </div>
                     ))}
-                </div>
+                </nav>
             </div>
 
             {/* Bottom bar */}
             <div className="border-t border-line">
                 <div className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between lg:px-6">
                     <span className="font-mono text-xs font-medium tracking-normal text-fg-faint">
-                        © 2026 Rumtelo B.V. · KvK 00000000 · All rights reserved
+                        {FOOTER_BLURB.copyright}
                     </span>
                     <div className="flex flex-wrap gap-2">
                         {TRUST_BADGES.map(badge => (

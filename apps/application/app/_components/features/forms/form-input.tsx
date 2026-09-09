@@ -4,10 +4,7 @@ import * as React from 'react';
 
 import { Input } from '@rumtelo/ui';
 
-import {
-    ignorePasswordManagers,
-    safeAutofillName,
-} from '@/app/_lib/ignore-password-managers';
+import { ignorePasswordManagers, safeAutofillName } from '@/app/_lib/ignore-password-managers';
 
 /**
  * Money-form text input — same as UI Input, but hard-discourages browser /

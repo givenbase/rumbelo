@@ -6,13 +6,17 @@ import Link from 'next/link';
 import { BRAND_TAGLINE } from '@rumtelo/i18n';
 import { RumteloLogo } from '@rumtelo/brand';
 import { ThemeToggle } from '@rumtelo/ui';
-import { webSignUpPath } from '@/lib/portal-urls';
+
+import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
+
+import { Cta } from './landing-primitives';
 
 const NAV_LINKS = [
-    { href: '#pillars', label: 'The portals' },
-    { href: '#jars', label: 'The jars' },
-    { href: '#how', label: 'How it works' },
+    { href: '#portals', label: 'The portals' },
+    { href: '#loop', label: 'The loop' },
+    { href: '#coach', label: 'The Coach' },
     { href: '#pricing', label: 'Pricing' },
+    { href: '#faq', label: 'Questions' },
 ] as const;
 
 export function LandingHeader() {
@@ -45,9 +49,7 @@ export function LandingHeader() {
     const close = () => setOpen(false);
 
     return (
-        <header
-            className="sticky top-0 z-20 border-b border-line backdrop-blur-md"
-            style={{ background: 'var(--color-chrome)' }}>
+        <header className="sticky top-0 z-20 border-b border-line bg-chrome backdrop-blur-md">
             <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-3 px-4 py-3 lg:gap-5 lg:px-6">
                 <div className="flex min-w-0 flex-1 items-center gap-2 lg:flex-none">
                     <Link href="/" className="flex min-w-0 items-center gap-2">
@@ -73,11 +75,14 @@ export function LandingHeader() {
                     <ThemeToggle className="size-8 rounded-full bg-transparent text-sm text-fg-muted hover:border-accent hover:bg-transparent hover:text-accent" />
 
                     <a
-                        href={webSignUpPath()}
-                        className="hidden rounded-full px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95 sm:inline-flex"
-                        style={{ background: 'var(--gradient-accent)' }}>
-                        Start free
+                        href={appSignInUrl()}
+                        className="hidden text-sm text-fg-muted transition-colors hover:text-accent md:inline">
+                        Sign in
                     </a>
+
+                    <Cta href={webSignUpPath()} className="hidden sm:inline-flex">
+                        Start free
+                    </Cta>
 
                     <button
                         type="button"
@@ -110,8 +115,7 @@ export function LandingHeader() {
             {/* Mobile menu */}
             <div
                 id={menuId}
-                className={`border-t border-line lg:hidden ${open ? 'block' : 'hidden'}`}
-                style={{ background: 'var(--color-chrome)' }}>
+                className={`border-t border-line bg-chrome lg:hidden ${open ? 'block' : 'hidden'}`}>
                 <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
                     {NAV_LINKS.map(link => (
                         <a
@@ -123,12 +127,18 @@ export function LandingHeader() {
                         </a>
                     ))}
                     <a
-                        href={webSignUpPath()}
+                        href={appSignInUrl()}
                         onClick={close}
-                        className="mt-2 rounded-full px-5 py-3.5 text-center font-mono text-xs font-semibold tracking-wide text-on-accent uppercase transition-all hover:brightness-105 active:scale-95 sm:hidden"
-                        style={{ background: 'var(--gradient-accent)' }}>
-                        Start free
+                        className="rounded-lg px-3 py-3 text-base text-fg-muted transition-colors hover:bg-raised hover:text-accent">
+                        Sign in
                     </a>
+                    <Cta
+                        href={webSignUpPath()}
+                        size="lg"
+                        onClick={close}
+                        className="mt-2 sm:hidden">
+                        Start free — no card
+                    </Cta>
                 </nav>
             </div>
         </header>
