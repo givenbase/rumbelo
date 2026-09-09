@@ -248,7 +248,10 @@ export function IncomeForm({
                                     value={field.value}
                                     onChange={field.onChange}
                                     placeholder="e.g. salary"
+                                    freeTextPlaceholder="Describe where it came from…"
                                     options={presetOptions}
+                                    lockPresets
+                                    freeTextKeys={['OTHER']}
                                     onSelect={opt => {
                                         const full = presetOptions.find(
                                             preset => preset.key === opt.key

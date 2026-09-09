@@ -36,4 +36,11 @@ export const GOAL_PRESET_SEED = [
         categoryTemplateKey: 'COURSES',
         icon: '📚',
     },
+    {
+        key: 'OTHER',
+        name: 'Other',
+        jarKey: JarKey.LONG_TERM_SAVINGS,
+        categoryTemplateKey: null,
+        icon: '✨',
+    },
 ] as const;

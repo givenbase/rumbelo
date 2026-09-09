@@ -681,4 +681,11 @@ export const FIXED_COST_PRESET_SEED: readonly Seed[] = [
         categoryTemplateKey: 'DONATIONS',
         audienceTags: ['FAMILY', 'COUPLE'],
     },
+    {
+        key: 'OTHER',
+        name: 'Other',
+        jarKey: necessities,
+        categoryTemplateKey: 'OTHER',
+        audienceTags: ['COMMON'],
+    },
 ];

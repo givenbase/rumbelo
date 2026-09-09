@@ -95,6 +95,7 @@ export function GoalForm({
                 name: preset.name,
                 jarKey: preset.jarKey,
                 icon: preset.icon,
+                group: preset.key === 'OTHER' ? 'Other' : undefined,
             })),
         [presetsQuery.data]
     );
@@ -261,10 +262,14 @@ export function GoalForm({
                                 <PresetNameField
                                     value={field.value}
                                     placeholder="e.g. emergency fund"
+                                    freeTextPlaceholder="Type a custom goal name…"
                                     options={presetOptions}
+                                    lockPresets
+                                    freeTextKeys={['OTHER']}
                                     onChange={value => {
                                         field.onChange(value);
                                         if (
+                                            value.trim() &&
                                             !presetOptions.some(
                                                 preset =>
                                                     preset.name.toLowerCase() ===

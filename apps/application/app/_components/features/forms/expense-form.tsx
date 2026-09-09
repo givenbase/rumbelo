@@ -488,14 +488,15 @@ export function ExpenseForm({
                                         const resolved = resolveInflowKey(value);
                                         setInflowKey(current => {
                                             if (resolved) return resolved;
-                                            if (!value.trim()) return null;
-                                            // Keep Other after picking it, while they type a custom label
+                                            // Keep Other after picking it (empty while they type)
                                             if (current === 'OTHER_IN') return 'OTHER_IN';
+                                            if (!value.trim()) return null;
                                             return null;
                                         });
                                     }}
                                     options={[...TRANSACTION_IN_PRESETS]}
-                                    placeholder="Gift, tax return, or type your own…"
+                                    placeholder="Gift, tax return…"
+                                    freeTextPlaceholder="Describe where it came from…"
                                     disabled={busy}
                                     onSelect={preset => {
                                         setInflowKey(preset.key);

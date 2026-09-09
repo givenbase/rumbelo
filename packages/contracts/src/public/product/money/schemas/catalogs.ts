@@ -32,7 +32,8 @@ export type DebtPreset = z.infer<typeof DebtPreset>;
 export const IncomeSourcePreset = CatalogItemBase.extend({
     kind: z.enum(IncomeKind),
     defaultCadence: z.enum(Cadence),
-    icon: z.string().max(8).nullable(),
+    /** Emoji for the create picker; nullish until migration/seed lands. */
+    icon: z.string().max(32).nullish(),
 });
 export type IncomeSourcePreset = z.infer<typeof IncomeSourcePreset>;
 

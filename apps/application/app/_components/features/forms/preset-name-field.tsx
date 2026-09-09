@@ -19,11 +19,13 @@ type PresetNameFieldProps = {
     onSelect?: (preset: NamePresetOption) => void;
     options: NamePresetOption[];
     placeholder?: string;
+    /** Placeholder after picking Other / a free-text key. */
+    freeTextPlaceholder?: string;
     disabled?: boolean;
     id?: string;
     /**
-     * Lock the name after picking a preset (chip). Manual typing stays free.
-     * Keys in `freeTextKeys` (e.g. Other) stay editable after select.
+     * Lock the name after picking a preset (chip). Manual typing only after
+     * a key in `freeTextKeys` (e.g. Other).
      */
     lockPresets?: boolean;
     freeTextKeys?: readonly string[];
@@ -57,7 +59,7 @@ function resolveLockedPreset(
 /**
  * Name input with a suggestion dropdown (design: New debt modal).
  * Default: free typing; list filters as you type; picking fills the name.
- * With lockPresets: picking a fixed preset locks until cleared; Other / free type stays editable.
+ * With lockPresets: catalog picks lock; only freeTextKeys (Other) unlock typing.
  */
 export function PresetNameField({
     value,
@@ -65,6 +67,7 @@ export function PresetNameField({
     onSelect,
     options,
     placeholder = 'e.g. rent',
+    freeTextPlaceholder = 'Type a custom name…',
     disabled,
     id,
     lockPresets = false,
@@ -77,18 +80,21 @@ export function PresetNameField({
     );
     const [hydratedLockKey, setHydratedLockKey] = useState(initialLockedKey);
     const [awaitingCustom, setAwaitingCustom] = useState(false);
+    const [filterQuery, setFilterQuery] = useState('');
     const rootRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const listboxId = `${id ?? 'preset-name'}-listbox`;
-    const query = value.trim();
 
     const freeKeySet = useMemo(() => new Set(freeTextKeys), [freeTextKeys]);
+    const searchOnly = lockPresets && !awaitingCustom && !locked;
 
     // Sync lock when edit hydrate key arrives (adjust during render — no effect).
     if (initialLockedKey !== hydratedLockKey) {
         setHydratedLockKey(initialLockedKey);
         setLocked(resolveLockedPreset(lockPresets, initialLockedKey, freeTextKeys, options));
     }
+
+    const query = (searchOnly ? filterQuery : value).trim();
 
     const selectedKey = useMemo(() => {
         if (locked) return locked.key;
@@ -124,6 +130,7 @@ export function PresetNameField({
     function clearLock() {
         setLocked(null);
         setAwaitingCustom(false);
+        setFilterQuery('');
         onChange('');
         setOpen(true);
         requestAnimationFrame(() => inputRef.current?.focus());
@@ -131,6 +138,7 @@ export function PresetNameField({
 
     function pickOption(opt: NamePresetOption) {
         onSelect?.(opt);
+        setFilterQuery('');
         if (lockPresets && freeKeySet.has(opt.key)) {
             setLocked(null);
             setAwaitingCustom(true);
@@ -151,7 +159,11 @@ export function PresetNameField({
     }
 
     const showLockedChip = Boolean(lockPresets && locked);
-    const inputPlaceholder = awaitingCustom ? 'Describe where it came from…' : placeholder;
+    const inputValue = searchOnly ? filterQuery : value;
+    const inputPlaceholder = awaitingCustom ? freeTextPlaceholder : placeholder;
+    const emptyHint = lockPresets
+        ? 'No matches — pick Other for a custom name.'
+        : 'No matches — keep typing for a custom name.';
 
     return (
         <div ref={rootRef} className="relative">
@@ -194,7 +206,7 @@ export function PresetNameField({
                         ref={inputRef}
                         id={id}
                         name="rumbelo-preset-label"
-                        value={value}
+                        value={inputValue}
                         disabled={disabled}
                         placeholder={inputPlaceholder}
                         role="combobox"
@@ -203,9 +215,14 @@ export function PresetNameField({
                         aria-autocomplete="list"
                         onChange={event => {
                             const next = event.target.value;
-                            onChange(next);
-                            setLocked(null);
-                            if (!next.trim()) setAwaitingCustom(false);
+                            if (searchOnly) {
+                                setFilterQuery(next);
+                                if (value) onChange('');
+                            } else {
+                                onChange(next);
+                                setLocked(null);
+                                if (!next.trim()) setAwaitingCustom(false);
+                            }
                             setOpen(true);
                         }}
                         onFocus={() => setOpen(true)}
@@ -228,9 +245,7 @@ export function PresetNameField({
                     role="listbox"
                     className="absolute z-30 mt-1 max-h-64 w-full overflow-auto rounded-xl bg-fg py-1.5 text-sm text-bg shadow-lg">
                     {filtered.length === 0 ? (
-                        <p className="px-3 py-2 text-bg/60">
-                            No matches — keep typing for a custom name.
-                        </p>
+                        <p className="px-3 py-2 text-bg/60">{emptyHint}</p>
                     ) : (
                         grouped.map(([group, items]) => (
                             <div key={group || 'all'}>

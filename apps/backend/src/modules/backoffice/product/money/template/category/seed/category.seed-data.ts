@@ -16,6 +16,7 @@ export const CATEGORY_TEMPLATE_SEED = [
     { key: 'CARE', name: 'Care', jarKey: JarKey.NECESSITIES, icon: '💊' },
     { key: 'PETS', name: 'Pets', jarKey: JarKey.NECESSITIES, icon: '🐾' },
     { key: 'BANKING', name: 'Banking', jarKey: JarKey.NECESSITIES, icon: '🏦' },
+    { key: 'OTHER', name: 'Other', jarKey: JarKey.NECESSITIES, icon: '✨' },
     // FINANCIAL_FREEDOM
     { key: 'INDEX_FUNDS', name: 'Index funds', jarKey: JarKey.FINANCIAL_FREEDOM, icon: '📈' },
     { key: 'STOCKS', name: 'Stocks', jarKey: JarKey.FINANCIAL_FREEDOM, icon: '📊' },

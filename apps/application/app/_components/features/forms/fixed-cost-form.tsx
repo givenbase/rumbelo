@@ -297,7 +297,10 @@ export function FixedCostForm({
                                     value={field.value}
                                     onChange={field.onChange}
                                     placeholder="e.g. rent"
+                                    freeTextPlaceholder="Type a custom bill name…"
                                     options={presetOptions}
+                                    lockPresets
+                                    freeTextKeys={['OTHER']}
                                     onSelect={opt => {
                                         const full = presetOptions.find(
                                             preset => preset.key === opt.key

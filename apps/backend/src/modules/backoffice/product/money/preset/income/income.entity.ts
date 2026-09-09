@@ -34,7 +34,7 @@ export class IncomeSourcePreset extends BaseEntity {
     name!: string;
 
     /** Optional emoji for the income create picker. */
-    @Property({ length: 8, nullable: true })
+    @Property({ length: 32, nullable: true })
     icon: string | null = null;
 
     /** Display / seed order within the catalog. */
