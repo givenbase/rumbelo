@@ -1,0 +1,65 @@
+/**
+ * Catalogs Schemas (Money)
+ * Backoffice company catalog DTOs — read-only suggestions for create forms.
+ * Zod only — no `export type`.
+ */
+
+import { z } from 'zod';
+
+import { Cadence, FlowDirection } from '../../../../common/common.enums';
+import { CatalogItemBase } from '../../../../common/common.schema';
+import { DebtKind, IncomeKind, JarKey } from '../enums';
+
+/** Money company-catalog DTOs (backoffice.product.money templates + presets). */
+
+export const CategoryTemplate = CatalogItemBase.extend({
+    jarKey: z.enum(JarKey),
+    icon: z.string().max(8).nullable(),
+});
+
+export const FixedCostPreset = CatalogItemBase.extend({
+    jarKey: z.enum(JarKey),
+    categoryTemplateKey: z.string().min(1).max(64),
+    defaultCadence: z.enum(Cadence),
+    suggestedDueDay: z.int().min(1).max(31).nullable(),
+    direction: z.enum(FlowDirection),
+    audienceTags: z.array(z.string()),
+});
+
+export const DebtPreset = CatalogItemBase.extend({
+    kind: z.enum(DebtKind),
+    icon: z.string().max(8).nullable(),
+    /** Lender name chips for "Who do you owe?" after this type is picked. */
+    suggestedLenders: z.array(z.string().min(1).max(120)),
+});
+
+export const IncomeSourcePreset = CatalogItemBase.extend({
+    kind: z.enum(IncomeKind),
+    defaultCadence: z.enum(Cadence),
+    /** Emoji for the create picker; nullish until migration/seed lands. */
+    icon: z.string().max(32).nullish(),
+});
+
+export const GoalPreset = CatalogItemBase.extend({
+    jarKey: z.enum(JarKey),
+    categoryTemplateKey: z.string().min(1).max(64).nullable(),
+    icon: z.string().max(8).nullable(),
+});
+
+export const MerchantPreset = CatalogItemBase.extend({
+    matchValue: z.string().min(1).max(120),
+    /** Extra bank-feed needles (Revolut / SEPA / card descriptors). */
+    aliases: z.array(z.string().min(1).max(120)),
+    /** ISO 18245 merchant category code when known. */
+    mcc: z.string().length(4).nullable(),
+    jarKey: z.enum(JarKey),
+    categoryTemplateKey: z.string().min(1).max(64),
+});
+
+// Inferred types (same-module merge for consumers)
+export type CategoryTemplate = z.infer<typeof CategoryTemplate>;
+export type FixedCostPreset = z.infer<typeof FixedCostPreset>;
+export type DebtPreset = z.infer<typeof DebtPreset>;
+export type IncomeSourcePreset = z.infer<typeof IncomeSourcePreset>;
+export type GoalPreset = z.infer<typeof GoalPreset>;
+export type MerchantPreset = z.infer<typeof MerchantPreset>;

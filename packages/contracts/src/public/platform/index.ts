@@ -7,5 +7,9 @@
  * Mirror: apps/backend/src/modules/public/platform/
  */
 export * from './enums';
-export { Currency } from '../../common/enums';
-export * from './schemas';
+export { Currency } from '../../common/common.enums';
+export * from './account';
+export * from './auth';
+export * from './billing';
+export * from './coach';
+export * from './household';

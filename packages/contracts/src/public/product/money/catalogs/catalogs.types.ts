@@ -1,0 +1,13 @@
+/**
+ * Catalogs Types (Money)
+ * Re-exports from schema (same-module merge).
+ */
+
+export type {
+    CategoryTemplate,
+    FixedCostPreset,
+    DebtPreset,
+    IncomeSourcePreset,
+    GoalPreset,
+    MerchantPreset,
+} from './catalogs.schema';

@@ -20,34 +20,34 @@
             "default": "./src/client/react.tsx"
         },
         "./money": {
-            "types": "./src/money/index.ts",
+            "types": "./src/public/product/money/index.ts",
             "import": "./dist/money.js",
             "require": "./dist/money.cjs",
-            "default": "./src/money/index.ts"
+            "default": "./src/public/product/money/index.ts"
         },
         "./growth": {
-            "types": "./src/growth/index.ts",
+            "types": "./src/public/product/growth/index.ts",
             "import": "./dist/growth.js",
             "require": "./dist/growth.cjs",
-            "default": "./src/growth/index.ts"
+            "default": "./src/public/product/growth/index.ts"
         },
         "./platform": {
-            "types": "./src/platform/index.ts",
+            "types": "./src/public/platform/index.ts",
             "import": "./dist/platform.js",
             "require": "./dist/platform.cjs",
-            "default": "./src/platform/index.ts"
+            "default": "./src/public/platform/index.ts"
         },
         "./energy": {
-            "types": "./src/energy/index.ts",
+            "types": "./src/public/product/energy/index.ts",
             "import": "./dist/energy.js",
             "require": "./dist/energy.cjs",
-            "default": "./src/energy/index.ts"
+            "default": "./src/public/product/energy/index.ts"
         },
         "./soul": {
-            "types": "./src/soul/index.ts",
+            "types": "./src/public/product/soul/index.ts",
             "import": "./dist/soul.js",
             "require": "./dist/soul.cjs",
-            "default": "./src/soul/index.ts"
+            "default": "./src/public/product/soul/index.ts"
         },
         "./backoffice": {
             "types": "./src/backoffice/index.ts",

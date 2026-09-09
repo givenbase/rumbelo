@@ -4,7 +4,8 @@
  * `@rumtelo/contracts/{domain}`.
  */
 export * from '../common/schemas';
-export * from '../backoffice/plan/schemas';
+export * from '../backoffice/plan/plan.schema';
+export * from '../backoffice/plan/plan.util';
 export * from '../public/platform/schemas';
 export * from '../public/product/money/schemas';
 export * from '../public/product/growth/schemas';

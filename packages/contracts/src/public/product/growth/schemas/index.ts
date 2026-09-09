@@ -1,6 +1,9 @@
-// Product barrel — keeps cross-product imports explicit.
-export * from './lever';
-export * from './catalogs';
-export * from './dashboard';
-export * from './milestone';
-export * from './week-check';
+/**
+ * Growth schemas compat barrel — re-exports from leaf folders.
+ * Source of truth lives in the leaf directories; import from those directly.
+ */
+export * from '../lever';
+export * from '../catalogs';
+export * from '../dashboard';
+export * from '../milestone';
+export * from '../week-check';

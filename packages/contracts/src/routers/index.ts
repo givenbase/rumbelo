@@ -1,9 +1,9 @@
 import { populateContractRouterPaths } from '@orpc/contract';
-import { contract as platform } from '../public/platform/router';
-import { contract as money } from '../public/product/money/router';
-import { contract as growth } from '../public/product/growth/router';
-import { contract as energy } from '../public/product/energy/router';
-import { contract as soul } from '../public/product/soul/router';
+import { contract as platform } from '../public/platform/platform.router';
+import { contract as money } from '../public/product/money/money.router';
+import { contract as growth } from '../public/product/growth/growth.router';
+import { contract as energy } from '../public/product/energy/energy.router';
+import { contract as soul } from '../public/product/soul/soul.router';
 
 /**
  * Contract-first oRPC, grouped by product (wire paths stay short for nav parity):

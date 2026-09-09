@@ -4,4 +4,5 @@
  */
 export * from './capabilities';
 export * from './enums';
-export * from './schemas';
+export * from './plan.schema';
+export * from './plan.util';

@@ -36,7 +36,10 @@ export function SignUpDraftProvider({ children }: { children: ReactNode }) {
         getSignUpDraftSnapshot,
         getSignUpDraftServerSnapshot
     );
-    const draft = useMemo(() => parseSignUpDraft(snapshot ? JSON.parse(snapshot) : null), [snapshot]);
+    const draft = useMemo(
+        () => parseSignUpDraft(snapshot ? JSON.parse(snapshot) : null),
+        [snapshot]
+    );
 
     const setDraft = useCallback((next: SignUpDraft) => {
         writeSignUpDraft(next);
@@ -46,10 +49,7 @@ export function SignUpDraftProvider({ children }: { children: ReactNode }) {
         clearSignUpDraft();
     }, []);
 
-    const value = useMemo(
-        () => ({ draft, setDraft, clearDraft }),
-        [draft, setDraft, clearDraft]
-    );
+    const value = useMemo(() => ({ draft, setDraft, clearDraft }), [draft, setDraft, clearDraft]);
 
     return <SignUpDraftContext.Provider value={value}>{children}</SignUpDraftContext.Provider>;
 }

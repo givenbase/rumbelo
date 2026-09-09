@@ -1,0 +1,40 @@
+/**
+ * Log Schemas (Energy)
+ * Energy metric readings and rolling summaries.
+ * Zod only — no `export type`.
+ */
+
+import { z } from 'zod';
+
+import { HouseholdId, Id, IsoDate } from '../../../../common/common.schema';
+import { EnergyMetric, EnergyTrend } from '../enums';
+
+/**
+ * "Energie draagt geld." Sleep, training and food are tracked because the product
+ * claims they are the floor under financial decisions — not as lifestyle extras.
+ * Correlation with spending is surfaced, never asserted as causation.
+ */
+export const EnergyLog = z.object({
+    id: Id,
+    householdId: HouseholdId,
+    /** Rumtelo `auth.account.id` — person who logged the reading (not Better Auth user). */
+    accountId: Id,
+    on: IsoDate,
+    metric: z.enum(EnergyMetric),
+    /** Normalised 0..100 so metrics are comparable on one axis. */
+    value: z.number().min(0).max(100),
+    note: z.string().max(280).nullable(),
+});
+
+export const EnergySummary = z.object({
+    metric: z.enum(EnergyMetric),
+    average7d: z.number(),
+    average28d: z.number(),
+    trend: z.enum(EnergyTrend),
+    /** Pearson r against daily discretionary spend. Informational only. */
+    spendCorrelation: z.number().min(-1).max(1).nullable(),
+});
+
+// Inferred types (same-module merge for consumers)
+export type EnergyLog = z.infer<typeof EnergyLog>;
+export type EnergySummary = z.infer<typeof EnergySummary>;
