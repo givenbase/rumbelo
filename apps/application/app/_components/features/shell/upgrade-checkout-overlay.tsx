@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 import { PlanKey } from '@rumtelo/contracts';
@@ -13,8 +13,8 @@ import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useOptionalPlanIntent } from '@/components/features/shell/plan-intent-provider';
 
 /**
- * After household onboard: if the user picked Plus/Max on marketing pricing,
- * collect payment via Stripe Checkout (card / bank methods Stripe enables).
+ * After household onboard (or sign-in with a remembered Plus/Max pick from marketing):
+ * open Stripe Checkout automatically once setup succeeded.
  */
 export function UpgradeCheckoutOverlay({ open, onSkip }: { open: boolean; onSkip: () => void }) {
     const { householdId } = useAuth();
@@ -22,6 +22,7 @@ export function UpgradeCheckoutOverlay({ open, onSkip }: { open: boolean; onSkip
     const planIntent = useOptionalPlanIntent();
     const intent = planIntent?.intent ?? null;
     const [busy, setBusy] = useState(false);
+    const autoStarted = useRef(false);
 
     const checkout = useMutation({
         mutationFn: async () => {
@@ -46,14 +47,30 @@ export function UpgradeCheckoutOverlay({ open, onSkip }: { open: boolean; onSkip
         onError: () => {
             showToast('Could not start Stripe checkout — try Settings → Plan', 'error');
             setBusy(false);
+            autoStarted.current = false;
         },
     });
+
+    useEffect(() => {
+        if (!open) {
+            autoStarted.current = false;
+            return;
+        }
+        if (!intent || !householdId || autoStarted.current) return;
+        if (intent.planKey !== PlanKey.PLUS && intent.planKey !== PlanKey.MAX) return;
+        autoStarted.current = true;
+        setBusy(true);
+        checkout.mutate();
+        // Intentionally once per open — mutate identity changes every render.
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- auto-start Stripe once when overlay opens
+    }, [open, intent, householdId]);
 
     if (!open || !intent || !householdId) return null;
     if (intent.planKey !== PlanKey.PLUS && intent.planKey !== PlanKey.MAX) return null;
 
     const label = PLAN_LABELS[intent.planKey];
     const period = intent.interval === 'year' ? 'yearly' : 'monthly';
+    const opening = busy || checkout.isPending;
 
     return (
         <>
@@ -67,18 +84,18 @@ export function UpgradeCheckoutOverlay({ open, onSkip }: { open: boolean; onSkip
                     Finish your upgrade
                 </p>
                 <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-fg">
-                    Add payment for {label}
+                    {opening ? `Opening Stripe for ${label}…` : `Add payment for ${label}`}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-fg-muted">
-                    You chose {label} ({period}) when you signed up. Continue to Stripe to add your
-                    card or bank payment method and activate the plan. You can skip and stay on
-                    Basic for now — upgrade anytime in Settings → Plan.
+                    You chose {label} ({period}) on the website. Account setup is done — next is
+                    Stripe Checkout to activate the plan. You can skip and stay on Basic, then
+                    upgrade anytime in Settings → Plan.
                 </p>
 
                 <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
                     <Button
                         variant="ghost"
-                        disabled={busy || checkout.isPending}
+                        disabled={opening}
                         onClick={() => {
                             planIntent?.clearIntent();
                             onSkip();
@@ -86,12 +103,12 @@ export function UpgradeCheckoutOverlay({ open, onSkip }: { open: boolean; onSkip
                         Stay on Basic
                     </Button>
                     <Button
-                        disabled={busy || checkout.isPending}
+                        disabled={opening}
                         onClick={() => {
                             setBusy(true);
                             checkout.mutate();
                         }}>
-                        {checkout.isPending || busy ? 'Opening Stripe…' : `Continue to Stripe`}
+                        {opening ? 'Opening Stripe…' : `Continue to Stripe`}
                     </Button>
                 </div>
             </div>

@@ -1,7 +1,6 @@
 /**
  * Plan Schemas
  * Commercial plan tiers — limits, capabilities, catalog DTOs.
- * Zod only — no `export type`.
  */
 
 import { z } from 'zod';

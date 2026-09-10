@@ -7,9 +7,11 @@ import { useRouter } from 'next/navigation';
 import { LandingSignUpForm } from '@rumtelo/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
 import { useOptionalSignUpDraft } from '@/app/_components/sign-up-draft-provider';
 import { ASSURANCES, SIGNUP_SECTION } from '@/lib/landing-content';
 import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
+import { planIntentQuery } from '@rumtelo/utils';
 
 import { LandingIcon } from './landing-icon';
 import { SectionHeading } from './landing-primitives';
@@ -45,6 +47,7 @@ const FIELDS = [
 export function LandingSignupForm() {
     const router = useRouter();
     const signUpDraft = useOptionalSignUpDraft();
+    const planIntent = useOptionalPlanIntent();
     const form = useForm<LandingSignUpForm>({
         defaultValues: { firstName: '', lastName: '', email: '', terms: false },
         mode: 'onTouched',
@@ -66,7 +69,7 @@ export function LandingSignupForm() {
             lastName: values.lastName,
             email: values.email,
         });
-        router.push(webSignUpPath());
+        router.push(webSignUpPath(planIntentQuery(planIntent?.intent ?? null)));
     }
 
     function fieldError(name: keyof LandingSignUpForm) {

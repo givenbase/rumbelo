@@ -27,12 +27,23 @@ import { AUTH_SIGN_UP } from '@rumtelo/i18n';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { planIntentQuery, type PendingPlanIntent } from '@rumtelo/utils';
+
 import { signUp } from '@/lib/auth';
 import { appSignInUrl } from '@/lib/portal-urls';
 import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
 import { useOptionalSignUpDraft } from '@/app/_components/sign-up-draft-provider';
 
 const PLAN_LABELS = { PLUS: 'Plus', MAX: 'Max' } as const;
+
+function verifyCallbackUrl(intent: PendingPlanIntent | null): string {
+    const params = new URLSearchParams({ status: 'confirmed' });
+    const planQuery = planIntentQuery(intent);
+    for (const [key, value] of Object.entries(planQuery)) {
+        params.set(key, value);
+    }
+    return `/verify?${params.toString()}`;
+}
 
 export function SignUpForm() {
     const router = useRouter();
@@ -87,7 +98,7 @@ export function SignUpForm() {
             name,
             email: values.email,
             password: values.password,
-            callbackURL: '/verify?status=confirmed',
+            callbackURL: verifyCallbackUrl(intent),
             // Forwarded to Nest → stashed → `auth.account` (not Better Auth user columns).
             firstName: values.firstName,
             middleName: values.middleName || undefined,
@@ -102,7 +113,8 @@ export function SignUpForm() {
             return;
         }
 
-        router.push('/verify');
+        const verifyQs = new URLSearchParams(planIntentQuery(intent)).toString();
+        router.push(verifyQs ? `/verify?${verifyQs}` : '/verify');
         router.refresh();
     }
 

@@ -616,7 +616,7 @@ export const PLANS: Plan[] = [
 export const PRICING_SECTION = {
     eyebrow: 'PRICING',
     headline: 'Free where it counts. Paid where it saves you work.',
-    lead: 'Start on Basic and stay as long as you like. Nothing you enter is ever locked away.',
+    lead: 'Start on Basic free. Choose Plus or Max and we’ll open Stripe Checkout after your account is set up — only when signup, verify and onboarding succeed.',
 } as const;
 
 export const ASSURANCES: { text: string; icon: IconName }[] = [

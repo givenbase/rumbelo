@@ -23,6 +23,7 @@ import { AccountThemeToggle } from '@/components/features/shell/account-theme-sy
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
+import { PendingPlanCheckout } from '@/components/features/shell/pending-plan-checkout';
 import { CapabilityGate } from '@/components/features/shell/capability-gate';
 import { usePlanCapabilities } from '@/components/features/shell/use-plan-capabilities';
 import { PageHelpButton, PageTourProvider, usePageTour } from '@/components/features/tour';
@@ -446,6 +447,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
             <QuickAddFab />
             <ToastPill />
             <OnboardingOverlay />
+            <PendingPlanCheckout />
         </div>
     );
 }

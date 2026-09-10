@@ -13,7 +13,6 @@ import { usePageTour } from '@/components/features/tour';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { useOptionalPlanIntent } from '@/components/features/shell/plan-intent-provider';
-import { UpgradeCheckoutOverlay } from '@/components/features/shell/upgrade-checkout-overlay';
 
 const STEPS = [
     {
@@ -45,7 +44,6 @@ export function OnboardingOverlay() {
     } = useAppShell();
     const { requestTourOffer } = usePageTour();
     const planIntent = useOptionalPlanIntent();
-    const [upgradeOpen, setUpgradeOpen] = useState(false);
 
     useEffect(() => {
         if (isPending) return;
@@ -64,19 +62,6 @@ export function OnboardingOverlay() {
     const [pending, setPending] = useState(false);
 
     if (!session) return null;
-
-    if (upgradeOpen) {
-        return (
-            <UpgradeCheckoutOverlay
-                open
-                onSkip={() => {
-                    setUpgradeOpen(false);
-                    requestTourOffer();
-                }}
-            />
-        );
-    }
-
     if (householdId) return null;
     if (!onboardingOpen) return null;
 
@@ -105,12 +90,10 @@ export function OnboardingOverlay() {
             closeOnboarding(true);
             showToast('Household created', 'success');
 
-            if (planIntent?.intent) {
-                setUpgradeOpen(true);
-                return;
+            // Paid plan from marketing → PendingPlanCheckout opens Stripe after this closes.
+            if (!planIntent?.intent) {
+                requestTourOffer();
             }
-
-            requestTourOffer();
         } catch (error) {
             console.error('onboard failed', error);
             const message =

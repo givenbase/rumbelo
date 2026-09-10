@@ -93,7 +93,7 @@ export const LANDING_SECTIONS: LandingSection[] = [
         anchor: '#pricing',
         label: 'Pricing toggle + 3 plans',
         status: 'partial',
-        gap: 'Features/limits from PLAN_ACCESS + PLAN_LIMITS; Stripe checkout not wired',
+        gap: 'Plus/Max → plan intent → signup/verify/onboard → Stripe Checkout auto-starts',
     },
     {
         id: 'faq',

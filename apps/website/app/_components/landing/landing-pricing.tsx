@@ -75,7 +75,7 @@ export function LandingPricing() {
                         : yearly
                           ? `€${(plan.yearly / 12).toFixed(2)}/month billed yearly`
                           : 'cancel any month';
-                    const cta = free ? 'Start free' : `Choose ${plan.name}`;
+                    const cta = free ? 'Start free' : `Choose ${plan.name} · pay after setup`;
 
                     return (
                         <div
