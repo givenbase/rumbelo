@@ -76,9 +76,9 @@ Money's children are the same list in all four places: `jars` `income`
 `modules/public/product/money/plan/jar/jar.controller.ts`, reads `public.jar`, and backs `/money/jars`.
 
 Postgres planes: `auth` (identity), `public` (app/household), `backoffice` (catalogs we publish).
-**Code is English; copy is Dutch.** Every folder, route, identifier and table is
-English. Only user-facing text is Dutch, and dates go through `Intl` with a
-locale rather than hardcoded month tables, because the product ships NL and EN.
+**Code is English; copy is English first (Dutch second).** Every folder, route,
+identifier and table is English. User-facing text ships English first, then
+Dutch; dates go through `Intl` with a locale rather than hardcoded month tables.
 
 ## Getting started
 

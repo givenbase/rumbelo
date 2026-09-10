@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 
 import { cn } from '@/lib/cn';
 
@@ -7,10 +8,12 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
     return (
         <span
             className={cn(
-                'inline-flex items-center gap-2 font-mono text-xs font-medium tracking-widest text-accent uppercase',
+                'inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] font-medium tracking-wide text-accent uppercase sm:text-xs sm:tracking-widest',
                 className
             )}>
-            <span aria-hidden>✦</span>
+            <span aria-hidden className="shrink-0">
+                ✦
+            </span>
             {children}
         </span>
     );
@@ -79,7 +82,7 @@ export function Cta({
     onClick,
 }: CtaProps) {
     return (
-        <a
+        <Link
             href={href}
             onClick={onClick}
             className={cn(
@@ -91,7 +94,7 @@ export function Cta({
                 className
             )}>
             {children}
-        </a>
+        </Link>
     );
 }
 

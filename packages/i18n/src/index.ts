@@ -17,5 +17,5 @@ export {
 
 import { LocalesEnum } from './next-intl';
 
-/** Default UI locale — NL-first product. */
-export const DEFAULT_LOCALE = LocalesEnum.Dutch;
+/** Default UI locale — English first, Dutch second. */
+export const DEFAULT_LOCALE = LocalesEnum.English;

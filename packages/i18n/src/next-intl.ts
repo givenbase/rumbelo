@@ -4,14 +4,14 @@ import { defineRouting } from 'next-intl/routing';
 
 /**
  * Rumtelo locales — match `packages/i18n/languages/*.json`.
- * Product is NL-first; English is the translation source of truth (Galighticus pattern).
+ * Product is English first; Dutch second. English stays the translation source of truth.
  */
 export enum LocalesEnum {
-    Dutch = 'nl',
     English = 'en',
+    Dutch = 'nl',
 }
 
-export const locales = [LocalesEnum.Dutch, LocalesEnum.English] as const;
+export const locales = [LocalesEnum.English, LocalesEnum.Dutch] as const;
 
 export type Locale = (typeof locales)[number];
 
@@ -25,7 +25,7 @@ export type Messages = AbstractIntlMessages;
 
 export const routing = defineRouting({
     locales: [...activeLocales],
-    defaultLocale: LocalesEnum.Dutch,
+    defaultLocale: LocalesEnum.English,
     localePrefix: 'never',
 });
 

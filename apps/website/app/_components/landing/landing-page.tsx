@@ -13,6 +13,7 @@ import { LandingPortals } from './landing-portals';
 import { LandingPricing } from './landing-pricing';
 import { LandingPrinciples } from './landing-principles';
 import { LandingProblem } from './landing-problem';
+import { LandingProof } from './landing-proof';
 import { LandingSignupForm } from './landing-signup-form';
 import { LandingWhy } from './landing-why';
 
@@ -59,7 +60,7 @@ export function LandingPage() {
     }, []);
 
     return (
-        <div ref={rootRef} className="min-h-screen">
+        <div ref={rootRef} className="min-h-screen overflow-x-clip">
             <LandingHeader />
             <main>
                 <LandingHero />
@@ -70,6 +71,7 @@ export function LandingPage() {
                 <LandingPrinciples />
                 <LandingJars />
                 <LandingWhy />
+                <LandingProof />
                 <LandingPricing />
                 <LandingFaq />
                 <LandingSignupForm />

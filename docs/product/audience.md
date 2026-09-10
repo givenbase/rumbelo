@@ -26,7 +26,7 @@ We speak to people who want **direction**.
 ## Language & market
 
 - **Audience start:** the owner and friends first; subscription product if it works.
-- **Language:** Dutch first, English second.
+- **Language:** English first, Dutch second.
 - **Market:** NL / EU-first (Amsterdam hosting, EU-resident data).
 
 ---

@@ -18,7 +18,7 @@ export function LandingPrinciples() {
                         </h2>
                     </div>
                     <span className="font-mono text-xs font-medium tracking-widest text-bg/55 uppercase">
-                        Code is English · copy is Dutch first
+                        Code is English · product copy is English first
                     </span>
                 </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm, useWatch } from 'react-hook-form';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { LandingSignUpForm } from '@rumtelo/contracts';
@@ -175,7 +176,19 @@ export function LandingSignupForm() {
                                     {terms ? '✓' : ''}
                                 </span>
                                 <span className="text-sm leading-relaxed text-fg-muted">
-                                    {SIGNUP_SECTION.terms}
+                                    {SIGNUP_SECTION.termsBefore}
+                                    <Link
+                                        href="/terms"
+                                        className="text-accent underline-offset-2 hover:underline">
+                                        {SIGNUP_SECTION.termsLink}
+                                    </Link>
+                                    {SIGNUP_SECTION.termsMid}
+                                    <Link
+                                        href="/privacy"
+                                        className="text-accent underline-offset-2 hover:underline">
+                                        {SIGNUP_SECTION.privacyLink}
+                                    </Link>
+                                    {SIGNUP_SECTION.termsAfter}
                                 </span>
                             </label>
                             {fieldError('terms') ? (
@@ -193,11 +206,11 @@ export function LandingSignupForm() {
 
                             <span className="text-center font-mono text-xs font-medium tracking-wide text-fg-faint">
                                 Already have an account?{' '}
-                                <a
+                                <Link
                                     href={appSignInUrl()}
                                     className="text-accent hover:text-accent-hover">
                                     Sign in
-                                </a>
+                                </Link>
                             </span>
                         </form>
                     </div>

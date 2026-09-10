@@ -77,9 +77,16 @@ export const LANDING_SECTIONS: LandingSection[] = [
     {
         id: 'why',
         anchor: '#why',
-        label: 'Why Rumtelo exists + roadmap',
+        label: 'Why Rumtelo exists + books + roadmap',
         status: 'shell',
-        gap: 'Founder note + roadmap; swap in real about page later',
+        gap: 'Founder note + book lineage; legal disclaimer on independence',
+    },
+    {
+        id: 'proof',
+        anchor: '#proof',
+        label: 'Soft social proof (founders)',
+        status: 'shell',
+        gap: 'No fake testimonials — founders + place + language order',
     },
     {
         id: 'pricing',
@@ -98,15 +105,15 @@ export const LANDING_SECTIONS: LandingSection[] = [
     {
         id: 'signup',
         anchor: '#signup',
-        label: 'Create account form',
+        label: 'Create account hand-off form',
         status: 'partial',
-        gap: 'Hands off to /sign-up (Better Auth); no social login yet',
+        gap: 'Draft → /sign-up (Better Auth); terms/privacy linked',
     },
     {
         id: 'footer',
         anchor: 'footer',
         label: 'Trust cards + links',
         status: 'shell',
-        gap: 'Legal hrefs are placeholders',
+        gap: 'Legal routes live at /privacy /terms /data-processing',
     },
 ];

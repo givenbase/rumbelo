@@ -466,14 +466,55 @@ export const PRINCIPLES: { nl: string; en: string; body: string; icon: IconName 
 
 /* ─────────────────────────── why we exist ─────────────────────────── */
 
+/**
+ * One story spine for Why + footer:
+ *   1. Built for the founders first
+ *   2. Grounded in proven books (not invented overnight)
+ *   3. Brought to market so others can use the same practice
+ * Footer keeps a short legal echo — the full story lives here.
+ */
 export const WHY = {
     eyebrow: 'WHY RUMTELO EXISTS',
     quoteNl: 'Rijkdom is geen getal. Het zijn de teugels in jouw handen.',
     quoteEn: 'Wealth isn’t a number. It’s the reins in your hands.',
-    body: 'We built Rumtelo for ourselves first. We earned fine and still didn’t know where it went — or what it cost in sleep, focus and direction. Budget apps counted. Nobody coached. So we made the thing we needed: one calm overview and a mentor for the whole picture. Then we noticed we weren’t the only ones.',
+    body: 'We built Rumtelo for ourselves first. We earned fine and still didn’t know where it went — or what it cost in sleep, focus and direction. Budget apps counted. Nobody coached. So we made the thing we needed: one calm overview and a mentor for the whole picture. Then we saw the opportunity — bring it to market, so others can steer their life the same way.',
+    booksEyebrow: 'GROUNDED IN PROVEN BOOKS',
+    booksLead:
+        'Rumtelo is not a new theory. It turns ideas from books that have shaped money, mindset and direction for decades into a daily practice you can actually keep.',
+    books: [
+        {
+            title: 'Rich Dad Poor Dad',
+            author: 'Robert Kiyosaki',
+            line: 'Assets vs liabilities — money that works for you, not the other way around.',
+        },
+        {
+            title: 'Think and Grow Rich',
+            author: 'Napoleon Hill',
+            line: 'Intention, habit and a clear why — the mindset under every number.',
+        },
+        {
+            title: 'Secrets of the Millionaire Mind',
+            author: 'T. Harv Eker',
+            line: 'The six-jar split — every amount gets a job the second it lands.',
+        },
+        {
+            title: 'The Psychology of Money',
+            author: 'Morgan Housel',
+            line: 'Behaviour beats cleverness — calm systems over panic and shame.',
+        },
+        {
+            title: 'The Secret',
+            author: 'Rhonda Byrne',
+            line: 'Clarity of desire and belief — what you focus on, you move toward.',
+        },
+    ],
+    booksNote:
+        'Independent product — not affiliated with, endorsed by, or licensed from these authors or their estates.',
     signature: 'Given Loyiso, founder & CEO · Charissa Peroti, co-founder · Amsterdam',
     manifesto: 'Don’t chase the number. Own the direction.',
     audience: 'Built for people who are doing well — and for people who are ready to.',
+    aspirantLine:
+        'The system is the aspirant’s. The Coach is the mentor. Rumtelo’s job is to guide — and to get out of the way.',
 } as const;
 
 export const ROADMAP: { head: string; line: string; icon: IconName }[] = [
@@ -484,7 +525,7 @@ export const ROADMAP: { head: string; line: string; icon: IconName }[] = [
     },
     {
         icon: 'flag',
-        head: 'Dutch first, English second',
+        head: 'English first, Dutch second',
         line: 'Built for NL and EU life. Amounts and dates follow your locale.',
     },
     {
@@ -605,7 +646,7 @@ export const FAQ: { question: string; answer: string }[] = [
     },
     {
         question: 'Why are sleep, training and books in a money product?',
-        answer: 'Because a tired head spends and a rested head decides. Energy is the floor under every financial decision. Learning is the one spend that raises what you earn. Leave them out and an app becomes a spreadsheet.',
+        answer: 'Because a tired head spends and a rested head decides — and because Rumtelo stands on books like Rich Dad Poor Dad, Think and Grow Rich, Secrets of the Millionaire Mind and The Secret, not on spreadsheets alone. Energy is the floor under every financial decision. Learning is the one spend that raises what you earn. Leave them out and an app becomes bookkeeping.',
     },
     {
         question: 'What does the Coach actually do?',
@@ -621,7 +662,7 @@ export const FAQ: { question: string; answer: string }[] = [
     },
     {
         question: 'Dutch or English?',
-        answer: 'Both. Dutch first, English second. Rumtelo is built for NL and EU life — amounts and dates follow your locale.',
+        answer: 'Both. English first, Dutch second. Rumtelo is built for NL and EU life — amounts and dates follow your locale.',
     },
 ];
 
@@ -630,9 +671,26 @@ export const FAQ: { question: string; answer: string }[] = [
 export const SIGNUP_SECTION = {
     eyebrow: 'CREATE YOUR ACCOUNT',
     headline: 'Split first. Spend second.',
-    lead: 'Built for people who are doing well — and for people who are ready to. Tell us what lands each month; Rumtelo assigns it from there.',
+    lead: 'Built for people who are doing well — and for people who are ready to. Start here — then finish on the create-account page with your password.',
     submit: 'Continue to create account',
-    terms: 'I agree to the terms and privacy policy. Rumtelo only ever reads bank data — and only after I connect it myself.',
+    termsBefore: 'I agree to the ',
+    termsLink: 'Terms',
+    termsMid: ' and ',
+    privacyLink: 'Privacy Policy',
+    termsAfter: '. Rumtelo only ever reads bank data — and only after I connect it myself.',
+} as const;
+
+/** Soft proof — no fake testimonials; founders + place + practice. */
+export const SOCIAL_PROOF = {
+    eyebrow: 'USED BY THE PEOPLE WHO BUILT IT',
+    headline: 'We run our own lives on Rumtelo.',
+    lead: 'Given and Charissa built Rumtelo because they needed it — then brought it to market so others can steer the same way. English first. Dutch second. Amsterdam servers.',
+    points: [
+        { value: 'Founders', label: 'use it every week' },
+        { value: 'Amsterdam', label: 'EU-hosted · GDPR' },
+        { value: 'EN → NL', label: 'English first · Dutch next' },
+        { value: 'No shame', label: 'information · one next move' },
+    ],
 } as const;
 
 /* ─────────────────────────── footer ─────────────────────────── */
@@ -689,9 +747,9 @@ export const FOOT_COLS = [
     {
         head: 'Legal',
         links: [
-            { text: 'Privacy policy', href: '#' },
-            { text: 'Terms of service', href: '#' },
-            { text: 'Data processing', href: '#' },
+            { text: 'Privacy policy', href: '/privacy' },
+            { text: 'Terms of service', href: '/terms' },
+            { text: 'Data processing', href: '/data-processing' },
         ],
     },
     {
@@ -705,7 +763,7 @@ export const FOOT_COLS = [
 
 export const FOOTER_BLURB = {
     attribution:
-        'Rumtelo · Amsterdam, the Netherlands. The six-jar split stands on the method popularised by T. Harv Eker; the asset-versus-liability lens on Robert Kiyosaki. Rumtelo is an independent product and is not affiliated with, endorsed by, or licensed from either.',
+        'Rumtelo · Amsterdam, the Netherlands. Built by the founders for themselves first — then brought to market so others can use the same practice. Grounded in books like Rich Dad Poor Dad, Think and Grow Rich, Secrets of the Millionaire Mind, The Psychology of Money and The Secret. Independent product — not affiliated with, endorsed by, or licensed from those authors.',
     disclaimer:
         'Rumtelo is a coach and an overview — not a bank and not a licensed financial adviser. Suggestions are education, not personal investment advice.',
     copyright: `© ${new Date().getFullYear()} Rumtelo · All rights reserved`,

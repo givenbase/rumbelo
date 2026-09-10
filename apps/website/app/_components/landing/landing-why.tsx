@@ -3,12 +3,23 @@ import { ROADMAP, WHY } from '@/lib/landing-content';
 import { LandingIcon } from './landing-icon';
 import { CARD, Eyebrow } from './landing-primitives';
 
-/** Why we exist — built for ourselves first — and where it goes next. */
+const BOOKS_ALWAYS = 3;
+
+/**
+ * Why we exist — one spine:
+ *   founded for ourselves → grounded in proven books → brought to market for others.
+ * Roadmap sits under that origin story.
+ * On small screens, books collapse after the first three.
+ */
 export function LandingWhy() {
+    const primaryBooks = WHY.books.slice(0, BOOKS_ALWAYS);
+    const moreBooks = WHY.books.slice(BOOKS_ALWAYS);
+
     return (
         <section id="why" className="border-y border-line bg-bg-app">
             <div className="mx-auto max-w-6xl px-4 py-12 lg:px-6 lg:py-20">
-                <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+                <div className="grid gap-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-14">
+                    {/* Origin */}
                     <div className="min-w-0">
                         <Eyebrow>{WHY.eyebrow}</Eyebrow>
                         <blockquote className="mt-4">
@@ -34,36 +45,92 @@ export function LandingWhy() {
                         </div>
                     </div>
 
+                    {/* Books that shaped the practice */}
                     <div className="min-w-0">
-                        <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
-                            Where it goes next
+                        <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
+                            ✦ {WHY.booksEyebrow}
                         </span>
-                        <ul className="mt-3 grid gap-3">
-                            {ROADMAP.map(item => (
-                                <li
-                                    key={item.head}
-                                    className={`${CARD} flex items-start gap-3.5 p-4`}>
-                                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-                                        <LandingIcon name={item.icon} size={17} />
-                                    </span>
-                                    <span className="grid min-w-0 gap-0.5">
-                                        <span className="text-sm font-semibold text-fg-strong">
-                                            {item.head}
-                                        </span>
-                                        <span className="text-xs leading-relaxed text-fg-muted">
-                                            {item.line}
-                                        </span>
-                                    </span>
-                                </li>
+                        <p className="mt-3 max-w-prose text-sm leading-relaxed text-pretty text-fg-muted">
+                            {WHY.booksLead}
+                        </p>
+                        <ul className="mt-4 hidden gap-2.5 lg:grid">
+                            {WHY.books.map(book => (
+                                <BookCard key={book.title} book={book} />
                             ))}
                         </ul>
+
+                        <div className="mt-4 lg:hidden">
+                            <ul className="grid gap-2.5">
+                                {primaryBooks.map(book => (
+                                    <BookCard key={book.title} book={book} />
+                                ))}
+                            </ul>
+                            {moreBooks.length > 0 ? (
+                                <details className="group mt-2.5">
+                                    <summary className="cursor-pointer list-none py-2 font-mono text-xs font-semibold tracking-widest text-accent uppercase [&::-webkit-details-marker]:hidden">
+                                        <span className="group-open:hidden">
+                                            + {moreBooks.length} more books
+                                        </span>
+                                        <span className="hidden group-open:inline">Show fewer</span>
+                                    </summary>
+                                    <ul className="grid gap-2.5">
+                                        {moreBooks.map(book => (
+                                            <BookCard key={book.title} book={book} />
+                                        ))}
+                                    </ul>
+                                </details>
+                            ) : null}
+                        </div>
+
                         <p className="mt-3 text-xs leading-relaxed text-fg-faint">
-                            The system is the aspirant’s. The Coach is the mentor. Rumtelo’s job is
-                            to guide — and to get out of the way.
+                            {WHY.booksNote}
                         </p>
                     </div>
                 </div>
+
+                {/* Roadmap — what comes next, under the origin */}
+                <div className="mt-12 border-t border-line pt-10">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                        <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
+                            Where it goes next
+                        </span>
+                        <p className="max-w-xl text-xs leading-relaxed text-fg-faint sm:text-right">
+                            {WHY.aspirantLine}
+                        </p>
+                    </div>
+                    <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+                        {ROADMAP.map(item => (
+                            <li key={item.head} className={`${CARD} flex items-start gap-3.5 p-4`}>
+                                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
+                                    <LandingIcon name={item.icon} size={17} />
+                                </span>
+                                <span className="grid min-w-0 gap-0.5">
+                                    <span className="text-sm font-semibold text-fg-strong">
+                                        {item.head}
+                                    </span>
+                                    <span className="text-xs leading-relaxed text-fg-muted">
+                                        {item.line}
+                                    </span>
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </section>
+    );
+}
+
+function BookCard({ book }: { book: (typeof WHY.books)[number] }) {
+    return (
+        <li className={`${CARD} grid gap-1 border-l-4 border-l-accent/50 p-4`}>
+            <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <span className="font-display text-base font-semibold tracking-tight text-fg">
+                    {book.title}
+                </span>
+                <span className="font-mono text-xs text-fg-faint">{book.author}</span>
+            </span>
+            <span className="text-xs leading-relaxed text-fg-muted">{book.line}</span>
+        </li>
     );
 }

@@ -45,7 +45,7 @@ Four products, which are also the navigation:
 be successful but don’t yet know the exact next move — see
 [`docs/product/audience.md`](./docs/product/audience.md). Start with the owner
 and friends; a subscription product if it works.
-**Language:** Dutch first, English second.
+**Language:** English first, Dutch second.
 
 ### Principles the product must not violate
 
@@ -176,10 +176,10 @@ in `app/globals.css` (no duplicate palette). shadcn semantic aliases
 product widgets from `@rumtelo/ui` widget barrel; domain composition in
 `app/_components/{layout,features}/` and route `./_components/`.
 
-**Code English, copy Dutch.** Every folder, route, identifier, table and column is
-English. Only user-facing text is Dutch. Dates and currency go through `Intl`
-with a locale — never hardcoded month tables, because the product ships NL *and*
-EN.
+**Code English, copy English first.** Every folder, route, identifier, table and column is
+English. User-facing text is English first, Dutch second. Dates and currency go through `Intl`
+with a locale — never hardcoded month tables, because the product ships EN *and*
+NL.
 
 **Money is integer minor units.** Never a float. Never arithmetic on a decimal
 string. Splitting goes through `common/utils/money.util.ts`, which gives the

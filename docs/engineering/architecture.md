@@ -63,7 +63,7 @@ Money children (same list everywhere): `jar` `income` `fixed-cost` `account` `tr
 3. **Postgres schemas group by ownership** (`auth`, `public`, `backoffice`) — products are folders under `modules/public/`, not DB schemas.
 4. **Money is integer minor units** — never floats; split remainder via `money.util.ts`.
 5. **Styling is Tailwind only** — tokens in `packages/config/tailwind/theme.css`.
-6. **Code English, copy Dutch** — identifiers English; user-facing text Dutch (+ EN via i18n later).
+6. **Code English, copy English first** — identifiers English; user-facing text English first, Dutch second (via i18n).
 
 ---
 

@@ -28,7 +28,7 @@ Rumtelo is not a bookkeeping app. It is a single quiet view of where your money,
 | **Energy** | Energie | What am I running on? Sleep, training, food, rest — the floor under financial decisions. |
 | **Soul** | Ziel | Why am I doing this? |
 
-Code, routes, and folders are English. User-facing copy is Dutch first, English second.
+Code, routes, and folders are English. User-facing copy is English first, Dutch second.
 
 ---
 

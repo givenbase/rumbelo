@@ -112,8 +112,19 @@ export function LandingHero() {
             <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-8 px-4 py-12 pb-14 md:flex-row md:flex-wrap md:items-center lg:gap-16 lg:px-6 lg:py-24 lg:pb-20">
                 {/* Left column */}
                 <div className="min-w-0 flex-1 animate-[rise_520ms_var(--ease-out)_both] md:basis-96">
-                    <Eyebrow>{HERO.eyebrow}</Eyebrow>
-                    <h1 className="my-4 max-w-md font-display text-5xl leading-[1.02] font-semibold tracking-tight text-balance text-fg sm:text-6xl lg:max-w-lg lg:text-7xl">
+                    <Eyebrow>
+                        {HERO.eyebrow.split(' · ').map((word, index, words) => (
+                            <span key={word} className="inline-flex items-center gap-x-2">
+                                <span>{word}</span>
+                                {index < words.length - 1 ? (
+                                    <span aria-hidden className="text-accent/70">
+                                        ·
+                                    </span>
+                                ) : null}
+                            </span>
+                        ))}
+                    </Eyebrow>
+                    <h1 className="my-4 max-w-md font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance text-fg sm:text-5xl sm:leading-[1.02] lg:max-w-lg lg:text-7xl">
                         {HERO.headline}
                     </h1>
                     <p className="mb-7 max-w-prose text-base leading-relaxed text-pretty text-fg-muted lg:text-lg">
