@@ -118,7 +118,7 @@ export function createAuth(env: Env) {
 
         emailAndPassword: {
             enabled: true,
-            minPasswordLength: 12,
+            minPasswordLength: 8,
             requireEmailVerification,
             sendResetPassword: async ({ user, url }) => {
                 // Fire-and-forget — avoid timing attacks on account enumeration.

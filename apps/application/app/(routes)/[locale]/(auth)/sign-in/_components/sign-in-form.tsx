@@ -31,7 +31,7 @@ import {
     webSignUpUrl,
     webVerifyUrl,
 } from '@/app/_lib/auth';
-import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@rumtelo/contracts/platform';
+import { DEMO_ACCOUNTS } from '@rumtelo/contracts/platform';
 
 function safeRedirectPath(value: string | null): string {
     if (value && value.startsWith('/') && !value.startsWith('//')) return value;
@@ -194,7 +194,7 @@ export function SignInForm() {
                                         shouldValidate: true,
                                         shouldDirty: true,
                                     });
-                                    form.setValue('password', DEMO_PASSWORD, {
+                                    form.setValue('password', account.password, {
                                         shouldValidate: true,
                                         shouldDirty: true,
                                     });
@@ -205,7 +205,13 @@ export function SignInForm() {
                         ))}
                     </div>
                     <p className="text-xs text-fg-muted">
-                        Password for all: <code className="text-fg">{DEMO_PASSWORD}</code>
+                        Passwords:{' '}
+                        {DEMO_ACCOUNTS.map((account, index) => (
+                            <span key={account.persona}>
+                                {index > 0 ? ' / ' : null}
+                                <code className="text-fg">{account.password}</code>
+                            </span>
+                        ))}
                     </p>
                 </div>
             ) : null}

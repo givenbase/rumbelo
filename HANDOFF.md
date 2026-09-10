@@ -297,13 +297,13 @@ pnpm db:seed                  # catalogs + Basic/Plus/Max demo accounts
 pnpm dev
 ```
 
-Demo sign-in (password `RumteloDemo1!` for all):
+Demo sign-in (`telo{Persona}1!`):
 
-| Plan key | Email |
-|----------|-------|
-| BASIC | basic@rumtelo.com |
-| PLUS | plus@rumtelo.com |
-| MAX | max@rumtelo.com |
+| Plan key | Email | Password |
+|----------|-------|----------|
+| BASIC | basic@rumtelo.com | teloBasic1! |
+| PLUS | plus@rumtelo.com | teloPlus1! |
+| MAX | max@rumtelo.com | teloMax1! |
 
 ```bash
 pnpm test:e2e:smoke

@@ -6,7 +6,7 @@
 
 import { z } from 'zod';
 
-export const AUTH_MIN_PASSWORD_LENGTH = 12;
+export const AUTH_MIN_PASSWORD_LENGTH = 8;
 
 export const AuthEmail = z.email('Enter a valid email');
 /** Maps to Better Auth `user.name` — how we greet you in the product (editable later). */

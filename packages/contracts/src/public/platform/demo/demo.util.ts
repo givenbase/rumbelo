@@ -1,19 +1,25 @@
 /**
  * Seeded demo personas — shared by backend seed, sign-in chips, and E2E defaults.
  * Domain: @rumtelo.com. Plan and Stripe billing are read-only for these accounts.
+ *
+ * Password pattern: `telo{Persona}1!` (e.g. teloBasic1!).
  */
 
 import { PlanKey } from '../../../backoffice/plan/enums';
 
-/** Shared password for all demo / E2E personas (better-auth min length 12). */
-export const DEMO_PASSWORD = 'RumteloDemo1!';
-
 export type DemoPersona = 'basic' | 'plus' | 'max';
+
+/** Demo password: `telo` + capitalized persona + `1!`. */
+export function demoPassword(persona: DemoPersona): string {
+    const label = persona.charAt(0).toUpperCase() + persona.slice(1);
+    return `telo${label}1!`;
+}
 
 export type DemoAccount = {
     persona: DemoPersona;
     planKey: PlanKey;
     email: string;
+    password: string;
     /** Sign-in chip label */
     label: string;
     name: string;
@@ -27,6 +33,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
         persona: 'basic',
         planKey: PlanKey.BASIC,
         email: 'basic@rumtelo.com',
+        password: demoPassword('basic'),
         label: 'Basic',
         name: 'Basic Demo',
         householdName: 'Basic Household',
@@ -37,6 +44,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
         persona: 'plus',
         planKey: PlanKey.PLUS,
         email: 'plus@rumtelo.com',
+        password: demoPassword('plus'),
         label: 'Plus',
         name: 'Plus Demo',
         householdName: 'Freelancer Plus',
@@ -47,6 +55,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
         persona: 'max',
         planKey: PlanKey.MAX,
         email: 'max@rumtelo.com',
+        password: demoPassword('max'),
         label: 'Max',
         name: 'Max Demo',
         householdName: 'Max Invest',

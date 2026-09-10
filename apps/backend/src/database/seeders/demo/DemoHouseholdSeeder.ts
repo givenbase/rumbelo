@@ -23,12 +23,7 @@ import {
     TransactionSource,
     TransactionStatus,
 } from '@rumtelo/contracts';
-import {
-    DEMO_ACCOUNTS,
-    DEMO_PASSWORD,
-    type DemoAccount,
-    type DemoPersona,
-} from '@rumtelo/contracts/platform';
+import { DEMO_ACCOUNTS, type DemoAccount, type DemoPersona } from '@rumtelo/contracts/platform';
 import { toMinorUnits } from '@rumtelo/utils';
 
 import { loadEnv } from '../../../common/config/env.config';
@@ -133,7 +128,7 @@ export class DemoHouseholdSeeder extends Seeder {
             const result = await auth.api.signUpEmail({
                 body: {
                     email: demo.email,
-                    password: DEMO_PASSWORD,
+                    password: demo.password,
                     name: demo.name,
                 },
             });

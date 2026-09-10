@@ -68,11 +68,11 @@ jobs:
                   APP_URL=${DOMAIN_APP}
                   BACKEND_URL=${DOMAIN_BACK}
                   E2E_BASIC_EMAIL=${E2E_BASIC_EMAIL:-basic@rumtelo.com}
-                  E2E_BASIC_PASSWORD=${E2E_BASIC_PASSWORD:-RumteloDemo1!}
+                  E2E_BASIC_PASSWORD=${E2E_BASIC_PASSWORD:-teloBasic1!}
                   E2E_PLUS_EMAIL=${E2E_PLUS_EMAIL:-plus@rumtelo.com}
-                  E2E_PLUS_PASSWORD=${E2E_PLUS_PASSWORD:-RumteloDemo1!}
+                  E2E_PLUS_PASSWORD=${E2E_PLUS_PASSWORD:-teloPlus1!}
                   E2E_MAX_EMAIL=${E2E_MAX_EMAIL:-max@rumtelo.com}
-                  E2E_MAX_PASSWORD=${E2E_MAX_PASSWORD:-RumteloDemo1!}
+                  E2E_MAX_PASSWORD=${E2E_MAX_PASSWORD:-teloMax1!}
                   EOF
 
             - name: Run smoke tests

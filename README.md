@@ -118,9 +118,9 @@ After migrate + auth migrate + seed:
 
 | Plan | Email | Password |
 |------|-------|----------|
-| Basic | `basic@rumtelo.com` | `RumteloDemo1!` |
-| Plus | `plus@rumtelo.com` | `RumteloDemo1!` |
-| Max | `max@rumtelo.com` | `RumteloDemo1!` |
+| Basic | `basic@rumtelo.com` | `teloBasic1!` |
+| Plus | `plus@rumtelo.com` | `teloPlus1!` |
+| Max | `max@rumtelo.com` | `teloMax1!` |
 
 ```bash
 pnpm infra:up && pnpm db:migrate && pnpm auth:migrate && pnpm db:seed
