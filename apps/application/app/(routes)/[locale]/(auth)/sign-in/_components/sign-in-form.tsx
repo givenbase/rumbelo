@@ -31,7 +31,7 @@ import {
     webSignUpUrl,
     webVerifyUrl,
 } from '@/app/_lib/auth';
-import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/app/_lib/demo-accounts';
+import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@rumtelo/contracts/platform';
 
 function safeRedirectPath(value: string | null): string {
     if (value && value.startsWith('/') && !value.startsWith('//')) return value;

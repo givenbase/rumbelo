@@ -1,7 +1,21 @@
 /**
  * Money is carried as integer minor units everywhere. These helpers are the only
- * place it becomes a string, so rounding happens once and consistently.
+ * place it becomes a string or major units, so rounding happens once and consistently.
  */
+
+/**
+ * Major currency units (e.g. euros) → integer minor units (cents).
+ * Use at authoring boundaries (seeds, form parsers) — never for ongoing math.
+ */
+export function toMinorUnits(major: number): number {
+    return Math.round(major * 100);
+}
+
+/** Integer minor units → major currency units (display / rare exports). */
+export function fromMinorUnits(minor: number): number {
+    return minor / 100;
+}
+
 export function formatMoney(
     minorUnits: number,
     {
@@ -19,7 +33,7 @@ export function formatMoney(
         currency,
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
-    }).format(minorUnits / 100);
+    }).format(fromMinorUnits(minorUnits));
     return signed && minorUnits > 0 ? `+${formatted}` : formatted;
 }
 

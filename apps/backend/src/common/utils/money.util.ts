@@ -7,6 +7,8 @@ export {
     allocateByPercentage as splitByPercentage,
     sumMonthly,
     monthlyAmount,
+    toMinorUnits,
+    fromMinorUnits,
 } from '@rumtelo/utils';
 
 export function sum(values: number[]): number {

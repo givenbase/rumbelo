@@ -56,7 +56,7 @@ import {
     PlanKey,
 } from '@/app/_lib/plan';
 import { isLiveData, PREVIEW_MODE } from '@/app/_lib/preview';
-import { isDemoAccountEmail } from '@/app/_lib/demo-accounts';
+import { isDemoAccountEmail } from '@rumtelo/contracts/platform';
 import { evaluateSplitCoach, pctByJarKey } from '@/app/_lib/split-coach';
 import { JAR_META } from '@/app/_lib/jar-meta';
 import { chrome as tourChrome, usePageTour } from '@/components/features/tour';

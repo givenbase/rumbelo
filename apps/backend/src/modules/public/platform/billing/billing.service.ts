@@ -12,7 +12,7 @@ import { PlanKey, PLAN_RANK } from '@rumtelo/contracts';
 import Stripe from 'stripe';
 
 import type { Env } from '../../../../common/config/env.config';
-import { isDemoHouseholdSlug } from '../../../../database/seeders/demo/demo-accounts';
+import { isDemoHouseholdSlug } from '@rumtelo/contracts/platform';
 import { AuthHousehold } from '../../../auth/household/managed/household/auth-household.entity';
 import { HouseholdBillingService } from '../../../auth/household/household-billing/household-billing.service';
 import { AccountService } from '../../../auth/user/account/account.service';

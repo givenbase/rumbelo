@@ -20,7 +20,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 import type { Env } from '../../../../common/config/env.config';
-import { isDemoHouseholdSlug } from '../../../../database/seeders/demo/demo-accounts';
+import { isDemoHouseholdSlug } from '@rumtelo/contracts/platform';
 import { AuthHousehold } from '../managed/household/auth-household.entity';
 import { AuthMember } from '../managed/member/auth-member.entity';
 import { HouseholdBilling } from '../household-billing/household-billing.entity';
