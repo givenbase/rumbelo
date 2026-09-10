@@ -9,12 +9,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useOptionalPlanIntent } from '@/app/_components/plan-intent-provider';
 import { useOptionalSignUpDraft } from '@/app/_components/sign-up-draft-provider';
+import { useMarketingSession } from '@/app/_components/marketing-session-provider';
 import { ASSURANCES, SIGNUP_SECTION } from '@/lib/landing-content';
-import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
+import { appHomeUrl, appPlanSettingsUrl, appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 import { planIntentQuery } from '@rumtelo/utils';
 
 import { LandingIcon } from './landing-icon';
-import { SectionHeading } from './landing-primitives';
+import { Cta, SectionHeading } from './landing-primitives';
+
+const PLAN_SHORT = { BASIC: 'Basic', PLUS: 'Plus', MAX: 'Max' } as const;
 
 const FIELDS = [
     {
@@ -48,6 +51,7 @@ export function LandingSignupForm() {
     const router = useRouter();
     const signUpDraft = useOptionalSignUpDraft();
     const planIntent = useOptionalPlanIntent();
+    const { isAuthenticated, isPending, user, planKey } = useMarketingSession();
     const form = useForm<LandingSignUpForm>({
         defaultValues: { firstName: '', lastName: '', email: '', terms: false },
         mode: 'onTouched',
@@ -75,6 +79,45 @@ export function LandingSignupForm() {
     function fieldError(name: keyof LandingSignUpForm) {
         const show = Boolean(errors[name]) && (touchedFields[name] || submitCount > 0);
         return show ? errors[name]?.message : undefined;
+    }
+
+    if (!isPending && isAuthenticated) {
+        const planLabel = planKey ? PLAN_SHORT[planKey] : null;
+        return (
+            <section
+                id="signup"
+                className="mx-auto max-w-6xl px-4 py-12 pb-14 lg:px-6 lg:py-20 lg:pb-24">
+                <div className="overflow-hidden rounded-3xl border border-accent/35 bg-surface shadow-lg ring-1 ring-fg/8 ring-inset dark:ring-white/8">
+                    <span className="block h-1 bg-(image:--gradient-accent)" />
+                    <div className="flex flex-col gap-6 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:p-10">
+                        <div className="min-w-0">
+                            <SectionHeading
+                                eyebrow="YOU’RE IN"
+                                headline={`Welcome back${user?.name ? `, ${user.name.split(' ')[0]}` : ''}`}
+                                lead={
+                                    planLabel
+                                        ? `You’re on ${planLabel}. Open the dashboard to continue, or manage upgrade and billing in Plan settings.`
+                                        : 'Open the dashboard to continue, or manage your plan in the app.'
+                                }
+                                headlineClassName="max-w-lg"
+                            />
+                        </div>
+                        <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row lg:w-auto lg:max-w-none lg:shrink-0">
+                            <Cta href={appHomeUrl()} size="lg" className="w-full sm:w-auto">
+                                Open dashboard
+                            </Cta>
+                            <Cta
+                                href={appPlanSettingsUrl()}
+                                variant="ghost"
+                                size="lg"
+                                className="w-full sm:w-auto">
+                                Plan & billing
+                            </Cta>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
     }
 
     return (

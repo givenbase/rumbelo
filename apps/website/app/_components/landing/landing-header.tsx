@@ -6,7 +6,11 @@ import Link from 'next/link';
 import { RumteloLogo } from '@rumtelo/brand';
 import { ThemeToggle } from '@rumtelo/ui';
 
-import { appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
+import {
+    initialsFromUser,
+    useMarketingSession,
+} from '@/app/_components/marketing-session-provider';
+import { appHomeUrl, appPlanSettingsUrl, appSignInUrl, webSignUpPath } from '@/lib/portal-urls';
 
 import { Cta } from './landing-primitives';
 
@@ -18,9 +22,13 @@ const NAV_LINKS = [
     { href: '#signup', label: 'Create account' },
 ] as const;
 
+const PLAN_SHORT = { BASIC: 'Basic', PLUS: 'Plus', MAX: 'Max' } as const;
+
 export function LandingHeader() {
     const [open, setOpen] = useState(false);
+    const [accountOpen, setAccountOpen] = useState(false);
     const menuId = useId();
+    const { isPending, isAuthenticated, user, planKey, signOut } = useMarketingSession();
 
     useEffect(() => {
         if (!open) return;
@@ -45,7 +53,26 @@ export function LandingHeader() {
         return () => mq.removeEventListener('change', onChange);
     }, []);
 
+    useEffect(() => {
+        if (!accountOpen) return;
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setAccountOpen(false);
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [accountOpen]);
+
     const close = () => setOpen(false);
+    const navLinks = NAV_LINKS.map(link =>
+        link.href === '#signup' && isAuthenticated
+            ? { href: appHomeUrl(), label: 'Dashboard' }
+            : link
+    );
+
+    const name = user?.name?.trim() || 'Account';
+    const email = user?.email?.trim() || '';
+    const initials = initialsFromUser(user?.name, user?.email);
+    const planLabel = planKey ? PLAN_SHORT[planKey] : null;
 
     return (
         <header className="sticky top-0 z-20 border-b border-line bg-chrome/95 backdrop-blur-md">
@@ -60,29 +87,143 @@ export function LandingHeader() {
                 <nav
                     aria-label="Primary"
                     className="ml-auto hidden items-center gap-5 lg:flex xl:gap-6">
-                    {NAV_LINKS.filter(link => link.href !== '#signup').map(link => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            className="text-sm whitespace-nowrap text-fg-muted transition-colors hover:text-accent">
-                            {link.label}
-                        </Link>
-                    ))}
+                    {navLinks
+                        .filter(link => link.href !== '#signup' && !link.href.startsWith('http'))
+                        .map(link => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className="text-sm whitespace-nowrap text-fg-muted transition-colors hover:text-accent">
+                                {link.label}
+                            </Link>
+                        ))}
                 </nav>
 
                 <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 lg:ml-4">
                     <ThemeToggle className="size-9 shrink-0 rounded-full bg-transparent text-sm text-fg-muted hover:border-accent hover:bg-transparent hover:text-accent sm:size-8" />
 
-                    <Cta
-                        href={appSignInUrl()}
-                        variant="ghost"
-                        className="hidden whitespace-nowrap sm:inline-flex">
-                        Sign in
-                    </Cta>
+                    {!isPending && isAuthenticated ? (
+                        <>
+                            <Cta
+                                href={appHomeUrl()}
+                                className="hidden whitespace-nowrap sm:inline-flex">
+                                Open app
+                            </Cta>
 
-                    <Cta href={webSignUpPath()} className="hidden whitespace-nowrap sm:inline-flex">
-                        Start free
-                    </Cta>
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setAccountOpen(previous => !previous)}
+                                    aria-label="Account menu"
+                                    aria-expanded={accountOpen}
+                                    className="relative grid size-9 place-items-center overflow-hidden rounded-full bg-accent font-mono text-xs font-bold text-on-accent transition hover:brightness-110 active:scale-95">
+                                    {user?.image ? (
+                                        // eslint-disable-next-line @next/next/no-img-element -- session avatar URL is arbitrary
+                                        <img
+                                            src={user.image}
+                                            alt=""
+                                            className="size-9 object-cover"
+                                        />
+                                    ) : (
+                                        initials
+                                    )}
+                                </button>
+
+                                {accountOpen ? (
+                                    <>
+                                        <button
+                                            type="button"
+                                            aria-label="Close account menu"
+                                            onClick={() => setAccountOpen(false)}
+                                            className="fixed inset-0 z-30 cursor-default"
+                                        />
+                                        <div className="absolute top-11 right-0 z-40 w-[min(18rem,calc(100vw-2rem))] animate-rise overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-xl">
+                                            <div className="flex items-center gap-3 border-b border-line px-4.5 py-4">
+                                                <div className="grid size-9.5 shrink-0 place-items-center overflow-hidden rounded-full bg-accent font-mono text-xs font-bold text-on-accent">
+                                                    {user?.image ? (
+                                                        // eslint-disable-next-line @next/next/no-img-element -- session avatar URL is arbitrary
+                                                        <img
+                                                            src={user.image}
+                                                            alt=""
+                                                            className="size-9.5 object-cover"
+                                                        />
+                                                    ) : (
+                                                        initials
+                                                    )}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="truncate text-sm font-medium text-fg">
+                                                        {name}
+                                                    </p>
+                                                    <p className="truncate font-mono text-xs text-fg-faint">
+                                                        {email || '—'}
+                                                    </p>
+                                                    {planLabel ? (
+                                                        <p className="mt-1 font-mono text-[11px] font-semibold tracking-wide text-accent uppercase">
+                                                            {planLabel} plan
+                                                        </p>
+                                                    ) : null}
+                                                </div>
+                                            </div>
+                                            <div className="grid gap-0.5 p-2">
+                                                <Link
+                                                    href={appHomeUrl()}
+                                                    onClick={() => setAccountOpen(false)}
+                                                    className="grid gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                    <span className="text-sm text-fg">
+                                                        Open dashboard
+                                                    </span>
+                                                    <span className="text-xs text-fg-faint">
+                                                        Continue in the app
+                                                    </span>
+                                                </Link>
+                                                <Link
+                                                    href={appPlanSettingsUrl()}
+                                                    onClick={() => setAccountOpen(false)}
+                                                    className="grid gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                    <span className="text-sm text-fg">
+                                                        Plan & billing
+                                                    </span>
+                                                    <span className="text-xs text-fg-faint">
+                                                        Upgrade, downgrade or manage
+                                                    </span>
+                                                </Link>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setAccountOpen(false);
+                                                        void signOut();
+                                                    }}
+                                                    className="grid gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                                    <span className="text-sm text-danger">
+                                                        Sign out
+                                                    </span>
+                                                    <span className="text-xs text-fg-faint">
+                                                        Leave this browser session
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : null}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <Cta
+                                href={appSignInUrl()}
+                                variant="ghost"
+                                className="hidden whitespace-nowrap sm:inline-flex">
+                                Sign in
+                            </Cta>
+
+                            <Cta
+                                href={webSignUpPath()}
+                                className="hidden whitespace-nowrap sm:inline-flex">
+                                Start free
+                            </Cta>
+                        </>
+                    )}
 
                     <button
                         type="button"
@@ -116,7 +257,7 @@ export function LandingHeader() {
                 <nav
                     aria-label="Mobile"
                     className="mx-auto flex w-full max-w-6xl flex-col gap-0.5 px-4 py-3 pb-5">
-                    {NAV_LINKS.map(link => (
+                    {navLinks.map(link => (
                         <Link
                             key={link.href}
                             href={link.href}
@@ -126,17 +267,43 @@ export function LandingHeader() {
                         </Link>
                     ))}
                     <div className="mt-3 grid gap-2 border-t border-line pt-4 sm:hidden">
-                        <Cta
-                            href={appSignInUrl()}
-                            variant="ghost"
-                            size="lg"
-                            className="w-full"
-                            onClick={close}>
-                            Sign in
-                        </Cta>
-                        <Cta href={webSignUpPath()} size="lg" className="w-full" onClick={close}>
-                            Start free — no card
-                        </Cta>
+                        {isAuthenticated ? (
+                            <>
+                                <Cta
+                                    href={appHomeUrl()}
+                                    size="lg"
+                                    className="w-full"
+                                    onClick={close}>
+                                    Open dashboard
+                                </Cta>
+                                <Cta
+                                    href={appPlanSettingsUrl()}
+                                    variant="ghost"
+                                    size="lg"
+                                    className="w-full"
+                                    onClick={close}>
+                                    Plan & billing
+                                </Cta>
+                            </>
+                        ) : (
+                            <>
+                                <Cta
+                                    href={appSignInUrl()}
+                                    variant="ghost"
+                                    size="lg"
+                                    className="w-full"
+                                    onClick={close}>
+                                    Sign in
+                                </Cta>
+                                <Cta
+                                    href={webSignUpPath()}
+                                    size="lg"
+                                    className="w-full"
+                                    onClick={close}>
+                                    Start free — no card
+                                </Cta>
+                            </>
+                        )}
                     </div>
                 </nav>
             </div>

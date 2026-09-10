@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useMarketingSession } from '@/app/_components/marketing-session-provider';
 import {
     DEMO_INCOME_DEFAULT,
     DEMO_INCOME_LINE,
@@ -11,9 +12,11 @@ import {
     PROOF,
     TICKER,
 } from '@/lib/landing-content';
-import { webSignUpPath } from '@/lib/portal-urls';
+import { appHomeUrl, appPlanSettingsUrl, webSignUpPath } from '@/lib/portal-urls';
 
 import { Cta, Eyebrow } from './landing-primitives';
+
+const PLAN_SHORT = { BASIC: 'Basic', PLUS: 'Plus', MAX: 'Max' } as const;
 
 function fmt(value: number) {
     return '€' + Number(value).toLocaleString('en-IE');
@@ -30,6 +33,7 @@ export function LandingHero() {
     const [splitP, setSplitP] = useState(1);
     const rafRef = useRef<number>(0);
     const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
+    const { isAuthenticated, planKey } = useMarketingSession();
 
     useEffect(() => {
         const loop = () => {
@@ -131,12 +135,25 @@ export function LandingHero() {
                         {HERO.lead}
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                        <Cta href={webSignUpPath()} size="lg">
-                            {HERO.ctaPrimary}
-                        </Cta>
-                        <Cta href="#loop" variant="ghost" size="lg">
-                            {HERO.ctaSecondary}
-                        </Cta>
+                        {isAuthenticated ? (
+                            <>
+                                <Cta href={appHomeUrl()} size="lg">
+                                    Open dashboard
+                                </Cta>
+                                <Cta href={appPlanSettingsUrl()} variant="ghost" size="lg">
+                                    {planKey ? `Manage ${PLAN_SHORT[planKey]}` : 'Manage plan'}
+                                </Cta>
+                            </>
+                        ) : (
+                            <>
+                                <Cta href={webSignUpPath()} size="lg">
+                                    {HERO.ctaPrimary}
+                                </Cta>
+                                <Cta href="#loop" variant="ghost" size="lg">
+                                    {HERO.ctaSecondary}
+                                </Cta>
+                            </>
+                        )}
                     </div>
 
                     {/* Proof stats */}

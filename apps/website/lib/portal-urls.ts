@@ -37,6 +37,16 @@ export function appSignInAfterAuthUrl(query?: Record<string, string>): string {
     return appSignInUrl({ verified: '1', ...query });
 }
 
+/** Product home / dashboard. */
+export function appHomeUrl(): string {
+    return `${appOrigin()}/`;
+}
+
+/** Plan & billing settings in the product app. */
+export function appPlanSettingsUrl(): string {
+    return `${appOrigin()}/settings/general/plan`;
+}
+
 export function portalDomains() {
     return {
         app: env.NEXT_PUBLIC_DOMAIN_APP,
