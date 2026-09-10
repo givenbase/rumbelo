@@ -144,6 +144,11 @@ export class DemoHouseholdSeeder extends Seeder {
             user.updatedAt = new Date();
             em.persist(user);
         }
+        if (user.name !== demo.name) {
+            user.name = demo.name;
+            user.updatedAt = new Date();
+            em.persist(user);
+        }
 
         const spendingStyle =
             demo.persona === 'max'
@@ -154,7 +159,14 @@ export class DemoHouseholdSeeder extends Seeder {
 
         let rumteloAccount = await em.findOne(Account, { user }, { populate: ['settings'] });
         if (!rumteloAccount) {
-            rumteloAccount = em.create(Account, { user } as never);
+            rumteloAccount = em.create(Account, {
+                user,
+                firstName: demo.firstName,
+                middleName: demo.middleName ?? null,
+                lastName: demo.lastName,
+                phone: demo.phone,
+                dateOfBirth: demo.dateOfBirth,
+            } as never);
             em.persist(rumteloAccount);
             em.create(AccountSettings, {
                 account: rumteloAccount,
@@ -164,6 +176,11 @@ export class DemoHouseholdSeeder extends Seeder {
                 onboardedAt: new Date(),
             } as never);
         } else {
+            rumteloAccount.firstName = demo.firstName;
+            rumteloAccount.middleName = demo.middleName ?? null;
+            rumteloAccount.lastName = demo.lastName;
+            rumteloAccount.phone = demo.phone;
+            rumteloAccount.dateOfBirth = demo.dateOfBirth;
             const settings = await em.findOne(AccountSettings, { account: rumteloAccount });
             if (settings) {
                 settings.locale = Locale.EN;
