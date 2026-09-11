@@ -125,5 +125,5 @@ Re-export module, service, entity, controller.
 
 ## Imports
 
-- Extensionless relative imports (`./foo`, not `./foo.js`) — `moduleResolution: Bundler` + `tsx`
+- Extensionless relative imports (`./foo`, not `./foo.js`) — `moduleResolution: Bundler` + `oxc-node`
 - Contracts package: extensionless; backend Nest: extensionless under Bundler

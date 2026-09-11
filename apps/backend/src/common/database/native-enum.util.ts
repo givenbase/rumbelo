@@ -108,7 +108,7 @@ export function NativeEnum<T extends Record<string, string>>(options: {
     /** Max column length for the enum value. */
     length?: number;
     /** Enum reference — provided via ES shorthand: `{ DebtKind, domain: 'money' }` */
-    [enumKey: string]: boolean | EnumDomain | number | string | T | T[keyof T] | undefined;
+    [enumKey: string]: boolean | number | string | T | T[keyof T] | undefined;
 }): {
     default?: T[keyof T];
     items: () => T;
@@ -117,7 +117,7 @@ export function NativeEnum<T extends Record<string, string>>(options: {
     nullable?: boolean;
 } {
     const { domain, name: nameOverride, defaultValue, nullable, length, ...rest } = options;
-    const { enumRef, enumNamePascalCase } = resolveEnumEntry<T>(rest as Record<string, unknown>);
+    const { enumRef, enumNamePascalCase } = resolveEnumEntry<T>(rest);
 
     let suffix: string;
 

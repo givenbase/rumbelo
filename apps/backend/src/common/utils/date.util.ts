@@ -3,6 +3,12 @@ import { format as formatDateFns, isValid, parseISO } from 'date-fns';
 
 const logger = new Logger('DateUtils');
 
+function formatDateForLog(date: Date | null | string): string {
+    if (typeof date === 'string') return date;
+    if (date instanceof Date) return date.toISOString();
+    return String(date);
+}
+
 export const DATE_FORMATS = {
     ISO: 'yyyy-MM-dd',
     ISO_DATETIME: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
@@ -23,13 +29,13 @@ export function formatToISODate(date?: Date | null | string): null | string {
 
         const dateObj = typeof date === 'string' ? parseISO(date) : date;
         if (!isValid(dateObj)) {
-            logger.warn(`Invalid date: ${date}`);
+            logger.warn(`Invalid date: ${formatDateForLog(date)}`);
             return null;
         }
 
         return formatDateFns(dateObj, DATE_FORMATS.ISO);
     } catch (error) {
-        logger.warn(`Failed to format date: ${date}`, error);
+        logger.warn(`Failed to format date: ${formatDateForLog(date)}`, error);
         return null;
     }
 }

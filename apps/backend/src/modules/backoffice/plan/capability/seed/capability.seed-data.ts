@@ -27,7 +27,7 @@ import {
 export const CAPABILITY_SEED = CAPABILITY_DEFINITIONS.map(row => {
     const { product, feature } = parseCapabilityKey(row.key);
     return {
-        key: row.key as CapabilityKey,
+        key: row.key,
         product: product as CapabilityProduct,
         feature,
         kind: row.kind,

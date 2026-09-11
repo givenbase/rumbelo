@@ -85,8 +85,8 @@ export function PlanChangeDialog({
 }: PlanChangeDialogProps) {
     if (!diff) return null;
 
-    const toLabel = PLAN_LABELS[diff.to as PlanKey];
-    const fromLabel = PLAN_LABELS[diff.from as PlanKey];
+    const toLabel = PLAN_LABELS[diff.to];
+    const fromLabel = PLAN_LABELS[diff.from];
     const upgrading = diff.direction === 'upgrade';
     const endsLabel = formatPeriodEnd(periodEndsAt);
 

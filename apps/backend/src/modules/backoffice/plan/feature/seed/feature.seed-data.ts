@@ -12,7 +12,7 @@ import {
 export const PLAN_FEATURE_SEED = CAPABILITY_DEFINITIONS.map(row => {
     const { product, feature } = parseCapabilityKey(row.key);
     return {
-        capabilityKey: row.key as CapabilityKey,
+        capabilityKey: row.key,
         productKey: product as CapabilityProduct,
         key: feature,
         name: row.name,

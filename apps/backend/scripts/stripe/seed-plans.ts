@@ -47,7 +47,7 @@ async function ensureProduct(stripe: Stripe, planKey: PaidPlanKey): Promise<Stri
     };
 
     if (existing.data.length > 0) {
-        const product = existing.data[0]!;
+        const product = existing.data[0];
         await stripe.products.update(product.id, payload);
         console.log(`↻ Product ${planKey}: ${product.id}`);
         return product;
@@ -78,7 +78,7 @@ async function ensurePrice(
     });
 
     if (existing.data.length > 0) {
-        const price = existing.data[0]!;
+        const price = existing.data[0];
         console.log(`  ⏭  ${lookupKey} → ${price.id} (exists)`);
         return price;
     }

@@ -21,7 +21,7 @@ export function extractEntityClassDeclaration(text: string): EntityClassDeclarat
     );
     if (!match) return null;
     return {
-        className: match[1]!,
+        className: match[1],
         extendsName: match[2] ?? null,
     };
 }
@@ -72,7 +72,7 @@ export function findInheritedFieldRedeclarations(text: string): string[] {
         /@(?:PrimaryKey|Property|Enum|ManyToOne|OneToOne)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
-        const fieldName = match[1]!;
+        const fieldName = match[1];
         if (forbidden.has(fieldName) && !redeclarations.includes(fieldName)) {
             redeclarations.push(fieldName);
         }
@@ -91,7 +91,7 @@ export function findRelationIdSuffixViolations(text: string): string[] {
     const pattern = /@(?:ManyToOne|OneToOne)\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
-        const fieldName = match[1]!;
+        const fieldName = match[1];
         if (fieldName.endsWith('Id') && !violations.includes(fieldName)) {
             violations.push(fieldName);
         }
@@ -112,7 +112,7 @@ export function extractBooleanPropertyNames(text: string): string[] {
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
         const opts = match[1] ?? '';
-        const fieldName = match[2]!;
+        const fieldName = match[2];
         const hasBoolDefault = /default:\s*(true|false)/.test(opts);
         const hasBoolType = /type:\s*['"]boolean['"]/.test(opts);
         const hasBoolAssign = match[3] === 'true' || match[3] === 'false';
@@ -152,7 +152,7 @@ export function extractPropertyDeclarations(text: string): PropertyDecl[] {
     const pattern = /@Property\(([\s\S]*?)\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(text)) !== null) {
-        decls.push({ opts: match[1] ?? '', fieldName: match[2]! });
+        decls.push({ opts: match[1] ?? '', fieldName: match[2] });
     }
     return decls;
 }
@@ -389,7 +389,7 @@ export const UI_METADATA_PRIORITY: Record<string, number> = {
 
 export function inferFieldPriority(fieldName: string): number {
     if (fieldName in EXACT_FIELD_PRIORITY) {
-        return EXACT_FIELD_PRIORITY[fieldName]!;
+        return EXACT_FIELD_PRIORITY[fieldName];
     }
     if (
         fieldName.startsWith('email') ||
@@ -451,7 +451,7 @@ export function extractPropertyFieldNames(block: string): string[] {
     const pattern = /@Property\([\s\S]*?\)\s*\n\s*(\w+)[!?]?\s*[=:]/g;
     let match: null | RegExpExecArray;
     while ((match = pattern.exec(block)) !== null) {
-        fields.push(match[1]!);
+        fields.push(match[1]);
     }
     return fields;
 }
@@ -467,8 +467,8 @@ export function findFieldOrderViolations(
 ): FieldOrderViolation[] {
     const violations: FieldOrderViolation[] = [];
     for (let i = 0; i < fields.length - 1; i++) {
-        const before = fields[i]!;
-        const after = fields[i + 1]!;
+        const before = fields[i];
+        const after = fields[i + 1];
         if (compareFieldOrder(before, after, section) > 0) {
             violations.push({ before, after });
         }

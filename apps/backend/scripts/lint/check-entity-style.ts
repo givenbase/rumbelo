@@ -239,8 +239,8 @@ function validateEntity(absPath: string): EntityIssue[] {
     }
 
     for (let i = 1; i < sections.length; i++) {
-        const prev = CANONICAL_SECTIONS.indexOf(sections[i - 1]!);
-        const curr = CANONICAL_SECTIONS.indexOf(sections[i]!);
+        const prev = CANONICAL_SECTIONS.indexOf(sections[i - 1]);
+        const curr = CANONICAL_SECTIONS.indexOf(sections[i]);
         if (curr < prev) {
             pushIssue(
                 issues,

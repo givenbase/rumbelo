@@ -86,7 +86,7 @@ export class TransactionController {
                 description: input.description,
                 amount: input.amount,
                 note: input.note,
-                status: input.status as never,
+                status: input.status,
                 counterparty: input.counterparty,
                 inflowKey: input.inflowKey,
                 categoryId: input.categoryId,

@@ -28,7 +28,7 @@ export class AccountSettingsController {
     @Implement(contract.account.createSettings)
     create() {
         return implement(contract.account.createSettings).handler(({ input }) =>
-            this.settings.create(input as never)
+            this.settings.create(input)
         );
     }
 
@@ -50,7 +50,7 @@ export class AccountSettingsController {
     @Implement(contract.account.updateSettings)
     update() {
         return implement(contract.account.updateSettings).handler(({ input }) =>
-            this.settings.update(input as never)
+            this.settings.update(input)
         );
     }
 

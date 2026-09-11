@@ -187,7 +187,7 @@ export class PlanSeeder extends Seeder {
             const pair = `${row.planKey}:${row.capabilityKey}`;
             if (existingPair.has(pair)) continue;
 
-            const plan = planByKey.get(row.planKey as PlanKey);
+            const plan = planByKey.get(row.planKey);
             const capability = capabilityByKey.get(row.capabilityKey);
             if (!plan || !capability) continue;
 

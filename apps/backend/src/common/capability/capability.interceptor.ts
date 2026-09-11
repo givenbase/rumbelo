@@ -44,7 +44,7 @@ export class CapabilityInterceptor implements NestInterceptor {
             throw new ForbiddenException('Household context required for capability check');
         }
         const householdId = currentHouseholdId();
-        const planKey = (await this.billing.getPlanKey(householdId)) as PlanKey;
+        const planKey = await this.billing.getPlanKey(householdId);
         for (const key of keys) {
             if (!hasCapability(key, planKey)) {
                 throw new ForbiddenException(`Plan does not include ${key}`);

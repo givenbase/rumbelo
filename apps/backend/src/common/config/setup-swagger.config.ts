@@ -14,7 +14,7 @@ const swaggerLogger = new Logger('Swagger');
 /** Enable in development by default; elsewhere require ENABLE_SWAGGER=true. */
 export function isSwaggerEnabled(env: Env): boolean {
     if (env.NODE_ENV === 'development') return true;
-    return env.ENABLE_SWAGGER === true;
+    return env.ENABLE_SWAGGER;
 }
 
 export async function setupSwagger(app: NestFastifyApplication, env: Env): Promise<void> {
@@ -25,7 +25,7 @@ export async function setupSwagger(app: NestFastifyApplication, env: Env): Promi
             _request: unknown,
             reply: { redirect: (url: string, code?: number) => void }
         ) => {
-            void reply.redirect('/access-denied', 302);
+            reply.redirect('/access-denied', 302);
         };
         fastify.get('/api/docs', deny);
         fastify.get('/api/docs/', deny);

@@ -51,7 +51,7 @@ export function FixedCostsPageClient() {
         live && byJarQuery.data?.length
             ? byJarQuery.data.flatMap(group =>
                   group.items
-                      .filter(item => item.direction === 'OUT' && item.isActive !== false)
+                      .filter(item => item.direction === 'OUT' && item.isActive)
                       .map(item => ({
                           id: item.id,
                           name: item.name,
@@ -68,7 +68,7 @@ export function FixedCostsPageClient() {
     const incomeSources =
         live && incomeQuery.data?.length
             ? incomeQuery.data
-                  .filter(source => source.isActive !== false)
+                  .filter(source => source.isActive)
                   .map(source => ({
                       id: source.id,
                       label: source.name,

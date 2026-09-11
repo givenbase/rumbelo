@@ -45,10 +45,10 @@ export function subscribeHelpersEnabled(onStoreChange: () => void): () => void {
     const onCustom = () => onStoreChange();
 
     window.addEventListener('storage', onStorage);
-    window.addEventListener(HELPERS_CHANGE_EVENT, onCustom as EventListener);
+    window.addEventListener(HELPERS_CHANGE_EVENT, onCustom);
     return () => {
         window.removeEventListener('storage', onStorage);
-        window.removeEventListener(HELPERS_CHANGE_EVENT, onCustom as EventListener);
+        window.removeEventListener(HELPERS_CHANGE_EVENT, onCustom);
     };
 }
 

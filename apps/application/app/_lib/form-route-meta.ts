@@ -80,7 +80,7 @@ export type FormRouteKey = keyof typeof FORM_ROUTE;
 
 /** Widen a route entry so optional description/width are always readable. */
 export function formRoute(key: FormRouteKey): FormRouteMeta {
-    return FORM_ROUTE[key] as FormRouteMeta;
+    return FORM_ROUTE[key];
 }
 
 export function moveCreateMeta(fromJarId?: string): FormRouteMeta {

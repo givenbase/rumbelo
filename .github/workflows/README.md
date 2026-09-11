@@ -56,7 +56,7 @@ Templates: `.env.github.secrets.example`, `.env.github.vars.example`. Script: `s
 | `api-smoke.yml` | `/health*` must not 5xx (strict ready after migrate) |
 | `e2e-smoke.yml` | Playwright `@smoke` against staging application |
 
-`db:push` / `db:seed` run via `tsx` scripts (not `@mikro-orm/cli`) so CI is not hit by the Node 22.22.3+ `yargonaut` / `require.cache` crash under `--import tsx/esm`. They also build `@rumtelo/contracts` first (`dist/` is required by package exports). Workflows pin Node **22.22.2**.
+`db:push` / `db:seed` run via `oxnode` scripts (not `@mikro-orm/cli`) so CI is not hit by the Node 22.22.3+ `yargonaut` / `require.cache` crash under `--import @oxc-node/core/register`. They also build `@rumtelo/contracts` first (`dist/` is required by package exports). Workflows pin Node **22.22.2**.
 
 Manual runs: **Actions** → pick workflow → choose `staging` or `production`.
 

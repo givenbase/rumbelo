@@ -59,13 +59,13 @@ export function JarDetailPageClient({ jarKey }: { jarKey: JarKey }) {
                 limit: 50,
             },
         }),
-        { items: [], nextCursor: null } as never,
+        { items: [], nextCursor: null },
         live && Boolean(jar?.id)
     );
 
     const fixedGroup = (byJarQuery.data ?? []).find(group => group.jarKey === jarKey);
     const fixedOut = (fixedGroup?.items ?? []).filter(
-        item => item.direction === 'OUT' && item.isActive !== false
+        item => item.direction === 'OUT' && item.isActive
     );
 
     const transactions = [...(txQuery.data?.items ?? [])].sort((left, right) =>

@@ -3,9 +3,9 @@
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "Bundler",
+        "rootDir": "src",
         "outDir": "dist",
         "strictNullChecks": true,
-        "baseUrl": ".",
         "paths": {
             "@rumtelo/ui/*": ["./src/*"]
         }

@@ -290,7 +290,7 @@ function mergeAccess(...maps: ProductFeatureMap[]): ProductFeatureMap {
         }
         result[product] = keys;
     }
-    return result as ProductFeatureMap;
+    return result;
 }
 
 /**

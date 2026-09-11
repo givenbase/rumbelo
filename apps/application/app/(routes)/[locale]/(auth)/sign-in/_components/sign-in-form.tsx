@@ -82,9 +82,13 @@ export function SignInForm() {
         });
 
         if (result.error) {
-            const code =
+            const errorCode =
                 typeof result.error === 'object' && result.error && 'code' in result.error
-                    ? String((result.error as { code?: unknown }).code ?? '')
+                    ? (result.error as { code?: unknown }).code
+                    : undefined;
+            const code =
+                typeof errorCode === 'string' || typeof errorCode === 'number'
+                    ? String(errorCode)
                     : '';
 
             if (code === 'EMAIL_NOT_VERIFIED' || code === 'EMAIL_VERIFICATION_REQUIRED') {

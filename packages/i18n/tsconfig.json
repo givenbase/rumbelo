@@ -1,7 +1,6 @@
 {
     "extends": "@rumtelo/typescript-config/base.json",
     "compilerOptions": {
-        "baseUrl": ".",
         "jsx": "preserve",
         "lib": ["ES2022", "DOM"],
         "declaration": false,

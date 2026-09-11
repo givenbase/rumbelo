@@ -32,7 +32,7 @@ function suggestJarKey(amount: number): string {
 }
 
 function metaForKey(key: string) {
-    return JAR_META.find(j => j.key === key) ?? JAR_META[0]!;
+    return JAR_META.find(j => j.key === key) ?? JAR_META[0];
 }
 
 function resolveInitialJarId(

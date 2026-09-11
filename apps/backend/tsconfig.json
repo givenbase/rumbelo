@@ -17,10 +17,6 @@
         "jsx": "react-jsx",
         "jsxImportSource": "react"
     },
-    "ts-node": {
-        "esm": true,
-        "experimentalSpecifierResolution": "node"
-    },
     "include": ["src/**/*", "mikro-orm.config.ts"],
     "exclude": ["node_modules", "dist"]
 }

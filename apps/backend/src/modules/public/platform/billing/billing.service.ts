@@ -548,15 +548,15 @@ export class BillingService {
 
         switch (event.type) {
             case 'checkout.session.completed':
-                await this.onCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+                await this.onCheckoutCompleted(event.data.object);
                 break;
             case 'customer.subscription.updated':
                 // Portal cancel / plan switches / renewals land here.
-                await this.onSubscriptionUpdated(event.data.object as Stripe.Subscription);
+                await this.onSubscriptionUpdated(event.data.object);
                 break;
             case 'customer.subscription.deleted':
                 // Portal cancel at period end (or immediate) — drop to Basic.
-                await this.onSubscriptionDeleted(event.data.object as Stripe.Subscription);
+                await this.onSubscriptionDeleted(event.data.object);
                 break;
             default:
                 this.logger.debug(`Ignoring Stripe event ${event.type}`);

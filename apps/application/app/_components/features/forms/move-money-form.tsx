@@ -127,7 +127,7 @@ export function MoveMoneyForm({
         const availableById = new Map(balances.map(row => [row.id, row.available]));
         return (jarsQuery.data ?? []).map(jar => {
             const meta = JAR_META.find(entry => entry.key === jar.key);
-            const caps = jar.capabilities ?? jarCapabilitiesFor(jar.key as JarKey);
+            const caps = jar.capabilities ?? jarCapabilitiesFor(jar.key);
             return {
                 id: jar.id,
                 key: jar.key,

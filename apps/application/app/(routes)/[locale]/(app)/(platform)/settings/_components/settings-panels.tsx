@@ -322,7 +322,7 @@ export function AccountSettings() {
 
     const displayName = profileQuery.data?.displayName?.trim() || user?.name?.trim() || 'Guest';
     const displayEmail = profileQuery.data?.email ?? user?.email ?? '';
-    const activeLang = (accountSettingsQuery.data?.locale ?? locale) as Locale;
+    const activeLang = accountSettingsQuery.data?.locale ?? locale;
 
     function beginEditProfile() {
         setNameDraft(profileQuery.data?.displayName ?? user?.name ?? '');

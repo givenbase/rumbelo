@@ -96,7 +96,7 @@ pnpm dev
 
 ### Lint & format (Oxc)
 
-ESLint and Prettier are replaced by [Oxlint](https://oxc.rs/) + [Oxfmt](https://oxc.rs/docs/guide/usage/formatter):
+ESLint and Prettier are replaced by [Oxlint](https://oxc.rs/) + [Oxfmt](https://oxc.rs/docs/guide/usage/formatter). Oxlint runs [type-aware](https://oxc.rs/docs/guide/usage/linter/type-aware.html) rules via [oxlint-tsgolint](https://github.com/oxc-project/tsgolint) (`options.typeAware` in `.oxlintrc.json`). Oxfmt sorts Tailwind classes (`sortTailwindcss` → `packages/config/tailwind/globals.css`). Backend/`@rumtelo/i18n` run TypeScript via [oxc-node](https://oxc.rs/docs/guide/usage/oxc-node.html) (`oxnode`, powered by the [Transformer](https://oxc.rs/docs/guide/usage/transformer.html)):
 
 ```bash
 pnpm lint         # style (oxlint/oxfmt/entities) + TypeScript (`check-types`)
@@ -105,6 +105,8 @@ pnpm lint:check   # CI-friendly check only (no writes) + types
 pnpm check-types  # TypeScript alone
 pnpm format       # oxfmt only
 ```
+
+Backend scripts use `oxnode` instead of `tsx` (`dev`, `start`, `db:*`, `auth:migrate`, …).
 
 Config: root `.oxlintrc.json` (shared baseline) plus nested configs:
 `apps/backend`, `apps/application`, `apps/website`, `packages/ui`, `packages/hooks`.

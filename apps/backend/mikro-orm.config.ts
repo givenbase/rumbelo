@@ -14,7 +14,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const baseDir = process.cwd();
 
 export default defineConfig({
-    // Source entities only — we run under tsx (Galighticus). TsMorph must read
+    // Source entities only — we run under oxc-node (Galighticus). TsMorph must read
     // .ts files; a dist/**/*.js glob makes it look for sibling .ts under dist.
     entities: ['./src/**/*.entity.ts'],
     entitiesTs: ['./src/**/*.entity.ts'],
@@ -26,7 +26,7 @@ export default defineConfig({
     // Planes: auth, public (app/household), backoffice.
     // Product areas are folders under modules/public — not separate DB schemas.
     schema: 'public',
-    // TsMorph (Galighticus): tsx does not emit Reflect decorator metadata.
+    // TsMorph (Galighticus): oxc-node does not emit Reflect decorator metadata.
     metadataProvider: TsMorphMetadataProvider,
     // Keep reflection cache next to migrations/seeders (not apps/backend/temp).
     metadataCache: {

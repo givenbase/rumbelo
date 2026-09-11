@@ -34,7 +34,7 @@ export class HouseholdSettingsController {
     update() {
         return implement(contract.household.updateSettings).handler(({ input }) => {
             const { householdId, ...patch } = input;
-            return this.settings.update(householdId, patch as never);
+            return this.settings.update(householdId, patch);
         });
     }
 }

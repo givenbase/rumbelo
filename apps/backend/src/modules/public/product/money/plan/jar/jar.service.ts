@@ -362,7 +362,7 @@ function toJarDto(jar: Jar): JarDto {
         // contract's literal union even though the runtime values are identical.
         id: jar.id,
         householdId: jar.household,
-        key: jar.key as JarDto['key'],
+        key: jar.key,
         name: jar.name,
         subtitle: jar.subtitle,
         icon: jar.icon,

@@ -19,7 +19,7 @@ function flattenErrors(
     return Object.entries(obj).reduce<{ message: string; path: string }[]>((acc, [key, value]) => {
         const path = prefix ? `${prefix}.${key}` : key;
         if (value && typeof value === 'object' && 'message' in value) {
-            acc.push({ message: String((value as { message: unknown }).message), path });
+            acc.push({ message: String(value.message), path });
         } else if (Array.isArray(value)) {
             value.forEach(item => {
                 if (typeof item === 'string') acc.push({ message: item, path });
@@ -39,7 +39,7 @@ function apiErrorMessage(apiError: unknown): string | null {
     if (typeof apiError === 'string') return apiError;
     if (apiError instanceof Error) return apiError.message;
     if (typeof apiError === 'object' && apiError !== null && 'message' in apiError) {
-        return String((apiError as { message: unknown }).message);
+        return String(apiError.message);
     }
     return null;
 }
@@ -54,7 +54,7 @@ export function FormErrorBox<T extends FieldValues>({
     form,
     title = 'Formulier onvolledig',
 }: FormErrorBoxProps<T>) {
-    const fieldErrors = flattenErrors(form.formState.errors as Record<string, unknown>);
+    const fieldErrors = flattenErrors(form.formState.errors);
     const apiMessage = apiErrorMessage(apiError);
 
     if (fieldErrors.length === 0 && !apiMessage) return null;

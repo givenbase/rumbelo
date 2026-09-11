@@ -11,7 +11,15 @@ export function downloadTextFile(filename: string, content: string, mime: string
 }
 
 function csvEscape(value: unknown): string {
-    const raw = value === null ? '' : String(value);
+    const raw =
+        value === null || value === undefined
+            ? ''
+            : typeof value === 'string' ||
+                typeof value === 'number' ||
+                typeof value === 'boolean' ||
+                typeof value === 'bigint'
+              ? String(value)
+              : JSON.stringify(value);
     if (/[",\n\r]/.test(raw)) return `"${raw.replace(/"/g, '""')}"`;
     return raw;
 }

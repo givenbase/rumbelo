@@ -29,7 +29,7 @@
         "pnpm-lock.yaml"
     ],
     "options": {
-        "typeAware": false
+        "typeAware": true
     },
     "rules": {
         "prefer-const": "error",

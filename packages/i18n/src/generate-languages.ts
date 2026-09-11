@@ -10,7 +10,7 @@
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { locales, LocalesEnum } from './next-intl';
 
@@ -39,7 +39,8 @@ async function loadTranslations(): Promise<Record<string, Record<string, unknown
             files.map(async file => {
                 const moduleName = basename(file, '.ts');
                 const modulePath = join(sectionDir, file);
-                const mod = await import(`${modulePath}?t=${Date.now()}`);
+                // Prefer file URL without query/hash — oxc-node keys language off the path.
+                const mod = await import(pathToFileURL(modulePath).href);
                 if (!mod.default) {
                     console.warn(`No default export: ${section}/${file}`);
                     return;
@@ -60,14 +61,14 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 /** Deep-merge: keep `existing` values, add missing keys from `fallback`. */
 function fillMissing(existing: Json, fallback: Json): Json {
     if (!isPlainObject(fallback)) return existing ?? fallback;
-    if (!isPlainObject(existing)) return structuredClone(fallback) as Json;
+    if (!isPlainObject(existing)) return structuredClone(fallback);
 
     const result: Record<string, Json> = { ...(existing as Record<string, Json>) };
     for (const [key, value] of Object.entries(fallback)) {
         if (!(key in result) || result[key] === undefined || result[key] === null) {
-            result[key] = structuredClone(value) as Json;
+            result[key] = structuredClone(value);
         } else {
-            result[key] = fillMissing(result[key]!, value as Json);
+            result[key] = fillMissing(result[key], value);
         }
     }
     return result;

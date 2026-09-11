@@ -14,6 +14,12 @@ import { contract } from '../routers';
  */
 export type AppClient = JsonifiedClient<ContractRouterClient<typeof contract>>;
 
+function fetchInputToString(input: RequestInfo | URL): string {
+    if (typeof input === 'string') return input;
+    if (input instanceof URL) return input.href;
+    return input.url;
+}
+
 export interface CreateClientOptions {
     /**
      * API origin for OpenAPILink.
@@ -54,13 +60,13 @@ export function createClient(options: CreateClientOptions): AppClient {
                     message?: unknown;
                 };
                 console.error('ORPC request failed', {
-                    url: String(input),
+                    url: fetchInputToString(input),
                     status: response.status,
                     code: errorData.code,
                     message: errorData.message,
                 });
             } catch {
-                console.error('ORPC request failed', String(input), response.status);
+                console.error('ORPC request failed', fetchInputToString(input), response.status);
             }
         }
 

@@ -17,7 +17,7 @@ export class HouseholdScopedRepository<T extends HouseholdEntity> {
         private readonly entity: new () => T
     ) {}
 
-    private scope(where: FilterQuery<T> = {} as FilterQuery<T>): FilterQuery<T> {
+    private scope(where: FilterQuery<T> = {}): FilterQuery<T> {
         return { ...(where as object), household: currentHouseholdId() } as FilterQuery<T>;
     }
 

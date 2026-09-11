@@ -32,7 +32,7 @@ function isPublicAuthRoute(pathname: string): boolean {
 }
 
 export async function proxy(request: NextRequest) {
-    const intlResponse = await intlMiddleware(request);
+    const intlResponse = intlMiddleware(request);
 
     if (process.env.NEXT_PUBLIC_PREVIEW_MODE === 'true') {
         return intlResponse;

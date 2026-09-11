@@ -158,4 +158,4 @@ async function main() {
     console.log('\nAll smoke checks passed');
 }
 
-main();
+void main();

@@ -186,9 +186,9 @@ export function mapToOrpcClientError(error: unknown): unknown {
             typeof body === 'string'
                 ? body
                 : body && typeof body === 'object' && 'message' in body
-                  ? Array.isArray((body as { message: unknown }).message)
+                  ? Array.isArray(body.message)
                       ? (body as { message: string[] }).message.join(', ')
-                      : String((body as { message: unknown }).message)
+                      : String(body.message)
                   : error.message;
         const code =
             status === HttpStatus.UNAUTHORIZED

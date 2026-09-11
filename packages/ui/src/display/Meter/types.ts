@@ -1,7 +1,7 @@
 interface MeterProps {
     value: number;
     className?: string;
-    tone?: 'accent' | 'danger' | string;
+    tone?: string;
 }
 
 export type { MeterProps };
