@@ -139,6 +139,10 @@ export class DemoHouseholdSeeder extends Seeder {
             user = await em.findOneOrFail(AuthUser, { id: userId });
         }
 
+        // Always (re)apply the demo password — re-seed must rotate credentials when
+        // DEMO_ACCOUNTS passwords change (signup only runs for brand-new users).
+        await this.ensureDemoPassword(auth, user.id, demo.password);
+
         if (!user.emailVerified) {
             user.emailVerified = true;
             user.updatedAt = new Date();
@@ -1251,6 +1255,29 @@ export class DemoHouseholdSeeder extends Seeder {
                 note: row.note ?? null,
             } as never);
         }
+    }
+
+    /** Hash + upsert Better Auth credential so demo passwords stay in sync on re-seed. */
+    private async ensureDemoPassword(
+        auth: ReturnType<typeof createAuth>,
+        userId: string,
+        password: string
+    ): Promise<void> {
+        const ctx = await auth.$context;
+        const passwordHash = await ctx.password.hash(password);
+        const credential = await ctx.internalAdapter.findCredentialAccount(userId);
+        if (credential) {
+            await ctx.internalAdapter.updateAccount(credential.id, { password: passwordHash });
+            return;
+        }
+        await ctx.internalAdapter.linkAccount({
+            userId,
+            providerId: 'credential',
+            // Matches better-auth createLocalAccountIssuer('credential')
+            issuer: 'local:credential',
+            accountId: userId,
+            password: passwordHash,
+        });
     }
 }
 

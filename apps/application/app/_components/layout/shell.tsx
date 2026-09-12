@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { RumteloLogo } from '@rumtelo/brand';
-import { BRAND_TAGLINE } from '@rumtelo/i18n';
 import { cn } from '@rumtelo/utils';
 import { Locale } from '@rumtelo/contracts';
+import { useTheme } from '@rumtelo/ui';
 
 import { signOut } from '@/app/_lib/auth';
 import {
@@ -19,14 +19,15 @@ import {
     resolveNavGroupForPath,
 } from '@/app/_lib/nav';
 import { settingsHrefForNavGroup } from '@/app/_lib/settings-tabs';
-import { AccountThemeToggle } from '@/components/features/shell/account-theme-sync';
+import { accountThemeFromCss } from '@/app/_lib/theme';
+import { useAccountTheme } from '@/components/features/shell/account-theme-sync';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 import { OnboardingOverlay } from '@/components/features/shell/onboarding-overlay';
 import { PendingPlanCheckout } from '@/components/features/shell/pending-plan-checkout';
 import { CapabilityGate } from '@/components/features/shell/capability-gate';
 import { usePlanCapabilities } from '@/components/features/shell/use-plan-capabilities';
-import { PageHelpButton, PageTourProvider, usePageTour } from '@/components/features/tour';
+import { PageHelpButton, PageTourProvider } from '@/components/features/tour';
 import { FeatureHelpersProvider, WhyCaption } from '@/components/features/helpers';
 import { PageContentWidthProvider } from '@/components/layout/page-content-width';
 
@@ -41,8 +42,6 @@ interface MenuItem {
     sub: string;
     href: string | null;
     danger: boolean;
-    onboardingTrigger?: true;
-    openHelp?: true;
 }
 
 const MENU_ITEMS: MenuItem[] = [
@@ -52,20 +51,6 @@ const MENU_ITEMS: MenuItem[] = [
         sub: 'Manage your subscription',
         href: '/settings/general/plan',
         danger: false,
-    },
-    {
-        label: 'Reset setup',
-        sub: 'Run through the first setup again',
-        href: null,
-        danger: false,
-        onboardingTrigger: true,
-    },
-    {
-        label: 'Help & info',
-        sub: 'What this screen is for',
-        href: null,
-        danger: false,
-        openHelp: true,
     },
     { label: 'Sign out', sub: 'You stay signed in for 30 days', href: null, danger: true },
 ];
@@ -107,12 +92,17 @@ function AppShellInner({ children }: { children: ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [portalOpen, setPortalOpen] = useState(false);
     const [subOpen, setSubOpen] = useState(false);
     const [signingOut, setSigningOut] = useState(false);
-    const { resetOnboardingFlow, toggleLocale, locale } = useAppShell();
+    const { toggleLocale, locale } = useAppShell();
+    const { setAccountTheme } = useAccountTheme();
+    const { resolvedTheme } = useTheme();
     const { isCapabilityLocked, accessForPath } = usePlanCapabilities();
     const { session } = useAuth();
-    const { openHelp } = usePageTour();
+
+    const isDark = resolvedTheme === 'dark';
+    const localeLabel = locale === Locale.NL ? 'NL' : 'EN';
 
     const userName = session?.user?.name?.trim() || 'Guest';
     const userEmail = session?.user?.email ?? '';
@@ -125,9 +115,15 @@ function AppShellInner({ children }: { children: ReactNode }) {
         return (userEmail.slice(0, 2) || '?').toUpperCase();
     })();
 
+    function closeOverlays() {
+        setMenuOpen(false);
+        setPortalOpen(false);
+        setSubOpen(false);
+    }
+
     async function handleSignOut() {
         setSigningOut(true);
-        setMenuOpen(false);
+        closeOverlays();
         try {
             await signOut();
             router.replace('/sign-in');
@@ -136,31 +132,110 @@ function AppShellInner({ children }: { children: ReactNode }) {
         }
     }
 
+    function handleToggleTheme() {
+        const next = isDark ? 'light' : 'dark';
+        void setAccountTheme(accountThemeFromCss(next)).catch(error => {
+            console.error('theme save failed', error);
+        });
+    }
+
     const activeGroup = resolveNavGroupForPath(pathname);
     const activeChild = resolveNavChildForPath(pathname);
     const access = accessForPath(pathname);
+    const activePortalLabel =
+        (activeGroup && (TOP_PILL_LABELS[activeGroup.key] ?? activeGroup.label)) || 'Overview';
 
     return (
         <div className="min-h-dvh bg-bg bg-(image:--gradient-page) bg-top bg-no-repeat">
             {/* ── HEADER ──────────────────────────────────────────────────── */}
             <header className="sticky top-0 z-40 bg-chrome backdrop-blur-md">
-                <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
+                <div className="relative mx-auto flex h-16 max-w-7xl items-center px-4">
                     {/* Wordmark */}
                     <Link
                         href="/"
-                        className="flex shrink-0 items-center gap-2.5"
+                        className="relative z-10 flex shrink-0 items-center"
                         data-tour="shell-brand">
                         <RumteloLogo variant="wordmark" className="h-7 w-auto max-w-[9.5rem]" />
-                        <span className="hidden font-mono text-xs font-medium tracking-wide text-fg-faint xl:inline">
-                            {BRAND_TAGLINE}
-                        </span>
                     </Link>
 
-                    {/* Portal pill bar (desktop) */}
+                    {/* Portal switcher — mobile dropdown */}
+                    <div className="relative z-10 mx-3 min-w-0 flex-1 md:hidden">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setMenuOpen(false);
+                                setSubOpen(false);
+                                setPortalOpen(previous => !previous);
+                            }}
+                            aria-label="Switch product"
+                            aria-expanded={portalOpen}
+                            className="flex w-full max-w-[14rem] items-center justify-between gap-2 rounded-full border border-line-strong bg-sunken px-3.5 py-2 shadow-sm transition-colors hover:border-accent-hover">
+                            <span className="flex min-w-0 items-center gap-2">
+                                <span aria-hidden className="text-accent">
+                                    {activeGroup?.icon ?? '◇'}
+                                </span>
+                                <span className="truncate font-mono text-xs font-semibold tracking-widest text-fg uppercase">
+                                    {activePortalLabel}
+                                </span>
+                            </span>
+                            <span
+                                aria-hidden
+                                className={cn(
+                                    'text-fg-faint transition-transform duration-200',
+                                    portalOpen && 'rotate-180'
+                                )}>
+                                ▾
+                            </span>
+                        </button>
+
+                        {portalOpen && (
+                            <>
+                                <button
+                                    type="button"
+                                    aria-label="Close product menu"
+                                    onClick={() => setPortalOpen(false)}
+                                    className="fixed inset-0 z-30 cursor-default"
+                                />
+                                <div className="absolute top-11 left-0 z-40 w-[min(16.5rem,calc(100vw-2rem))] animate-rise overflow-hidden rounded-2xl border border-line-strong bg-surface p-1.5 shadow-xl">
+                                    {NAV_GROUPS.map(group => {
+                                        const active = group === activeGroup;
+                                        return (
+                                            <Link
+                                                key={group.key}
+                                                href={group.href}
+                                                onClick={() => setPortalOpen(false)}
+                                                className={cn(
+                                                    'flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors',
+                                                    active
+                                                        ? 'bg-accent text-on-accent'
+                                                        : 'text-fg hover:bg-raised'
+                                                )}>
+                                                <span
+                                                    aria-hidden
+                                                    className={cn(
+                                                        'grid size-8 place-items-center rounded-full font-mono text-sm',
+                                                        active
+                                                            ? 'bg-on-accent/15'
+                                                            : 'bg-sunken text-accent'
+                                                    )}>
+                                                    {group.icon}
+                                                </span>
+                                                <span className="font-mono text-xs font-semibold tracking-widest uppercase">
+                                                    {TOP_PILL_LABELS[group.key] ?? group.label}
+                                                </span>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Portal pill bar — desktop, truly centered */}
                     <nav
-                        className="hidden flex-1 justify-center md:flex"
+                        className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex"
                         aria-label="Main navigation">
-                        <div className="flex items-center gap-0.5 rounded-full border border-line bg-sunken p-1 shadow-md">
+                        <div className="pointer-events-auto flex items-center gap-0.5 rounded-full border border-line bg-sunken p-1 shadow-md">
                             {NAV_GROUPS.map(group => {
                                 const active = group === activeGroup;
                                 return (
@@ -181,22 +256,15 @@ function AppShellInner({ children }: { children: ReactNode }) {
                         </div>
                     </nav>
 
-                    {/* Right side: lang toggle, theme + avatar */}
-                    <div className="relative ml-auto flex items-center gap-2 md:ml-0">
-                        {/* Lang toggle */}
+                    {/* Avatar menu (language + theme live here) */}
+                    <div className="relative z-10 ml-auto shrink-0">
                         <button
                             type="button"
-                            onClick={toggleLocale}
-                            title={locale === Locale.NL ? 'Switch to English' : 'Switch to Dutch'}
-                            className="flex h-8 items-center rounded-full border border-line px-2.5 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase transition-colors hover:border-accent-hover hover:text-accent sm:px-3">
-                            {locale === Locale.NL ? 'NL' : 'EN'}
-                        </button>
-
-                        <AccountThemeToggle />
-
-                        <button
-                            type="button"
-                            onClick={() => setMenuOpen(previous => !previous)}
+                            onClick={() => {
+                                setPortalOpen(false);
+                                setSubOpen(false);
+                                setMenuOpen(previous => !previous);
+                            }}
                             aria-label="User menu"
                             aria-expanded={menuOpen}
                             className="grid size-9 place-items-center rounded-full bg-accent font-mono text-xs font-bold text-on-accent transition hover:brightness-110 active:scale-95">
@@ -227,10 +295,41 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                         </div>
                                     </div>
 
+                                    <div className="grid gap-0.5 border-b border-line p-2">
+                                        <button
+                                            type="button"
+                                            onClick={toggleLocale}
+                                            className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                            <span className="grid gap-0.5">
+                                                <span className="text-sm text-fg">Language</span>
+                                                <span className="text-xs leading-tight text-fg-faint">
+                                                    App language
+                                                </span>
+                                            </span>
+                                            <span className="rounded-full border border-line px-2.5 py-1 font-mono text-xs font-semibold tracking-wide text-fg-muted uppercase">
+                                                {localeLabel}
+                                            </span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleToggleTheme}
+                                            className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
+                                            <span className="grid gap-0.5">
+                                                <span className="text-sm text-fg">Appearance</span>
+                                                <span className="text-xs leading-tight text-fg-faint">
+                                                    Light or dark
+                                                </span>
+                                            </span>
+                                            <span
+                                                className="rounded-full border border-line px-2.5 py-1 font-mono text-xs font-semibold tracking-wide text-fg-muted"
+                                                suppressHydrationWarning>
+                                                {isDark ? '☾ Dark' : '☀ Light'}
+                                            </span>
+                                        </button>
+                                    </div>
+
                                     <div className="grid gap-0.5 p-2">
                                         {MENU_ITEMS.map(item => {
-                                            const isOnboarding = item.onboardingTrigger === true;
-
                                             const inner = (
                                                 <>
                                                     <span
@@ -246,21 +345,6 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                                 </>
                                             );
 
-                                            if (isOnboarding) {
-                                                return (
-                                                    <button
-                                                        key={item.label}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setMenuOpen(false);
-                                                            resetOnboardingFlow();
-                                                        }}
-                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
-                                                        {inner}
-                                                    </button>
-                                                );
-                                            }
-
                                             if (item.href) {
                                                 return (
                                                     <Link
@@ -273,39 +357,12 @@ function AppShellInner({ children }: { children: ReactNode }) {
                                                 );
                                             }
 
-                                            if (item.openHelp) {
-                                                return (
-                                                    <button
-                                                        key={item.label}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setMenuOpen(false);
-                                                            openHelp();
-                                                        }}
-                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
-                                                        {inner}
-                                                    </button>
-                                                );
-                                            }
-
-                                            if (item.danger) {
-                                                return (
-                                                    <button
-                                                        key={item.label}
-                                                        type="button"
-                                                        disabled={signingOut}
-                                                        onClick={() => void handleSignOut()}
-                                                        className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
-                                                        {inner}
-                                                    </button>
-                                                );
-                                            }
-
                                             return (
                                                 <button
                                                     key={item.label}
                                                     type="button"
-                                                    onClick={() => setMenuOpen(false)}
+                                                    disabled={signingOut}
+                                                    onClick={() => void handleSignOut()}
                                                     className="grid w-full gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-raised">
                                                     {inner}
                                                 </button>
@@ -353,7 +410,11 @@ function AppShellInner({ children }: { children: ReactNode }) {
                             <div className="relative min-w-0 sm:hidden">
                                 <button
                                     type="button"
-                                    onClick={() => setSubOpen(previous => !previous)}
+                                    onClick={() => {
+                                        setPortalOpen(false);
+                                        setMenuOpen(false);
+                                        setSubOpen(previous => !previous);
+                                    }}
                                     className="flex max-w-[min(100%,14rem)] items-center gap-2 rounded-full border border-line-strong px-3.5 py-2 font-mono text-xs font-semibold tracking-wide text-fg uppercase">
                                     <span className="truncate">
                                         {activeChild &&

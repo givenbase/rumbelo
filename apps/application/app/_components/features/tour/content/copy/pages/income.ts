@@ -10,9 +10,9 @@ const income = {
             heading: 'Now, Target, Gap',
             body: 'Now is your current monthly net (all active sources). Target comes from your highest active Earn goal (monthly net you want). If you have no Earn goal yet, a demo target is shown. Gap is how much net still needs to rise.',
         },
-        at_target_jars: {
-            heading: 'At target, each jar',
-            body: 'If you hit Target and keep the same jar percentages, this is what each jar would get per month. It is a projection — not money moved yet.',
+        simulator: {
+            heading: 'What a raise does',
+            body: 'Drag to any monthly net — it opens on your Target. With the same jar percentages, this is what each jar would receive per month. Pick a goal to see its date (at the monthly amount you set on it) and how much room its jar has to speed it up. It is a projection — not money moved yet.',
         },
         sources: {
             heading: 'Income sources',
@@ -29,10 +29,10 @@ const income = {
             content:
                 'Your monthly net today, the Earn-goal target, and how much is left to close the gap.',
         },
-        jars: {
-            title: 'At target, each jar',
+        simulator: {
+            title: 'What a raise does',
             content:
-                'If income hits Target with the same split, this is what each jar would receive per month.',
+                'Drag income up or down. Same split, different amounts per jar — and what that buys for a goal.',
         },
         sources: {
             title: 'Income sources',

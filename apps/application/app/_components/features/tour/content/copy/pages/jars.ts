@@ -8,14 +8,14 @@ const jars = {
         },
         how: {
             heading: 'How it works',
-            body: 'Available = allocated − spent − fixed OUT on that jar. Overspent means commitments and spending already ate the envelope. The simulator asks what if income were higher or lower.',
+            body: 'Available = allocated − spent − fixed OUT on that jar. Overspent means commitments and spending already ate the envelope. To ask what a raise would do to these jars, use the simulator on Growth → Income.',
         },
     },
     steps: {
-        tabs: {
-            title: 'Jars · Simulator',
+        toolbar: {
+            title: 'Add · Move',
             content:
-                'Jars shows this period’s envelopes. Simulator asks what if income were higher or lower.',
+                'Log a transaction in or out, or move money between jars when a month needs it.',
         },
         list: {
             title: 'Your six jars',

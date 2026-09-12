@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "oxnode --watch src/main.ts",
+        "dev": "tsx watch src/main.ts",
         "build": "nest build",
         "start": "tsx src/main.ts",
         "start:node": "node dist/src/main.js",

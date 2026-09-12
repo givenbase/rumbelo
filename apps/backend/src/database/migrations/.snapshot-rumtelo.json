@@ -135,6 +135,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "date"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(32)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 32,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "string"
         }
       },
       "name": "account",

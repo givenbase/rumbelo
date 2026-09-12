@@ -13,7 +13,7 @@ export const SHELL_TOUR_STEPS: PageTourStep[] = [
 
 export const INCOME_TOUR_STEPS: PageTourStep[] = [
     step('[data-tour="income-summary"]', pages.income.steps.summary),
-    step('[data-tour="income-jars"]', pages.income.steps.jars),
+    step('[data-tour="income-simulator"]', pages.income.steps.simulator),
     step('[data-tour="income-sources"]', pages.income.steps.sources),
 ];
 
@@ -23,6 +23,6 @@ export const FIXED_TOUR_STEPS: PageTourStep[] = [
 ];
 
 export const JARS_TOUR_STEPS: PageTourStep[] = [
-    step('[data-tour="jars-tabs"]', pages.jars.steps.tabs),
+    step('[data-tour="jars-toolbar"]', pages.jars.steps.toolbar),
     step('[data-tour="jars-list"]', pages.jars.steps.list),
 ];

@@ -3,7 +3,6 @@
 import { apiQuery } from '@/app/_lib/api-hooks';
 import { useMemo } from 'react';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { GoalKind, GoalStatus } from '@rumtelo/contracts';
@@ -13,9 +12,7 @@ import { formatMoney, incomeDelta, monthlyNetAsOf, sumMonthly, toPeriodKey } fro
 
 import { CREATE_HREF, updateHref } from '@/app/_lib/create-routes';
 import { isLiveData } from '@/app/_lib/preview';
-import { JAR_META } from '@/app/_lib/jar-meta';
-import { jarKeyToSlug } from '@/app/_lib/jar-slug';
-import { CoachMark, useHelpersEnabled } from '@/components/features/helpers';
+import { IncomeSimulator } from '@/components/features/growth/income-simulator';
 import { useAppShell } from '@/components/features/shell/app-shell-context';
 import { useAuth } from '@/components/features/shell/auth-provider';
 
@@ -36,7 +33,6 @@ export function IncomePageClient() {
     const { householdId } = useAuth();
     const { period } = useAppShell();
     const router = useRouter();
-    const coachGuidesEnabled = useHelpersEnabled();
     const periodKey = toPeriodKey(period.year, period.month);
     const live = isLiveData(householdId);
 
@@ -76,6 +72,11 @@ export function IncomePageClient() {
             .map(goal => goal.target);
         return earnTargets.length > 0 ? Math.max(...earnTargets) : FALLBACK_TARGET;
     }, [goalsQuery.data]);
+    const saveGoals = useMemo(
+        () =>
+            (goalsQuery.data ?? []).filter(goal => (goal.kind ?? GoalKind.SAVE) === GoalKind.SAVE),
+        [goalsQuery.data]
+    );
 
     const gap = target - NET;
 
@@ -108,10 +109,7 @@ export function IncomePageClient() {
                 </Button>
             </div>
 
-            <div
-                className={
-                    coachGuidesEnabled ? 'grid gap-4 md:grid-cols-2 md:items-stretch' : 'grid gap-4'
-                }>
+            <div className="grid gap-4">
                 <div data-tour="income-summary" className="min-w-0">
                     <AccentCard
                         tint="var(--color-accent)"
@@ -166,46 +164,14 @@ export function IncomePageClient() {
                     </AccentCard>
                 </div>
 
-                {coachGuidesEnabled ? (
-                    <div data-tour="income-jars" data-coach-guide="income-jars" className="min-w-0">
-                        <Card className="grid h-full content-start gap-2 border-accent/20 p-4 shadow-sm ring-1 ring-accent/10 sm:p-5">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <CoachMark size="sm" />
-                                <span className="font-mono text-xs font-medium tracking-widest text-accent uppercase">
-                                    At target, each jar
-                                </span>
-                            </div>
-                            <p className="text-xs leading-relaxed text-fg-muted">
-                                If you hit your income target with today&apos;s split, each jar
-                                would land here. Tap a jar to open it.
-                            </p>
-                            <div>
-                                {JAR_META.map(j => {
-                                    const jar = jars.find(mj => mj.key === j.key);
-                                    const now = jar?.allocated ?? 0;
-                                    const then = Math.round((target * j.pct) / 100);
-                                    return (
-                                        <Link
-                                            key={j.key}
-                                            href={`/product/money/jars/${jarKeyToSlug(j.key)}`}
-                                            className="flex items-center gap-2 border-b border-line py-2 transition-colors outline-none last:border-b-0 hover:bg-raised focus-visible:bg-raised">
-                                            <span className="shrink-0 text-sm">{j.icon}</span>
-                                            <span className="min-w-0 flex-1 truncate text-sm text-fg-secondary">
-                                                {j.name}
-                                            </span>
-                                            <span className="shrink-0 font-mono text-xs whitespace-nowrap text-fg-muted">
-                                                {formatMoney(now)} →
-                                            </span>
-                                            <span className="shrink-0 font-mono text-sm whitespace-nowrap text-success">
-                                                {formatMoney(then)}
-                                            </span>
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-                        </Card>
-                    </div>
-                ) : null}
+                <div data-tour="income-simulator" className="min-w-0">
+                    <IncomeSimulator
+                        netCents={NET}
+                        targetCents={target}
+                        jars={jars}
+                        goals={saveGoals}
+                    />
+                </div>
             </div>
 
             <div data-tour="income-sources">
