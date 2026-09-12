@@ -1,7 +1,6 @@
 import {
     CAPABILITY_DEFINITIONS,
     parseCapabilityKey,
-    type CapabilityKey,
     type CapabilityProduct,
 } from '@rumtelo/contracts';
 

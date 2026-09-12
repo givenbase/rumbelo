@@ -7,7 +7,7 @@ import {
     type NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { hasCapability, type CapabilityKey, type PlanKey } from '@rumtelo/contracts';
+import { hasCapability, type CapabilityKey } from '@rumtelo/contracts';
 import { Observable } from 'rxjs';
 
 import { HouseholdBillingService } from '../../modules/auth/household/household-billing/household-billing.service';

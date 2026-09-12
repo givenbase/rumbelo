@@ -4,7 +4,6 @@ import {
     PLAN_CAPABILITY_GRANT_ROWS,
     PlanKey,
     parseCapabilityKey,
-    type CapabilityKey,
     type CapabilityProduct,
 } from '@rumtelo/contracts';
 

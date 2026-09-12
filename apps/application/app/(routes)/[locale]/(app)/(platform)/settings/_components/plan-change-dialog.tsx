@@ -10,7 +10,7 @@ import {
     DialogTitle,
 } from '@rumtelo/ui';
 
-import { PLAN_LABELS, type PlanChangeDiff, type PlanKey } from '@/app/_lib/plan';
+import { PLAN_LABELS, type PlanChangeDiff } from '@/app/_lib/plan';
 
 type PlanChangeDialogProps = {
     open: boolean;

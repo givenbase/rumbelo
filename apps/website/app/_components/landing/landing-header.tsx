@@ -16,7 +16,7 @@ import { Cta } from './landing-primitives';
 
 const NAV_LINKS = [
     { href: '#portals', label: 'Portals' },
-    { href: '#loop', label: 'How it works' },
+    { href: '#jars', label: 'How it works' },
     { href: '#pricing', label: 'Pricing' },
     { href: '#faq', label: 'Questions' },
     { href: '#signup', label: 'Create account' },

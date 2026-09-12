@@ -1,6 +1,5 @@
-import { ROADMAP, WHY } from '@/lib/landing-content';
+import { WHY } from '@/lib/landing-content';
 
-import { LandingIcon } from './landing-icon';
 import { CARD, Eyebrow } from './landing-primitives';
 
 const BOOKS_ALWAYS = 3;
@@ -86,35 +85,6 @@ export function LandingWhy() {
                             {WHY.booksNote}
                         </p>
                     </div>
-                </div>
-
-                {/* Roadmap — what comes next, under the origin */}
-                <div className="mt-12 border-t border-line pt-10">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                        <span className="font-mono text-xs font-medium tracking-widest text-fg-faint uppercase">
-                            Where it goes next
-                        </span>
-                        <p className="max-w-xl text-xs leading-relaxed text-fg-faint sm:text-right">
-                            {WHY.aspirantLine}
-                        </p>
-                    </div>
-                    <ul className="mt-4 grid gap-3 sm:grid-cols-3">
-                        {ROADMAP.map(item => (
-                            <li key={item.head} className={`${CARD} flex items-start gap-3.5 p-4`}>
-                                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-                                    <LandingIcon name={item.icon} size={17} />
-                                </span>
-                                <span className="grid min-w-0 gap-0.5">
-                                    <span className="text-sm font-semibold text-fg-strong">
-                                        {item.head}
-                                    </span>
-                                    <span className="text-xs leading-relaxed text-fg-muted">
-                                        {item.line}
-                                    </span>
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
                 </div>
             </div>
         </section>

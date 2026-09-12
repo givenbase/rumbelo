@@ -69,7 +69,7 @@ export function MarketingSessionProvider({ children }: { children: ReactNode }) 
     const canLoadPlan = isAuthenticated && Boolean(householdId);
     const planKey =
         canLoadPlan && planFetch?.householdId === householdId ? planFetch.planKey : null;
-    const planPending = Boolean(canLoadPlan && planFetch?.householdId !== householdId);
+    const planPending = canLoadPlan && planFetch?.householdId !== householdId;
 
     // First visit: activate the only household if the session has none.
     useEffect(() => {

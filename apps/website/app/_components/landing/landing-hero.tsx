@@ -8,6 +8,7 @@ import {
     DEMO_INCOME_LINE,
     FLOATERS,
     HERO,
+    HERO_VIDEO,
     JARS,
     PROOF,
     TICKER,
@@ -33,7 +34,38 @@ export function LandingHero() {
     const [splitP, setSplitP] = useState(1);
     const rafRef = useRef<number>(0);
     const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
+    const videoRef = useRef<HTMLVideoElement>(null);
     const { isAuthenticated, planKey } = useMarketingSession();
+
+    // Background video: honour reduced motion (poster only) and don't decode while off-screen.
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return undefined;
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let visible = true;
+        const sync = () => {
+            if (mq.matches || !visible || document.hidden) {
+                video.pause();
+            } else {
+                void video.play().catch(() => undefined);
+            }
+        };
+        const io = new IntersectionObserver(
+            ([entry]) => {
+                visible = Boolean(entry?.isIntersecting);
+                sync();
+            },
+            { threshold: 0.05 }
+        );
+        io.observe(video);
+        mq.addEventListener('change', sync);
+        document.addEventListener('visibilitychange', sync);
+        return () => {
+            io.disconnect();
+            mq.removeEventListener('change', sync);
+            document.removeEventListener('visibilitychange', sync);
+        };
+    }, []);
 
     useEffect(() => {
         const loop = () => {
@@ -68,7 +100,25 @@ export function LandingHero() {
               : 'INCOME LANDING…';
 
     return (
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden border-b border-line">
+            {/* Background video — decorative; scrim below keeps the copy readable */}
+            <video
+                ref={videoRef}
+                className="pointer-events-none absolute inset-0 size-full object-cover object-[70%_center]"
+                src={HERO_VIDEO.src}
+                poster={HERO_VIDEO.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden
+                tabIndex={-1}
+            />
+            {/* Scrim: solid behind the text column, thinning to the right where the demo card sits */}
+            <span className="pointer-events-none absolute inset-0 bg-bg/75 md:bg-linear-to-r md:from-bg md:via-bg/85 md:via-45% md:to-bg/35 dark:bg-bg/80 dark:md:via-bg/90 dark:md:to-bg/45" />
+            {/* Floor fade so the hairline into Portals stays clean */}
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-bg to-transparent" />
             <span className="pointer-events-none absolute inset-[-20%_-10%] animate-[drift_16s_ease-in-out_infinite] bg-(image:--gradient-page)" />
 
             {/* Floating labels — desktop only to keep the mobile hero clear */}
@@ -149,7 +199,7 @@ export function LandingHero() {
                                 <Cta href={webSignUpPath()} size="lg">
                                     {HERO.ctaPrimary}
                                 </Cta>
-                                <Cta href="#loop" variant="ghost" size="lg">
+                                <Cta href="#jars" variant="ghost" size="lg">
                                     {HERO.ctaSecondary}
                                 </Cta>
                             </>

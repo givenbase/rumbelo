@@ -2,9 +2,12 @@
  * Canonical map: landing section → build status.
  *
  * The original `design/Kluis Landing.dc.html` was a money-only landing. The current
- * page follows the Rumtelo brand arc instead (docs/brand/quotes.md → "How to use"):
- * money punch → problem → four portals → the loop → the Coach → principles → jars →
- * why we exist → pricing → FAQ → sign-up. Copy lives in `lib/landing-content.ts`.
+ * page follows a what → how → trust → price arc:
+ * hero → portals → jars → the Coach → principles → why we exist → pricing → FAQ → sign-up.
+ * Copy lives in `lib/landing-content.ts`.
+ *
+ * Cut on purpose to keep the page light: Problem (hero already names it), Loop (covered by
+ * jars + Coach + principles), Proof (Why already carries the founders).
  */
 
 export type LandingSectionStatus = 'shell' | 'partial' | 'missing';
@@ -33,13 +36,6 @@ export const LANDING_SECTIONS: LandingSection[] = [
         gap: 'Demo loop uses static income; real data via API later',
     },
     {
-        id: 'problem',
-        anchor: '#problem',
-        label: 'Why the picture goes missing (research)',
-        status: 'shell',
-        gap: 'Static copy from docs/research/money-awareness.md',
-    },
-    {
         id: 'portals',
         anchor: '#portals',
         label: 'Four portals + switch strip',
@@ -47,11 +43,11 @@ export const LANDING_SECTIONS: LandingSection[] = [
         gap: 'Feature lines mirror FEATURES in @rumtelo/contracts by hand',
     },
     {
-        id: 'loop',
-        anchor: '#loop',
-        label: 'The loop — five steps',
+        id: 'jars',
+        anchor: '#jars',
+        label: 'Six jars + split bar (tinted band)',
         status: 'shell',
-        gap: 'Static copy; bank sync line says "coming"',
+        gap: 'Static copy',
     },
     {
         id: 'coach',
@@ -63,30 +59,16 @@ export const LANDING_SECTIONS: LandingSection[] = [
     {
         id: 'principles',
         anchor: '#principles',
-        label: 'Four principles (NL + EN)',
+        label: 'Four principles (NL + EN) — dark pivot band',
         status: 'shell',
         gap: 'Static copy from docs/product/principles.md',
     },
     {
-        id: 'jars',
-        anchor: '#jars',
-        label: 'Six jars + split bar',
-        status: 'shell',
-        gap: 'Static copy',
-    },
-    {
         id: 'why',
         anchor: '#why',
-        label: 'Why Rumtelo exists + books + roadmap',
+        label: 'Why Rumtelo exists + books (tinted band)',
         status: 'shell',
         gap: 'Founder note + book lineage; legal disclaimer on independence',
-    },
-    {
-        id: 'proof',
-        anchor: '#proof',
-        label: 'Soft social proof (founders)',
-        status: 'shell',
-        gap: 'No fake testimonials — founders + place + language order',
     },
     {
         id: 'pricing',
@@ -98,7 +80,7 @@ export const LANDING_SECTIONS: LandingSection[] = [
     {
         id: 'faq',
         anchor: '#faq',
-        label: 'FAQ (native <details>)',
+        label: 'FAQ (native <details>, tinted band)',
         status: 'shell',
         gap: 'Static copy',
     },
@@ -112,7 +94,7 @@ export const LANDING_SECTIONS: LandingSection[] = [
     {
         id: 'footer',
         anchor: 'footer',
-        label: 'Trust cards + links',
+        label: 'Trust cards + links (tinted)',
         status: 'shell',
         gap: 'Legal routes live at /privacy /terms /data-processing',
     },

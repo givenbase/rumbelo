@@ -18,7 +18,7 @@ import {
     createFormInvalidHandler,
 } from '@rumtelo/ui';
 import { cn, formatMoney, toPeriodKey } from '@rumtelo/utils';
-import { jarCapabilitiesFor, type JarKey } from '@rumtelo/contracts';
+import { jarCapabilitiesFor } from '@rumtelo/contracts';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

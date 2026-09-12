@@ -39,6 +39,14 @@
             transform: none;
             transition: none;
         }
+
+        /* Demo mocks jump straight to their resting state. */
+        [data-demo] *,
+        [data-demo] {
+            animation-duration: 1ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+        }
     }
 
     body {

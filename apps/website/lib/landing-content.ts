@@ -97,7 +97,19 @@ export const HERO = {
     /** Support + one short widener. */
     lead: 'Money leaves. You’ll know why. Rumtelo gives every amount a job the second it lands — then widens the picture to your energy, your growth and your why. Ten minutes a week. Information, never shame.',
     ctaPrimary: 'Start free — no card',
-    ctaSecondary: 'See the loop',
+    ctaSecondary: 'See how it works',
+} as const;
+
+/**
+ * Ambient background video behind the hero. Decorative only — the scrim in
+ * `landing-hero.tsx` keeps the copy readable over it.
+ * TEMP — Pexels clip (free licence). Self-host the final in /public/media/ before launch.
+ */
+export const HERO_VIDEO = {
+    // Pexels #18069235 — 1080p rendition (the UHD file is 22 MB for no visible gain under the scrim).
+    src: 'https://videos.pexels.com/video-files/18069235/18069235-hd_1920_1080_24fps.mp4',
+    // First frame of the same clip, generated with ffmpeg — Pexels has no poster for this ID.
+    poster: '/media/hero-poster.jpg',
 } as const;
 
 export const PROOF = [
@@ -237,7 +249,26 @@ export interface Portal {
     icon: IconName;
     /** Features from `FEATURES[product]` in @rumtelo/contracts, in product words. */
     features: string[];
+    /**
+     * Optional screen recording of the portal in action.
+     * Drop the file in `apps/website/public/media/portals/` and set the paths here;
+     * until then the landing renders a hand-built animation of the same screen.
+     */
+    media?: { video: string; poster?: string };
+    /** Copy for the mock screen (title bar + Coach line). */
+    demo: { screen: string; coach: string };
 }
+
+/**
+ * TEMP — Pexels placeholder so every portal has a "Watch video" to exercise the slot.
+ * Replace per portal with a real screen recording in /public/media/portals/
+ * (e.g. `{ video: '/media/portals/money.mp4', poster: '/media/portals/money.jpg' }`),
+ * or drop `media` from a portal to hide its button.
+ */
+const PLACEHOLDER_MEDIA: NonNullable<Portal['media']> = {
+    video: 'https://videos.pexels.com/video-files/3130284/3130284-hd_1920_1080_30fps.mp4',
+    poster: 'https://images.pexels.com/videos/3130284/free-video-3130284.jpg?auto=compress&w=1280',
+};
 
 export const PORTALS: Portal[] = [
     {
@@ -255,6 +286,11 @@ export const PORTALS: Portal[] = [
             'Debt plan with an end date',
             'The week check · the month score',
         ],
+        demo: {
+            screen: 'Inbox · this week',
+            coach: 'Play is €38 over its line. One move: shift it from Long Term Savings — or let it ride.',
+        },
+        media: PLACEHOLDER_MEDIA,
     },
     {
         key: 'growth',
@@ -270,6 +306,11 @@ export const PORTALS: Portal[] = [
             'Learn — books, courses, what they changed',
             'Net worth and your freedom number',
         ],
+        demo: {
+            screen: 'Goals · income',
+            coach: 'Cutting costs has a floor. Raising income does not. Side income is 20% of the way.',
+        },
+        media: PLACEHOLDER_MEDIA,
     },
     {
         key: 'energy',
@@ -285,6 +326,11 @@ export const PORTALS: Portal[] = [
             'Training and load',
             'Food and fuel',
         ],
+        demo: {
+            screen: 'Sleep · last 7 nights',
+            coach: 'Three nights under 6h30 — and Play rose on those days. Sleep first. Then decide.',
+        },
+        media: PLACEHOLDER_MEDIA,
     },
     {
         key: 'soul',
@@ -300,8 +346,67 @@ export const PORTALS: Portal[] = [
             'One intention a week',
             'The seven centres — where energy gets stuck',
         ],
+        demo: {
+            screen: 'Stillness · day 6',
+            coach: 'Intention set. One line is enough — the week has a direction now.',
+        },
+        media: PLACEHOLDER_MEDIA,
     },
 ];
+
+/* Demo data for the mock screens — product voice, plausible numbers. */
+
+export const PORTAL_DEMO_MONEY = {
+    rows: [
+        {
+            label: 'Salary',
+            amount: '+€4,300',
+            jar: 'Split → six jars',
+            colorVar: 'var(--color-accent)',
+        },
+        {
+            label: 'Albert Heijn',
+            amount: '−€38.65',
+            jar: 'Necessity',
+            colorVar: 'var(--color-jar-nec)',
+        },
+        { label: 'Coffee bar', amount: '−€5.20', jar: 'Play', colorVar: 'var(--color-jar-play)' },
+        { label: 'Gym', amount: '−€29.00', jar: 'Necessity', colorVar: 'var(--color-jar-nec)' },
+        { label: 'Debt payment', amount: '−€310', jar: 'Freedom', colorVar: 'var(--color-jar-ff)' },
+    ],
+    overLine: { jar: 'Play', over: '€38' },
+} as const;
+
+export const PORTAL_DEMO_GROWTH = {
+    goals: [
+        { name: 'Emergency fund', pct: 64, meta: 'Long Term Savings · Mar 2027' },
+        { name: 'Side income €500 / month', pct: 20, meta: 'Income · the second lever' },
+        { name: 'Course · data analysis', pct: 30, meta: 'Education jar' },
+    ],
+    /** Monthly income, six months. */
+    income: [3900, 3950, 4100, 4050, 4300, 4450],
+    incomeLabel: '+14% in six months',
+} as const;
+
+export const PORTAL_DEMO_ENERGY = {
+    /** Hours slept, last seven nights. */
+    nights: [6.2, 7.3, 5.9, 7.4, 6.4, 8.0, 7.3],
+    floor: 6.5,
+    days: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+    hours: [
+        { label: 'Sleep', value: 51, colorVar: 'var(--color-jar-play)' },
+        { label: 'Work', value: 40, colorVar: 'var(--color-jar-nec)' },
+        { label: 'Move', value: 6, colorVar: 'var(--color-jar-ff)' },
+        { label: 'Yours', value: 71, colorVar: 'var(--color-accent)' },
+    ],
+} as const;
+
+export const PORTAL_DEMO_SOUL = {
+    stillnessSeconds: 60,
+    streakDays: 6,
+    gratitude: ['Morning light on the canal', 'A coffee made for me', 'An empty inbox at nine'],
+    intention: 'One good week — keep the dinners in.',
+} as const;
 
 export const PORTALS_SECTION = {
     eyebrow: 'NOT JUST MONEY. WHERE YOUR LIFE GOES.',
@@ -730,9 +835,8 @@ export const FOOT_COLS = [
         head: 'Product',
         links: [
             { text: 'The portals', href: '#portals' },
-            { text: 'The loop', href: '#loop' },
-            { text: 'The Coach', href: '#coach' },
             { text: 'The jars', href: '#jars' },
+            { text: 'The Coach', href: '#coach' },
             { text: 'Pricing', href: '#pricing' },
         ],
     },

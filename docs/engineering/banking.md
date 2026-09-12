@@ -1,6 +1,6 @@
-# Bank data — CSV import and Enable Banking
+# Bank data — CSV import, Enable Banking, and moving money
 
-How Rumtelo gets bank transactions into the Inbox. **CSV is always-on. Live PSD2 sync is Enable Banking**, behind a feature flag, not implemented end-to-end yet.
+How Rumtelo gets bank transactions into the Inbox. **CSV is always-on. Live PSD2 sync is Enable Banking**, behind a feature flag, not implemented end-to-end yet. **Moving money (PIS) is not on the near roadmap** — see [Moving money](#moving-money--pis-licences-bunq-vs-revolut) for why and for the three routes.
 
 ---
 
@@ -20,6 +20,7 @@ Rows land as transactions in **Inbox** (`status: INBOX`). The household sorts th
 | Pattern | Who | Approach |
 |---|---|---|
 | Bank-first | Dutch apps like **Dyme** | PSD2 bank koppelen (own DNB licence or partner). Auto-categorise. Re-consent ~every 90 days. Product barely works without connect. |
+| Move-the-money | **Flow (Flow Your Money)** | Own DNB licence (AISP + PISP, R166735). Deep **bunq** integration: real IBAN sub-accounts + realtime triggers = salary lands → jars filled. Other banks (incl. **Revolut**) are only "Flow Contacts" — external IBANs they pay *to*; no balance read, Pockets unreachable. Now also sells the rails as **FlowOS** (embedded finance). |
 | Sync + files | **YNAB** and similar | Direct Import where an aggregator covers the bank; **CSV / OFX** with column mapping as the reliable fallback. NL coverage is often incomplete — community converters and third-party syncers fill gaps. |
 | File-first | Converters / DIY | Bank CSV → map columns → import with dedupe. No aggregator bill; more friction. |
 
@@ -96,6 +97,58 @@ When you have a real quote (“NL, AIS only, ~N households, no PIS”), replace 
 
 ---
 
+## Moving money — PIS, licences, bunq vs Revolut
+
+Everything above is **AIS** (read). "Salary lands → six jars fill *in the bank*" is **PIS** (payment initiation). This section records what we verified in Sep 2026 so we do not re-research it.
+
+### The regulatory wall
+
+| Capability | Who may do it | What Rumtelo has |
+|---|---|---|
+| Read accounts/transactions (AIS) | Licensed AISP, **or** an agent using an aggregator's licence | Enable Banking — planned, behind `FEATURE_BANK_SYNC` |
+| Initiate a payment (PIS) | **PISP licence holder only.** Enable Banking: *"in PRODUCTION, payment initiation is only available to companies holding a PISP license."* | Nothing |
+| Move money without per-payment SCA | Bank-specific automation (bunq internal transfers, standing orders). No EU-wide variable recurring payments yet (UK-only VRP). | Nothing |
+
+A PISP licence is a full payment-institution application at DNB: minimum own funds, compliance officer, safeguarding, security audit, ~9–18 months, six-figure cost. Only worth it if moving money becomes the product. Our positioning is **"a coach, not a bank"** — so it is not.
+
+### Revolut — what is and isn't possible
+
+- **Revolut Bank UAB** (the EU entity, NL branch) is in **Enable Banking production: AISP + PISP, SEPA**. No Revolut partnership is needed to *read* a Revolut account.
+- Revolut's own Open Banking API is for regulated TPPs only (eIDAS QWAC + QSeal). There is a "Revolut Partners — contact us" path for non-regulated parties; treat it as a long shot.
+- **Pockets are not exposed.** `GET /accounts` returns currency sub-accounts (shared IBAN, unique `AccountId`) and `UK.Revolut.InternalAccountId` entries that *cannot receive funds*. Six Rumtelo jars ≠ six Revolut Pockets. Do not promise it.
+- Every PIS payment from Revolut needs SCA in the Revolut app. No webhooks for third parties.
+
+**Conclusion:** Revolut is a fine *source* of transactions and a fine *destination IBAN*. It is not a partner for real-money jars.
+
+### bunq — the bank that makes real jars possible
+
+- Up to **25 real IBAN sub-accounts** per user, one fee. Each can be a jar.
+- Realtime push on incoming payments (this is what makes Flow instant).
+- PSD2 sandbox open; production needs a QSeal certificate (i.e. a licence — ours or an umbrella's). bunq's OAuth for non-TPPs exists but bunq explicitly warns it "may be subject to PSD2" for other users' data — do not build on that.
+- Also in Enable Banking coverage for AIS.
+
+If we ever do "real jars", **bunq is the bank**, exactly as it is for Flow.
+
+### Three routes, in order
+
+1. **Now — read, don't move (no licence).**
+   Enable Banking AIS for Revolut, bunq, ING, Rabobank, ABN AMRO. Jars stay virtual in the ledger. New product piece: **map a real sub-account (bunq IBAN, Revolut currency account) to a jar**, so the jar balance mirrors the bank. Fits `BankingPort` as-is; needs a `jar ↔ external account` link on the household.
+2. **Next — "Split assist" with one tap.**
+   Salary lands → Coach computes the split → user approves the transfers in one flow (SCA per payment, bank rules apply). Needs PIS **without our own licence**, via one of:
+   - **Agent / licence umbrella** — ask Enable Banking (or Yapily / Tink) whether they onboard a PIS *agent* under their licence, and at what price.
+   - **FlowOS** — embed Flow's rails; Rumtelo stays the brain (jars, Coach, energy, soul). Turns the closest NL competitor into infra.
+   Whichever says yes first decides the route. Outreach drafts: [outreach-pis.md](./outreach-pis.md).
+3. **Later, if ever — full automation, own DNB licence.**
+   Only if route 2 proves demand *and* per-payment SCA is what users churn on.
+
+### What this means for copy and trust
+
+- Keep **"Read-only, ever"** in the trust cards and footer until route 2 ships; it is both the honest state and what the licence allows.
+- Roadmap card "Live bank sync — PSD2, read-only" stays accurate. Do not add "automatic transfers" anywhere on the site.
+- If route 2 ships, the product language is "Rumtelo *proposes*, you *approve*" — never "Rumtelo moves your money".
+
+---
+
 ## Code map
 
 | Piece | Location |
@@ -121,12 +174,15 @@ Bank AIS ──► BankingPort.fetchTransactions ──► Transaction (BANK, IN
 
 - CSV **import wizard** UI: pick account → upload → confirm mapping/preview → commit
 - Implement **Enable Banking** adapter (institutions, link, fetch) + consent expiry UX
+- **Jar ↔ external account mapping** (route 1 above): link a bunq IBAN / Revolut currency account to a jar so balances mirror the bank
+- Send the two outreach mails in [outreach-pis.md](./outreach-pis.md); record answers (price, agent model yes/no) here
 - Optional later: MT940 / CAMT.053 parsers if customers need them beyond CSV
 
 ---
 
 ## Related
 
+- [Outreach — PIS access](./outreach-pis.md) — draft mails to Enable Banking and Flow/FlowOS
 - [Traps](./traps.md) — free open banking trap
 - [Money module README](../../apps/backend/src/modules/public/product/money/README.md)
 - [HANDOFF](../../HANDOFF.md) §11

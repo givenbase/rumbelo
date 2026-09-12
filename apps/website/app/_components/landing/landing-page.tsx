@@ -8,19 +8,23 @@ import { LandingFooter } from './landing-footer';
 import { LandingHeader } from './landing-header';
 import { LandingHero } from './landing-hero';
 import { LandingJars } from './landing-jars';
-import { LandingLoop } from './landing-loop';
 import { LandingPortals } from './landing-portals';
 import { LandingPricing } from './landing-pricing';
 import { LandingPrinciples } from './landing-principles';
-import { LandingProblem } from './landing-problem';
-import { LandingProof } from './landing-proof';
 import { LandingSignupForm } from './landing-signup-form';
 import { LandingWhy } from './landing-why';
 
 /**
- * Narrative order (docs/brand/quotes.md → "How to use"):
- *   hook (money punch) → name the problem → widen to four portals → the loop →
- *   the Coach (aspirant ↔ mentor) → principles → jars → why we exist → pricing → FAQ → sign-up.
+ * Narrative order — what → how → trust → price:
+ *   hook (hero) → what it is (portals) → the core mechanic (jars) → how it feels daily (coach)
+ *   → the rules we keep (principles, dark band) → why we exist (trust) → pricing → FAQ → sign-up.
+ *
+ * Background rhythm alternates plain / tinted, with Principles as the single dark pivot:
+ *   hero gradient · portals plain · jars tinted · coach plain · PRINCIPLES DARK
+ *   · why tinted · pricing plain · faq tinted · signup plain · footer tinted
+ *
+ * Cut on purpose (hero already names the problem; Why already carries the founders):
+ *   Problem, Loop, Proof.
  */
 export function LandingPage() {
     const rootRef = useRef<HTMLDivElement>(null);
@@ -64,14 +68,11 @@ export function LandingPage() {
             <LandingHeader />
             <main>
                 <LandingHero />
-                <LandingProblem />
                 <LandingPortals />
-                <LandingLoop />
+                <LandingJars />
                 <LandingCoach />
                 <LandingPrinciples />
-                <LandingJars />
                 <LandingWhy />
-                <LandingProof />
                 <LandingPricing />
                 <LandingFaq />
                 <LandingSignupForm />
