@@ -101,25 +101,26 @@ export function LandingHero() {
 
     return (
         <section className="relative overflow-hidden border-b border-line">
-            {/* Background video — decorative; scrim below keeps the copy readable */}
+            {/* Background video — decorative; light scrim below keeps copy readable without hiding the clip */}
             <video
                 ref={videoRef}
-                className="pointer-events-none absolute inset-0 size-full object-cover object-[70%_center]"
+                className="pointer-events-none absolute inset-0 size-full object-cover object-[60%_center]"
                 src={HERO_VIDEO.src}
                 poster={HERO_VIDEO.poster}
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="auto"
                 aria-hidden
                 tabIndex={-1}
             />
-            {/* Scrim: solid behind the text column, thinning to the right where the demo card sits */}
-            <span className="pointer-events-none absolute inset-0 bg-bg/75 md:bg-linear-to-r md:from-bg md:via-bg/85 md:via-45% md:to-bg/35 dark:bg-bg/80 dark:md:via-bg/90 dark:md:to-bg/45" />
-            {/* Floor fade so the hairline into Portals stays clean */}
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-bg to-transparent" />
-            <span className="pointer-events-none absolute inset-[-20%_-10%] animate-[drift_16s_ease-in-out_infinite] bg-(image:--gradient-page)" />
+            {/* Scrim: protect the headline, leave the rest open so the video reads */}
+            <span className="pointer-events-none absolute inset-0 bg-linear-to-b from-bg/80 via-bg/48 to-bg/58 md:bg-linear-to-r md:from-bg/94 md:via-bg/54 md:via-40% md:to-bg/28 dark:from-bg/84 dark:via-bg/56 dark:to-bg/64 dark:md:from-bg/94 dark:md:via-bg/56 dark:md:to-bg/36" />
+            {/* Soft floor fade into the next section */}
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-bg to-transparent" />
+            {/* Brand tint — quiet, so it doesn’t wash the footage */}
+            <span className="pointer-events-none absolute inset-[-20%_-10%] animate-[drift_16s_ease-in-out_infinite] bg-(image:--gradient-page) opacity-40" />
 
             {/* Floating labels — desktop only to keep the mobile hero clear */}
             <div
@@ -163,7 +164,7 @@ export function LandingHero() {
             </div>
 
             {/* Content */}
-            <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-8 px-4 py-12 pb-14 md:flex-row md:flex-wrap md:items-center lg:gap-16 lg:px-6 lg:py-24 lg:pb-20">
+            <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-stretch gap-8 px-4 py-12 pb-14 md:flex-row md:flex-wrap md:items-center lg:gap-16 lg:px-6 lg:py-24 lg:pb-20">
                 {/* Left column */}
                 <div className="min-w-0 flex-1 animate-[rise_520ms_var(--ease-out)_both] md:basis-96">
                     <Eyebrow>
