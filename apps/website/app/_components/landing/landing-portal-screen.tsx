@@ -59,52 +59,82 @@ export function LandingPortalScreen({
                     </span>
                 </span>
 
-                {hasVideo ? (
+                {videoOpen ? (
                     <button
                         type="button"
                         onClick={toggleVideo}
-                        aria-pressed={videoOpen}
-                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold tracking-widest uppercase transition-colors ${
-                            videoOpen
-                                ? 'border-line bg-raised text-fg-muted hover:text-fg'
-                                : 'border-transparent text-bg hover:opacity-90'
-                        }`}
-                        style={videoOpen ? undefined : { background: portal.colorVar }}>
-                        {videoOpen ? (
-                            <>
-                                <span aria-hidden>←</span> Back to demo
-                            </>
-                        ) : (
-                            <>
-                                <svg
-                                    viewBox="0 0 12 12"
-                                    className="size-2.5 fill-current"
-                                    aria-hidden>
-                                    <path d="M3 1.5v9l7-4.5z" />
-                                </svg>
-                                Watch video
-                            </>
-                        )}
+                        className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-raised px-2.5 py-1 font-mono text-[10px] font-semibold tracking-widest text-fg-muted uppercase transition-colors hover:text-fg">
+                        <span aria-hidden>←</span> Back to demo
                     </button>
                 ) : null}
             </div>
 
             <div className="p-4 sm:p-5" data-demo>
-                {videoOpen && portal.media ? (
-                    <video
-                        className="aspect-16/10 w-full rounded-xl border border-line bg-sunken object-cover"
-                        src={portal.media.video}
-                        poster={portal.media.poster}
-                        autoPlay={!reducedMotion}
-                        controls
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                    />
-                ) : (
-                    <DemoScreen portalKey={portal.key} />
-                )}
+                {/* Stage — one fixed height for every portal and for the video, so tabs never jump */}
+                <div className="relative h-88 overflow-hidden">
+                    {videoOpen && portal.media ? (
+                        <video
+                            className="size-full rounded-xl border border-line bg-sunken object-cover"
+                            src={portal.media.video}
+                            poster={portal.media.poster}
+                            autoPlay={!reducedMotion}
+                            controls
+                            muted
+                            loop
+                            playsInline
+                            preload="metadata"
+                        />
+                    ) : (
+                        <>
+                            {/* Mock keeps clear of the play bar so nothing ends up underneath it */}
+                            <div className={hasVideo ? 'h-full pb-16' : 'h-full'}>
+                                <DemoScreen portalKey={portal.key} />
+                            </div>
+
+                            {/* Play affordance — covers the stage, reveals after the animation has had its say */}
+                            {hasVideo ? (
+                                <button
+                                    type="button"
+                                    onClick={toggleVideo}
+                                    aria-label={`Watch ${portal.name} in action — short video, no sound`}
+                                    className="group absolute inset-0 flex cursor-pointer items-end rounded-xl text-left focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                                    <span
+                                        className="flex w-full animate-[demoPop_520ms_var(--ease-out)_both] items-center justify-between gap-3 bg-linear-to-t from-surface via-surface/92 to-transparent px-2 pt-14 pb-2"
+                                        style={{ animationDelay: '2400ms' }}>
+                                        <span className="flex items-center gap-3">
+                                            <span
+                                                className="relative grid size-11 shrink-0 place-items-center rounded-full text-bg shadow-md transition-transform group-hover:scale-105"
+                                                style={{ background: portal.colorVar }}>
+                                                <span
+                                                    className="absolute inset-0 animate-[demoPing_1.8s_ease-out_infinite] rounded-full"
+                                                    style={{ background: portal.colorVar }}
+                                                    aria-hidden
+                                                />
+                                                <svg
+                                                    viewBox="0 0 12 12"
+                                                    className="relative size-4 translate-x-px fill-current"
+                                                    aria-hidden>
+                                                    <path d="M3 1.5v9l7-4.5z" />
+                                                </svg>
+                                            </span>
+                                            <span className="grid gap-0.5">
+                                                <span className="font-display text-base font-semibold text-fg">
+                                                    Watch {portal.name} in action
+                                                </span>
+                                                <span className="font-mono text-[10px] font-medium tracking-widest text-fg-faint uppercase">
+                                                    Short video · no sound
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span className="hidden font-mono text-[10px] font-semibold tracking-widest text-fg-muted uppercase transition-colors group-hover:text-fg sm:inline">
+                                            Play →
+                                        </span>
+                                    </span>
+                                </button>
+                            ) : null}
+                        </>
+                    )}
+                </div>
 
                 {/* Coach line — every screen opens with one sentence and one move */}
                 <div
@@ -118,7 +148,8 @@ export function LandingPortalScreen({
                         <span className="font-mono text-[10px] font-medium tracking-widest text-accent uppercase">
                             The Coach
                         </span>
-                        <span className="text-sm leading-snug text-fg-secondary">
+                        {/* Reserve two lines so a one-line tip doesn't change the card height */}
+                        <span className="min-h-10 text-sm leading-snug text-fg-secondary">
                             {portal.demo.coach}
                         </span>
                     </span>
@@ -147,11 +178,11 @@ function DemoScreen({ portalKey }: { portalKey: Portal['key'] }) {
 function MoneyDemo() {
     const { rows, overLine } = PORTAL_DEMO_MONEY;
     return (
-        <div className="grid gap-2">
+        <div className="flex h-full flex-col justify-between gap-2">
             {rows.map((row, index) => (
                 <div
                     key={row.label}
-                    className="grid animate-[demoRow_420ms_var(--ease-out)_both] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-line bg-surface px-3 py-2.5"
+                    className="grid animate-[demoRow_420ms_var(--ease-out)_both] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-line bg-surface px-3 py-2"
                     style={{ animationDelay: `${index * 260}ms` }}>
                     <span className="grid min-w-0 gap-0.5">
                         <span className="truncate text-sm text-fg">{row.label}</span>
@@ -216,9 +247,9 @@ function GrowthDemo() {
     const last = points[points.length - 1]!;
 
     return (
-        <div className="grid gap-4">
-            <div className="rounded-xl border border-line bg-surface p-3">
-                <div className="mb-2 flex items-baseline justify-between gap-3">
+        <div className="flex h-full flex-col justify-between gap-3">
+            <div className="rounded-xl border border-line bg-surface px-3 py-2.5">
+                <div className="mb-1.5 flex items-baseline justify-between gap-3">
                     <span className="font-mono text-[10px] font-medium tracking-widest text-fg-faint uppercase">
                         Income · six months
                     </span>
@@ -228,7 +259,7 @@ function GrowthDemo() {
                 </div>
                 <svg
                     viewBox={`0 0 ${width} ${height}`}
-                    className="h-20 w-full overflow-visible"
+                    className="h-16 w-full overflow-visible"
                     aria-hidden>
                     <path
                         d={path}
@@ -256,11 +287,11 @@ function GrowthDemo() {
                 </svg>
             </div>
 
-            <div className="grid gap-2.5">
+            <div className="grid gap-2">
                 {goals.map((goal, index) => (
                     <div
                         key={goal.name}
-                        className="grid animate-[demoRow_420ms_var(--ease-out)_both] gap-1.5"
+                        className="grid animate-[demoRow_420ms_var(--ease-out)_both] gap-1"
                         style={{ animationDelay: `${600 + index * 220}ms` }}>
                         <div className="flex items-baseline justify-between gap-3">
                             <span className="truncate text-sm text-fg">{goal.name}</span>
@@ -295,7 +326,7 @@ function EnergyDemo() {
     const total = hours.reduce((sum, item) => sum + item.value, 0);
 
     return (
-        <div className="grid gap-4">
+        <div className="flex h-full flex-col justify-between gap-4">
             <div className="rounded-xl border border-line bg-surface p-3">
                 <div className="mb-3 flex items-baseline justify-between gap-3">
                     <span className="font-mono text-[10px] font-medium tracking-widest text-fg-faint uppercase">
@@ -388,9 +419,9 @@ function SoulDemo() {
     const circumference = 2 * Math.PI * radius;
 
     return (
-        <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
-            <div className="grid justify-items-center gap-2 rounded-xl border border-line bg-surface p-4">
-                <svg viewBox="0 0 84 84" className="size-24" aria-hidden>
+        <div className="grid h-full content-center gap-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center">
+            <div className="grid justify-items-center gap-2 self-stretch rounded-xl border border-line bg-surface p-4 sm:content-center">
+                <svg viewBox="0 0 84 84" className="size-28" aria-hidden>
                     <circle
                         cx="42"
                         cy="42"

@@ -371,7 +371,6 @@ export const PORTAL_DEMO_MONEY = {
             colorVar: 'var(--color-jar-nec)',
         },
         { label: 'Coffee bar', amount: '−€5.20', jar: 'Play', colorVar: 'var(--color-jar-play)' },
-        { label: 'Gym', amount: '−€29.00', jar: 'Necessity', colorVar: 'var(--color-jar-nec)' },
         { label: 'Debt payment', amount: '−€310', jar: 'Freedom', colorVar: 'var(--color-jar-ff)' },
     ],
     overLine: { jar: 'Play', over: '€38' },
