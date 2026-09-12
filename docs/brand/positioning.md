@@ -50,18 +50,22 @@ Use **tagline under the wordmark** as a secondary lockup; wordmark alone for app
 
 ## Visual direction (product tokens)
 
+Source: **Complete Brand Guidelines RB** (logo, palette, typography).
+
 | Token | Value | Role |
 |---|---|---|
-| Accent | `#0F766E` deep teal | Growth, control, calm |
-| Ink | `#0E1116` | Primary text |
-| Surfaces | `#EDEFF3` / `#F5F7F9` | Soft cool greys |
-| Display font | Bricolage-style | Headlines |
-| Body | Clean humanist sans | UI copy |
+| Accent | `#06656C` brand teal | Primary actions, Freedom jar, growth |
+| Accent tint | `#00777F` → `#2EAEAA` → `#4ED9D2` | Hover / dark-mode accents |
+| Ink | `#1A202D` brand navy | Primary text / dark surfaces |
+| Surfaces | `#EEF1F5` / `#FFFFFF` | Cool wash + white cards |
+| Display font | Archivo Narrow (web stand-in for Tungsten) | Headlines |
+| Body | Archivo | UI copy (14–19pt on web) |
 | Mono | Plex Mono | Labels, rituals, meta |
+| Logo mark | Teal gradient `#27A19A` → `#0D656C` | Stylized R + lowercase wordmark |
 
-**Avoid:** purple/indigo as brand identity, neon, crypto gold, loud bank-blue gradients.
+**Avoid:** purple/indigo as brand identity, neon, crypto gold, loud bank-blue gradients. Do not recolor or stretch the logo lockup.
 
-**Logo preference:** combination mark (text + quiet icon) + wordmark + lettermark **R**.  
+**Logo preference:** combination mark (gradient R + `umtelo` wordmark) + lettermark **R** favicon.  
 Metaphors: jars/vessels, direction, quiet geometric glyph. **Not** pigs, coins, €/$, charts.
 
 ---

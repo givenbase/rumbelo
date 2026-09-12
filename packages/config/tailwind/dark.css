@@ -1,86 +1,87 @@
 /* Dark palette — overrides Layer 1 vars; shadcn aliases flip automatically. */
 
+/* Dark surfaces keyed to brand navy #1A202D; accent uses brand teal tints. */
 @layer base {
     :root:not([data-theme='light']) {
         @media (prefers-color-scheme: dark) {
-            --color-bg: #121822;
-            --color-bg-app: #161d29;
-            --color-surface: #1c2433;
-            --color-raised: #242e40;
-            --color-sunken: #2c384c;
+            --color-bg: #12151c;
+            --color-bg-app: #1a202d;
+            --color-surface: #222b3b;
+            --color-raised: #2c384c;
+            --color-sunken: #343f52;
             --color-line: rgb(255 255 255 / 0.1);
             --color-line-strong: rgb(255 255 255 / 0.2);
             --color-fg: #f2f5f9;
             --color-fg-strong: #dce3ed;
             --color-fg-secondary: #a7b2c3;
-            --color-fg-muted: #93a0b2;
-            --color-fg-faint: #8592a5;
-            --color-accent: #2dd4bf;
-            --color-accent-hover: #5eead4;
-            --color-accent-press: #14b8a6;
-            --color-accent-soft: rgb(45 212 191 / 0.14);
-            --color-on-accent: #0b0f16;
+            --color-fg-muted: #8babd6;
+            --color-fg-faint: #667fa0;
+            --color-accent: #2eaeaa;
+            --color-accent-hover: #4ed9d2;
+            --color-accent-press: #00777f;
+            --color-accent-soft: rgb(46 174 170 / 0.16);
+            --color-on-accent: #1a202d;
             --color-success: #34d399;
             --color-warning: #fbbf24;
             --color-danger: #f87171;
             --color-jar-nec: #94a3b8;
-            --color-jar-ff: #2dd4bf;
+            --color-jar-ff: #2eaeaa;
             --color-jar-edu: #22d3ee;
             --color-jar-lts: #60a5fa;
             --color-jar-play: #fbbf24;
             --color-jar-give: #4ade80;
             --color-portal-soul: #a78bfa;
-            --color-scrim: rgb(8 12 20 / 0.68);
-            --color-chrome: rgb(22 29 41 / 0.9);
+            --color-scrim: rgb(18 21 28 / 0.72);
+            --color-chrome: rgb(26 32 45 / 0.92);
             --shadow-md: 0 2px 8px rgb(0 0 0 / 0.32);
             --shadow-lg: 0 10px 30px rgb(0 0 0 / 0.4);
             --shadow-xl: 0 30px 70px rgb(0 0 0 / 0.5);
-            --shadow-glow: 0 8px 28px rgb(45 212 191 / 0.28);
+            --shadow-glow: 0 8px 28px rgb(46 174 170 / 0.28);
             --gradient-page: radial-gradient(
                 90% 46% at 50% 0%,
-                rgb(45 212 191 / 0.14),
+                rgb(46 174 170 / 0.14),
                 transparent 72%
             );
         }
     }
 
     [data-theme='dark'] {
-        --color-bg: #121822;
-        --color-bg-app: #161d29;
-        --color-surface: #1c2433;
-        --color-raised: #242e40;
-        --color-sunken: #2c384c;
+        --color-bg: #12151c;
+        --color-bg-app: #1a202d;
+        --color-surface: #222b3b;
+        --color-raised: #2c384c;
+        --color-sunken: #343f52;
         --color-line: rgb(255 255 255 / 0.1);
         --color-line-strong: rgb(255 255 255 / 0.2);
         --color-fg: #f2f5f9;
         --color-fg-strong: #dce3ed;
         --color-fg-secondary: #a7b2c3;
-        --color-fg-muted: #93a0b2;
-        --color-fg-faint: #8592a5;
-        --color-accent: #2dd4bf;
-        --color-accent-hover: #5eead4;
-        --color-accent-press: #14b8a6;
-        --color-accent-soft: rgb(45 212 191 / 0.14);
-        --color-on-accent: #0b0f16;
+        --color-fg-muted: #8babd6;
+        --color-fg-faint: #667fa0;
+        --color-accent: #2eaeaa;
+        --color-accent-hover: #4ed9d2;
+        --color-accent-press: #00777f;
+        --color-accent-soft: rgb(46 174 170 / 0.16);
+        --color-on-accent: #1a202d;
         --color-success: #34d399;
         --color-warning: #fbbf24;
         --color-danger: #f87171;
         --color-jar-nec: #94a3b8;
-        --color-jar-ff: #2dd4bf;
+        --color-jar-ff: #2eaeaa;
         --color-jar-edu: #22d3ee;
         --color-jar-lts: #60a5fa;
         --color-jar-play: #fbbf24;
         --color-jar-give: #4ade80;
         --color-portal-soul: #a78bfa;
-        --color-scrim: rgb(8 12 20 / 0.68);
-        --color-chrome: rgb(22 29 41 / 0.9);
+        --color-scrim: rgb(18 21 28 / 0.72);
+        --color-chrome: rgb(26 32 45 / 0.92);
         --shadow-md: 0 2px 8px rgb(0 0 0 / 0.32);
         --shadow-lg: 0 10px 30px rgb(0 0 0 / 0.4);
         --shadow-xl: 0 30px 70px rgb(0 0 0 / 0.5);
-        --shadow-glow: 0 8px 28px rgb(45 212 191 / 0.28);
+        --shadow-glow: 0 8px 28px rgb(46 174 170 / 0.28);
         --gradient-page: radial-gradient(
             90% 46% at 50% 0%,
-            rgb(45 212 191 / 0.14),
+            rgb(46 174 170 / 0.14),
             transparent 72%
         );
     }

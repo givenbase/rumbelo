@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
+import { Archivo, Archivo_Narrow, IBM_Plex_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
@@ -9,16 +9,17 @@ import { Providers } from './providers';
 
 import '../../globals.css';
 
-const display = Bricolage_Grotesque({
+/** Brand book: Tungsten (display) → Archivo Narrow web substitute; Archivo body. */
+const display = Archivo_Narrow({
     subsets: ['latin'],
     weight: ['500', '600', '700'],
-    variable: '--font-bricolage',
+    variable: '--font-archivo-narrow',
     display: 'swap',
 });
-const sans = Public_Sans({
+const sans = Archivo({
     subsets: ['latin'],
     weight: ['400', '500', '600', '700'],
-    variable: '--font-public-sans',
+    variable: '--font-archivo',
     display: 'swap',
 });
 const mono = IBM_Plex_Mono({
@@ -64,8 +65,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
     themeColor: [
-        { media: '(prefers-color-scheme: light)', color: '#EDEFF3' },
-        { media: '(prefers-color-scheme: dark)', color: '#0B0F16' },
+        { media: '(prefers-color-scheme: light)', color: '#EEF1F5' },
+        { media: '(prefers-color-scheme: dark)', color: '#1A202D' },
     ],
 };
 

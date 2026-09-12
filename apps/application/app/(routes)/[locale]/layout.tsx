@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, IBM_Plex_Mono, Public_Sans } from 'next/font/google';
+import { Archivo, Archivo_Narrow, IBM_Plex_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
@@ -8,9 +8,8 @@ import { Providers } from './providers';
 import '../../globals.css';
 
 /**
- * Fonts come from the design: Bricolage Grotesque for display, Public Sans for
- * body, IBM Plex Mono for figures. next/font self-hosts them, so there is no
- * render-blocking request to Google and no layout shift.
+ * Brand book fonts: Archivo Narrow (Tungsten web stand-in) for display,
+ * Archivo for body, IBM Plex Mono for figures. next/font self-hosts them.
  *
  * No `generateStaticParams` here: Next 16.3 fails SSG on `@modal/(...)` intercept
  * routes under `[locale]` ("Could not resolve param value for segment: locale").
@@ -18,16 +17,16 @@ import '../../globals.css';
  *
  * Locale comes from next-intl `requestLocale` via `i18n/request.ts` (not `setRequestLocale`).
  */
-const display = Bricolage_Grotesque({
+const display = Archivo_Narrow({
     subsets: ['latin'],
-    weight: ['500', '600'],
-    variable: '--font-bricolage',
+    weight: ['500', '600', '700'],
+    variable: '--font-archivo-narrow',
     display: 'swap',
 });
-const sans = Public_Sans({
+const sans = Archivo({
     subsets: ['latin'],
     weight: ['400', '500', '600', '700'],
-    variable: '--font-public-sans',
+    variable: '--font-archivo',
     display: 'swap',
 });
 const mono = IBM_Plex_Mono({
@@ -44,8 +43,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
     themeColor: [
-        { media: '(prefers-color-scheme: light)', color: '#EDEFF3' },
-        { media: '(prefers-color-scheme: dark)', color: '#0B0F16' },
+        { media: '(prefers-color-scheme: light)', color: '#EEF1F5' },
+        { media: '(prefers-color-scheme: dark)', color: '#1A202D' },
     ],
 };
 

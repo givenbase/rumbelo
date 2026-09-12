@@ -12,18 +12,18 @@ import { cn } from '../../lib/utils';
 import { STATUS_COPY } from './copy';
 import type { StatusPageProps } from './types';
 
-/** Brand fallbacks mirror packages/config/tailwind/theme.css (light teal). */
+/** Brand fallbacks mirror packages/config/tailwind/theme.css (brand teal #06656C). */
 const FALLBACK = {
-    bg: '#EDEFF3',
-    fg: '#0E1116',
-    muted: '#5B6575',
+    bg: '#EEF1F5',
+    fg: '#1A202D',
+    muted: '#5A6474',
     line: '#D5DAE3',
     surface: '#FFFFFF',
-    raised: '#F5F6F9',
-    accent: '#0f766e',
-    accentHover: '#0d9488',
-    accentSoft: 'rgb(15 118 110 / 0.1)',
-    danger: '#dc2626',
+    raised: '#E8ECF2',
+    accent: '#06656c',
+    accentHover: '#00777f',
+    accentSoft: 'rgb(6 101 108 / 0.12)',
+    danger: '#c81e1e',
     onAccent: '#FFFFFF',
 } as const;
 

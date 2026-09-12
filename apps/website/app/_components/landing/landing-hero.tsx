@@ -179,7 +179,7 @@ export function LandingHero() {
                             </span>
                         ))}
                     </Eyebrow>
-                    <h1 className="my-4 max-w-md font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance text-fg sm:text-5xl sm:leading-[1.02] lg:max-w-lg lg:text-7xl">
+                    <h1 className="my-4 max-w-md font-display text-4xl leading-[1.05] font-bold tracking-tight text-balance text-fg sm:text-5xl sm:leading-[1.02] lg:max-w-lg lg:text-7xl">
                         {HERO.headline}
                     </h1>
                     <p className="mb-7 max-w-prose text-base leading-relaxed text-pretty text-fg-muted lg:text-lg">

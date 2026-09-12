@@ -44,7 +44,7 @@ export function SectionHeading({
             <Eyebrow>{eyebrow}</Eyebrow>
             <h2
                 className={cn(
-                    'mt-3.5 mb-3 font-display text-3xl leading-[1.08] font-semibold tracking-tight text-balance text-fg lg:text-4xl',
+                    'mt-3.5 mb-3 font-display text-3xl leading-[1.08] font-bold tracking-tight text-balance text-fg lg:text-4xl',
                     centered ? 'mx-auto max-w-2xl' : 'max-w-xl',
                     headlineClassName
                 )}>

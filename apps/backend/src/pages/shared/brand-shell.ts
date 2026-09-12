@@ -1,6 +1,6 @@
 /**
  * Shared HTML shell for API-host pages — matches product tokens
- * (Bricolage / Public Sans, teal accent, calm light surface).
+ * (Archivo Narrow / Archivo, brand teal #06656C, calm light surface).
  */
 
 export type BrandPageOptions = {
@@ -23,21 +23,21 @@ export type BrandPageOptions = {
 
 const CSS = `
 :root {
-  --bg: #edeff3;
-  --bg-app: #f5f7f9;
+  --bg: #e6eaef;
+  --bg-app: #eef1f5;
   --surface: #ffffff;
-  --fg: #0e1116;
+  --fg: #1a202d;
   --fg-muted: #5a6474;
   --fg-secondary: #3e4859;
-  --accent: #0f766e;
-  --accent-hover: #0d9488;
-  --accent-press: #115e59;
-  --accent-soft: rgb(15 118 110 / 0.1);
-  --line: rgb(14 17 22 / 0.1);
+  --accent: #06656c;
+  --accent-hover: #00777f;
+  --accent-press: #044a50;
+  --accent-soft: rgb(6 101 108 / 0.12);
+  --line: rgb(26 32 45 / 0.12);
   --radius: 16px;
-  --shadow: 0 2px 4px rgb(14 17 22 / 0.06), 0 14px 34px rgb(14 17 22 / 0.1);
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --shadow: 0 2px 4px rgb(26 32 45 / 0.06), 0 14px 34px rgb(26 32 45 / 0.1);
+  --font-display: "Archivo Narrow", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +62,7 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(90% 46% at 50% 0%, rgb(13 148 136 / 0.14), transparent 70%),
+    radial-gradient(90% 46% at 50% 0%, rgb(6 101 108 / 0.14), transparent 70%),
     radial-gradient(50% 40% at 100% 100%, rgb(3 105 161 / 0.06), transparent 55%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-app) 100%);
   pointer-events: none;
@@ -257,7 +257,7 @@ export function renderBrandPage(opts: BrandPageOptions): string {
   <title>${escapeHtml(opts.title)} · Rumtelo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet" />
   <style>${CSS}</style>
 </head>
 <body>

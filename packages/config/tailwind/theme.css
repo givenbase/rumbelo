@@ -4,32 +4,38 @@
  */
 
 @theme {
-    /* Fonts — next/font sets --font-* in each app's layout.tsx */
-    --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-    --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+    /*
+     * Brand book (Complete Brand Guidelines RB):
+     *   Primary teal #06656C · Ink navy #1A202D
+     *   Typography: Tungsten (display) + Archivo (body)
+     *   Web: Archivo Narrow stands in for Tungsten (commercial face).
+     * next/font sets --font-archivo* / --font-plex-mono in each app layout.
+     */
+    --font-display: var(--font-archivo-narrow), ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
     --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-    /* Surfaces — light (slightly deeper than pure wash for balance) */
-    --color-bg: #e4e8ee;
-    --color-bg-app: #eceff4;
-    --color-surface: #f7f8fa;
+    /* Surfaces — cool wash keyed to brand navy */
+    --color-bg: #e6eaef;
+    --color-bg-app: #eef1f5;
+    --color-surface: #ffffff;
     --color-raised: #e8ecf2;
     --color-sunken: #d5dbe5;
-    --color-line: rgb(14 17 22 / 0.11);
-    --color-line-strong: rgb(14 17 22 / 0.22);
+    --color-line: rgb(26 32 45 / 0.12);
+    --color-line-strong: rgb(26 32 45 / 0.22);
 
-    /* Foreground */
-    --color-fg: #0e1116;
-    --color-fg-strong: #1e2634;
+    /* Foreground — brand navy #1A202D */
+    --color-fg: #1a202d;
+    --color-fg-strong: #222b3b;
     --color-fg-secondary: #3e4859;
     --color-fg-muted: #5a6474;
-    --color-fg-faint: #5f6a78;
+    --color-fg-faint: #667fa0;
 
-    /* Accent — deep teal (growth / control; distinct from Meltizo indigo) */
-    --color-accent: #0f766e;
-    --color-accent-hover: #0d9488;
-    --color-accent-press: #115e59;
-    --color-accent-soft: rgb(15 118 110 / 0.1);
+    /* Accent — brand teal #06656C (+ sampled tints) */
+    --color-accent: #06656c;
+    --color-accent-hover: #00777f;
+    --color-accent-press: #044a50;
+    --color-accent-soft: rgb(6 101 108 / 0.12);
     --color-on-accent: #ffffff;
 
     /* Status */
@@ -37,36 +43,36 @@
     --color-warning: #9a4e08;
     --color-danger: #c81e1e;
 
-    /* Jars + portals */
+    /* Jars + portals — Freedom jar locks to brand teal */
     --color-jar-nec: #64748b;
-    --color-jar-ff: #0f766e;
+    --color-jar-ff: #06656c;
     --color-jar-edu: #0e7490;
     --color-jar-lts: #0369a1;
     --color-jar-play: #b45309;
     --color-jar-give: #15803d;
     --color-portal-soul: #7c3aed;
 
-    --color-scrim: rgb(14 17 22 / 0.42);
-    --color-chrome: rgb(236 239 244 / 0.92);
+    --color-scrim: rgb(26 32 45 / 0.42);
+    --color-chrome: rgb(238 241 245 / 0.92);
 
     --radius-lg: 16px;
     --radius-md: calc(var(--radius-lg) - 4px);
     --radius-sm: calc(var(--radius-lg) - 8px);
-    --shadow-md: 0 1px 2px rgb(14 17 22 / 0.05), 0 6px 16px rgb(14 17 22 / 0.06);
-    --shadow-lg: 0 2px 4px rgb(14 17 22 / 0.06), 0 14px 34px rgb(14 17 22 / 0.1);
-    --shadow-xl: 0 30px 70px rgb(14 17 22 / 0.18);
-    --shadow-glow: 0 8px 26px rgb(15 118 110 / 0.18);
+    --shadow-md: 0 1px 2px rgb(26 32 45 / 0.05), 0 6px 16px rgb(26 32 45 / 0.06);
+    --shadow-lg: 0 2px 4px rgb(26 32 45 / 0.06), 0 14px 34px rgb(26 32 45 / 0.1);
+    --shadow-xl: 0 30px 70px rgb(26 32 45 / 0.18);
+    --shadow-glow: 0 8px 26px rgb(6 101 108 / 0.2);
 
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --animate-rise: rise 380ms var(--ease-out) both;
 
     --gradient-accent: linear-gradient(
         135deg,
-        var(--color-accent-hover) 0%,
+        #27a19a 0%,
         var(--color-accent) 58%,
         var(--color-accent-press) 100%
     );
-    --gradient-page: radial-gradient(90% 46% at 50% 0%, rgb(13 148 136 / 0.12), transparent 70%);
+    --gradient-page: radial-gradient(90% 46% at 50% 0%, rgb(6 101 108 / 0.12), transparent 70%);
 
     /* shadcn semantic aliases — var() only, no duplicate hex */
     --color-background: var(--color-bg-app);

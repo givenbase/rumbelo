@@ -1,11 +1,12 @@
 /**
  * Rumtelo email design tokens — mirrors packages/config/tailwind/theme.css.
  * Tuned for WCAG AA contrast on white reading surfaces.
+ * Brand book: teal #06656C · navy #1A202D · Archivo / Archivo Narrow.
  */
 
 export const emailFonts = {
-    display: "'Bricolage Grotesque', Georgia, 'Times New Roman', serif",
-    sans: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    display: "'Archivo Narrow', 'Arial Narrow', Arial, sans-serif",
+    sans: "'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 } as const;
 
 export const emailRadii = {
@@ -22,19 +23,19 @@ export const emailLayout = {
 } as const;
 
 export const emailBrand = {
-    /** Deep teal — growth / control */
-    accent: '#0f766e',
-    accentHover: '#0d9488',
-    canvas: '#edeff3',
-    canvasDark: '#0b0f16',
+    /** Brand teal #06656C */
+    accent: '#06656c',
+    accentHover: '#00777f',
+    canvas: '#eef1f5',
+    canvasDark: '#1a202d',
     surface: '#ffffff',
-    raised: '#f4f6f8',
-    ink: '#0e1116',
+    raised: '#e8ecf2',
+    ink: '#1a202d',
     inkMuted: '#5a6474',
     inkSecondary: '#3e4859',
     hairline: '#d4d9e2',
     hairlineSubtle: '#e2e6ee',
-    button: '#0f766e',
+    button: '#06656c',
     buttonText: '#ffffff',
 } as const;
 

@@ -54,6 +54,9 @@
         font-feature-settings:
             'tnum' 1,
             'ss01' 1;
+        /* Brand book: web body 14–19pt */
+        font-size: 1rem;
+        line-height: 1.55;
     }
 
     button:not(:disabled),
