@@ -56,10 +56,12 @@ function SheetContent({
                 data-slot="sheet-content"
                 className={cn(
                     'data-[state=closed]:animate-out data-[state=open]:animate-in fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
+                    // Full width on phones; on larger screens fill up to the max so the panel
+                    // never shrinks to its content. Callers override the max (sm:max-w-*).
                     side === 'right' &&
-                        'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-full border-l sm:w-auto sm:max-w-sm',
+                        'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-full border-l sm:max-w-lg',
                     side === 'left' &&
-                        'data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-full border-r sm:w-auto sm:max-w-sm',
+                        'data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-full border-r sm:max-w-lg',
                     side === 'top' &&
                         'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b',
                     side === 'bottom' &&

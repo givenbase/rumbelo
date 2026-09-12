@@ -75,8 +75,9 @@ export function RouteModalShell({
                 showCloseButton
                 className={cn(
                     'flex flex-col gap-0 overflow-hidden border-line bg-surface p-0 shadow-xl',
-                    // Must override Sheet default sm:max-w-sm
-                    width === 'wide' ? 'sm:max-w-lg' : 'sm:max-w-md'
+                    // Overrides the Sheet default (sm:max-w-lg). Forms need room for
+                    // two-column rows and long select labels.
+                    width === 'wide' ? 'sm:max-w-2xl' : 'sm:max-w-xl'
                 )}>
                 <SheetHeader className="shrink-0 space-y-0 border-b border-line bg-raised px-5 py-4 pr-12 text-left">
                     <div className="space-y-1">
